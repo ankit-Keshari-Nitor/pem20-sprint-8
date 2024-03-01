@@ -1,0 +1,40 @@
+{
+  "name": "@b2bi/pem",
+  "version": "1.0.0",
+  "description": "B2Bi PEM",
+  "main": "index.js",
+  "license": "Precisely License",
+  "private": true,
+  "dependencies": {
+    "@b2bi/shell": "file:C:/Users/pradeep.k/work/bitbucket/b2bi/b2bi-ui-shared/packages/shell",
+    "@b2bi/ui-lib": "link:../../../b2bi-ui-shared/packages/ui-lib"
+  },
+  "devDependencies": {
+    "@b2bi/build": "link:../../../b2bi-ui-shared/packages/build-lib"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "build-local": "CI=true react-scripts build",
+    "test": "react-scripts test --coverage --coverageDirectory='build/reports/jest'"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "ignorePatterns": []
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

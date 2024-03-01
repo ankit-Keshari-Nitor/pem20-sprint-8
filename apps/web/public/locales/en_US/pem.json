@@ -1,0 +1,45 @@
+{
+    "appName": "Partner Engagement Manager",
+    "appPrefix": "IBM",
+    "productName": "Partner Engagement Manager",
+    "sideNav": {
+      "home": "Home",
+      "dashboard": "Dashboard",
+      "manage": {
+        "companies": "Companies",
+        "my_company": "My Company",
+        "partner_companies": "Partner Companies",
+        "applications": "Applications",
+        "my_applications": "My Application",
+        "partner_applications": "Partner Application",
+        "communites": "Communites",
+        "connections": "Connections",
+        "my_connections": "My Connections",
+        "templates": "Templates",
+        "preferences": "Preferences",
+        "notifications": "Notification preferences",
+        "users": "Users",
+        "business":"Business"
+      },
+      "monitor": {
+        "reports": "Reports",
+        "activities": "Activites",
+        "activity_snapshots": "Actvity snapshots"
+      },
+      "tools": {
+        "b2bi_integrator": "B2Bi Integrator",
+        "logs": "Logs"
+      },
+      "samples": {
+        "crud": "CRUD Sample",
+        "mdf": "MDF"
+      }
+    },
+    "headerLink": {
+      "directories": "Directories",
+      "activities": "Activities",
+      "library": "Library",
+      "settings": "Settings"
+    }
+  }
+  

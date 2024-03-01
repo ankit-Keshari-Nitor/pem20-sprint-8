@@ -1,0 +1,9 @@
+{
+  "name": "@b2bi/flow-designer",
+  "version": "1.0.0",
+  "description": "B2Bi Flow Designer",
+  "main": "index.js",
+  "license": "Precisely License",
+  "private": true,
+  "dependencies": {}
+}

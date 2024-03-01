@@ -1,0 +1,87 @@
+{
+  "dashboard": "Dashboard",
+  "userProfile": "User Profile",
+
+  "login": {
+    "languageChooser": "Choose the language",
+    "welcome_message": "Welcome to",
+    "logIn": "Log in",
+    "loginHelpMessage": "Need help? Contact Administrator",
+    "passwordHelpMessage": "Logging in as {{userId}}.",
+    "notYou": "Not you?",
+    "userId": "User Id",
+    "continue": "Continue",
+    "login_btn": "Log in",
+    "forgot_id_link": "Forgot ID?",
+    "forgot_password_link": "Forgot Password?",
+    "remember_id": "Remember ID",
+    "password": "Password",
+    "remember_password": "Remember Password",
+    "togglePasswordOn": "Show password",
+    "togglePasswordOff": "Hide password",
+    "invalid_user_credentials":" Invalid Userid/Password. Please try again",
+    "server_not_reachable": "Server not reachable"
+  },
+
+  "common": {
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "add": "Add",
+      "update": "Update",
+      "edit": "Edit",
+      "close": "Close",
+      "delete": "Delete",
+      "apply":"Apply",
+      "deactivate":"Deactivate",
+      "activate":"Activate",
+      "confirm":"Confirm",
+      "back":"Back",
+      "ok": "OK",
+      "clearAll": "Clear All"
+    },
+    "form": {
+      "field_required": "This field is required"
+    },
+    "emptyState":{
+      "no_result_found":"No results found",
+      "message":"Try adjusting your search or filter options to find what you're looking for.",
+      "reset_filters":"Reset Filters"
+
+    },
+    "filter-section":{
+      "filter": "Filter",
+      "clear-filter": "Clear Filters"
+    }
+  },
+  "form" : {
+    "validations": {
+      "required": "{{fieldName}} is required",
+      "minLength": "{{fieldName}} should have minimum {{count}} characters",
+      "maxLength": "{{fieldName}} should have maximum {{count}} characters"
+    }
+  },
+  "modal": {
+    "labels": {
+      "confirm": "Confirm",
+      "warning": "Warning",
+      "info": "Information",
+      "error": "Error"
+    },
+    "actions": {
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "close": "Close",
+      "ok": "OK"
+    }
+  },
+  "wizard": {
+    "actions": {
+      "previous": "Previous",
+      "next": "Next",
+      "submit": "Submit",
+      "close":"Close",
+      "save":"Save"
+    }
+  }
+}

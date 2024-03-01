@@ -1,0 +1,9 @@
+{
+  "name": "@b2bi/carbon-mappers",
+  "version": "1.0.0",
+  "description": "B2Bi Carbon Component mappers for DDF",
+  "main": "index.js",
+  "license": "Precisely License",
+  "private": true,
+  "dependencies": {}
+}

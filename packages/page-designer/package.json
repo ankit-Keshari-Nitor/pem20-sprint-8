@@ -1,0 +1,9 @@
+{
+  "name": "@b2bi/page-designer",
+  "version": "1.0.0",
+  "description": "B2Bi Page Designer",
+  "main": "index.js",
+  "license": "Precisely License",
+  "private": true,
+  "dependencies": {}
+}

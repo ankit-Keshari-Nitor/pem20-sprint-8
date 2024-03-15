@@ -19,11 +19,18 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build1": "react-scripts build",
+    "build": "node tasks/build.js",
     "test": "react-scripts test --watchAll=false --coverage",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
     "prettier": "^3.2.5"
+  },
+  "rollup": {
+    "watch": {
+      "include": "src/**",
+      "buildDelay": 1000
+    }
   }
 }

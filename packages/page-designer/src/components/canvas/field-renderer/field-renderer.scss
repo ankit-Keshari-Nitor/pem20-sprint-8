@@ -1,0 +1,27 @@
+.element {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  padding: 1rem;
+  box-shadow: 0px 0px 5px -2px;
+  cursor: pointer;
+}
+
+.element:hover {
+  border: solid hsl(219deg 99% 53% / 50%);
+}
+
+.element:first-of-type {
+  margin-top: 8px;
+}
+
+.element:last-child {
+  margin-bottom: 8px;
+}
+
+.element .delete-icon {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}

@@ -1,0 +1,6 @@
+/**
+   PRIVATE LICENSE
+   */
+  
+'use strict';
+

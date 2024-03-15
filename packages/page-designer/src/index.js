@@ -1,1 +1,2 @@
-// Main Designer with 3 tabs and it will accept field mapper
+import PageDesigner from './container/page-designer';
+export default PageDesigner;

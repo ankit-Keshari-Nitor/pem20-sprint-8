@@ -9,6 +9,9 @@ body {
 }
 
 #root {
-    height: 100%;
+  height: 100%;
 }
 //margin 0
+
+@import '@b2bi/styles/component-overrides.scss';
+@import '@b2bi/styles/utilities.scss';

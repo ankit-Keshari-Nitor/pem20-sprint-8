@@ -6,7 +6,7 @@ import App from './App';
 //import reportWebVitals from './reportWebVitals';
 
 initI18n({
-  ns:['shell', 'pem', 'mod-partner'],
+  ns:['shell', 'common', 'pem', 'mod-partner', 'mod-sponsor-user'],
   defaultNS: 'pem'
 });
 const root = ReactDOM.createRoot(document.getElementById('root'));

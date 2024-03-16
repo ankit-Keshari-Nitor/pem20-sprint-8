@@ -5,7 +5,7 @@ import './components-tray.scss';
 import { PALETTE_GROUPS } from '../../constants/constant';
 import ComponentItem from './component-item';
 
-export default function ComponentTray({ mapper, getIconByType }) {
+export default function ComponentTray({ mapper }) {
   const initialPaletteEntries = React.useRef(collectPaletteEntries(mapper));
   const [paletteEntries, setPaletteEntries] = useState(initialPaletteEntries.current);
   const groups = groupEntries(paletteEntries);
@@ -54,12 +54,6 @@ export default function ComponentTray({ mapper, getIconByType }) {
     [inputRef, setSearchTerm]
   );
   
-  const handleGetPaletteIcon = (entry) => {
-    const { icon, iconUrl, type, label } = entry;
-    const modifiedIcon = getPaletteIcon(icon, iconUrl, type, label, getIconByType)
-    return modifiedIcon
-  }
-  
   return (
     <div className="palette">
       {/* Header */}
@@ -83,7 +77,7 @@ export default function ComponentTray({ mapper, getIconByType }) {
             <span className="palette-group-title">{label}</span>
             <div className="palette-fields">
               {entries.map((entry) => {
-                return <ComponentItem key={entry.label} getPaletteIcon={handleGetPaletteIcon} {...entry} />;
+                return <ComponentItem key={entry.label} {...entry} />;
               })}
             </div>
           </div>
@@ -128,17 +122,4 @@ export function collectPaletteEntries(formFields) {
       };
     })
     .filter(({ type }) => type !== 'default');
-}
-
-// Returns the palette Icon.
-export function getPaletteIcon(icon, iconUrl, type, label, getIconByType) {
-  let Icon;
-
-  if (iconUrl) {
-    Icon = () => <img className="field-icon-image" width={36} style={{ margin: 'auto' }} alt={label} src={iconUrl} />;
-  } else {
-    Icon = icon || getIconByType(type);
-  }
-
-  return Icon;
 }

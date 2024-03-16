@@ -1,6 +1,7 @@
 import React from 'react';
 import { FileUploader as CarbonFileUploader } from '@carbon/react';
 import { FORM_FIELD_TYPE, editableProps } from '../constant';
+import { Upload } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.FILE_UPLOADER;
 
@@ -34,6 +35,7 @@ FileUploader.config = {
   type,
   label: 'File Uploader',
   group: 'basic-input',
+  icon: <Upload />,
   editableProps: editableProps,
   advanceProps: []
 };

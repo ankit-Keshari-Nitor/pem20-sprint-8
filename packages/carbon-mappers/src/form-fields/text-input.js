@@ -3,6 +3,7 @@ import { TextInput as CarbonTextInput } from '@carbon/react';
 import { FORM_FIELD_TYPE, editableProps, minProps, maxProps, readOnly, helperText } from '../constant';
 import Label from './label';
 import useMinMaxInput from '../custom-hooks/use-min-max-input';
+import { Txt } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.TEXT_INPUT;
 
@@ -34,6 +35,7 @@ TextInput.config = {
   type,
   label: 'Text Input',
   group: 'basic-input',
+  icon: <Txt />,
   editableProps: {
     Basic: [...editableProps.Basic, helperText],
     Condition: [...editableProps.Condition, readOnly]

@@ -4,7 +4,7 @@ import { useDrop } from 'react-dnd';
 import './page-designer.scss';
 import { Canvas, ComponentTray, PropsPanel } from '../../components';
 
-const PageDesigner = ({ mapper, getFormField, getIconByType }) => {
+const PageDesigner = ({ mapper, getFormField }) => {
   const [schema, setSchema] = React.useState([]);
   const [selectedFiledProps, setSelectedFiledProps] = React.useState();
   const [valueTracker, setValueTracker] = React.useState(false);
@@ -103,7 +103,7 @@ const PageDesigner = ({ mapper, getFormField, getIconByType }) => {
     <div className="PageDesigner-container">
       <div className="layout-container">
         <div className="left-palette-container">
-          <ComponentTray mapper={mapper} getIconByType={getIconByType} />
+          <ComponentTray mapper={mapper} />
         </div>
         <div ref={drop} style={{ backgroundColor }} className="canvas-container">
           <Canvas schema={schema} removeFormField={removeFormFieldFromCanvas} selectedField={selectedField} getFormField={getFormField} />

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Checkbox as CarbonCheckbox } from '@carbon/react';
 import { FORM_FIELD_TYPE, editableProps, helperText, readOnly } from '../constant';
 import Label from './label';
+import { CheckboxCheckedFilled } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.CHECKBOX;
 
@@ -24,6 +25,7 @@ Checkbox.config = {
   type,
   label: 'Checkbox',
   group: 'selection',
+  icon: <CheckboxCheckedFilled />,
   editableProps: {
     Basic: [...editableProps.Basic, helperText],
     Condition: [...editableProps.Condition, readOnly]

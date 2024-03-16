@@ -2,6 +2,7 @@ import React from 'react';
 import { NumberInput as CarbonNumberInput } from '@carbon/react';
 import { FORM_FIELD_TYPE, editableProps, minProps, maxProps, readOnly, helperText } from '../constant';
 import Label from './label';
+import { CharacterWholeNumber } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.NUMBER;
 
@@ -23,6 +24,7 @@ NumberInput.config = {
   type,
   label: 'Number',
   group: 'basic-input',
+  icon: <CharacterWholeNumber />,
   editableProps: {
     Basic: [...editableProps.Basic, helperText],
     Condition: [...editableProps.Condition, readOnly]

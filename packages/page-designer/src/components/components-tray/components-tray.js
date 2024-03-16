@@ -5,8 +5,8 @@ import './components-tray.scss';
 import { PALETTE_GROUPS } from '../../constants/constant';
 import ComponentItem from './component-item';
 
-export default function ComponentTray({ mapper }) {
-  const initialPaletteEntries = React.useRef(collectPaletteEntries(mapper));
+export default function ComponentTray({ componentMapper }) {
+  const initialPaletteEntries = React.useRef(collectPaletteEntries(componentMapper));
   const [paletteEntries, setPaletteEntries] = useState(initialPaletteEntries.current);
   const groups = groupEntries(paletteEntries);
   const [searchTerm, setSearchTerm] = useState('');

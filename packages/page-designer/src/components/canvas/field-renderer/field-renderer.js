@@ -3,9 +3,8 @@ import { TrashCan } from '@carbon/icons-react';
 
 import './field-renderer.scss';
 
-const FieldRenderer = (props) => {
-  const { field, removeFormField } = props;
-  const FormFieldComponent = props.getFormField(field.type);
+const FieldRenderer = ({ field, removeFormField, getFormField }) => {
+  const FormFieldComponent = getFormField(field.type);
 
   if (!FormFieldComponent) {
     throw new Error(`cannot render field <${field.type}>`);

@@ -4,7 +4,7 @@ import { useDrop } from 'react-dnd';
 import './page-designer.scss';
 import { Canvas, ComponentTray, PropsPanel } from '../../components';
 
-const PageDesigner = ({ mapper, getFormField }) => {
+const PageDesigner = ({ componentMapper }) => {
   const [schema, setSchema] = React.useState([]);
   const [selectedFiledProps, setSelectedFiledProps] = React.useState();
   const [valueTracker, setValueTracker] = React.useState(false);
@@ -27,6 +27,10 @@ const PageDesigner = ({ mapper, getFormField }) => {
   } else if (canDrop) {
     backgroundColor = 'rgb(203 209 223)';
   }
+
+  const getFormField = (type) => {     
+    return componentMapper[type];
+  };
 
   // Function to remove the form field from canvas
   const removeFormFieldFromCanvas = (id) => {
@@ -103,7 +107,7 @@ const PageDesigner = ({ mapper, getFormField }) => {
     <div className="PageDesigner-container">
       <div className="layout-container">
         <div className="left-palette-container">
-          <ComponentTray mapper={mapper} />
+          <ComponentTray componentMapper={componentMapper} />
         </div>
         <div ref={drop} style={{ backgroundColor }} className="canvas-container">
           <Canvas schema={schema} removeFormField={removeFormFieldFromCanvas} selectedField={selectedField} getFormField={getFormField} />

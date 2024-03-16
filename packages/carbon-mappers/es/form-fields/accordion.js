@@ -7,6 +7,7 @@ import React from 'react';
 import { Accordion as Accordion$1, AccordionItem } from '@carbon/react';
 import { FORM_FIELD_TYPE } from '../constant/form-field-type.js';
 import { editableProps } from '../constant/field-property-props.js';
+import { Plan } from '@carbon/icons-react';
 
 var _p;
 const type = FORM_FIELD_TYPE.ACCORDION;
@@ -33,6 +34,7 @@ Accordion.config = {
   type,
   label: 'Accordion',
   group: 'panel',
+  icon: /*#__PURE__*/React.createElement(Plan, null),
   editableProps: editableProps,
   advanceProps: []
 };

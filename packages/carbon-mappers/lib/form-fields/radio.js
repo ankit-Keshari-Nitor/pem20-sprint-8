@@ -12,6 +12,7 @@ var react = require('@carbon/react');
 var formFieldType = require('../constant/form-field-type.js');
 var fieldPropertyProps = require('../constant/field-property-props.js');
 var label = require('./label.js');
+var iconsReact = require('@carbon/icons-react');
 
 const type = formFieldType.FORM_FIELD_TYPE.RADIO;
 const RadioButton = _ref => {
@@ -43,6 +44,7 @@ RadioButton.config = {
   type,
   label: 'Radio Group',
   group: 'selection',
+  icon: /*#__PURE__*/React.createElement(iconsReact.RadioButtonChecked, null),
   editableProps: {
     Basic: [...fieldPropertyProps.editableProps.Basic],
     Condition: [...fieldPropertyProps.editableProps.Condition]

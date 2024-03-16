@@ -9,6 +9,7 @@ import { FORM_FIELD_TYPE } from '../constant/form-field-type.js';
 import { editableProps, helperText, readOnly, minProps, maxProps } from '../constant/field-property-props.js';
 import Label from './label.js';
 import useMinMaxInput from '../custom-hooks/use-min-max-input.js';
+import { TextFill } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.TEXT_AREA;
 const TextArea = _ref => {
@@ -60,6 +61,7 @@ TextArea.config = {
   type,
   label: 'Text Area',
   group: 'basic-input',
+  icon: /*#__PURE__*/React.createElement(TextFill, null),
   editableProps: {
     Basic: [...editableProps.Basic, helperText],
     Condition: [...editableProps.Condition, readOnly]

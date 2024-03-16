@@ -11,6 +11,7 @@ var React = require('react');
 var react = require('@carbon/react');
 var formFieldType = require('../constant/form-field-type.js');
 var fieldPropertyProps = require('../constant/field-property-props.js');
+var iconsReact = require('@carbon/icons-react');
 
 const type = formFieldType.FORM_FIELD_TYPE.FILE_UPLOADER;
 const FileUploader = _ref => {
@@ -43,6 +44,7 @@ FileUploader.config = {
   type,
   label: 'File Uploader',
   group: 'basic-input',
+  icon: /*#__PURE__*/React.createElement(iconsReact.Upload, null),
   editableProps: fieldPropertyProps.editableProps,
   advanceProps: []
 };

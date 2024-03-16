@@ -13,6 +13,7 @@ var formFieldType = require('../constant/form-field-type.js');
 var fieldPropertyProps = require('../constant/field-property-props.js');
 var label = require('./label.js');
 var useMinMaxInput = require('../custom-hooks/use-min-max-input.js');
+var iconsReact = require('@carbon/icons-react');
 
 const type = formFieldType.FORM_FIELD_TYPE.TEXT_AREA;
 const TextArea = _ref => {
@@ -64,6 +65,7 @@ TextArea.config = {
   type,
   label: 'Text Area',
   group: 'basic-input',
+  icon: /*#__PURE__*/React.createElement(iconsReact.TextFill, null),
   editableProps: {
     Basic: [...fieldPropertyProps.editableProps.Basic, fieldPropertyProps.helperText],
     Condition: [...fieldPropertyProps.editableProps.Condition, fieldPropertyProps.readOnly]

@@ -2,4 +2,8 @@
    PRIVATE LICENSE
    */
   
-export { formFields } from './form-fields/index.js';
+import { getFormFields } from './utils/form-field-helper.js';
+
+const componentMapper = getFormFields();
+
+export { componentMapper as default };

@@ -11,6 +11,7 @@ var React = require('react');
 var react = require('@carbon/react');
 var formFieldType = require('../constant/form-field-type.js');
 var fieldPropertyProps = require('../constant/field-property-props.js');
+var iconsReact = require('@carbon/icons-react');
 
 const type = formFieldType.FORM_FIELD_TYPE.BUTTON;
 const Button = _ref => {
@@ -34,6 +35,7 @@ Button.config = {
   type,
   label: 'Button',
   group: 'action',
+  icon: /*#__PURE__*/React.createElement(iconsReact.ButtonCentered, null),
   editableProps: {
     Basic: [...fieldPropertyProps.editableProps.Basic],
     Condition: [...fieldPropertyProps.editableProps.Condition]

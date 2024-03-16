@@ -8,6 +8,7 @@ import { RadioButtonGroup, RadioButton as RadioButton$1 } from '@carbon/react';
 import { FORM_FIELD_TYPE } from '../constant/form-field-type.js';
 import { editableProps } from '../constant/field-property-props.js';
 import Label from './label.js';
+import { RadioButtonChecked } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.RADIO;
 const RadioButton = _ref => {
@@ -39,6 +40,7 @@ RadioButton.config = {
   type,
   label: 'Radio Group',
   group: 'selection',
+  icon: /*#__PURE__*/React.createElement(RadioButtonChecked, null),
   editableProps: {
     Basic: [...editableProps.Basic],
     Condition: [...editableProps.Condition]

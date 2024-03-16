@@ -7,6 +7,7 @@ import React from 'react';
 import { FileUploader as FileUploader$1 } from '@carbon/react';
 import { FORM_FIELD_TYPE } from '../constant/form-field-type.js';
 import { editableProps } from '../constant/field-property-props.js';
+import { Upload } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.FILE_UPLOADER;
 const FileUploader = _ref => {
@@ -39,6 +40,7 @@ FileUploader.config = {
   type,
   label: 'File Uploader',
   group: 'basic-input',
+  icon: /*#__PURE__*/React.createElement(Upload, null),
   editableProps: editableProps,
   advanceProps: []
 };

@@ -8,6 +8,7 @@ import { Checkbox as Checkbox$1 } from '@carbon/react';
 import { FORM_FIELD_TYPE } from '../constant/form-field-type.js';
 import { editableProps, helperText, readOnly } from '../constant/field-property-props.js';
 import Label from './label.js';
+import { CheckboxCheckedFilled } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.CHECKBOX;
 const Checkbox = _ref => {
@@ -45,6 +46,7 @@ Checkbox.config = {
   type,
   label: 'Checkbox',
   group: 'selection',
+  icon: /*#__PURE__*/React.createElement(CheckboxCheckedFilled, null),
   editableProps: {
     Basic: [...editableProps.Basic, helperText],
     Condition: [...editableProps.Condition, readOnly]

@@ -11,6 +11,7 @@ var React = require('react');
 var react = require('@carbon/react');
 var formFieldType = require('../constant/form-field-type.js');
 var fieldPropertyProps = require('../constant/field-property-props.js');
+var iconsReact = require('@carbon/icons-react');
 var label = require('./label.js');
 
 const type = formFieldType.FORM_FIELD_TYPE.PASSWORD;
@@ -41,6 +42,7 @@ Password.config = {
   type,
   label: 'Password Input',
   group: 'basic-input',
+  icon: /*#__PURE__*/React.createElement(iconsReact.Password, null),
   editableProps: {
     Basic: [...fieldPropertyProps.editableProps.Basic, fieldPropertyProps.helperText],
     Condition: [...fieldPropertyProps.editableProps.Condition]

@@ -8,6 +8,7 @@ import { DatePicker as DatePicker$1, DatePickerInput } from '@carbon/react';
 import { FORM_FIELD_TYPE } from '../constant/form-field-type.js';
 import { editableProps, helperText } from '../constant/field-property-props.js';
 import Label from './label.js';
+import { Calendar } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.DATEPICKER;
 const DatePicker = _ref => {
@@ -41,6 +42,7 @@ DatePicker.config = {
   type,
   label: 'DatePicker',
   group: 'basic-input',
+  icon: /*#__PURE__*/React.createElement(Calendar, null),
   editableProps: {
     Basic: [...editableProps.Basic, helperText],
     Condition: [...editableProps.Condition]

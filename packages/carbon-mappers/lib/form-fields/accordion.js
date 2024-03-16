@@ -11,6 +11,7 @@ var React = require('react');
 var react = require('@carbon/react');
 var formFieldType = require('../constant/form-field-type.js');
 var fieldPropertyProps = require('../constant/field-property-props.js');
+var iconsReact = require('@carbon/icons-react');
 
 var _p;
 const type = formFieldType.FORM_FIELD_TYPE.ACCORDION;
@@ -37,6 +38,7 @@ Accordion.config = {
   type,
   label: 'Accordion',
   group: 'panel',
+  icon: /*#__PURE__*/React.createElement(iconsReact.Plan, null),
   editableProps: fieldPropertyProps.editableProps,
   advanceProps: []
 };

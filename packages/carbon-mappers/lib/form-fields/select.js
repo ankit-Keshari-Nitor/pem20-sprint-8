@@ -12,6 +12,7 @@ var react = require('@carbon/react');
 var formFieldType = require('../constant/form-field-type.js');
 var fieldPropertyProps = require('../constant/field-property-props.js');
 var label = require('./label.js');
+var iconsReact = require('@carbon/icons-react');
 
 var _SelectItem;
 const type = formFieldType.FORM_FIELD_TYPE.SELECT;
@@ -45,6 +46,7 @@ Select.config = {
   type,
   label: 'Select',
   group: 'selection',
+  icon: /*#__PURE__*/React.createElement(iconsReact.ListDropdown, null),
   editableProps: {
     Basic: [...fieldPropertyProps.editableProps.Basic, fieldPropertyProps.helperText],
     Condition: [...fieldPropertyProps.editableProps.Condition, fieldPropertyProps.readOnly]

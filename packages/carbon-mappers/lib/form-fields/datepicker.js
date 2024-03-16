@@ -12,6 +12,7 @@ var react = require('@carbon/react');
 var formFieldType = require('../constant/form-field-type.js');
 var fieldPropertyProps = require('../constant/field-property-props.js');
 var label = require('./label.js');
+var iconsReact = require('@carbon/icons-react');
 
 const type = formFieldType.FORM_FIELD_TYPE.DATEPICKER;
 const DatePicker = _ref => {
@@ -45,6 +46,7 @@ DatePicker.config = {
   type,
   label: 'DatePicker',
   group: 'basic-input',
+  icon: /*#__PURE__*/React.createElement(iconsReact.Calendar, null),
   editableProps: {
     Basic: [...fieldPropertyProps.editableProps.Basic, fieldPropertyProps.helperText],
     Condition: [...fieldPropertyProps.editableProps.Condition]

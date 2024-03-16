@@ -8,6 +8,7 @@ import { NumberInput as NumberInput$1 } from '@carbon/react';
 import { FORM_FIELD_TYPE } from '../constant/form-field-type.js';
 import { editableProps, helperText, readOnly, minProps, maxProps } from '../constant/field-property-props.js';
 import Label from './label.js';
+import { CharacterWholeNumber } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.NUMBER;
 const NumberInput = _ref => {
@@ -37,6 +38,7 @@ NumberInput.config = {
   type,
   label: 'Number',
   group: 'basic-input',
+  icon: /*#__PURE__*/React.createElement(CharacterWholeNumber, null),
   editableProps: {
     Basic: [...editableProps.Basic, helperText],
     Condition: [...editableProps.Condition, readOnly]

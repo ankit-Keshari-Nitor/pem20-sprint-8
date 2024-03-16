@@ -4,8 +4,10 @@
   
 'use strict';
 
-var index = require('./form-fields/index.js');
+Object.defineProperty(exports, '__esModule', { value: true });
 
+var formFieldHelper = require('./utils/form-field-helper.js');
 
+const componentMapper = formFieldHelper.getFormFields();
 
-exports.formFields = index.formFields;
+exports.default = componentMapper;

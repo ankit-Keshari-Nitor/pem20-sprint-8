@@ -7,6 +7,7 @@ import React from 'react';
 import { TextInput } from '@carbon/react';
 import { FORM_FIELD_TYPE } from '../constant/form-field-type.js';
 import { editableProps, helperText } from '../constant/field-property-props.js';
+import { Password as Password$1 } from '@carbon/icons-react';
 import Label from './label.js';
 
 const type = FORM_FIELD_TYPE.PASSWORD;
@@ -37,6 +38,7 @@ Password.config = {
   type,
   label: 'Password Input',
   group: 'basic-input',
+  icon: /*#__PURE__*/React.createElement(Password$1, null),
   editableProps: {
     Basic: [...editableProps.Basic, helperText],
     Condition: [...editableProps.Condition]

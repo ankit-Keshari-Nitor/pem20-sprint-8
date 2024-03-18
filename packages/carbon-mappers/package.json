@@ -2,11 +2,10 @@
   "name": "@b2bi/carbon-mappers",
   "version": "1.0.0",
   "description": "B2Bi Carbon Component mappers for DDF",
-  "main": "index.js",
+  "main": "es/index.js",
   "license": "Precisely License",
   "private": true,
   "dependencies": {
-    "@carbon/icons-react": "^11.36.0",
     "@carbon/react": "^1.51.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

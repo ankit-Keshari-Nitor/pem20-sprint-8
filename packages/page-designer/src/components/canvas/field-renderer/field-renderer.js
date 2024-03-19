@@ -15,7 +15,7 @@ const FieldRenderer = ({ field, removeFormField, getFormField }) => {
       <span className="delete-icon" onClick={() => removeFormField(field.id)}>
         <TrashCan />
       </span>
-      <FormFieldComponent {...field} />
+      <FormFieldComponent field={field} />
     </div>
   );
 };

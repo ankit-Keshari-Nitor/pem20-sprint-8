@@ -1,54 +1,54 @@
 .editor-container {
-    display: flex;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    margin: 0px 8px;
-  }
-  
-  .layout-container {
-    width: 100%;
-    display: flex;
-    flex: 1;
-  }
-  
-  .left-palette-container {
-    display: flex;
-    position: sticky;
-    flex-direction: column;
-    min-width: 270px;
-    max-height: calc(100vh - 56px);
-    overflow: auto;
-    background-color: #ffffff;
-    border: solid 1px hsl(225, 10%, 80%);
-  }
-  
-  .canvas-container {
-    flex: 1;
-    max-height: calc(100vh - 56px);
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
-    border: dotted 1px hsl(225, 10%, 80%);
-    margin: 0px 4px;
-  }
-  
-  .right-container {
-    display: flex;
-    position: sticky;
-    flex-direction: column;
-    min-width: 270px;
-    max-height: calc(100vh - 56px);
-    overflow: auto;
-    background-color: #ffffff;
-    border: solid 1px hsl(225, 10%, 80%);
-  }
-  
-  .ddf-div .cds--text-input-wrapper {
-    margin-bottom: 1rem;
-  }
-  
-  .ddf-div ul {
-    margin-top: 1rem;
-  }
-  
+  display: flex;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0px 8px;
+}
+
+.layout-container {
+  width: 100%;
+  display: flex;
+  flex: 1;
+}
+
+.left-palette-container {
+  display: flex;
+  position: sticky;
+  flex-direction: column;
+  min-width: 270px;
+  max-height: calc(100vh - 56px);
+  overflow: auto;
+  background-color: #ffffff;
+  border: solid 1px hsl(225, 10%, 80%);
+}
+
+.canvas-container {
+  flex: 1;
+  max-height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  border: dotted 1px hsl(225, 10%, 80%);
+  margin: 0px 4px;
+}
+
+.right-container {
+  display: flex;
+  position: sticky;
+  flex-direction: column;
+  min-width: 270px;
+  max-height: calc(100vh - 56px);
+  overflow: auto;
+  padding: 8px;
+  background-color: #ffffff;
+  border: solid 1px hsl(225, 10%, 80%);
+}
+
+.ddf-div .cds--text-input-wrapper {
+  margin-bottom: 1rem;
+}
+
+.ddf-div ul {
+  margin-top: 1rem;
+}

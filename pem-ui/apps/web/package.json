@@ -6,14 +6,14 @@
   "license": "Precisely License",
   "private": true,
   "dependencies": {
-    "@b2bi/shell": "file:../b2bi-ui-shared/packages/shell",
-    "@b2bi/styles": "file:../../../b2bi-ui-shared/packages/styles",
-    "@b2bi/ui-lib": "link:../../../b2bi-ui-shared/packages/ui-lib",
+    "@b2bi/shell": "file:../../../../b2bi-ui-shared/packages/shell",
+    "@b2bi/styles": "file:../../../../b2bi-ui-shared/packages/styles",
+    "@b2bi/ui-lib": "file:../../../../b2bi-ui-shared/packages/ui-lib",
     "@b2bi/page-designer": "1.0.0",
     "@b2bi/carbon-mappers": "1.0.0"
   },
   "devDependencies": {
-    "@b2bi/build": "link:../../../b2bi-ui-shared/packages/build-lib"
+    "@b2bi/build": "file:../../../../b2bi-ui-shared/packages/build-lib"
   },
   "scripts": {
     "prestart": "rm -rf node_modules/.cache",

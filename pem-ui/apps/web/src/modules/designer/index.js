@@ -15,7 +15,7 @@ const routes = [
     element: (
       <Shell.RoutePage resourceKey="PARTNERS.VIEW" dataLoaderConfig={{}}>
         <DndProvider backend={HTML5Backend}>
-          <Designer.Designer />
+        <Designer.Designer />
         </DndProvider>
       </Shell.RoutePage>
     )

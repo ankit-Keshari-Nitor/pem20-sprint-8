@@ -13,7 +13,7 @@ const sideNavConfig = [
   },
   {
     label: 'pem:sideNav.users',
-    to: '/directories/users',
+    to: '/directories/sponsor-users',
     title: 'pem:sideNav.users',
     resourceKey: 'USERS.VIEW'
   },

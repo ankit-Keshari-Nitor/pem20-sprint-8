@@ -104,6 +104,7 @@ const PageDesigner = ({ componentMapper }) => {
   };
 
   return (
+    
     <div className="PageDesigner-container">
       <div className="layout-container">
         <div className="left-palette-container">

@@ -8,8 +8,8 @@ export default function PropsPanel({ selectedFiledProps, handleSchemaChanges }) 
   const [advanceProps, setAdvanceProps] = React.useState([]);
 
   useEffect(() => {
-    setEditableProps(selectedFiledProps?.editableProps);
-    setAdvanceProps(selectedFiledProps?.advanceProps);
+    setEditableProps(selectedFiledProps?.component?.editableProps);
+    setAdvanceProps(selectedFiledProps?.component?.advanceProps);
   }, [selectedFiledProps]);
 
   return (
@@ -29,7 +29,7 @@ export default function PropsPanel({ selectedFiledProps, handleSchemaChanges }) 
                       className="right-palette-form-item "
                       labelText={item.label}
                       value={item.value}
-                      onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value)}
+                      onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value, selectedFiledProps?.currentPathDetail)}
                     />
                   ) : (
                     <ul key={idx}>
@@ -41,7 +41,7 @@ export default function PropsPanel({ selectedFiledProps, handleSchemaChanges }) 
                           labelText={item.label}
                           defaultToggled={item.value}
                           toggled={item.value}
-                          onClick={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, !item.value)}
+                          onClick={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, !item.value, selectedFiledProps?.currentPathDetail)}
                           hideLabel
                         />
                       </li>
@@ -65,7 +65,7 @@ export default function PropsPanel({ selectedFiledProps, handleSchemaChanges }) 
                     if (isNaN(e.target.value)) {
                       e.preventDefault();
                     } else {
-                      handleSchemaChanges(selectedFiledProps?.id, 'advance', advncProps.propsName, e.target.value);
+                      handleSchemaChanges(selectedFiledProps?.id, 'advance', advncProps.propsName, e.target.value, selectedFiledProps?.currentPathDetail);
                     }
                   }}
                 />

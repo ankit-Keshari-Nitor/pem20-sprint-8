@@ -1,2 +1,3 @@
-import PageDesigner from './container/page-designer';
-export default PageDesigner;
+import Designer from './components/designer';
+
+export default Designer;

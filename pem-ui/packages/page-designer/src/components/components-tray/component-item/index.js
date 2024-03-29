@@ -1,2 +1,3 @@
-import ComponentItem from './component-item';
+import ComponentItem from './component-tem';
+
 export default ComponentItem;

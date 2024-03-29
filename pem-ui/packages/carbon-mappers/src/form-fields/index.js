@@ -10,5 +10,7 @@ import Password from './password';
 import FileUploader from './file-upload';
 import Accordion from './accordion';
 import Link from './link';
+import Group from './group';
+import Tab from './tab';
 
-export const formFields = [Button, TextInput, Textarea, DatePicker, Checkbox, RadioButton, Select, NumberInput, Password, FileUploader, Accordion, Link];
+export const formFields = [Button, TextInput, Textarea, DatePicker, Checkbox, RadioButton, Select, NumberInput, Password, FileUploader, Group, Accordion];

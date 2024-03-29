@@ -5,14 +5,12 @@ import { Plan } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.ACCORDION;
 
-const Accordion = ({ field }) => {
-  const { id, type, labelText, ...rest } = field;
+const Accordion = ({ renderRow, row, currentPath }) => {
+  //const { id, type, labelText, ...rest } = field;
 
   return (
-    <CarbonAccordion data-testid={id} id={id} {...rest}>
-      <AccordionItem title={labelText}>
-        <p></p>
-      </AccordionItem>
+    <CarbonAccordion data-testid={'accordion-id'} id={'accordion-id'}>
+      <AccordionItem title={'Accordion-title'}>{renderRow(row, currentPath, renderRow)}</AccordionItem>
     </CarbonAccordion>
   );
 };

@@ -6,8 +6,8 @@ import { CheckboxCheckedFilled } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.CHECKBOX;
 
-const Checkbox = ({ field }) => {
-  const { id, type, labelText, isRequired, ...rest } = field;
+const Checkbox = ({ field, id }) => {
+  const {type, labelText, isRequired, ...rest } = field;
   const [isChecked, setIsChecked] = useState(false);
 
   return (

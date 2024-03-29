@@ -3,7 +3,7 @@ export const editableProps = {
     {
       propsName: 'labelText',
       label: 'Label',
-      value: 'Text Input'
+      value: 'Label Text'
     }
   ],
   Condition: [

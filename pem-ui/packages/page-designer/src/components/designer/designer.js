@@ -73,8 +73,8 @@ export default function Designer({ componentMapper }) {
 
   const selectedField = (e, componentDetail, currentPathDetail) => {
     e.stopPropagation();
-    console.log('componentDetail', componentDetail);
-    let filedTypeConfig = componentMapper[componentDetail.component.type].config;
+    if(componentDetail.type === COMPONENT){
+      let filedTypeConfig = componentMapper[componentDetail.component.type].config;
     let fieldData = findById(layout, componentDetail.id);
 
     filedTypeConfig?.editableProps?.Basic.map((basicEditPops) => {
@@ -101,18 +101,20 @@ export default function Designer({ componentMapper }) {
       }
     });
 
-    function findById(array, id) {
-      for (const item of array) {
-        if (item.id === id) return item;
-        if (item.children?.length) {
-          const innerResult = findById(item.children, id);
-          if (innerResult) return innerResult;
-        }
+    setSelectedFiledProps({ id: componentDetail.id, type: componentDetail.type, component: { ...filedTypeConfig }, currentPathDetail: currentPathDetail });
+  
+    }
+    };
+
+  function findById(array, id) {
+    for (const item of array) {
+      if (item.id === id) return item;
+      if (item.children?.length) {
+        const innerResult = findById(item.children, id);
+        if (innerResult) return innerResult;
       }
     }
-
-    setSelectedFiledProps({ id: componentDetail.id, type: componentDetail.type, component: { ...filedTypeConfig }, currentPathDetail: currentPathDetail });
-  };
+  }
 
   const handleSchemaChanges = (id, key, propsName, newValue, currentPathDetail) => {
     const componentPosition = currentPathDetail.split('-');

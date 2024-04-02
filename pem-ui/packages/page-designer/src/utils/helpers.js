@@ -206,7 +206,7 @@ export const handleMoveToDifferentParent = (layout, splitDropZonePath, splitItem
 
 export const handleMoveSidebarComponentIntoParent = (layout, splitDropZonePath, item) => {
   let newLayoutStructure;
-  if (item.component.type === GROUP || item.component.type === ACCORDION) {
+  if (item.component.type === GROUP) {
     switch (splitDropZonePath.length) {
       case 1: {
         newLayoutStructure = {
@@ -244,12 +244,12 @@ export const handleMoveSidebarComponentIntoParent = (layout, splitDropZonePath, 
       }
     }
   } else {
-    if (item.component.type === GROUP || item.component.type === ACCORDION) {
+    if (item.component.type === GROUP) {
       newLayoutStructure = {
         maintype: item.component.type,
         ...item
       };
-    } else if (item.component.type === TAB) {
+    } else if (item.component.type === TAB || item.component.type === ACCORDION) {
       newLayoutStructure = {
         id: uuid(),
         type: TAB,

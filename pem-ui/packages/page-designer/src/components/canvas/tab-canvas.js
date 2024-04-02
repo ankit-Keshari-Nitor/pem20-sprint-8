@@ -6,11 +6,19 @@ const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, selectedFie
   const renderComponent = (component, currentPath, renderRow) => {
     return (
       <div
-        onClick={() => {
-          selectedField(component, currentPath);
+        onClick={(e) => {
+          selectedField(e, component, currentPath);
         }}
       >
-        <FieldRenderer key={component.id} data={component} path={currentPath} componentMapper={componentMapper} renderRow={renderRow} handleDrop={handleDrop} />
+        <FieldRenderer
+          key={component.id}
+          data={component}
+          path={currentPath}
+          componentMapper={componentMapper}
+          renderRow={renderRow}
+          handleDrop={handleDrop}
+          selectedField={selectedField}
+        />
       </div>
     );
   };

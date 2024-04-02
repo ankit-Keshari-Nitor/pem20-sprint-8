@@ -4,16 +4,15 @@ import { FORM_FIELD_TYPE, editableProps } from '../constant';
 import { Plan } from '@carbon/icons-react';
 import TabCanvas from '../../../page-designer/src/components/canvas/tab-canvas';
 
-
 const type = FORM_FIELD_TYPE.ACCORDION;
 
-const Accordion = ({ renderRow, row, currentPath, handleDrop, componentMapper }) => {
+const Accordion = ({ renderRow, row, currentPath, handleDrop, componentMapper, selectedField }) => {
   //const { id, type, labelText, ...rest } = field;
 
   return (
     <CarbonAccordion data-testid={'accordion-id'} id={'accordion-id'}>
       <AccordionItem title={'Accordion-title'}>
-        <TabCanvas layout={row.children} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} path={currentPath} />
+        <TabCanvas layout={row.children} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} path={currentPath} selectedField={selectedField} />
       </AccordionItem>
     </CarbonAccordion>
   );

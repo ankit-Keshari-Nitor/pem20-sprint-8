@@ -18,6 +18,7 @@ export default function Canvas({ layout, handleDrop, renderRow, componentMapper,
           renderRow={renderRow}
           handleDrop={handleDrop}
           deleteFormField={deleteFormField}
+          selectedField={selectedField}
         />
       </div>
     );

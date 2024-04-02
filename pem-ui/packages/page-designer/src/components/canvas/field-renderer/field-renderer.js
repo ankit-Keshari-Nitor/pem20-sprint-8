@@ -5,7 +5,7 @@ import { TrashCan } from '@carbon/icons-react';
 import './field-renderer.scss';
 import { COMPONENT } from '../../../constants/constants';
 
-const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, deleteFormField }) => {
+const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, deleteFormField, selectedField }) => {
   let compent_type;
   var isNestedBlock = false;
   if (data.maintype) {
@@ -39,7 +39,7 @@ const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, del
             <TrashCan onClick={(e) => deleteFormField(e, path)} />
           </span>
           {isNestedBlock ? (
-            <FormFieldComponent renderRow={renderRow} row={data} currentPath={path} handleDrop={handleDrop} componentMapper={componentMapper} />
+            <FormFieldComponent renderRow={renderRow} row={data} currentPath={path} handleDrop={handleDrop} componentMapper={componentMapper} selectedField={selectedField} />
           ) : (
             <FormFieldComponent field={data.component} id={data.id} />
           )}

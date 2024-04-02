@@ -29,7 +29,15 @@ const Column = ({ data, handleDrop, path, componentMapper, selectedField, render
           selectedField(e, component, currentPath);
         }}
       >
-        <FieldRenderer key={component.id} data={component} path={currentPath} componentMapper={componentMapper} renderRow={renderRow} deleteFormField={deleteFormField} />
+        <FieldRenderer
+          key={component.id}
+          data={component}
+          path={currentPath}
+          componentMapper={componentMapper}
+          renderRow={renderRow}
+          deleteFormField={deleteFormField}
+          selectedField={selectedField}
+        />
       </div>
     );
   };

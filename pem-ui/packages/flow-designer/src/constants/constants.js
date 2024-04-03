@@ -1,7 +1,7 @@
 import {
   PartnerBlockIcon,
   CustomBlockIcon, SponsorBlockIcon, SystemBlockIcon, ApprovalBlockIcon, AttributeBlockIcon, GatewayBlockIcon
-} from './assets/icons'
+} from '../assets/icons'
 
 export const NODE_TYPES = [
   {

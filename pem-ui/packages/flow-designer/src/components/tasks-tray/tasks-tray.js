@@ -1,6 +1,6 @@
 import React from "react";
 import "./tasks-tray.css";
-import { NODE_TYPES } from "../../constants";
+import { NODE_TYPES } from "../../constants/constants";
 
 export const TasksTray = () => {
   const onDragStart = (event, nodeType) => {

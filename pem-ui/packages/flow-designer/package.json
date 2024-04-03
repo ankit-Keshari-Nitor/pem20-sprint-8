@@ -2,6 +2,7 @@
   "name": "@b2bi/flow-designer",
   "description": "Workflow/Activity Designer",
   "version": "0.1.0",
+  "main": "es/index.js",
   "private": true,
   "dependencies": {
     "@carbon/react": "^1.51.1",

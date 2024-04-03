@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import { Accordion, AccordionItem, Toggle, TextInput, Dropdown, Button, Select, SelectItem } from '@carbon/react';
+import { Accordion, AccordionItem, Toggle, TextInput, Button, Select, SelectItem } from '@carbon/react';
 
 import './props-panel.scss';
 import { ROW } from '../../constants/constants';
-import { findChildComponentById } from '../../utils/helpers';
 
 export default function PropsPanel({ selectedFiledProps, handleSchemaChanges, columnSizeCustomization }) {
   const [editableProps, setEditableProps] = React.useState({});

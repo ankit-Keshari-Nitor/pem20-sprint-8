@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { ROW } from '../constants/constants';
-import DropZone from './DropZone';
 import Column from './Column';
 import { Grid, Column as Carboncolumn } from '@carbon/react';
 

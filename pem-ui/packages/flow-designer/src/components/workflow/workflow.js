@@ -90,4 +90,4 @@ const Workflow = () => {
   );
 };
 
-export default DnDFlow;
+export default Workflow;

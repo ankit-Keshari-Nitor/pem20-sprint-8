@@ -7,12 +7,15 @@ import { COMPONENT } from '../../../constants/constants';
 
 const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, deleteFormField, selectedField }) => {
   let compent_type;
+  let dragItem;
   var isNestedBlock = false;
   if (data.maintype) {
     compent_type = data.maintype;
     isNestedBlock = true;
+    dragItem = { path, ...data };
   } else {
     compent_type = data.component.type;
+    dragItem = { type: COMPONENT, id: data.id, path, component: data.component };
   }
   const FormFieldComponent = componentMapper[compent_type];
 
@@ -23,7 +26,7 @@ const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, del
   const ref = useRef(null);
 
   const [{ isDragging }, drag] = useDrag({
-    item: { type: COMPONENT, id: data.id, path, component: data.component },
+    item: dragItem,
     collect: (monitor) => ({
       isDragging: monitor.isDragging()
     })
@@ -39,7 +42,15 @@ const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, del
             <TrashCan onClick={(e) => deleteFormField(e, path)} />
           </span>
           {isNestedBlock ? (
-            <FormFieldComponent renderRow={renderRow} row={data} currentPath={path} handleDrop={handleDrop} componentMapper={componentMapper} selectedField={selectedField} />
+            <FormFieldComponent
+              renderRow={renderRow}
+              row={data}
+              currentPath={path}
+              handleDrop={handleDrop}
+              componentMapper={componentMapper}
+              selectedField={selectedField}
+              deleteFormField={deleteFormField}
+            />
           ) : (
             <FormFieldComponent field={data.component} id={data.id} />
           )}

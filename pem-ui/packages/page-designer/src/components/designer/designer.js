@@ -7,8 +7,16 @@ import Canvas from '../canvas';
 import ComponentsTray from '../components-tray/components-tray';
 import PropsPanel from '../props-panel/props-panel';
 
-import { handleMoveWithinParent, handleMoveToDifferentParent, handleMoveSidebarComponentIntoParent, handleRemoveItemFromLayout, updateChildToChildren } from '../../utils/helpers';
-import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA } from '../../constants/constants';
+import {
+  handleMoveWithinParent,
+  handleMoveToDifferentParent,
+  handleMoveSidebarComponentIntoParent,
+  handleRemoveItemFromLayout,
+  updateChildToChildren,
+  addChildToChildren,
+  findChildComponentById
+} from '../../utils/helpers';
+import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION } from '../../constants/constants';
 
 export default function Designer({ componentMapper }) {
   const initialLayout = INITIAL_DATA.layout;
@@ -16,13 +24,17 @@ export default function Designer({ componentMapper }) {
   const [layout, setLayout] = useState(initialLayout);
   const [components, setComponents] = useState(initialComponents);
   const [selectedFiledProps, setSelectedFiledProps] = useState();
+  const [showSchema, setSowSchema] = useState(false);
 
   const handleDrop = useCallback(
     (dropZone, item) => {
       const splitDropZonePath = dropZone.path.split('-');
       const pathToDropZone = splitDropZonePath.slice(0, -1).join('-');
 
-      const newItem = { id: item.id, type: item.type, component: item.component };
+      let newItem = { id: item.id, type: item.type, component: item.component };
+      if (item.maintype) {
+        newItem = { id: item.id, type: item.type, maintype: item.maintype, children: item.children };
+      }
       if (item.type === COLUMN) {
         newItem.children = item.children;
       }
@@ -64,7 +76,6 @@ export default function Designer({ componentMapper }) {
         setLayout(handleMoveToDifferentParent(layout, splitDropZonePath, splitItemPath, newItem));
         return;
       }
-
       // 3. Move + Create
       setLayout(handleMoveToDifferentParent(layout, splitDropZonePath, splitItemPath, newItem));
     },
@@ -73,68 +84,78 @@ export default function Designer({ componentMapper }) {
 
   const selectedField = (e, componentDetail, currentPathDetail) => {
     e.stopPropagation();
-    if(componentDetail.type === COMPONENT){
-      let filedTypeConfig = componentMapper[componentDetail.component.type].config;
-    let fieldData = findById(layout, componentDetail.id);
 
-    filedTypeConfig?.editableProps?.Basic.map((basicEditPops) => {
-      if (fieldData.component[basicEditPops.propsName]) {
-        return (basicEditPops.value = fieldData.component[basicEditPops?.propsName]);
+    let filedTypeConfig;
+    if (componentDetail.type === COMPONENT || componentDetail.type === ACCORDION) {
+      if (componentDetail.maintype) {
+        filedTypeConfig = componentMapper[componentDetail.maintype].config;
       } else {
-        return (basicEditPops.value = '');
+        filedTypeConfig = componentMapper[componentDetail.component.type].config;
       }
-    });
+      let fieldData = findChildComponentById(layout, componentDetail.id);
 
-    filedTypeConfig?.editableProps?.Condition?.map((conditionEditPops) => {
-      if (fieldData.component[conditionEditPops.propsName]) {
-        return (conditionEditPops.value = fieldData.component[conditionEditPops?.propsName]);
-      } else {
-        return (conditionEditPops.value = false);
-      }
-    });
+      filedTypeConfig?.editableProps?.Basic.map((basicEditPops) => {
+        if (fieldData.component[basicEditPops.propsName]) {
+          return (basicEditPops.value = fieldData.component[basicEditPops?.propsName]);
+        } else {
+          return (basicEditPops.value = '');
+        }
+      });
 
-    filedTypeConfig?.advanceProps.map((advancePops) => {
-      if (fieldData.component[advancePops.propsName]) {
-        return (advancePops.value = fieldData.component[advancePops?.propsName]);
-      } else {
-        return (advancePops.value = '');
-      }
-    });
+      filedTypeConfig?.editableProps?.Condition?.map((conditionEditPops) => {
+        if (fieldData.component[conditionEditPops.propsName]) {
+          return (conditionEditPops.value = fieldData.component[conditionEditPops?.propsName]);
+        } else {
+          return (conditionEditPops.value = false);
+        }
+      });
 
-    setSelectedFiledProps({ id: componentDetail.id, type: componentDetail.type, component: { ...filedTypeConfig }, currentPathDetail: currentPathDetail });
-  
-    }
-    };
-
-  function findById(array, id) {
-    for (const item of array) {
-      if (item.id === id) return item;
-      if (item.children?.length) {
-        const innerResult = findById(item.children, id);
-        if (innerResult) return innerResult;
-      }
-    }
-  }
-
-  const handleSchemaChanges = (id, key, propsName, newValue, currentPathDetail) => {
-    const componentPosition = currentPathDetail.split('-');
-    let objCopy = selectedFiledProps;
-    if (key !== 'advance') {
-      objCopy.component.editableProps[key].map((config) => {
-        if (config.propsName === propsName) {
-          config.value = newValue;
+      filedTypeConfig?.advanceProps.map((advancePops) => {
+        if (fieldData.component[advancePops.propsName]) {
+          return (advancePops.value = fieldData.component[advancePops?.propsName]);
+        } else {
+          return (advancePops.value = '');
         }
       });
     } else {
-      objCopy.component.advanceProps.map((config) => {
-        if (config.propsName === propsName) {
-          config.value = newValue;
-        }
-      });
+      if (componentDetail.type === COLUMN) {
+        const size = componentDetail.customsize ? componentDetail.customsize : componentDetail.defaultsize;
+        filedTypeConfig = { ...componentDetail, style: [{ labelText: 'Column Size', text: size }], currentPathDetail: currentPathDetail };
+      }
     }
-    setSelectedFiledProps({ ...objCopy });
-    const newLayout = updateChildToChildren(layout, componentPosition, propsName, newValue);
+    setSelectedFiledProps({ id: componentDetail.id, type: componentDetail.type, component: { ...filedTypeConfig }, currentPathDetail: currentPathDetail });
+  };
+
+  const columnSizeCustomization = (colsize, path) => {
+    const newLayout = updateChildToChildren(layout, path.split('-'), 'customsize', colsize);
     setLayout([...newLayout]);
+  };
+
+  const handleSchemaChanges = (id, key, propsName, newValue, currentPathDetail) => {
+    const componentPosition = currentPathDetail.split('-');
+    if (key === 'customColumn') {
+      componentPosition.push('0');
+      const newLayout = addChildToChildren(layout, componentPosition, [], '7');
+      setLayout([...newLayout]);
+    } else {
+      let objCopy = selectedFiledProps;
+      if (key !== 'advance') {
+        objCopy.component.editableProps[key].map((config) => {
+          if (config.propsName === propsName) {
+            config.value = newValue;
+          }
+        });
+      } else {
+        objCopy.component.advanceProps.map((config) => {
+          if (config.propsName === propsName) {
+            config.value = newValue;
+          }
+        });
+      }
+      setSelectedFiledProps({ ...objCopy });
+      const newLayout = updateChildToChildren(layout, componentPosition, propsName, newValue);
+      setLayout([...newLayout]);
+    }
   };
 
   const deleteFormField = (e, path) => {
@@ -162,7 +183,6 @@ export default function Designer({ componentMapper }) {
   return (
     <div className="designer-container">
       <div className="layout-container">
-        {/* TopNav Will come her */}
         <div className="leftSideBar">
           <ComponentsTray componentMapper={componentMapper} />
         </div>
@@ -170,7 +190,7 @@ export default function Designer({ componentMapper }) {
           <Canvas layout={layout} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} selectedField={selectedField} deleteFormField={deleteFormField} />
         </div>
         <div className="rightSideBar">
-          <PropsPanel selectedFiledProps={selectedFiledProps} handleSchemaChanges={handleSchemaChanges} />
+          <PropsPanel selectedFiledProps={selectedFiledProps} handleSchemaChanges={handleSchemaChanges} columnSizeCustomization={columnSizeCustomization} />
         </div>
       </div>
     </div>

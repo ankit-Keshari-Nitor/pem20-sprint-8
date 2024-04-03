@@ -35,6 +35,7 @@ const Column = ({ data, handleDrop, path, componentMapper, selectedField, render
           path={currentPath}
           componentMapper={componentMapper}
           renderRow={renderRow}
+          handleDrop={handleDrop}
           deleteFormField={deleteFormField}
           selectedField={selectedField}
         />

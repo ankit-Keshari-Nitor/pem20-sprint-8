@@ -27,7 +27,11 @@ export const insert = (arr, index, newItem) => [
 ];
 
 export const update = (arr, index, propsName, newValue) => {
-  arr[index].component[propsName] = newValue;
+  if (arr[index].component) {
+    arr[index].component[propsName] = newValue;
+  } else {
+    arr[index][propsName] = newValue;
+  }
   return arr;
 };
 
@@ -83,7 +87,8 @@ export const addChildToChildren = (children, splitDropZonePath, item) => {
       newLayoutStructure = {
         type: COLUMN,
         id: uuid(),
-        children: [item]
+        defaultsize: '4',
+        children: item.length ? [item] : []
       };
     }
     return insert(children, dropZoneIndex, newLayoutStructure);
@@ -213,7 +218,7 @@ export const handleMoveSidebarComponentIntoParent = (layout, splitDropZonePath, 
           type: ROW,
           id: uuid(),
           maintype: item.component.type,
-          children: [{ type: COLUMN, id: uuid(), children: [] }]
+          children: [{ type: COLUMN, id: uuid(), defaultsize: '16', children: [] }]
         };
         break;
       }
@@ -252,9 +257,10 @@ export const handleMoveSidebarComponentIntoParent = (layout, splitDropZonePath, 
     } else if (item.component.type === TAB || item.component.type === ACCORDION) {
       newLayoutStructure = {
         id: uuid(),
-        type: TAB,
+        type: item.component.type,
         maintype: item.component.type,
-        children: []
+        children: [],
+        component: item.component
       };
     } else {
       newLayoutStructure = {
@@ -287,4 +293,32 @@ export const getFormFieldDetails = (path, layout) => {
     }
   }
   return res;
+};
+
+export const convertComponent = (layout) => {
+  let schema = [];
+  layout.forEach((layoutItem) => {
+    if (layoutItem.type === 'component') {
+      schema.push({ id: layoutItem.id });
+    }
+    if (layoutItem.children) {
+      convertComponent(layoutItem.children);
+    }
+  });
+  return schema;
+};
+
+export const convertToSchema = (state) => {
+  const schema = convertComponent(state.layout);
+  return schema;
+};
+
+export const findChildComponentById = (array, id) => {
+  for (const item of array) {
+    if (item.id === id) return item;
+    if (item.children?.length) {
+      const innerResult = findChildComponentById(item.children, id);
+      if (innerResult) return innerResult;
+    }
+  }
 };

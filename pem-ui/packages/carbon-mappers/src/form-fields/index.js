@@ -13,4 +13,4 @@ import Link from './link';
 import Group from './group';
 import Tab from './tab';
 
-export const formFields = [Button, TextInput, Textarea, DatePicker, Checkbox, RadioButton, Select, NumberInput, Password, FileUploader, Group, Accordion];
+export const formFields = [Button, TextInput, Textarea, DatePicker, Checkbox, RadioButton, Select, NumberInput, Password, FileUploader, Group, Accordion, Tab];

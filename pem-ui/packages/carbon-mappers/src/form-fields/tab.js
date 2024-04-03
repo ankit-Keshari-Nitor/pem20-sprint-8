@@ -6,7 +6,7 @@ import TabCanvas from '../../../page-designer/src/components/canvas/tab-canvas';
 
 const type = FORM_FIELD_TYPE.TAB;
 
-const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, selectedField }) => {
+const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, selectedField, deleteFormField }) => {
   return (
     <Tabs>
       <TabList aria-label="List of tabs" activation="manual">
@@ -14,7 +14,15 @@ const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, s
       </TabList>
       <TabPanels>
         <TabPanel>
-          <TabCanvas layout={row.children} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} path={currentPath} selectedField={selectedField}/>
+          <TabCanvas
+            layout={row.children}
+            handleDrop={handleDrop}
+            renderRow={renderRow}
+            componentMapper={componentMapper}
+            path={currentPath}
+            selectedField={selectedField}
+            deleteFormField={deleteFormField}
+          />
         </TabPanel>
       </TabPanels>
     </Tabs>

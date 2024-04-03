@@ -17,6 +17,8 @@ import {
   findChildComponentById
 } from '../../utils/helpers';
 import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION } from '../../constants/constants';
+import ViewSchema from './../view-schema';
+import { Modal } from '@carbon/react';
 
 export default function Designer({ componentMapper }) {
   const initialLayout = INITIAL_DATA.layout;
@@ -25,6 +27,7 @@ export default function Designer({ componentMapper }) {
   const [components, setComponents] = useState(initialComponents);
   const [selectedFiledProps, setSelectedFiledProps] = useState();
   const [showSchema, setSowSchema] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDrop = useCallback(
     (dropZone, item) => {
@@ -181,18 +184,30 @@ export default function Designer({ componentMapper }) {
   };
 
   return (
-    <div className="designer-container">
-      <div className="layout-container">
-        <div className="leftSideBar">
-          <ComponentsTray componentMapper={componentMapper} />
-        </div>
-        <div className="pageContainer">
-          <Canvas layout={layout} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} selectedField={selectedField} deleteFormField={deleteFormField} />
-        </div>
-        <div className="rightSideBar">
-          <PropsPanel selectedFiledProps={selectedFiledProps} handleSchemaChanges={handleSchemaChanges} columnSizeCustomization={columnSizeCustomization} />
+    <>
+      <div className="designer-container">
+        <div className="layout-container">
+          <div className="leftSideBar">
+            <ComponentsTray componentMapper={componentMapper} setOpen={setOpen} />
+          </div>
+          <div className="pageContainer">
+            <Canvas
+              layout={layout}
+              handleDrop={handleDrop}
+              renderRow={renderRow}
+              componentMapper={componentMapper}
+              selectedField={selectedField}
+              deleteFormField={deleteFormField}
+            />
+          </div>
+          <div className="rightSideBar">
+            <PropsPanel selectedFiledProps={selectedFiledProps} handleSchemaChanges={handleSchemaChanges} columnSizeCustomization={columnSizeCustomization} />
+          </div>
         </div>
       </div>
-    </div>
+      <Modal open={open} onRequestClose={() => setOpen(false)} passiveModal modalLabel="Schema" primaryButtonText="Close" secondaryButtonText="Cancel">
+        <ViewSchema layout={layout} />
+      </Modal>
+    </>
   );
 }

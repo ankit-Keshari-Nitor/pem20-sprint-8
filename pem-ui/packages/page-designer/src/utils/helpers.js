@@ -295,14 +295,40 @@ export const getFormFieldDetails = (path, layout) => {
   return res;
 };
 
+const convertChildrenToComponent = (children) => {
+  let childrenSchema = [];
+  children.forEach((child) => {
+    childrenSchema.push({
+      id: child.id,
+      type: child.component.type,
+      labelText: child.component.labelText,
+      helperText: child.component.helperText,
+      disabled: child.component.disabled,
+      isRequired: child.component.isRequired,
+      readOnly: child.component.readOnly
+    });
+  });
+  return childrenSchema;
+};
+
 export const convertComponent = (layout) => {
   let schema = [];
   layout.forEach((layoutItem) => {
-    if (layoutItem.type === 'component') {
-      schema.push({ id: layoutItem.id });
+    if (layoutItem.type === COMPONENT) {
+      schema.push({
+        id: layoutItem.id,
+        type: layoutItem.component.type,
+        labelText: layoutItem.component.labelText,
+        helperText: layoutItem.component.helperText,
+        disabled: layoutItem.component.disabled,
+        isRequired: layoutItem.component.isRequired,
+        readOnly: layoutItem.component.readOnly
+      });
     }
-    if (layoutItem.children) {
-      convertComponent(layoutItem.children);
+    if (layoutItem.maintype === GROUP) {
+      if (layoutItem.children) {
+        schema.push(convertChildrenToComponent(layoutItem.children[0].children));
+      }
     }
   });
   return schema;

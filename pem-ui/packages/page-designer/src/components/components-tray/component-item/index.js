@@ -1,3 +1,3 @@
-import ComponentItem from './component-tem';
+import ComponentItem from './component-item';
 
 export default ComponentItem;

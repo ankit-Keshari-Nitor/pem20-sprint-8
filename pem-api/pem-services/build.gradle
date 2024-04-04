@@ -10,6 +10,15 @@ repositories {
 }
 
 dependencies {
+    implementation project(":pem-entity")
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '3.1.0'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.1.0'
+    implementation 'org.springframework:spring-web:6.0.18'
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.3.0'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.0'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: '3.1.0'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

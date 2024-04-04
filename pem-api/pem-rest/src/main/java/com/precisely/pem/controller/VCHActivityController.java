@@ -1,20 +1,28 @@
 package com.precisely.pem.controller;
 
 import com.precisely.pem.dtos.responses.VCHCreateActivityDefinitionResp;
+import com.precisely.pem.services.VCHActivityDefinitionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 @Tag(name = "Activity Definition", description = "Activity Definition management APIs")
 @RequestMapping("/sponsors/{sponsorContext}")
 @RestController
 public class VCHActivityController {
+    @Autowired
+    VCHActivityDefinitionService vchActivityDefinitionService;
+
     @Operation(summary = "Create an Activity Definition")
     @ApiResponses({
             @ApiResponse(responseCode = "201", content = {
@@ -27,9 +35,7 @@ public class VCHActivityController {
                                                                     @RequestParam(value = "description", required = false) String description,
                                                                     @RequestParam(value = "file") MultipartFile file,
                                                                     @RequestParam(value = "application", defaultValue = "PEM") String app,
-                                                                    @PathVariable(value = "sponsorContext")String sponsorContext){
-
-
-        return null;
+                                                                    @PathVariable(value = "sponsorContext")String sponsorContext) throws IOException, SQLException {
+        return vchActivityDefinitionService.createActivityDefinition(sponsorContext, name, description, file, app);
     }
 }

@@ -4,25 +4,25 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Blob;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "vch_activity_defn_data")
+@Table(name = "VCH_ACTIVITY_DEFN_DATA")
 public class VCHActivityDefnData {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="ACTIVITY_DEFN_DATA_KEY")
-    private UUID activityDefnDataKey;
+    private String activityDefnDataKey;
     @Column(name="DEF_DATA")
     private Blob defData;
     @Column(name="CREATE_TS")
-    private Date createTs;
+    private LocalDateTime createTs;
     @Column(name="CREATED_BY")
     private String createdBy;
     @Column(name="MODIFY_TS")
-    private Date modifyTs;
+    private LocalDateTime modifyTs;
     @Column(name="MODIFIED_BY")
     private String modifiedBy;
 }

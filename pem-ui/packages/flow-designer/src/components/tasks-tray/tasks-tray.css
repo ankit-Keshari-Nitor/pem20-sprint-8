@@ -1,6 +1,29 @@
-.palette-field {
+.task-tray-aside {
+  background: #eeeeee;
+  padding-top: 12px;
+  border-radius: 0px 9px 9px 0px;
+}
+
+.dnd-node {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2px;
+  margin-bottom: 12px;
+  cursor: grab;
+}
+
+.dnd-node.input {
+  border-color: #0041d0;
+}
+
+.dnd-node.output {
+  border-color: #ff0072;
+}
+
+.dnd-node-field {
   width: 72px;
-  height: 50px;
+  height: 48px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -8,26 +31,25 @@
   border: none;
   font-family: inherit;
   user-select: none;
-  outline: solid 1px hsl(225, 10%, 93%);
   outline-offset: 0px;
   transition: all ease-in-out 0.05s;
   cursor: grab;
+  background-color: #eeeeee;
 }
 
-.palette-field:focus {
-  outline: solid 1px hsl(205, 100%, 45%);
-}
-
-.palette-field-icon {
-  width: 48px;
-  height: 48px;
-  background-color: white;
+.dnd-node-field-icon {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 2px;
+  border-radius: 4px;
+  border: 1px solid #b5b5b5;
+  background-color: white;
 }
 
-.palette-field .palette-field-text {
+.dnd-node-field .dnd-node-field-text {
   width: inherit;
   font-family: IBM Plex Sans;
   font-size: 14px;

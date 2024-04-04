@@ -1,0 +1,7 @@
+.task-node-container {
+  background: #fff;
+  border-style: solid;
+  border-width: 1px 5px 1px 5px;
+  border-color: #d21cf0;
+  padding: 8px 3px 6px 3px;
+}

@@ -1,24 +1,9 @@
 import React from 'react';
-import {
-  BaseEdge,
-  EdgeLabelRenderer,
-  getBezierPath,
-  useReactFlow,
-} from 'reactflow';
+import { BaseEdge, EdgeLabelRenderer, getBezierPath, useReactFlow } from 'reactflow';
 
 import './custom-edge.css';
 
-export default function CustomEdge({
-  id,
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-  sourcePosition,
-  targetPosition,
-  style = {},
-  markerEnd,
-}) {
+export default function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = { stroke: '#000' }, markerEnd }) {
   const { setEdges } = useReactFlow();
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -26,7 +11,7 @@ export default function CustomEdge({
     sourcePosition,
     targetX,
     targetY,
-    targetPosition,
+    targetPosition
   });
 
   const onEdgeClick = () => {
@@ -42,13 +27,11 @@ export default function CustomEdge({
             position: 'absolute',
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             fontSize: 12,
-            // everything inside EdgeLabelRenderer has no pointer events by default
-            // if you have an interactive element, set pointer-events: all
-            pointerEvents: 'all',
+            pointerEvents: 'all'
           }}
           className="nodrag nopan"
         >
-          <button className="edgebutton" onClick={onEdgeClick}>
+          <button className="edge-button" onClick={onEdgeClick}>
             ×
           </button>
         </div>

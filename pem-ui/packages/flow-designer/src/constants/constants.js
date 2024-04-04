@@ -3,38 +3,55 @@ import { PartnerBlockIcon, CustomBlockIcon, SponsorBlockIcon, SystemBlockIcon, A
 
 export const NODE_TYPES = [
   {
-    nodeType: 'partner',
-    nodeLabel: 'Partner',
+    id: 'partner',
+    type: 'partner',
+    data: {
+      label: 'Partner'
+    },
     nodeIcon: <PartnerBlockIcon />
   },
   {
-    nodeType: 'approval',
-    nodeLabel: 'Approval',
+    id: 'approval',
+    type: 'approval',
+    data: {
+      label: 'Approval'
+    },
     nodeIcon: <ApprovalBlockIcon />
   },
   {
-    nodeType: 'attribute',
-    nodeLabel: 'Attribute',
-    nodeIcon: <ApprovalBlockIcon />
+    id: 'attribute',
+    type: 'attribute',
+    data: {
+      label: 'Attribute'
+    },
+    nodeIcon: <AttributeBlockIcon />
   },
   {
-    nodeType: 'sponsor',
-    nodeLabel: 'Sponsor',
+    id: 'sponsor',
+    type: 'sponsor',
+    data: {
+      label: 'Sponsor'
+    },
     nodeIcon: <SponsorBlockIcon />
   },
   {
-    nodeType: 'custom',
-    nodeLabel: 'Custom',
+    id: 'custom',
+    type: 'custom',
+    data: { label: 'Custom' },
     nodeIcon: <CustomBlockIcon />
   },
   {
-    nodeType: 'system',
-    nodeLabel: 'System',
+    id: 'system',
+    type: 'system',
+    data: { label: 'System' },
     nodeIcon: <SystemBlockIcon />
   },
   {
-    nodeType: 'gateway',
-    nodeLabel: 'Gateway',
+    id: 'gateway',
+    type: 'gateway',
+    data: {
+      label: 'Gateway'
+    },
     nodeIcon: <GatewayBlockIcon />
   }
 ];

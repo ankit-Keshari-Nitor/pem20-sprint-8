@@ -1,3 +1,3 @@
-import { TasksTray } from "./tasks-tray";
+import { TasksTray } from './tasks-tray';
 
 export default TasksTray;

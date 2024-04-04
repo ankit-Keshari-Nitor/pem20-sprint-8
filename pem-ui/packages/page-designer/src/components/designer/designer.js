@@ -14,9 +14,12 @@ import {
   handleRemoveItemFromLayout,
   updateChildToChildren,
   addChildToChildren,
-  findChildComponentById
+  findChildComponentById,
+  updateConfigChildToChildren
 } from '../../utils/helpers';
-import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION } from '../../constants/constants';
+import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, TAB, CUSTOM_COLUMN, CUSTOM_SIZE } from '../../constants/constants';
+import ViewSchema from './../view-schema';
+import { Modal } from '@carbon/react';
 
 export default function Designer({ componentMapper }) {
   const initialLayout = INITIAL_DATA.layout;
@@ -25,6 +28,7 @@ export default function Designer({ componentMapper }) {
   const [components, setComponents] = useState(initialComponents);
   const [selectedFiledProps, setSelectedFiledProps] = useState();
   const [showSchema, setSowSchema] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDrop = useCallback(
     (dropZone, item) => {
@@ -86,7 +90,7 @@ export default function Designer({ componentMapper }) {
     e.stopPropagation();
 
     let filedTypeConfig;
-    if (componentDetail.type === COMPONENT || componentDetail.type === ACCORDION) {
+    if (componentDetail.type === COMPONENT || componentDetail.type === ACCORDION || componentDetail.type === TAB) {
       if (componentDetail.maintype) {
         filedTypeConfig = componentMapper[componentDetail.maintype].config;
       } else {
@@ -127,15 +131,15 @@ export default function Designer({ componentMapper }) {
   };
 
   const columnSizeCustomization = (colsize, path) => {
-    const newLayout = updateChildToChildren(layout, path.split('-'), 'customsize', colsize);
+    const newLayout = updateChildToChildren(layout, path.split('-'), CUSTOM_SIZE, colsize);
     setLayout([...newLayout]);
   };
 
   const handleSchemaChanges = (id, key, propsName, newValue, currentPathDetail) => {
     const componentPosition = currentPathDetail.split('-');
-    if (key === 'customColumn') {
+    if (key === CUSTOM_COLUMN) {
       componentPosition.push('0');
-      const newLayout = addChildToChildren(layout, componentPosition, [], '7');
+      const newLayout = addChildToChildren(layout, componentPosition, []);
       setLayout([...newLayout]);
     } else {
       let objCopy = selectedFiledProps;
@@ -153,8 +157,7 @@ export default function Designer({ componentMapper }) {
         });
       }
       setSelectedFiledProps({ ...objCopy });
-      const newLayout = updateChildToChildren(layout, componentPosition, propsName, newValue);
-      setLayout([...newLayout]);
+      setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
     }
   };
 
@@ -181,18 +184,36 @@ export default function Designer({ componentMapper }) {
   };
 
   return (
-    <div className="designer-container">
-      <div className="layout-container">
-        <div className="leftSideBar">
-          <ComponentsTray componentMapper={componentMapper} />
-        </div>
-        <div className="pageContainer">
-          <Canvas layout={layout} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} selectedField={selectedField} deleteFormField={deleteFormField} />
-        </div>
-        <div className="rightSideBar">
-          <PropsPanel selectedFiledProps={selectedFiledProps} handleSchemaChanges={handleSchemaChanges} columnSizeCustomization={columnSizeCustomization} />
+    <>
+      <div className="designer-container">
+        <div className="layout-container">
+          <div className="leftSideBar">
+            <ComponentsTray componentMapper={componentMapper} setOpen={setOpen} />
+          </div>
+          <div className="pageContainer">
+            <Canvas
+              layout={layout}
+              handleDrop={handleDrop}
+              renderRow={renderRow}
+              componentMapper={componentMapper}
+              selectedField={selectedField}
+              deleteFormField={deleteFormField}
+            />
+          </div>
+          <div className="rightSideBar">
+            <PropsPanel
+              layout={layout}
+              selectedFiledProps={selectedFiledProps}
+              handleSchemaChanges={handleSchemaChanges}
+              columnSizeCustomization={columnSizeCustomization}
+              deleteFormField={deleteFormField}
+            />
+          </div>
         </div>
       </div>
-    </div>
+      <Modal open={open} onRequestClose={() => setOpen(false)} passiveModal modalLabel="Schema" primaryButtonText="Close" secondaryButtonText="Cancel">
+        <ViewSchema layout={layout} />
+      </Modal>
+    </>
   );
 }

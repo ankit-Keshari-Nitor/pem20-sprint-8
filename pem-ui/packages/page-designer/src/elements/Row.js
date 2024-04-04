@@ -6,7 +6,6 @@ import { Grid, Column as Carboncolumn } from '@carbon/react';
 
 const Row = ({ data, handleDrop, path, componentMapper, selectedField, renderRow, deleteFormField }) => {
   const ref = useRef(null);
-
   const [{ isDragging }, drag] = useDrag({
     item: {
       type: ROW,
@@ -25,7 +24,7 @@ const Row = ({ data, handleDrop, path, componentMapper, selectedField, renderRow
 
   const renderColumn = (column, currentPath, renderRow) => {
     return (
-      <Carboncolumn onClick={(e) => selectedField(e, column, currentPath)} lg={column.customsize ? column.customsize : column.defaultsize} style={{ border: '2px dotted' }}>
+      <Carboncolumn onClick={(e) => selectedField(e, column, currentPath)} lg={column.customsize ? column.customsize : column.defaultsize} className="column-zone">
         <Column
           key={column.id}
           data={column}
@@ -42,7 +41,7 @@ const Row = ({ data, handleDrop, path, componentMapper, selectedField, renderRow
   return (
     <div ref={ref} style={{ opacity }} className="base row">
       <div className="columns">
-        <Grid>
+        <Grid className="custom-grid">
           {data.children.map((column, index) => {
             const currentPath = `${path}-${index}`;
 

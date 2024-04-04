@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { Accordion, AccordionItem, Toggle, TextInput, Button, Select, SelectItem } from '@carbon/react';
 
 import './props-panel.scss';
-import { ROW } from '../../constants/constants';
+import { CUSTOM_COLUMN, ROW } from '../../constants/constants';
 
-export default function PropsPanel({ selectedFiledProps, handleSchemaChanges, columnSizeCustomization }) {
+export default function PropsPanel({ layout, selectedFiledProps, handleSchemaChanges, columnSizeCustomization, deleteFormField }) {
   const [editableProps, setEditableProps] = React.useState({});
   const [advanceProps, setAdvanceProps] = React.useState([]);
   const [componentStyle, setComponentStyle] = React.useState([]);
@@ -29,7 +29,7 @@ export default function PropsPanel({ selectedFiledProps, handleSchemaChanges, co
         {selectedFiledProps?.type === ROW && (
           <Button
             onClick={(e) => {
-              handleSchemaChanges(selectedFiledProps?.id, 'customColumn', '', 1, selectedFiledProps?.currentPathDetail);
+              handleSchemaChanges(selectedFiledProps?.id, CUSTOM_COLUMN, '', 1, selectedFiledProps?.currentPathDetail);
             }}
           >
             Add Column
@@ -109,6 +109,16 @@ export default function PropsPanel({ selectedFiledProps, handleSchemaChanges, co
                 </Select>
               );
             })}
+            {/* <div className="delete-column">
+              <Button
+                kind="danger--tertiary"
+                onClick={(e) => {
+                  deleteFormField(e, selectedFiledProps?.currentPathDetail);
+                }}
+              >
+                Delete Column
+              </Button>
+            </div> */}
           </AccordionItem>
         )}
       </Accordion>

@@ -1,2 +1,3 @@
-import ComponentTray from './components-tray';
-export default ComponentTray;
+import ComponentsTray from "./components-tray";
+
+export default ComponentsTray;

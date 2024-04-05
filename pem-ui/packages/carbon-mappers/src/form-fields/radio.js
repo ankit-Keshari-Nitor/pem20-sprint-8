@@ -6,8 +6,8 @@ import { RadioButtonChecked } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.RADIO;
 
-const RadioButton = ({ field }) => {
-  const { id, type, labelText, isRequired, ...rest } = field;
+const RadioButton = ({ field, id }) => {
+  const { type, labelText, isRequired, ...rest } = field;
 
   return (
     <>

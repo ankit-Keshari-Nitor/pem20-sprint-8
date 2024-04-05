@@ -1,8 +1,8 @@
 import React from 'react';
-import { DropZone } from '../../elements';
 import FieldRenderer from './field-renderer/field-renderer';
+import { DropZone } from '../../elements';
 
-export default function Canvas({ layout, handleDrop, renderRow, componentMapper, selectedField, deleteFormField }) {
+const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, selectedField, deleteFormField, path }) => {
   const renderComponent = (component, currentPath, renderRow) => {
     return (
       <div
@@ -27,7 +27,7 @@ export default function Canvas({ layout, handleDrop, renderRow, componentMapper,
   return (
     <>
       {layout.map((component, index) => {
-        const currentPath = `${index}`;
+        const currentPath = `${path}-${index}`;
         return (
           <React.Fragment key={component.id}>
             <DropZone
@@ -44,7 +44,7 @@ export default function Canvas({ layout, handleDrop, renderRow, componentMapper,
       })}
       <DropZone
         data={{
-          path: `${layout.length}`,
+          path: `${path}-${layout.length}`,
           childrenCount: layout.length
         }}
         onDrop={handleDrop}
@@ -52,4 +52,6 @@ export default function Canvas({ layout, handleDrop, renderRow, componentMapper,
       />
     </>
   );
-}
+};
+
+export default TabCanvas;

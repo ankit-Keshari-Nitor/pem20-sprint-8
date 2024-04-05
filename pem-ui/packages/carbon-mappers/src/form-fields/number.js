@@ -6,8 +6,8 @@ import { CharacterWholeNumber } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.NUMBER;
 
-const NumberInput = ({ field }) => {
-  const { id, type, labelText, isRequired, ...rest } = field;
+const NumberInput = ({ field, id }) => {
+  const { type, labelText, isRequired, ...rest } = field;
 
   return (
     <>

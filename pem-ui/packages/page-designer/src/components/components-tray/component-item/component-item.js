@@ -1,20 +1,21 @@
 import React from 'react';
-import './component-item.scss';
 import { useDrag } from 'react-dnd';
+import { v4 as uuid } from 'uuid';
 
-const ComponentItem = (props) => {
-  const { type, label, icon } = props;
+import './component-item.scss';
 
-  const [{ isDragging }, drag] = useDrag({
-    type: 'form-field',
-    item: { id: type + '-' + Date.now().toString(36), type, labelText: label },
+const ComponentItem = ({ data }) => {
+  const { type, label, icon } = data.component;
+  
+  const [{ opacity }, drag] = useDrag({
+    item: { id: uuid(), type: data.type, component: data.component },
     collect: (monitor) => ({
-      isDragging: !!monitor.isDragging()
+      opacity: monitor.isDragging() ? 0.4 : 1
     })
   });
 
   return (
-    <div ref={drag} style={{ border: isDragging ? '1px solid red' : '1px solid green' }}>
+    <div ref={drag} style={{ opacity }}>
       <button className="palette-field" data-field-type={type} title={`Create ${getIndefiniteArticle(type)} ${label} element`}>
         {icon}
         <span className="palette-field-text">{label}</span>
@@ -22,7 +23,6 @@ const ComponentItem = (props) => {
     </div>
   );
 };
-
 export default ComponentItem;
 
 // helpers ///////////

@@ -10,5 +10,7 @@ export const FORM_FIELD_TYPE = {
   PASSWORD: 'password',
   FILE_UPLOADER: 'fileUploader',
   ACCORDION: 'accordion',
-  LINK: 'link'
+  LINK: 'link',
+  GROUP: 'group',
+  TAB: 'tab'
 };

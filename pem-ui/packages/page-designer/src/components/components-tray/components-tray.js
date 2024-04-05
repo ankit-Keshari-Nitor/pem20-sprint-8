@@ -2,12 +2,14 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Search, Close } from '@carbon/icons-react';
 
 import './components-tray.scss';
-import { PALETTE_GROUPS } from '../../constants/constant';
 import ComponentItem from './component-item';
+import { PALETTE_GROUPS, SIDEBAR_ITEM } from '../../constants/constants';
+import { Button as CarbonButton } from '@carbon/react';
 
-export default function ComponentTray({ componentMapper }) {
+export default function ComponentsTray({ componentMapper, setOpen }) {
   const initialPaletteEntries = React.useRef(collectPaletteEntries(componentMapper));
   const [paletteEntries, setPaletteEntries] = useState(initialPaletteEntries.current);
+
   const groups = groupEntries(paletteEntries);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -25,8 +27,8 @@ export default function ComponentTray({ componentMapper }) {
         return true;
       }
 
-      const simplifiedEntryLabel = simplifyString(entry.label);
-      const simplifiedEntryType = simplifyString(entry.type);
+      const simplifiedEntryLabel = simplifyString(entry.component.label);
+      const simplifiedEntryType = simplifyString(entry.component.type);
 
       return simplifiedEntryLabel.includes(simplifiedSearchTerm) || simplifiedEntryType.includes(simplifiedSearchTerm);
     },
@@ -53,11 +55,16 @@ export default function ComponentTray({ componentMapper }) {
     },
     [inputRef, setSearchTerm]
   );
-  
+
   return (
     <div className="palette">
       {/* Header */}
-      <div className="palette-header">Components</div>
+      <div className="palette-header">
+        <span className="palette-header-text-1">Components</span>
+        <span onClick={() => setOpen(true)} className="palette-header-text-2">
+          View Schema
+        </span>
+      </div>
       {/* Search Box */}
       <div className="palette-search-container">
         <span className="palette-search-icon">
@@ -73,11 +80,11 @@ export default function ComponentTray({ componentMapper }) {
       {/* Form Fields */}
       <div className="palette-entries">
         {groups.map(({ label, entries, id }) => (
-          <div className="palette-group" data-group-id={id} key={id}>
+          <div className="palette-group" data-group-id={id} key={`ddf_${id}`}>
             <span className="palette-group-title">{label}</span>
             <div className="palette-fields">
-              {entries.map((entry) => {
-                return <ComponentItem key={entry.label} {...entry} />;
+              {entries.map((entry, index) => {
+                return <ComponentItem key={index} data={entry} />;
               })}
             </div>
           </div>
@@ -100,7 +107,7 @@ function groupEntries(entries) {
   const getGroup = (id) => groups.find((group) => id === group.id);
 
   entries.forEach((entry) => {
-    const { group } = entry;
+    const { group } = entry.component;
     getGroup(group).entries.push(entry);
   });
 
@@ -112,13 +119,14 @@ export function collectPaletteEntries(formFields) {
   return Object.entries(formFields)
     .map(([type, formField]) => {
       const { config: fieldConfig } = formField;
-
       return {
-        label: fieldConfig.label,
-        type: type,
-        group: fieldConfig.group,
-        icon: fieldConfig.icon,
-        iconUrl: fieldConfig.iconUrl
+        type: SIDEBAR_ITEM,
+        component: {
+          type: type,
+          label: fieldConfig.label,
+          group: fieldConfig.group,
+          icon: fieldConfig.icon
+        }
       };
     })
     .filter(({ type }) => type !== 'default');

@@ -6,8 +6,8 @@ import Label from './label';
 
 const type = FORM_FIELD_TYPE.PASSWORD;
 
-const Password = ({ field }) => {
-  const { id, type, labelText, isRequired, ...rest } = field;
+const Password = ({ field , id}) => {
+  const {type, labelText, isRequired, ...rest } = field;
 
   return (
     <>

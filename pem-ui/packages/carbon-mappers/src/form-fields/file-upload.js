@@ -5,8 +5,8 @@ import { Upload } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.FILE_UPLOADER;
 
-const FileUploader = ({ field }) => {
-  const { id, ...rest } = field;
+const FileUploader = ({ field, id }) => {
+  const { ...rest } = field;
 
   return (
     <CarbonFileUploader

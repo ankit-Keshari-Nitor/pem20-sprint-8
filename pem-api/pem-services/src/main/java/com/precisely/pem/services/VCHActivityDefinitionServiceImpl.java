@@ -99,7 +99,7 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
     public VCHCreateActivityDefinitionResp createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException, SizeLimitExceededException {
         long fileSize = file.getSize();
         if(file.isEmpty() || fileSize > 10 * 1024 * 1024){
-            throw new SizeLimitExceededException();
+            //throw new SizeLimitExceededException();
         }
         if(Objects.requireNonNull(file.getContentType()).equalsIgnoreCase("application/xml")){
             //throw new InvalidFileException();

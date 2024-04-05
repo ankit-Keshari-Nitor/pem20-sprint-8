@@ -6,11 +6,9 @@ spring:
     properties:
       hibernate:
         show-sql: true
-  servlet:
-    multipart:
-      resolve-lazily: true
-
-
+    naming:
+      physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
 
   datasource:
     url: jdbc:mysql://localhost:3306/pem?allowPublicKeyRetrieval=true&useSSL=false
@@ -20,8 +18,6 @@ spring:
     initialization-mode: always
 
 server:
-  tomcat:
-    max-swallow-size: -1
   port: 9080
 
 springdoc:

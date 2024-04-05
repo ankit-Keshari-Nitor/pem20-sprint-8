@@ -28,4 +28,12 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
         errResp.setErrorDescription("File is invalid. Please upload xml file");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<Object> handleCommonException(RuntimeException ex, WebRequest request) {
+        ErrorResponseDto errResp = new ErrorResponseDto();
+        errResp.setErrorCode(HttpStatus.BAD_REQUEST.value());
+        errResp.setErrorDescription(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
+    }
 }

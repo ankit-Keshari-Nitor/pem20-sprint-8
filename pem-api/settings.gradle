@@ -6,4 +6,5 @@ include 'pem-entity'
 include 'pem-rest'
 include 'pem-systemdata'
 include 'pem-liberty'
+include 'pem-common'
 

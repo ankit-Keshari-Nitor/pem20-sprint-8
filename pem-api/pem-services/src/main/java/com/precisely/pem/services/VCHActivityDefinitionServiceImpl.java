@@ -1,7 +1,11 @@
 package com.precisely.pem.services;
 
-import com.precisely.pem.dtos.responses.VCHActivityDefinitionPaginationRes;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.precisely.pem.dtos.responses.VCHActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.VCHCreateActivityDefinitionResp;
+import com.precisely.pem.dtos.responses.VCHGetActivitiyDefnByIdResp;
+import com.precisely.pem.dtos.shared.PaginationDto;
+import com.precisely.pem.dtos.shared.VCHActivityDefnDto;
 import com.precisely.pem.models.VCHActivityDefn;
 import com.precisely.pem.models.VCHActivityDefnData;
 import com.precisely.pem.models.VCHActivityDefnVersion;
@@ -10,19 +14,29 @@ import com.precisely.pem.repositories.VCHActivityDefnRepo;
 import com.precisely.pem.repositories.VCHActivityDefnVersionRepo;
 import com.precisely.pem.repositories.VCHSponsorRepo;
 import com.precisely.pem.util.ActivityDefnStatus;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.naming.SizeLimitExceededException;
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionService {
@@ -35,21 +49,68 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
     @Autowired
     private VCHActivityDefnVersionRepo vchActivityDefnVersionRepo;
 
+    @Value("${pem.openapi.dev-url}")
+    private String devUrl;
+
     Logger logger = LoggerFactory.getLogger(VCHActivityDefinitionServiceImpl.class);
 
-    @Override
-    public VCHActivityDefinitionPaginationRes getAllDefinitionList(String sponsorContext, int pageNo, int pageSize, String sortBy, String sortDir) {
-        return null;
+    private final ModelMapper mapper;
+    public VCHActivityDefinitionServiceImpl(VCHActivityDefnRepo vchActivityDefnRepo, ModelMapper mapper) {
+        this.vchActivityDefnRepo = vchActivityDefnRepo;
+        this.mapper = mapper;
     }
 
     @Override
-    public VCHCreateActivityDefinitionResp createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException {
+    public VCHActivityDefnPaginationRes getAllDefinitionList(String sponsorContext,
+                                                                   String applicationName, String applicationDescription,
+                                                                   String status, int pageNo, int pageSize, String sortBy,
+                                                                   String sortDir) {
+        VCHActivityDefnPaginationRes vchActivityDefinitionPaginationRes = new VCHActivityDefnPaginationRes();
+        PaginationDto paginationDto = new PaginationDto();
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<VCHActivityDefn> defnsPage = vchActivityDefnRepo.findAll(pageable);
+//        Page<VCHActivityDefn> defnsPage = vchActivityDefnRepo.findVCHActivityDefnByActivityNameOrActivityDescriptionAndVCHActivityDefnVersionStatus(applicationName,applicationDescription,status,pageable);
+        List<VCHActivityDefn> listOfDefns = defnsPage.getContent();
+        List<VCHActivityDefnDto> defnContent = listOfDefns.stream()
+                .map(p -> mapper.map(p,VCHActivityDefnDto.class)).collect(Collectors.toList());
+
+        int totalPage = defnsPage.getTotalPages();
+        long totalElements = defnsPage.getTotalElements();
+        int numberOfElements = defnsPage.getNumberOfElements();
+        int size = defnsPage.getSize();
+
+
+        paginationDto.setNumber(numberOfElements);
+        paginationDto.setSize(size);
+        paginationDto.setTotalPages(totalPage);
+        paginationDto.setTotalElements(totalElements);
+
+        vchActivityDefinitionPaginationRes.setContent(defnContent);
+        vchActivityDefinitionPaginationRes.setPage(paginationDto);
+
+        return vchActivityDefinitionPaginationRes;
+    }
+
+    @Override
+    public VCHCreateActivityDefinitionResp createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException, SizeLimitExceededException {
+        long fileSize = file.getSize();
+        if(file.isEmpty() || fileSize > 10 * 1024 * 1024){
+            throw new SizeLimitExceededException();
+        }
+        if(Objects.requireNonNull(file.getContentType()).equalsIgnoreCase("application/xml")){
+            //throw new InvalidFileException();
+        }
+
         VCHCreateActivityDefinitionResp vchCreateActivityDefinitionResp = new VCHCreateActivityDefinitionResp();
         VCHActivityDefn vchActivityDefn = new VCHActivityDefn();
         VCHActivityDefnData vchActivityDefnData = new VCHActivityDefnData();
         VCHActivityDefnVersion vchActivityDefnVersion = new VCHActivityDefnVersion();
 
-        logger.info("sponsorkey : " + vchSponsorRepo.getSponsorKey(sponsorContext));
+        logger.info("Creating Activity Definition Data");
 
         //Populating the Activity Definition Object
         vchActivityDefn.setActivityDefnKey(UUID.randomUUID().toString());
@@ -107,5 +168,10 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
         vchCreateActivityDefinitionResp.setLocation(location.getHref());
 
         return vchCreateActivityDefinitionResp;
+    }
+
+    @Override
+    public VCHGetActivitiyDefnByIdResp findByActivityDefnKeyAndSponsorKey(String activityDefnKey, String sponsorKey) {
+        return null;
     }
 }

@@ -5,8 +5,6 @@ import lombok.Data;
 
 import java.sql.Blob;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -15,14 +13,22 @@ public class VCHActivityDefnData {
     @Id
     @Column(name="ACTIVITY_DEFN_DATA_KEY")
     private String activityDefnDataKey;
+
     @Column(name="DEF_DATA")
     private Blob defData;
+
     @Column(name="CREATE_TS")
     private LocalDateTime createTs;
+
     @Column(name="CREATED_BY")
     private String createdBy;
+
     @Column(name="MODIFY_TS")
     private LocalDateTime modifyTs;
+
     @Column(name="MODIFIED_BY")
     private String modifiedBy;
+
+    @OneToOne
+    private VCHActivityDefnVersion vchActivityDefnVersion;
 }

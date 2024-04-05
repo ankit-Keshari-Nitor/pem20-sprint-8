@@ -6,6 +6,10 @@ spring:
     properties:
       hibernate:
         show-sql: true
+  servlet:
+    multipart:
+      resolve-lazily: true
+
 
 
   datasource:
@@ -16,6 +20,8 @@ spring:
     initialization-mode: always
 
 server:
+  tomcat:
+    max-swallow-size: -1
   port: 9080
 
 springdoc:

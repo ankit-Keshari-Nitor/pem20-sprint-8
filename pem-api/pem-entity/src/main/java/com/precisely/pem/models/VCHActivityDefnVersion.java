@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -47,4 +45,11 @@ public class VCHActivityDefnVersion {
 
     @Column(name="MODIFIED_BY")
     private String modifiedBy;
+
+    @ManyToOne
+    @JoinColumn(name = "VCHAD_ACTIVITY_DEFN_KEY")
+    private VCHActivityDefn vchActivityDefnDetails;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private VCHActivityDefnData contentData;
 }

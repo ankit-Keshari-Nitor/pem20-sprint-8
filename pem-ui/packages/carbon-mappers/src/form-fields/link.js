@@ -5,8 +5,8 @@ import { Link as LinkIcon } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.LINK;
 
-const Link = ({ field }) => {
-  const { id, type, labelText, ...rest } = field;
+const Link = ({ field, id }) => {
+  const { type, labelText, ...rest } = field;
   return (
     <CarbonLink data-testid={id} id={id} {...rest}>
       {field.labelText}

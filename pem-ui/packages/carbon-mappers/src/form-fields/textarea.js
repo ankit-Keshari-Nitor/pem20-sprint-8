@@ -7,8 +7,8 @@ import { TextFill } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.TEXT_AREA;
 
-const TextArea = ({ field }) => {
-  const { id, type, labelText, isRequired, min, max, ...rest } = field;
+const TextArea = ({ field, id }) => {
+  const { type, labelText, isRequired, min, max, ...rest } = field;
   const { value, isValid, invalidText, valueChangeHandler, minChangeHandler, maxChangeHandler } = useMinMaxInput();
 
   useEffect(() => {

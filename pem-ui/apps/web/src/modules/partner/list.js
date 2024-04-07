@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Layer, Section } from '@carbon/react';
+import { Section } from '@carbon/react';
 import Shell from '@b2bi/shell';
 import '@b2bi/styles/pages/list-page.scss';
 

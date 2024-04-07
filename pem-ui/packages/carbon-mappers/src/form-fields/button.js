@@ -5,8 +5,8 @@ import { ButtonCentered } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.BUTTON;
 
-const Button = ({field}) => {
-  const { id, type, labelText, ...rest } = field;
+const Button = ({field, id}) => {
+  const { type, labelText, ...rest } = field;
 
   return (
     <CarbonButton data-testid={id} id={id} {...rest}>

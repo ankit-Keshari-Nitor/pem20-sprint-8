@@ -6,8 +6,8 @@ import { Calendar } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.DATEPICKER;
 
-const DatePicker = ({ field }) => {
-  const { id, type, labelText, isRequired, ...rest } = field;
+const DatePicker = ({ field, id }) => {
+  const { type, labelText, isRequired, ...rest } = field;
 
   return (
     <>

@@ -1,19 +1,55 @@
 import React from 'react';
-import FieldRenderer from './field-renderer';
+import { DropZone } from '../../elements';
+import FieldRenderer from './field-renderer/field-renderer';
 
-const Canvas = ({ schema, removeFormField, selectedField, getFormField }) => {
-  return schema.map((formField) => {
+export default function Canvas({ layout, handleDrop, renderRow, componentMapper, selectedField, deleteFormField }) {
+  const renderComponent = (component, currentPath, renderRow) => {
     return (
       <div
-        key={formField.id}
-        onClick={() => {
-          selectedField(formField);
+        onClick={(e) => {
+          selectedField(e, component, currentPath);
         }}
       >
-        <FieldRenderer field={formField} removeFormField={removeFormField} getFormField={getFormField} />
+        <FieldRenderer
+          key={component.id}
+          data={component}
+          path={currentPath}
+          componentMapper={componentMapper}
+          renderRow={renderRow}
+          handleDrop={handleDrop}
+          deleteFormField={deleteFormField}
+          selectedField={selectedField}
+        />
       </div>
     );
-  });
-};
+  };
 
-export default Canvas;
+  return (
+    <>
+      {layout.map((component, index) => {
+        const currentPath = `${index}`;
+        return (
+          <React.Fragment key={component.id}>
+            <DropZone
+              data={{
+                path: currentPath,
+                childrenCount: layout.length
+              }}
+              onDrop={handleDrop}
+              path={currentPath}
+            />
+            {renderComponent(component, currentPath, renderRow)}
+          </React.Fragment>
+        );
+      })}
+      <DropZone
+        data={{
+          path: `${layout.length}`,
+          childrenCount: layout.length
+        }}
+        onDrop={handleDrop}
+        isLast
+      />
+    </>
+  );
+}

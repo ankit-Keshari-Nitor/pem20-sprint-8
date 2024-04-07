@@ -7,8 +7,8 @@ import { ListDropdown } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.SELECT;
 
-const Select = ({ field }) => {
-  const { id, type, labelText, isRequired, ...rest } = field;
+const Select = ({ field , id}) => {
+  const { type, labelText, isRequired, ...rest } = field;
 
   return (
     <>

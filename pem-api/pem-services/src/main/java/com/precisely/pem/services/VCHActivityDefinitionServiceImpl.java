@@ -3,7 +3,9 @@ package com.precisely.pem.services;
 import com.precisely.pem.dtos.responses.VCHActivityDefinitionPaginationRes;
 import com.precisely.pem.dtos.responses.VCHCreateActivityDefinitionResp;
 import com.precisely.pem.dtos.shared.PaginationDto;
+import com.precisely.pem.dtos.shared.VCHActivityDefnDataDto;
 import com.precisely.pem.dtos.shared.VCHActivityDefnDto;
+import com.precisely.pem.dtos.shared.VCHActivityDefnVersionDto;
 import com.precisely.pem.models.VCHActivityDefn;
 import com.precisely.pem.models.VCHActivityDefnData;
 import com.precisely.pem.models.VCHActivityDefnVersion;
@@ -96,51 +98,42 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
     @Transactional(rollbackFor = Exception.class)
     public VCHCreateActivityDefinitionResp createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app, UriComponentsBuilder builder) throws IOException, SQLException {
         VCHCreateActivityDefinitionResp vchCreateActivityDefinitionResp = new VCHCreateActivityDefinitionResp();
-        VCHActivityDefn vchActivityDefn = new VCHActivityDefn();
-        VCHActivityDefnData vchActivityDefnData = new VCHActivityDefnData();
-        VCHActivityDefnVersion vchActivityDefnVersion = new VCHActivityDefnVersion();
+        VCHActivityDefn vchActivityDefn = null;
+        VCHActivityDefnData vchActivityDefnData = null;
+        VCHActivityDefnVersion vchActivityDefnVersion = null;
+        ModelMapper mapper = new ModelMapper();
 
         logger.info("sponsorkey : " + vchSponsorRepo.getSponsorKey(sponsorContext));
 
         //Populating the Activity Definition Object
-        vchActivityDefn.setActivityDefnKey(UUID.randomUUID().toString());
-        vchActivityDefn.setSponsorKey(vchSponsorRepo.getSponsorKey(sponsorContext));//This data is populated from VCH_SPONSOR table.
-        vchActivityDefn.setActivityName(name);
-        vchActivityDefn.setActivityDescription(description);
-        vchActivityDefn.setApplication(app);
-        vchActivityDefn.setDeleted(false);
-        vchActivityDefn.setCreatedBy("");//Not sure from where we have to populate this value
-        vchActivityDefn.setCreateTs(LocalDateTime.now());
-        vchActivityDefn.setModifiedBy("");//Not sure from where we have to populate this value
-        vchActivityDefn.setModifyTs(LocalDateTime.now());
-
+        VCHActivityDefnDto vchActivityDefnDto = new VCHActivityDefnDto(
+                UUID.randomUUID().toString(), vchSponsorRepo.getSponsorKey(sponsorContext), name,
+                description, LocalDateTime.now(), "", LocalDateTime.now(), "",
+                app, false, false
+        );
+        vchActivityDefn = mapper.map(vchActivityDefnDto, VCHActivityDefn.class);
         vchActivityDefn = vchActivityDefnRepo.save(vchActivityDefn);
 
+        //Populating the Activity Definition Data Object
         byte[] bytes = file.getBytes();
         Blob blob = new SerialBlob(bytes);
 
-        vchActivityDefnData.setActivityDefnDataKey(UUID.randomUUID().toString());
-        vchActivityDefnData.setCreateTs(LocalDateTime.now());
-        vchActivityDefnData.setCreatedBy("");
-        vchActivityDefnData.setModifyTs(LocalDateTime.now());
-        vchActivityDefnData.setModifiedBy("");
-        vchActivityDefnData.setDefData(blob);
+        VCHActivityDefnDataDto vchActivityDefnDataDto = new VCHActivityDefnDataDto(
+                UUID.randomUUID().toString(), blob, LocalDateTime.now(),
+                "", LocalDateTime.now(), ""
+        );
 
+        //Populating the Activity Definition Version Object
+        vchActivityDefnData = mapper.map(vchActivityDefnDataDto, VCHActivityDefnData.class);
         vchActivityDefnData = vchActivityDefnDataRepo.save(vchActivityDefnData);
 
-        vchActivityDefnVersion.setActivityDefnKeyVersion(UUID.randomUUID().toString());
-        vchActivityDefnVersion.setActivityDefnKey(vchActivityDefn.getActivityDefnKey());
-        vchActivityDefnVersion.setActivityDefnDataKey(vchActivityDefnData.getActivityDefnDataKey());
-        vchActivityDefnVersion.setDefault(false);
-        vchActivityDefnVersion.setEncrypted(false);
-        vchActivityDefnVersion.setEncryptionKey("");
-        vchActivityDefnVersion.setStatus(String.valueOf(ActivityDefnStatus.DRAFT));
-        vchActivityDefnVersion.setVersion("");
-        vchActivityDefnVersion.setCreateTs(LocalDateTime.now());
-        vchActivityDefnVersion.setCreatedBy("");
-        vchActivityDefnVersion.setModifyTs(LocalDateTime.now());
-        vchActivityDefnVersion.setModifiedBy("");
-
+        VCHActivityDefnVersionDto vchActivityDefnVersionDto = new VCHActivityDefnVersionDto(
+                UUID.randomUUID().toString(), vchActivityDefn.getActivityDefnKey(),
+                vchActivityDefnData.getActivityDefnDataKey(), "",
+                String.valueOf(ActivityDefnStatus.DRAFT), false, false,
+                "", LocalDateTime.now(), "", LocalDateTime.now(), ""
+        );
+        vchActivityDefnVersion = mapper.map(vchActivityDefnVersionDto, VCHActivityDefnVersion.class);
         vchActivityDefnVersion = vchActivityDefnVersionRepo.save(vchActivityDefnVersion);
 
         String url = builder.path("/sponsors/{sponsorContext}/v2/activityDefinitions").buildAndExpand(sponsorContext).toUriString() + "/" +vchActivityDefn.getActivityDefnKey();

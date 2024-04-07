@@ -3,6 +3,8 @@ package com.precisely.pem.controller;
 import com.precisely.pem.Validator.LowerCaseValidator;
 import com.precisely.pem.Validator.MultipartFileValidator;
 import com.precisely.pem.Validator.SpecialCharValidator;
+import com.precisely.pem.commonUtil.SortBy;
+import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.dtos.responses.VCHActivityDefinitionPaginationRes;
 import com.precisely.pem.dtos.responses.VCHCreateActivityDefinitionResp;
 import com.precisely.pem.dtos.shared.VCHActivityDefnDto;
@@ -19,47 +21,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 @Tag(name = "Activity Definition", description = "Activity Definition management APIs")
 @RequestMapping("/sponsors/{sponsorContext}/v2/activityDefinitions")
 @RestController
 public class VCHActivityController {
-
-    public enum SORT_DIRECTION {
-        ASC ("ASC"), DESC ("DESC");
-
-        private String sort_direction;
-        SORT_DIRECTION(String asc) {
-            this.sort_direction = sort_direction;
-        }
-
-        public String getSort_direction() {
-            return sort_direction;
-        }
-
-        public void setSort_direction(String sort_direction) {
-            this.sort_direction = sort_direction;
-        }
-    }
-
-    public enum SORT_BY {
-        modifyTs ("modifyTs"), activityName ("activityName");
-
-        private String sort_by;
-        SORT_BY(String asc) {
-            this.sort_by = sort_by;
-        }
-
-        public String getSort_by() {
-            return sort_by;
-        }
-
-        public void setSort_by(String sort_by) {
-            this.sort_by = sort_by;
-        }
-    }
 
     @Autowired
     VCHActivityDefinitionService vchActivityDefinitionService;
@@ -90,8 +55,8 @@ public class VCHActivityController {
     @GetMapping
     public VCHActivityDefinitionPaginationRes getActivityDefinitionList(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
                                                                         @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                                                        @RequestParam(value = "sortBy",  required = false) SORT_BY sortBy,
-                                                                        @RequestParam(value = "sortDir", required = false) SORT_DIRECTION sortDir,
+                                                                        @RequestParam(value = "sortBy",  required = false) SortBy sortBy,
+                                                                        @RequestParam(value = "sortDir", required = false) SortDirection sortDir,
                                                                         @PathVariable(value = "sponsorContext")String sponsorContext){
         VCHActivityDefinitionPaginationRes res = new VCHActivityDefinitionPaginationRes();
 

@@ -1,5 +1,8 @@
 package com.precisely.pem.controller;
 
+import com.precisely.pem.Validator.LowerCaseValidator;
+import com.precisely.pem.Validator.MultipartFileValidator;
+import com.precisely.pem.Validator.SpecialCharValidator;
 import com.precisely.pem.dtos.responses.VCHActivityDefinitionPaginationRes;
 import com.precisely.pem.dtos.responses.VCHCreateActivityDefinitionResp;
 import com.precisely.pem.dtos.shared.VCHActivityDefnDto;
@@ -10,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -68,11 +72,11 @@ public class VCHActivityController {
                     @Content(schema = @Schema()) }),
             @ApiResponse(responseCode = "422", content = { @Content(schema = @Schema()) }) })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public VCHCreateActivityDefinitionResp createActivityDefinition(@RequestPart(value = "name", required = true) String name,
-                                                                    @RequestPart(value = "description", required = true) String description,
-                                                                    @RequestPart(value = "file") MultipartFile file,
-                                                                    @RequestPart(value = "application", required = true) String app,
-                                                                    @PathVariable(value = "sponsorContext")String sponsorContext) throws IOException, SQLException {
+    public VCHCreateActivityDefinitionResp createActivityDefinition(@RequestPart(value = "name", required = true) @Size(min = 1, max = 80) @SpecialCharValidator String name,
+                                                                    @RequestPart(value = "description", required = false) @Size(min = 1, max = 255) String description,
+                                                                    @RequestPart(value = "file") @MultipartFileValidator MultipartFile file,
+                                                                    @RequestPart(value = "application", required = true) @LowerCaseValidator String app,
+                                                                    @PathVariable(value = "sponsorContext", required = true) String sponsorContext) throws Exception {
         return vchActivityDefinitionService.createActivityDefinition(sponsorContext, name, description, file, app);
     }
 

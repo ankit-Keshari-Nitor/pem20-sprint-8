@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class VCHActivityDefinitionPaginationDto implements Serializable {
+public class VCHActivityDefnPaginationDto implements Serializable {
     private VCHActivityDefnDto vchActivityDefinitionDto;
     private  PaginationDto paginationDto;
 }

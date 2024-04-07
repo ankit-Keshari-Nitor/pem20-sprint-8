@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -90,6 +91,7 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public VCHCreateActivityDefinitionResp createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException {
         VCHCreateActivityDefinitionResp vchCreateActivityDefinitionResp = new VCHCreateActivityDefinitionResp();
         VCHActivityDefn vchActivityDefn = new VCHActivityDefn();
@@ -123,11 +125,6 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
         vchActivityDefnData.setDefData(blob);
 
         vchActivityDefnData = vchActivityDefnDataRepo.save(vchActivityDefnData);
-
-        // Get the file name
-        String fileName = file.getOriginalFilename();
-
-        logger.info("filename : " + fileName);
 
         vchActivityDefnVersion.setActivityDefnKeyVersion(UUID.randomUUID().toString());
         vchActivityDefnVersion.setActivityDefnKey(vchActivityDefn.getActivityDefnKey());

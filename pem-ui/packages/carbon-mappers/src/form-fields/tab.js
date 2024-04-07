@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
-import { FORM_FIELD_TYPE } from '../constant';
+import { FORM_FIELD_TYPE, editableProps } from '../constant';
 import { NewTab } from '@carbon/icons-react';
 import TabCanvas from '../../../page-designer/src/components/canvas/tab-canvas';
 
@@ -10,7 +10,7 @@ const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, s
   return (
     <Tabs>
       <TabList aria-label="List of tabs" activation="manual">
-        <Tab>Tab-1</Tab>
+        <Tab>{row.component.labelText ? row.component.labelText : 'Title'}</Tab>
       </TabList>
       <TabPanels>
         <TabPanel>
@@ -38,7 +38,7 @@ CustomTab.config = {
   group: 'panel',
   icon: <NewTab />,
   editableProps: {
-    Basic: [],
+    Basic: [...editableProps.Basic],
     Condition: []
   },
   advanceProps: []

@@ -92,7 +92,7 @@
 .trashDropZone.active {
   background: hsl(205, 100%, 95%);
   transition: 100ms all;
-  border: 2px dashed hsl(205, 100%, 50%);
+  border: 1px dashed hsl(205, 100%, 50%);
 }
 
 .trashDropZone {
@@ -106,4 +106,18 @@
   align-items: center;
   justify-content: center;
   border: 1px solid purple;
+}
+
+.column-zone {
+  border: 1px dotted;
+  margin: 0.5rem;
+  min-height: 100px;
+}
+.delete-column {
+  margin-top: 2rem;
+}
+
+.custom-grid {
+  width: 100%;
+  margin-inline: auto;
 }

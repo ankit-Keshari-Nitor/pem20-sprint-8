@@ -44,7 +44,7 @@ const Column = ({ data, handleDrop, path, componentMapper, selectedField, render
   };
 
   return (
-    <div ref={ref} style={{ opacity }} className="base column">
+    <div style={{ opacity }} className="base column">
       {data?.children === undefined ? (
         <>
           <React.Fragment key={data.id}>

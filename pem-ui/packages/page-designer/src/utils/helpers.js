@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { ROW, COLUMN, COMPONENT, GROUP, TAB, ACCORDION } from '../constants/constants';
+import { ROW, COLUMN, COMPONENT, GROUP, TAB, ACCORDION, CUSTOM_SIZE } from '../constants/constants';
 
 // a little function to help us with reordering the result
 export const reorder = (list, startIndex, endIndex) => {
@@ -27,11 +27,7 @@ export const insert = (arr, index, newItem) => [
 ];
 
 export const update = (arr, index, propsName, newValue) => {
-  if (arr[index].component) {
-    arr[index].component[propsName] = newValue;
-  } else {
-    arr[index][propsName] = newValue;
-  }
+  arr[index][propsName] = newValue;
   return arr;
 };
 
@@ -79,6 +75,37 @@ export const removeChildFromChildren = (children, splitDropZonePath) => {
   return updatedChildren;
 };
 
+export const updateConfigChildToChildren = (children, splitDropZonePath, item, rest) => {
+  const { component, ...others } = item;
+  if (splitDropZonePath.length === 1) {
+    const dropZoneIndex = Number(splitDropZonePath[0]);
+    let newLayoutStructure = { ...others, component: { ...item.component, ...rest } };
+    if (children[0]?.type === COLUMN) {
+      newLayoutStructure = {
+        type: COLUMN,
+        id: uuid(),
+        defaultsize: '4',
+        children: item.length ? [item] : []
+      };
+    }
+    return insert(children, dropZoneIndex, newLayoutStructure);
+  }
+
+  const updatedChildren = [...children];
+
+  const curIndex = Number(splitDropZonePath.slice(0, 1));
+
+  // Update the specific node's children
+  const splitItemChildrenPath = splitDropZonePath.slice(1);
+  const nodeChildren = updatedChildren[curIndex];
+  updatedChildren[curIndex] = {
+    ...nodeChildren,
+    children: addChildToChildren(nodeChildren.children, splitItemChildrenPath, item)
+  };
+
+  return updatedChildren;
+};
+
 export const addChildToChildren = (children, splitDropZonePath, item) => {
   if (splitDropZonePath.length === 1) {
     const dropZoneIndex = Number(splitDropZonePath[0]);
@@ -111,9 +138,14 @@ export const addChildToChildren = (children, splitDropZonePath, item) => {
 
 export const updateChildToChildren = (children, splitDropZonePath, propsName, newValue) => {
   if (splitDropZonePath.length === 1) {
-    const dropZoneIndex = Number(splitDropZonePath[0]);
-
-    return update(children, dropZoneIndex, propsName, newValue);
+    if (propsName === CUSTOM_SIZE) {
+      const dropZoneIndex = Number(splitDropZonePath[0]);
+      return update(children, dropZoneIndex, propsName, newValue);
+    } else {
+      const updatedItem = { ...children[splitDropZonePath[0]] };
+      const deletedLayout = handleRemoveItemFromLayout(children, splitDropZonePath);
+      return updateConfigChildToChildren(deletedLayout, splitDropZonePath, updatedItem, { [propsName]: newValue });
+    }
   }
 
   const updatedChildren = [...children];
@@ -228,7 +260,7 @@ export const handleMoveSidebarComponentIntoParent = (layout, splitDropZonePath, 
             type: ROW,
             id: uuid(),
             maintype: item.component.type,
-            children: [{ type: COLUMN, id: uuid(), children: [] }]
+            children: [{ type: COLUMN, id: uuid(), defaultsize: '16', children: [] }]
           };
         } else {
           newLayoutStructure = {
@@ -244,7 +276,7 @@ export const handleMoveSidebarComponentIntoParent = (layout, splitDropZonePath, 
           type: ROW,
           id: uuid(),
           maintype: item.component.type,
-          children: [{ type: COLUMN, id: uuid(), children: [] }]
+          children: [{ type: COLUMN, id: uuid(), defaultsize: '16', children: [] }]
         };
       }
     }
@@ -295,48 +327,65 @@ export const getFormFieldDetails = (path, layout) => {
   return res;
 };
 
-const convertChildrenToComponent = (children) => {
-  let childrenSchema = [];
-  children.forEach((child) => {
-    childrenSchema.push({
-      id: child.id,
-      type: child.component.type,
-      labelText: child.component.labelText,
-      helperText: child.component.helperText,
-      disabled: child.component.disabled,
-      isRequired: child.component.isRequired,
-      readOnly: child.component.readOnly
-    });
-  });
-  return childrenSchema;
-};
-
-export const convertComponent = (layout) => {
-  let schema = [];
-  layout.forEach((layoutItem) => {
-    if (layoutItem.type === COMPONENT) {
-      schema.push({
-        id: layoutItem.id,
-        type: layoutItem.component.type,
-        labelText: layoutItem.component.labelText,
-        helperText: layoutItem.component.helperText,
-        disabled: layoutItem.component.disabled,
-        isRequired: layoutItem.component.isRequired,
-        readOnly: layoutItem.component.readOnly
-      });
-    }
-    if (layoutItem.maintype === GROUP) {
-      if (layoutItem.children) {
-        schema.push(convertChildrenToComponent(layoutItem.children[0].children));
+export const nestedLayoutView = (childLayout, childSchema) => {
+  childLayout.forEach((item, index) => {
+    switch (item.type) {
+      case ROW: {
+        childSchema.push({
+          id: item.id,
+          type: item.type,
+          children: []
+        });
+        nestedLayoutView(childLayout[index]?.children, childSchema[index].children);
+        break;
+      }
+      case COLUMN: {
+        childSchema.push({
+          id: item.id,
+          type: item.type,
+          size: item?.customsize ? item?.customsize : item?.defaultsize,
+          children: []
+        });
+        nestedLayoutView(childLayout[index]?.children, childSchema[index].children);
+        break;
+      }
+      case ACCORDION: {
+        const { icon, label, group, ...others } = item.component;
+        childSchema.push({
+          id: item.id,
+          type: item.type,
+          ...others,
+          children: []
+        });
+        nestedLayoutView(childLayout[index]?.children, childSchema[index].children);
+        break;
+      }
+      case TAB: {
+        const { icon, label, group, ...others } = item.component;
+        childSchema.push({
+          id: item.id,
+          type: item.type,
+          ...others,
+          children: []
+        });
+        nestedLayoutView(childLayout[index]?.children, childSchema[index].children);
+        break;
+      }
+      default: {
+        const { icon, label, group, ...others } = item.component;
+        childSchema.push({
+          id: item.id,
+          ...others
+        });
       }
     }
   });
-  return schema;
+  return childSchema;
 };
 
-export const convertToSchema = (state) => {
-  const schema = convertComponent(state.layout);
-  return schema;
+export const convertToSchema = (layout) => {
+  const schema = nestedLayoutView(layout, []);
+  return { fields: schema };
 };
 
 export const findChildComponentById = (array, id) => {

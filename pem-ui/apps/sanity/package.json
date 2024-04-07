@@ -1,0 +1,15 @@
+{
+  "name": "@b2bi/pem-sanity",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@b2bi/shell-bdd": "file:../../../../b2bi-ui-shared/packages/shell-bdd"
+  },
+  "scripts": {
+    "test": "cucumber-js test --tags \"(not (@Ignore or @ignore))\" ",
+    "test-current": "cucumber-js --tags \"(@current and (not (@Ignore or @ignore)))\" -f summary -f json:test/report/cucumber_report.json",
+    "test-report": "node bdd/reporter.js"
+  }
+}

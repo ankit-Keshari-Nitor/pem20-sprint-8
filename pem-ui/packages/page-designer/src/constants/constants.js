@@ -5,6 +5,8 @@ export const COMPONENT = 'component';
 export const GROUP = 'group';
 export const ACCORDION = 'accordion';
 export const TAB = 'tab';
+export const CUSTOM_COLUMN = 'customColumn';
+export const CUSTOM_SIZE = 'customsize';
 
 export const PALETTE_GROUPS = [
   {

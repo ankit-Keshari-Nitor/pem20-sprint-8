@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.multipart.MultipartException;
 
 import javax.naming.SizeLimitExceededException;
@@ -45,6 +46,14 @@ public class ResponseExceptionHandler{
         ErrorResponseDto errResp = new ErrorResponseDto();
         errResp.setErrorCode(1010);
         errResp.setErrorDescription("Invalid format for given string. Please check your input.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    protected ResponseEntity<Object> handleGeneralConflict(Exception ex, WebRequest request) {
+        ErrorResponseDto errResp = new ErrorResponseDto();
+        errResp.setErrorCode(1010);
+        errResp.setErrorDescription("Validation Failure");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 

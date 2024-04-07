@@ -16,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
@@ -92,7 +94,7 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public VCHCreateActivityDefinitionResp createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException {
+    public VCHCreateActivityDefinitionResp createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app, UriComponentsBuilder builder) throws IOException, SQLException {
         VCHCreateActivityDefinitionResp vchCreateActivityDefinitionResp = new VCHCreateActivityDefinitionResp();
         VCHActivityDefn vchActivityDefn = new VCHActivityDefn();
         VCHActivityDefnData vchActivityDefnData = new VCHActivityDefnData();
@@ -141,14 +143,13 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
 
         vchActivityDefnVersion = vchActivityDefnVersionRepo.save(vchActivityDefnVersion);
 
-        Link location = Link.of("/sponsors/"+sponsorContext+
-                "/v2/activityDefinitions/"+ vchActivityDefn.getActivityDefnKey());
+        String url = builder.path("/sponsors/{sponsorContext}/v2/activityDefinitions").buildAndExpand(sponsorContext).toUriString() + "/" +vchActivityDefn.getActivityDefnKey();
 
-        logger.info("location : " + location.getHref());
+        logger.info("location : " + url);
 
         vchCreateActivityDefinitionResp.setActivityDefnKey(vchActivityDefn.getActivityDefnKey());
         vchCreateActivityDefinitionResp.setActivityDefnVersionKey(vchActivityDefnVersion.getActivityDefnKeyVersion());
-        vchCreateActivityDefinitionResp.setLocation(location.getHref());
+        vchCreateActivityDefinitionResp.setLocation(url);
 
         return vchCreateActivityDefinitionResp;
     }

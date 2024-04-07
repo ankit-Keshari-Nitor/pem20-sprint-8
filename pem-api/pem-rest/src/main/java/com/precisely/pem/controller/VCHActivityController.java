@@ -16,10 +16,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Size;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Tag(name = "Activity Definition", description = "Activity Definition management APIs")
 @RequestMapping("/sponsors/{sponsorContext}/v2/activityDefinitions")
@@ -28,6 +31,8 @@ public class VCHActivityController {
 
     @Autowired
     VCHActivityDefinitionService vchActivityDefinitionService;
+
+    Logger logger = LoggerFactory.getLogger(VCHActivityController.class);
 
     @Operation(summary = "Create an Activity Definition")
     @ApiResponses({
@@ -41,8 +46,9 @@ public class VCHActivityController {
                                                                     @RequestPart(value = "description", required = false) @Size(min = 1, max = 255) String description,
                                                                     @RequestPart(value = "file") @MultipartFileValidator MultipartFile file,
                                                                     @RequestPart(value = "application", required = true) @LowerCaseValidator String app,
-                                                                    @PathVariable(value = "sponsorContext", required = true) String sponsorContext) throws Exception {
-        return vchActivityDefinitionService.createActivityDefinition(sponsorContext, name, description, file, app);
+                                                                    @PathVariable(value = "sponsorContext", required = true) String sponsorContext,
+                                                                    UriComponentsBuilder builder) throws Exception {
+        return vchActivityDefinitionService.createActivityDefinition(sponsorContext, name, description, file, app, builder);
     }
 
     @Operation(summary = "Retrieve all Activity Definitions", tags = { "Activity Definition" })

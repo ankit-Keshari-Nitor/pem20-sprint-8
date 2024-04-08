@@ -24,6 +24,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.9.0'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.9.0'
+    testImplementation 'org.springframework:spring-mock:2.0.8'
 }
 
 test {

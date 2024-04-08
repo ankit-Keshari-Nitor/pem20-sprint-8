@@ -18,10 +18,12 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +42,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionService {
+    @Value("${pem.openapi.dev-url}")
+    private String urlInfo;
+
     @Autowired
     private VCHSponsorRepo vchSponsorRepo;
     @Autowired
@@ -48,12 +53,8 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
     private VCHActivityDefnDataRepo vchActivityDefnDataRepo;
     @Autowired
     private VCHActivityDefnVersionRepo vchActivityDefnVersionRepo;
-
-    private final ModelMapper mapper;
-    public VCHActivityDefinitionServiceImpl(VCHActivityDefnRepo vchActivityDefnRepo, ModelMapper mapper) {
-        this.vchActivityDefnRepo = vchActivityDefnRepo;
-        this.mapper = mapper;
-    }
+    @Autowired
+    private ModelMapper mapper;
 
     Logger logger = LoggerFactory.getLogger(VCHActivityDefinitionServiceImpl.class);
 
@@ -83,8 +84,10 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
                 .map(p ->
                 {
                     VCHActivityDefnDto dtoObj = mapper.map(p, VCHActivityDefnDto.class);
-                    String url = builder.path("/sponsors/{sponsorContext}/v2/activityDefinitions").buildAndExpand(sponsorContext).toUriString() + "/" + dtoObj.getActivityDefnKey() + "/versions" ;
-                    dtoObj.setActivityVersionLink(url);
+                    Link locationp = Link.of("/sponsors/" + sponsorContext +
+                            "/v2/activityDefinitions/" + dtoObj.getActivityDefnKey() + "/versions");
+                    String location = builder.path(locationp.toString()).toUriString();
+                    dtoObj.setActivityVersionLink(urlInfo + location);
                     return dtoObj;
                 }).collect(Collectors.toList());
 
@@ -153,7 +156,7 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
         vchActivityDefnVersion = mapper.map(vchActivityDefnVersionDto, VCHActivityDefnVersion.class);
         vchActivityDefnVersion = vchActivityDefnVersionRepo.save(vchActivityDefnVersion);
 
-        String url = builder.path("/sponsors/{sponsorContext}/v2/activityDefinitions").buildAndExpand(sponsorContext).toUriString() + "/" +vchActivityDefn.getActivityDefnKey();
+        String url = urlInfo + "/" + builder.path("/sponsors/{sponsorContext}/v2/activityDefinitions").buildAndExpand(sponsorContext).toUriString() + "/" +vchActivityDefn.getActivityDefnKey();
 
         logger.info("location : " + url);
 

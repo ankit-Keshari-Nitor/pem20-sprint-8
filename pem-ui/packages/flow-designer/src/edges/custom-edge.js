@@ -1,9 +1,8 @@
 import React from 'react';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, useReactFlow } from 'reactflow';
-
 import './custom-edge.css';
 
-export default function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = { stroke: '#000' }, markerEnd }) {
+function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = { stroke: '#000' }, markerEnd }) {
   const { setEdges } = useReactFlow();
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -13,6 +12,8 @@ export default function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sou
     targetY,
     targetPosition
   });
+
+  //import { Popover, PopoverContent } from '@carbon/react';
 
   const onEdgeClick = () => {
     setEdges((edges) => edges.filter((edge) => edge.id !== id));
@@ -39,3 +40,5 @@ export default function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sou
     </>
   );
 }
+
+export default CustomEdge;

@@ -1,14 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useCallback } from 'react';
-import ReactFlow, { ReactFlowProvider, addEdge, useNodesState, useEdgesState, Controls, Background } from 'reactflow';
-
+import ReactFlow, { ReactFlowProvider, addEdge, MarkerType, useNodesState, useEdgesState, Controls, Background } from 'reactflow';
 import 'reactflow/dist/style.css';
-import './workflow.css';
-
-import TasksTray from '../tasks-tray';
-import CustomEdge from '../custom-edge';
-import StartNode from '../custom-nodes/start-node';
-import EndNode from '../custom-nodes/end-node';
-import TaskNode from '../custom-nodes/task-node';
+import './workflow-designer.css';
+import BlockTray from './blocktray';
+import { CustomEdge } from './edges';
+import { StartNode, EndNode, TaskNode } from './nodes';
 
 const connectionLineStyle = { stroke: '#000' };
 const defaultViewport = { x: 0, y: 0, zoom: 1 };
@@ -31,13 +28,21 @@ const initialNodes = [
   }
 ];
 
+
+const endMark = {
+  type: MarkerType.ArrowClosed,
+  width: 20,
+  height: 20,
+  color: '#FF0072',
+};
 const initialEdges = [
   {
     id: 'e1-2',
     source: '1',
     target: '2',
     animated: true,
-    type: 'buttonedge'
+    type: 'buttonedge',
+    markerEnd: endMark
   }
 ];
 
@@ -53,6 +58,8 @@ const nodeTypes = {
   gateway: TaskNode
 };
 
+
+
 const edgeTypes = {
   buttonedge: CustomEdge
 };
@@ -60,7 +67,7 @@ const edgeTypes = {
 let id = 0;
 const getId = () => `dnd-node_${id++}`;
 
-const Workflow = () => {
+const WorkflowDnDDesigner = () => {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -71,6 +78,7 @@ const Workflow = () => {
   const onConnect = useCallback((params) => {
     let newparam = params;
     newparam.type = 'buttonedge';
+    newparam.markerEnd = endMark;
     setEdges((eds) => addEdge({ ...newparam, animated: true, style: { stroke: '#000' } }, eds));
   }, []);
 
@@ -114,7 +122,7 @@ const Workflow = () => {
   return (
     <div className="dnd-flow">
       <div className="task-tray-container">
-        <TasksTray />
+        <BlockTray blockType="group1" />
       </div>
       <ReactFlowProvider>
         <div className="reactflow-wrapper" ref={reactFlowWrapper}>
@@ -144,4 +152,4 @@ const Workflow = () => {
   );
 };
 
-export default Workflow;
+export default WorkflowDnDDesigner;

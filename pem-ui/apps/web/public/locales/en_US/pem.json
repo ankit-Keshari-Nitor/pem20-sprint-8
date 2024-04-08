@@ -10,7 +10,7 @@
       "users": "Users",
       "roles": "Roles",
       "divisions":"Divisions",
-      "workflow":"Workflow"
+      "workflow":"Activity Definitions"
     },
     "headerLink": {
       "directories": "Directories",

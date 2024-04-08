@@ -1,8 +1,10 @@
 import React from 'react';
-import './tasks-tray.css';
-import { NODE_TYPES } from './../../constants/constants';
+import './sidetray.css';
+import { NODE_TYPES } from '../constants';
 
-export const TasksTray = () => {
+export const BlockTray = ({ blockType = "group1" }) => {
+
+  console.log(blockType);
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
@@ -10,9 +12,9 @@ export const TasksTray = () => {
 
   return (
     <div className="task-tray-aside">
-      {NODE_TYPES.map((node) => {
+      {NODE_TYPES.filter((x) => x.blockType == blockType).map((node) => {
         return (
-          <div className="dnd-node" onDragStart={(event) => onDragStart(event, node.type)} draggable>
+          <div key={node.id} className="dnd-node" onDragStart={(event) => onDragStart(event, node.type)} draggable>
             <button className="dnd-node-field">
               <span className="dnd-node-field-icon">
                 <>{node.nodeIcon}</>

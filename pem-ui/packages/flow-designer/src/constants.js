@@ -1,5 +1,5 @@
 import React from 'react';
-import { PartnerBlockIcon, CustomBlockIcon, SponsorBlockIcon, SystemBlockIcon, ApprovalBlockIcon, AttributeBlockIcon, GatewayBlockIcon } from '../assets/icons';
+import { PartnerBlockIcon, CustomBlockIcon, SponsorBlockIcon, SystemBlockIcon, ApprovalBlockIcon, AttributeBlockIcon, GatewayBlockIcon } from './icons'
 
 export const NODE_TYPES = [
   {
@@ -8,7 +8,8 @@ export const NODE_TYPES = [
     data: {
       label: 'Partner'
     },
-    nodeIcon: <PartnerBlockIcon />
+    nodeIcon: <PartnerBlockIcon />,
+    blockType:'group1'
   },
   {
     id: 'approval',
@@ -16,7 +17,8 @@ export const NODE_TYPES = [
     data: {
       label: 'Approval'
     },
-    nodeIcon: <ApprovalBlockIcon />
+    nodeIcon: <ApprovalBlockIcon />,
+    blockType:'group1'
   },
   {
     id: 'attribute',
@@ -24,7 +26,8 @@ export const NODE_TYPES = [
     data: {
       label: 'Attribute'
     },
-    nodeIcon: <AttributeBlockIcon />
+    nodeIcon: <AttributeBlockIcon />,
+    blockType:'group1'
   },
   {
     id: 'sponsor',
@@ -32,19 +35,22 @@ export const NODE_TYPES = [
     data: {
       label: 'Sponsor'
     },
-    nodeIcon: <SponsorBlockIcon />
+    nodeIcon: <SponsorBlockIcon />,
+    blockType:'group1'
   },
   {
     id: 'custom',
     type: 'custom',
     data: { label: 'Custom' },
-    nodeIcon: <CustomBlockIcon />
+    nodeIcon: <CustomBlockIcon />,
+    blockType:'group1'
   },
   {
     id: 'system',
     type: 'system',
     data: { label: 'System' },
-    nodeIcon: <SystemBlockIcon />
+    nodeIcon: <SystemBlockIcon />,
+    blockType:'group1'
   },
   {
     id: 'gateway',
@@ -52,6 +58,7 @@ export const NODE_TYPES = [
     data: {
       label: 'Gateway'
     },
-    nodeIcon: <GatewayBlockIcon />
+    nodeIcon: <GatewayBlockIcon />,
+    blockType:'group1'
   }
 ];

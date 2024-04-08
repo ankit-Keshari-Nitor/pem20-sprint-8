@@ -28,6 +28,12 @@ const sideNavConfig = [
     to: '/directories/divisions',
     title: 'pem:sideNav.divisions',
     resourceKey: 'DIVISIONS.VIEW'
+  },
+  {
+    label: 'pem:sideNav.workflow',
+    to: '/activities/workflow',
+    title: 'pem:sideNav.workflow',
+    resourceKey: 'WORKFLOW.VIEW'
   }
 ];
 

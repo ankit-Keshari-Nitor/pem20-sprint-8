@@ -9,7 +9,8 @@
       "partnerUsers": "Partner Users",
       "users": "Users",
       "roles": "Roles",
-      "divisions":"Divisions"
+      "divisions":"Divisions",
+      "workflow":"Activity Definitions"
     },
     "headerLink": {
       "directories": "Directories",

@@ -19,7 +19,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "start":"cd apps/web && yarn start"
   },
   "devDependencies": {},
   "dependencies": {

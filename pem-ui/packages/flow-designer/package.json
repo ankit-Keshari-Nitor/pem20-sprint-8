@@ -1,9 +1,40 @@
 {
   "name": "@b2bi/flow-designer",
-  "version": "1.0.0",
-  "description": "B2Bi Flow Designer",
-  "main": "index.js",
-  "license": "Precisely License",
+  "description": "Workflow/Activity Designer",
+  "version": "0.1.0",
+  "main": "es/index.js",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "@carbon/react": "^1.51.1",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "reactflow": "11.10.4",
+    "sass": "^1.71.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "node tasks/build.js",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  },
+  "rollup": {
+    "watch": {
+      "include": "src/**",
+      "buildDelay": 1000
+    }
+  }
 }

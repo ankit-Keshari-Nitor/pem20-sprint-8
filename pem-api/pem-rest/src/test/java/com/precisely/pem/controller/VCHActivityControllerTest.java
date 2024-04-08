@@ -4,7 +4,7 @@ import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.dtos.responses.VCHActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.VCHCreateActivityDefinitionResp;
-import com.precisely.pem.dtos.shared.VCHActivityDefnDto;
+import com.precisely.pem.dtos.responses.VCHGetActivitiyDefnByIdResp;
 import com.precisely.pem.services.VCHActivityDefinitionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,10 +57,10 @@ class VCHActivityControllerTest {
     void testGetActivityDefinitionById() throws Exception {
         String sponsorContext = "test";
         String activityDefnKey = "test";
-        VCHActivityDefnDto resp = new VCHActivityDefnDto();
+        VCHGetActivitiyDefnByIdResp resp = new VCHGetActivitiyDefnByIdResp();
         Mockito.when(vchActivityDefinitionService.getActivityDefinitionByKey(Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(resp);
-        VCHActivityDefnDto output = vchActivityController.getActivityDefinitionByKey(sponsorContext,activityDefnKey);
+        VCHGetActivitiyDefnByIdResp output = vchActivityController.getActivityDefinitionByKey(sponsorContext,activityDefnKey);
         assertNotNull(output);
     }
 }

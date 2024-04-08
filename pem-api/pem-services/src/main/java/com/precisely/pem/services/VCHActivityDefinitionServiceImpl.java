@@ -2,6 +2,7 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.dtos.responses.VCHActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.VCHCreateActivityDefinitionResp;
+import com.precisely.pem.dtos.responses.VCHGetActivitiyDefnByIdResp;
 import com.precisely.pem.dtos.shared.PaginationDto;
 import com.precisely.pem.dtos.shared.VCHActivityDefnDataDto;
 import com.precisely.pem.dtos.shared.VCHActivityDefnDto;
@@ -86,7 +87,7 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
                     VCHActivityDefnDto dtoObj = mapper.map(p, VCHActivityDefnDto.class);
                     Link location = Link.of("/sponsors/" + sponsorContext +
                             "/v2/activityDefinitions/" + dtoObj.getActivityDefnKey() + "/versions");
-                    dtoObj.setActivityVersionLink(urlInfo + location);
+                    dtoObj.setActivityVersionLink(urlInfo + location.getHref());
                     return dtoObj;
                 }).collect(Collectors.toList());
 
@@ -167,7 +168,7 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
     }
 
     @Override
-    public VCHActivityDefnDto getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception {
+    public VCHGetActivitiyDefnByIdResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception {
 
         String SponsorKey = vchSponsorRepo.getSponsorKey(sponsorContext);
         Optional<VCHActivityDefn> result = Optional.ofNullable(vchActivityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, SponsorKey));;
@@ -175,6 +176,6 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
             throw  new Exception("ActivityDefn not found" );
         }
         ModelMapper mapper = new ModelMapper();
-        return mapper.map(result.get(), VCHActivityDefnDto.class);
+        return mapper.map(result.get(), VCHGetActivitiyDefnByIdResp.class);
     }
 }

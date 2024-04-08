@@ -3,9 +3,8 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.dtos.responses.VCHActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.VCHCreateActivityDefinitionResp;
-import com.precisely.pem.dtos.shared.VCHActivityDefnDto;
+import com.precisely.pem.dtos.responses.VCHGetActivitiyDefnByIdResp;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -18,5 +17,5 @@ public interface VCHActivityDefinitionService {
 
     public VCHCreateActivityDefinitionResp createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException;
 
-    public VCHActivityDefnDto getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception;
+    public VCHGetActivitiyDefnByIdResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception;
 }

@@ -7,7 +7,7 @@ import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.dtos.responses.VCHActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.VCHCreateActivityDefinitionResp;
-import com.precisely.pem.dtos.shared.VCHActivityDefnDto;
+import com.precisely.pem.dtos.responses.VCHGetActivitiyDefnByIdResp;
 import com.precisely.pem.services.VCHActivityDefinitionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -72,12 +72,12 @@ public class VCHActivityController {
     @Operation(summary = "Get Activity Definitions by Key", tags = { "Activity Definition" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = VCHActivityDefnDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
+                    @Content(schema = @Schema(implementation = VCHGetActivitiyDefnByIdResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
             @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
                     @Content(schema = @Schema()) }),
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
     @GetMapping ("/{activityDefnKey}")
-    public VCHActivityDefnDto getActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey) throws Exception {
+    public VCHGetActivitiyDefnByIdResp getActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey) throws Exception {
        return  vchActivityDefinitionService.getActivityDefinitionByKey(sponsorContext, activityDefnKey);
     }
 }

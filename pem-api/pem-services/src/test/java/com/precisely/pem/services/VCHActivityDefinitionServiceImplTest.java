@@ -2,6 +2,7 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.dtos.responses.VCHActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.VCHCreateActivityDefinitionResp;
+import com.precisely.pem.dtos.responses.VCHGetActivitiyDefnByIdResp;
 import com.precisely.pem.dtos.shared.VCHActivityDefnDto;
 import com.precisely.pem.models.VCHActivityDefn;
 import com.precisely.pem.models.VCHActivityDefnData;
@@ -100,7 +101,7 @@ class VCHActivityDefinitionServiceImplTest {
         Mockito.when(vchSponsorRepo.getSponsorKey(anyString())).thenReturn("test");
         Mockito.when(vchActivityDefnRepo.findByActivityDefnKeyAndSponsorKey(anyString(),anyString()))
                 .thenReturn(getVchActivityDefnObj());
-        VCHActivityDefnDto resp;
+        VCHGetActivitiyDefnByIdResp resp;
         resp = vchActivityDefinitionService.getActivityDefinitionByKey("test","test");
         assertNotNull(resp);
     }

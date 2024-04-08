@@ -20,4 +20,5 @@ public class VCHActivityDefnDto {
     public String application;
     public boolean isDeleted;
     public boolean migrationStatus;
+    public String activityVersionLink;
 }

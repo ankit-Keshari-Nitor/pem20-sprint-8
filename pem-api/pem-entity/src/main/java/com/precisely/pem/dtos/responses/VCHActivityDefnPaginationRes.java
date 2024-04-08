@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VCHActivityDefinitionPaginationRes {
+public class VCHActivityDefnPaginationRes {
     private List<VCHActivityDefnDto> content;
     private PaginationDto pageContent;
 }

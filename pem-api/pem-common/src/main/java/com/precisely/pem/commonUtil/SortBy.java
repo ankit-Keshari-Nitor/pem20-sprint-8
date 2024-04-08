@@ -1,7 +1,7 @@
 package com.precisely.pem.commonUtil;
 
 public enum SortBy {
-    modifyTs ("modify_ts"), activityName ("activity_name");
+    modify_ts ("modifyTs"), activity_name ("activityName");
 
     private String sort_by;
     SortBy(String asc) {

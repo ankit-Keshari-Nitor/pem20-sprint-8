@@ -84,9 +84,8 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
                 .map(p ->
                 {
                     VCHActivityDefnDto dtoObj = mapper.map(p, VCHActivityDefnDto.class);
-                    Link locationp = Link.of("/sponsors/" + sponsorContext +
+                    Link location = Link.of("/sponsors/" + sponsorContext +
                             "/v2/activityDefinitions/" + dtoObj.getActivityDefnKey() + "/versions");
-                    String location = builder.path(locationp.toString()).toUriString();
                     dtoObj.setActivityVersionLink(urlInfo + location);
                     return dtoObj;
                 }).collect(Collectors.toList());
@@ -156,7 +155,7 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
         vchActivityDefnVersion = mapper.map(vchActivityDefnVersionDto, VCHActivityDefnVersion.class);
         vchActivityDefnVersion = vchActivityDefnVersionRepo.save(vchActivityDefnVersion);
 
-        String url = urlInfo + "/" + builder.path("/sponsors/{sponsorContext}/v2/activityDefinitions").buildAndExpand(sponsorContext).toUriString() + "/" +vchActivityDefn.getActivityDefnKey();
+        String url = urlInfo + builder.path("/sponsors/{sponsorContext}/v2/activityDefinitions").buildAndExpand(sponsorContext).toUriString() + "/" +vchActivityDefn.getActivityDefnKey();
 
         logger.info("location : " + url);
 

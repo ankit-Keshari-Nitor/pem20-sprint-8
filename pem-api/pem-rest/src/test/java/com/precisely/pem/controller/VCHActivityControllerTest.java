@@ -49,7 +49,7 @@ class VCHActivityControllerTest {
         VCHActivityDefnPaginationRes resp = new VCHActivityDefnPaginationRes();
         Mockito.when(vchActivityDefinitionService.getAllDefinitionList(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(resp);
-        VCHActivityDefnPaginationRes output = vchActivityController.getActivityDefinitionList(sponsorContext,name,"DRAFT","PEM",1,1, SortBy.modifyTs, SortDirection.ASC,"cashbank");
+        VCHActivityDefnPaginationRes output = vchActivityController.getActivityDefinitionList(sponsorContext,name,"DRAFT","PEM",1,1, SortBy.modify_ts, SortDirection.ASC,"cashbank");
         assertNotNull(output);
     }
 

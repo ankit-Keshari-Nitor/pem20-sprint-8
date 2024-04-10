@@ -1,4 +1,8 @@
-@import '@carbon/styles';
+@use '@carbon/layout';
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/colors';
+@use '@carbon/type';
+@use '@carbon/react/scss/theme' as *;
 
 html {
   height: 100%;

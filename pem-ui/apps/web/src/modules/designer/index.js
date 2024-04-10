@@ -13,7 +13,7 @@ const WorkFlow = {
 
 const routes = [
   {
-    path: '/designer/page',
+    path: 'activities/designer/',
     breadcrumb: 'mod-designer:breadcrumb.page-designer',
     resourceKey: 'DESIGNER.PAGE.VIEW',
     element: (

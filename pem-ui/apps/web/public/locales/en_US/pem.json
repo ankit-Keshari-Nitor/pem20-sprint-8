@@ -10,7 +10,8 @@
       "users": "Users",
       "roles": "Roles",
       "divisions":"Divisions",
-      "workflow":"Activity Definitions"
+      "workflow":"Activity Definitions",
+      "designer":"Page Designer"
     },
     "headerLink": {
       "directories": "Directories",

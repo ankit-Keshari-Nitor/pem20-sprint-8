@@ -6,16 +6,16 @@ import TabCanvas from '../../../page-designer/src/components/canvas/tab-canvas';
 
 const type = FORM_FIELD_TYPE.TAB;
 
-const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, selectedField, deleteFormField }) => {
+const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, onFieldSelect, onFieldDelete }) => {
   return (
-    <Tabs>
+    <Tabs data-testid={'test-tab'}>
       <TabList aria-label="List of tabs">
         {row.children.map((tabItem, idx) => {
           const { tabTitle } = tabItem;
           return (
             <Tab
               onClick={(e) => {
-                selectedField(e, tabItem, `${currentPath}-${idx}`);
+                onFieldSelect(e, tabItem, `${currentPath}-${idx}`);
               }}
             >
               {tabTitle}
@@ -33,8 +33,8 @@ const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, s
                 renderRow={renderRow}
                 componentMapper={componentMapper}
                 path={`${currentPath}-${idx}`}
-                selectedField={selectedField}
-                deleteFormField={deleteFormField}
+                onFieldSelect={onFieldSelect}
+                onFieldDelete={onFieldDelete}
               />
             </TabPanel>
           );
@@ -55,7 +55,7 @@ const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, s
   //         renderRow={renderRow}
   //         componentMapper={componentMapper}
   //         path={currentPath}
-  //         selectedField={selectedField}
+  //         onFieldSelect={onFieldSelect}
   //         deleteFormField={deleteFormField}
   //       />
   //     </TabPanel>

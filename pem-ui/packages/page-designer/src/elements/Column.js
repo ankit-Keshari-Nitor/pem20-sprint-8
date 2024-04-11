@@ -4,7 +4,7 @@ import { COLUMN } from '../constants/constants';
 import DropZone from './DropZone';
 import FieldRenderer from '../components/canvas/field-renderer/field-renderer';
 
-const Column = ({ data, handleDrop, path, componentMapper, selectedField, renderRow, deleteFormField }) => {
+const Column = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete }) => {
   const ref = useRef(null);
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -26,7 +26,7 @@ const Column = ({ data, handleDrop, path, componentMapper, selectedField, render
     return (
       <div
         onClick={(e) => {
-          selectedField(e, component, currentPath);
+          onFieldSelect(e, component, currentPath);
         }}
       >
         <FieldRenderer
@@ -36,8 +36,8 @@ const Column = ({ data, handleDrop, path, componentMapper, selectedField, render
           componentMapper={componentMapper}
           renderRow={renderRow}
           handleDrop={handleDrop}
-          deleteFormField={deleteFormField}
-          selectedField={selectedField}
+          onFieldDelete={onFieldDelete}
+          onFieldSelect={onFieldSelect}
         />
       </div>
     );

@@ -86,7 +86,7 @@ export default function Designer({ componentMapper }) {
     [layout, components]
   );
 
-  const selectedField = (e, componentDetail, currentPathDetail) => {
+  const onFieldSelect = (e, componentDetail, currentPathDetail) => {
     e.stopPropagation();
     let filedTypeConfig;
     if (componentDetail.type === COMPONENT || componentDetail.type === ACCORDION) {
@@ -169,7 +169,7 @@ export default function Designer({ componentMapper }) {
     }
   };
 
-  const deleteFormField = (e, path) => {
+  const onFieldDelete = (e, path) => {
     e.stopPropagation();
     const splitDropZonePath = path.split('-');
     setLayout(handleRemoveItemFromLayout(layout, splitDropZonePath));
@@ -184,9 +184,9 @@ export default function Designer({ componentMapper }) {
         handleDrop={handleDrop}
         path={currentPath}
         componentMapper={componentMapper}
-        selectedField={selectedField}
+        onFieldSelect={onFieldSelect}
         renderRow={renderRow}
-        deleteFormField={deleteFormField}
+        onFieldDelete={onFieldDelete}
       />
     );
   };
@@ -199,15 +199,7 @@ export default function Designer({ componentMapper }) {
         </div>
         <div className="layout-container">
           <div className="canvas-wrapper">
-            <Canvas
-              layout={layout}
-              handleDrop={handleDrop}
-              renderRow={renderRow}
-              componentMapper={componentMapper}
-              selectedField={selectedField}
-              deleteFormField={deleteFormField}
-              previewMode={false}
-            />
+            <Canvas layout={layout} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} onFieldSelect={onFieldSelect} onFieldDelete={onFieldDelete} />
           </div>
           <div className="propsPanel">
             <PropsPanel
@@ -215,7 +207,7 @@ export default function Designer({ componentMapper }) {
               selectedFiledProps={selectedFiledProps}
               handleSchemaChanges={handleSchemaChanges}
               columnSizeCustomization={columnSizeCustomization}
-              deleteFormField={deleteFormField}
+              onFieldDelete={onFieldDelete}
             />
           </div>
         </div>
@@ -232,14 +224,7 @@ export default function Designer({ componentMapper }) {
         <ViewSchema layout={layout} />
       </Modal>
       <Modal open={openPreview} onRequestClose={() => setOpenPreview(false)} passiveModal modalLabel="Form Preview" primaryButtonText="Close" secondaryButtonText="Cancel">
-        <Formpreview
-          layout={layout}
-          handleDrop={handleDrop}
-          renderRow={renderRow}
-          componentMapper={componentMapper}
-          selectedField={selectedField}
-          deleteFormField={deleteFormField}
-        />
+        <Formpreview layout={layout} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} onFieldSelect={onFieldSelect} onFieldDelete={onFieldDelete} />
       </Modal>
     </>
   );

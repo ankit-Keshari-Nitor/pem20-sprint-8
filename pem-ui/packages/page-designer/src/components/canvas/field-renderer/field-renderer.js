@@ -5,7 +5,7 @@ import { TrashCan } from '@carbon/icons-react';
 import './field-renderer.scss';
 import { COMPONENT } from '../../../constants/constants';
 
-const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, deleteFormField, selectedField, previewMode }) => {
+const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onFieldDelete, onFieldSelect, previewMode }) => {
   let compent_type;
   let dragItem;
   var isNestedBlock = false;
@@ -40,8 +40,8 @@ const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, del
       currentPath={path}
       handleDrop={handleDrop}
       componentMapper={componentMapper}
-      selectedField={selectedField}
-      deleteFormField={deleteFormField}
+      onFieldSelect={onFieldSelect}
+      onFieldDelete={onFieldDelete}
     />
   ) : (
     <FormFieldComponent field={data.component} id={data.id} />
@@ -51,7 +51,7 @@ const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, del
     <div ref={ref} style={{ opacity }}>
       <div className="element">
         <span className="delete-icon">
-          <TrashCan onClick={(e) => deleteFormField(e, path)} />
+          <TrashCan onClick={(e) => onFieldDelete(e, path)} />
         </span>
         {formFieldData}
       </div>

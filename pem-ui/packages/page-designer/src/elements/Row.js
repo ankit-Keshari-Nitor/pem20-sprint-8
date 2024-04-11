@@ -4,7 +4,7 @@ import { ROW } from '../constants/constants';
 import Column from './Column';
 import { Grid, Column as Carboncolumn } from '@carbon/react';
 
-const Row = ({ data, handleDrop, path, componentMapper, selectedField, renderRow, deleteFormField }) => {
+const Row = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete }) => {
   const ref = useRef(null);
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -24,16 +24,16 @@ const Row = ({ data, handleDrop, path, componentMapper, selectedField, renderRow
 
   const renderColumn = (column, currentPath, renderRow) => {
     return (
-      <Carboncolumn onClick={(e) => selectedField(e, column, currentPath)} lg={column.customsize ? Number(column.customsize) : Number(column.defaultsize)} className="column-zone">
+      <Carboncolumn onClick={(e) => onFieldSelect(e, column, currentPath)} lg={column.customsize ? Number(column.customsize) : Number(column.defaultsize)} className="column-zone">
         <Column
           key={column.id}
           data={column}
           handleDrop={handleDrop}
           path={currentPath}
           componentMapper={componentMapper}
-          selectedField={selectedField}
+          onFieldSelect={onFieldSelect}
           renderRow={renderRow}
-          deleteFormField={deleteFormField}
+          onFieldDelete={onFieldDelete}
         />
       </Carboncolumn>
     );

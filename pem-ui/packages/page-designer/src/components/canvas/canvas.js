@@ -3,12 +3,12 @@ import { DropZone } from '../../elements';
 import classNames from 'classnames';
 import FieldRenderer from './field-renderer/field-renderer';
 
-export default function Canvas({ layout, handleDrop, renderRow, componentMapper, selectedField, deleteFormField, previewMode }) {
+export default function Canvas({ layout, handleDrop, renderRow, componentMapper, onFieldSelect, onFieldDelete, previewMode = false }) {
   const renderComponent = (component, currentPath, renderRow) => {
     return (
       <div
         onClick={(e) => {
-          !previewMode && selectedField(e, component, currentPath);
+          !previewMode && onFieldSelect(e, component, currentPath);
         }}
         className={classNames(previewMode && 'form-fields')}
       >
@@ -19,8 +19,8 @@ export default function Canvas({ layout, handleDrop, renderRow, componentMapper,
           componentMapper={componentMapper}
           renderRow={renderRow}
           handleDrop={handleDrop}
-          deleteFormField={deleteFormField}
-          selectedField={selectedField}
+          onFieldDelete={onFieldDelete}
+          onFieldSelect={onFieldSelect}
           previewMode={previewMode}
         />
       </div>

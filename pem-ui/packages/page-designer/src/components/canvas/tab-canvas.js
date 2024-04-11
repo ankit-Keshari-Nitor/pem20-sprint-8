@@ -2,12 +2,12 @@ import React from 'react';
 import FieldRenderer from './field-renderer/field-renderer';
 import { DropZone } from '../../elements';
 
-const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, selectedField, deleteFormField, path }) => {
+const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, onFieldSelect, onFieldDelete, path }) => {
   const renderComponent = (component, currentPath, renderRow) => {
     return (
       <div
         onClick={(e) => {
-          selectedField(e, component, currentPath);
+          onFieldSelect(e, component, currentPath);
         }}
       >
         <FieldRenderer
@@ -17,8 +17,8 @@ const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, selectedFie
           componentMapper={componentMapper}
           renderRow={renderRow}
           handleDrop={handleDrop}
-          deleteFormField={deleteFormField}
-          selectedField={selectedField}
+          onFieldDelete={onFieldDelete}
+          onFieldSelect={onFieldSelect}
         />
       </div>
     );

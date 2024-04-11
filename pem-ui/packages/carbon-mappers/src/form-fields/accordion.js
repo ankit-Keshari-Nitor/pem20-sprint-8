@@ -6,7 +6,7 @@ import TabCanvas from '../../../page-designer/src/components/canvas/tab-canvas';
 
 const type = FORM_FIELD_TYPE.ACCORDION;
 
-const Accordion = ({ renderRow, row, currentPath, handleDrop, componentMapper, selectedField, deleteFormField }) => {
+const Accordion = ({ renderRow, row, currentPath, handleDrop, componentMapper, onFieldSelect, onFieldDelete }) => {
   return (
     <CarbonAccordion data-testid={'accordion-id'} id={'accordion-id'}>
       <AccordionItem title={row.component.labelText} open>
@@ -16,8 +16,8 @@ const Accordion = ({ renderRow, row, currentPath, handleDrop, componentMapper, s
           renderRow={renderRow}
           componentMapper={componentMapper}
           path={currentPath}
-          selectedField={selectedField}
-          deleteFormField={deleteFormField}
+          onFieldSelect={onFieldSelect}
+          onFieldDelete={onFieldDelete}
         />
       </AccordionItem>
     </CarbonAccordion>

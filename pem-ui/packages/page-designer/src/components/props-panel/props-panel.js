@@ -4,7 +4,7 @@ import { Accordion, AccordionItem, Toggle, TextInput, Button, Select, SelectItem
 import './props-panel.scss';
 import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE } from '../../constants/constants';
 
-export default function PropsPanel({ layout, selectedFiledProps, handleSchemaChanges, columnSizeCustomization, deleteFormField }) {
+export default function PropsPanel({ layout, selectedFiledProps, handleSchemaChanges, columnSizeCustomization, onFieldDelete }) {
   const [editableProps, setEditableProps] = React.useState({});
   const [advanceProps, setAdvanceProps] = React.useState([]);
   const [componentStyle, setComponentStyle] = React.useState([]);
@@ -141,7 +141,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                 <Button
                   kind="danger--tertiary"
                   onClick={(e) => {
-                    deleteFormField(e, selectedFiledProps?.currentPathDetail);
+                    onFieldDelete(e, selectedFiledProps?.currentPathDetail);
                   }}
                 >
                   Delete Column

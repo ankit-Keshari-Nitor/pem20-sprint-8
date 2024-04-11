@@ -1,8 +1,10 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { Search, Close } from '@carbon/icons-react';
 
 import './components-tray.scss';
 import ComponentItem from './component-item';
 import { PALETTE_GROUPS, SIDEBAR_ITEM } from '../../constants/constants';
+import { Button as CarbonButton } from '@carbon/react';
 
 export default function ComponentsTray({ componentMapper, setOpen, setOpenPreview }) {
   const initialPaletteEntries = React.useRef(collectPaletteEntries(componentMapper));
@@ -60,15 +62,15 @@ export default function ComponentsTray({ componentMapper, setOpen, setOpenPrevie
         return <ComponentItem key={index} data={entry} />;
       })}
       {/* Header */}
-      {/* <div className="palette-header">
-        <span className="palette-header-text-1">Components</span>
+      <div className="palette-header">
+        {/* <span className="palette-header-text-1">Components</span> */}
         <span onClick={() => setOpen(true)} className="palette-header-text-2">
           View Schema
         </span>
         <span onClick={() => setOpenPreview(true)} className="palette-header-text-3">
           Preview
         </span>
-      </div> */}
+      </div>
       {/* Search Box */}
       {/* <div className="palette-search-container">
         <span className="palette-search-icon">

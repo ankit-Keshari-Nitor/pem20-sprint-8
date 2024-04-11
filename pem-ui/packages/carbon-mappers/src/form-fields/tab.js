@@ -9,24 +9,58 @@ const type = FORM_FIELD_TYPE.TAB;
 const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, selectedField, deleteFormField }) => {
   return (
     <Tabs>
-      <TabList aria-label="List of tabs" activation="manual">
-        <Tab>{row.component.labelText ? row.component.labelText : 'Title'}</Tab>
+      <TabList aria-label="List of tabs">
+        {row.children.map((tabItem, idx) => {
+          const { tabTitle } = tabItem;
+          return (
+            <Tab
+              onClick={(e) => {
+                selectedField(e, tabItem, `${currentPath}-${idx}`);
+              }}
+            >
+              {tabTitle}
+            </Tab>
+          );
+        })}
       </TabList>
       <TabPanels>
-        <TabPanel>
-          <TabCanvas
-            layout={row.children}
-            handleDrop={handleDrop}
-            renderRow={renderRow}
-            componentMapper={componentMapper}
-            path={currentPath}
-            selectedField={selectedField}
-            deleteFormField={deleteFormField}
-          />
-        </TabPanel>
+        {row.children.map(({ children }, idx) => {
+          return (
+            <TabPanel>
+              <TabCanvas
+                layout={children}
+                handleDrop={handleDrop}
+                renderRow={renderRow}
+                componentMapper={componentMapper}
+                path={`${currentPath}-${idx}`}
+                selectedField={selectedField}
+                deleteFormField={deleteFormField}
+              />
+            </TabPanel>
+          );
+        })}
       </TabPanels>
     </Tabs>
   );
+
+  // <Tabs>
+  //   <TabList aria-label="List of tabs" activation="manual">
+  //     <Tab>{row.component.labelText ? row.component.labelText : 'Title'}</Tab>
+  //   </TabList>
+  //   <TabPanels>
+  //     <TabPanel>
+  //       <TabCanvas
+  //         layout={row.children}
+  //         handleDrop={handleDrop}
+  //         renderRow={renderRow}
+  //         componentMapper={componentMapper}
+  //         path={currentPath}
+  //         selectedField={selectedField}
+  //         deleteFormField={deleteFormField}
+  //       />
+  //     </TabPanel>
+  //   </TabPanels>
+  // </Tabs>
 };
 
 export default CustomTab;

@@ -24,7 +24,7 @@ const Row = ({ data, handleDrop, path, componentMapper, selectedField, renderRow
 
   const renderColumn = (column, currentPath, renderRow) => {
     return (
-      <Carboncolumn onClick={(e) => selectedField(e, column, currentPath)} lg={column.customsize ? column.customsize : column.defaultsize} className="column-zone">
+      <Carboncolumn onClick={(e) => selectedField(e, column, currentPath)} lg={column.customsize ? Number(column.customsize) : Number(column.defaultsize)} className="column-zone">
         <Column
           key={column.id}
           data={column}

@@ -1,12 +1,10 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Search, Close } from '@carbon/icons-react';
 
 import './components-tray.scss';
 import ComponentItem from './component-item';
 import { PALETTE_GROUPS, SIDEBAR_ITEM } from '../../constants/constants';
-import { Button as CarbonButton } from '@carbon/react';
 
-export default function ComponentsTray({ componentMapper, setOpen }) {
+export default function ComponentsTray({ componentMapper, setOpen, setOpenPreview }) {
   const initialPaletteEntries = React.useRef(collectPaletteEntries(componentMapper));
   const [paletteEntries, setPaletteEntries] = useState(initialPaletteEntries.current);
 
@@ -58,15 +56,21 @@ export default function ComponentsTray({ componentMapper, setOpen }) {
 
   return (
     <div className="palette">
+      {paletteEntries.map((entry, index) => {
+        return <ComponentItem key={index} data={entry} />;
+      })}
       {/* Header */}
-      <div className="palette-header">
+      {/* <div className="palette-header">
         <span className="palette-header-text-1">Components</span>
         <span onClick={() => setOpen(true)} className="palette-header-text-2">
           View Schema
         </span>
-      </div>
+        <span onClick={() => setOpenPreview(true)} className="palette-header-text-3">
+          Preview
+        </span>
+      </div> */}
       {/* Search Box */}
-      <div className="palette-search-container">
+      {/* <div className="palette-search-container">
         <span className="palette-search-icon">
           <Search />
         </span>
@@ -76,9 +80,9 @@ export default function ComponentsTray({ componentMapper, setOpen }) {
             <Close />
           </button>
         )}
-      </div>
+      </div> */}
       {/* Form Fields */}
-      <div className="palette-entries">
+      {/* <div className="palette-entries">
         {groups.map(({ label, entries, id }) => (
           <div className="palette-group" data-group-id={id} key={`ddf_${id}`}>
             <span className="palette-group-title">{label}</span>
@@ -90,7 +94,7 @@ export default function ComponentsTray({ componentMapper, setOpen }) {
           </div>
         ))}
         {groups.length === 0 && <div className="palette-no-entries">No components found.</div>}
-      </div>
+      </div> */}
     </div>
   );
 }

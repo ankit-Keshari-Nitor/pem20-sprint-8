@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link as CarbonLink } from '@carbon/react';
 import { FORM_FIELD_TYPE, editableProps } from '../constant';
-import { Link as LinkIcon } from '@carbon/icons-react';
+import { LinkIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.LINK;
 

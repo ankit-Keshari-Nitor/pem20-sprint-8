@@ -1,7 +1,8 @@
 .palette {
-  height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
   flex: 1;
 }
 
@@ -16,14 +17,18 @@
 }
 
 .palette-header-text-1 {
-  padding: 8px;
+  padding: 1px;
 }
 
 .palette-header-text-2 {
-  padding: 8px;
+  padding: 6px;
   cursor: pointer;
 }
 
+.palette-header-text-3 {
+  padding: 1px;
+  cursor: pointer;
+}
 // Search Container
 .palette .palette-search-container {
   display: flex;

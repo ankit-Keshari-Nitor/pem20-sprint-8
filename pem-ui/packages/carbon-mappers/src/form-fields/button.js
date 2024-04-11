@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button as CarbonButton } from '@carbon/react';
 import { FORM_FIELD_TYPE, editableProps } from '../constant';
-import { ButtonCentered } from '@carbon/icons-react';
+import { ButtonIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.BUTTON;
 
-const Button = ({field, id}) => {
+const Button = ({ field, id }) => {
   const { type, labelText, ...rest } = field;
 
   return (
@@ -22,7 +22,7 @@ Button.config = {
   type,
   label: 'Button',
   group: 'action',
-  icon: <ButtonCentered />,
+  icon: <ButtonIcon />,
   editableProps: {
     Basic: [...editableProps.Basic],
     Condition: [...editableProps.Condition]

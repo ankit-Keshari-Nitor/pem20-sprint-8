@@ -2,7 +2,7 @@ import React from 'react';
 import { Select as CarbonSelect, SelectItem } from '@carbon/react';
 import { FORM_FIELD_TYPE, editableProps, helperText, readOnly } from '../constant';
 import Label from './label';
-import { ListDropdown } from '@carbon/icons-react';
+import { SelectIcon } from './../icons';
 
 
 const type = FORM_FIELD_TYPE.SELECT;
@@ -27,7 +27,7 @@ Select.config = {
   type,
   label: 'Select',
   group: 'selection',
-  icon: <ListDropdown />,
+  icon: <SelectIcon />,
   editableProps: {
     Basic: [...editableProps.Basic, helperText],
     Condition: [...editableProps.Condition, readOnly]

@@ -14,12 +14,12 @@ import {
   handleRemoveItemFromLayout,
   updateChildToChildren,
   addChildToChildren,
-  findChildComponentById,
-  updateConfigChildToChildren
+  findChildComponentById
 } from '../../utils/helpers';
-import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, TAB, CUSTOM_COLUMN, CUSTOM_SIZE } from '../../constants/constants';
+import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Modal } from '@carbon/react';
+import Formpreview from '../preview-mode';
 
 export default function Designer({ componentMapper }) {
   const initialLayout = INITIAL_DATA.layout;
@@ -27,8 +27,8 @@ export default function Designer({ componentMapper }) {
   const [layout, setLayout] = useState(initialLayout);
   const [components, setComponents] = useState(initialComponents);
   const [selectedFiledProps, setSelectedFiledProps] = useState();
-  const [showSchema, setSowSchema] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openPreview, setOpenPreview] = useState(false);
 
   const handleDrop = useCallback(
     (dropZone, item) => {
@@ -88,9 +88,8 @@ export default function Designer({ componentMapper }) {
 
   const selectedField = (e, componentDetail, currentPathDetail) => {
     e.stopPropagation();
-
     let filedTypeConfig;
-    if (componentDetail.type === COMPONENT || componentDetail.type === ACCORDION || componentDetail.type === TAB) {
+    if (componentDetail.type === COMPONENT || componentDetail.type === ACCORDION) {
       if (componentDetail.maintype) {
         filedTypeConfig = componentMapper[componentDetail.maintype].config;
       } else {
@@ -121,11 +120,11 @@ export default function Designer({ componentMapper }) {
           return (advancePops.value = '');
         }
       });
-    } else {
-      if (componentDetail.type === COLUMN) {
-        const size = componentDetail.customsize ? componentDetail.customsize : componentDetail.defaultsize;
-        filedTypeConfig = { ...componentDetail, style: [{ labelText: 'Column Size', text: size }], currentPathDetail: currentPathDetail };
-      }
+    } else if (componentDetail.type === COLUMN) {
+      const size = componentDetail.customsize ? componentDetail.customsize : componentDetail.defaultsize;
+      filedTypeConfig = { ...componentDetail, style: [{ labelText: 'Column Size', text: size }], currentPathDetail: currentPathDetail };
+    } else if (componentDetail.type === SUBTAB) {
+      filedTypeConfig = { ...componentDetail };
     }
     setSelectedFiledProps({ id: componentDetail.id, type: componentDetail.type, component: { ...filedTypeConfig }, currentPathDetail: currentPathDetail });
   };
@@ -137,10 +136,19 @@ export default function Designer({ componentMapper }) {
 
   const handleSchemaChanges = (id, key, propsName, newValue, currentPathDetail) => {
     const componentPosition = currentPathDetail.split('-');
-    if (key === CUSTOM_COLUMN) {
+    if (key === SUBTAB) {
+      componentPosition.push('0');
+      const newLayout = addChildToChildren(layout, componentPosition, { id: uuid(), tabTitle: DEFAULTTITLE, type: SUBTAB, children: [] });
+      setLayout([...newLayout]);
+    } else if (key === CUSTOM_COLUMN) {
       componentPosition.push('0');
       const newLayout = addChildToChildren(layout, componentPosition, []);
       setLayout([...newLayout]);
+    } else if (key === CUSTOM_TITLE) {
+      let objCopy = selectedFiledProps;
+      objCopy.component[propsName] = newValue;
+      setSelectedFiledProps({ ...objCopy });
+      setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
     } else {
       let objCopy = selectedFiledProps;
       if (key !== 'advance') {
@@ -186,11 +194,11 @@ export default function Designer({ componentMapper }) {
   return (
     <>
       <div className="designer-container">
+        <div className="components-tray">
+          <ComponentsTray componentMapper={componentMapper} setOpen={setOpen} setOpenPreview={setOpenPreview} />
+        </div>
         <div className="layout-container">
-          <div className="leftSideBar">
-            <ComponentsTray componentMapper={componentMapper} setOpen={setOpen} />
-          </div>
-          <div className="pageContainer">
+          <div className="canvas-wrapper">
             <Canvas
               layout={layout}
               handleDrop={handleDrop}
@@ -198,9 +206,10 @@ export default function Designer({ componentMapper }) {
               componentMapper={componentMapper}
               selectedField={selectedField}
               deleteFormField={deleteFormField}
+              previewMode={false}
             />
           </div>
-          <div className="rightSideBar">
+          <div className="propsPanel">
             <PropsPanel
               layout={layout}
               selectedFiledProps={selectedFiledProps}
@@ -210,9 +219,27 @@ export default function Designer({ componentMapper }) {
             />
           </div>
         </div>
+        <div className="button-wrapper">
+          <span className="cancel-button">
+            <span className="button-text">Cancel</span>
+          </span>
+          <span className="save-button">
+            <span className="button-text">Save</span>
+          </span>
+        </div>
       </div>
       <Modal open={open} onRequestClose={() => setOpen(false)} passiveModal modalLabel="Schema" primaryButtonText="Close" secondaryButtonText="Cancel">
         <ViewSchema layout={layout} />
+      </Modal>
+      <Modal open={openPreview} onRequestClose={() => setOpenPreview(false)} passiveModal modalLabel="Form Preview" primaryButtonText="Close" secondaryButtonText="Cancel">
+        <Formpreview
+          layout={layout}
+          handleDrop={handleDrop}
+          renderRow={renderRow}
+          componentMapper={componentMapper}
+          selectedField={selectedField}
+          deleteFormField={deleteFormField}
+        />
       </Modal>
     </>
   );

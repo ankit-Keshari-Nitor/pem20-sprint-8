@@ -25,7 +25,7 @@ import java.sql.SQLException;
 @RestController
 public class VCHActivityController {
 
-    private static Logger LOG = LogManager.getLogger(VCHActivityController.class);
+    private static final Logger LOG = LogManager.getLogger(VCHActivityController.class);
 
     public enum SORT_DIRECTION {
         ASC ("ASC"), DESC ("DESC");

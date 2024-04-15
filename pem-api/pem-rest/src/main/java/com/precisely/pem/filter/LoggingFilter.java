@@ -24,7 +24,7 @@ import java.util.Objects;
 @WebFilter(filterName = "LoggingFilter", urlPatterns = "/*")
 public class LoggingFilter extends OncePerRequestFilter {
 
-    private static Logger LOG = LogManager.getLogger(LoggingFilter.class);
+    private static final Logger LOG = LogManager.getLogger(LoggingFilter.class);
     @Autowired
     private SponsorService sponsorService;
 

@@ -78,10 +78,10 @@ public class LoggingFilter extends OncePerRequestFilter {
            if(Objects.nonNull(company)){
                // Set MDC context for logging here
                ThreadContext.put("sponsor", company.getCompanyName());
-           }else {
-               LOG.info("Company Name Not Found for Log Context Info.");
-               ThreadContext.put("sponsor", "None");
            }
+       }else {
+           LOG.info("Sponsor Context Not Found for Log Context Info.");
+           ThreadContext.put("sponsor", "None");
        }
     }
 }

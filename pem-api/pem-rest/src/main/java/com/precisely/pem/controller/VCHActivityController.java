@@ -3,6 +3,7 @@ package com.precisely.pem.controller;
 import com.precisely.pem.Validator.LowerCaseValidator;
 import com.precisely.pem.Validator.MultipartFileValidator;
 import com.precisely.pem.Validator.SpecialCharValidator;
+import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.dtos.responses.VCHActivityDefnPaginationRes;
@@ -44,9 +45,9 @@ public class VCHActivityController {
     public VCHCreateActivityDefinitionResp createActivityDefinition(@RequestPart(value = "name", required = true) @Size(min = 1, max = 80) @SpecialCharValidator String name,
                                                                     @RequestPart(value = "description", required = false) @Size(min = 1, max = 255) String description,
                                                                     @RequestPart(value = "file") @MultipartFileValidator MultipartFile file,
-                                                                    @RequestPart(value = "application", required = true) @LowerCaseValidator String app,
+                                                                    @RequestParam(value = "application", required = true) Application app,
                                                                     @PathVariable(value = "sponsorContext", required = true) String sponsorContext) throws Exception {
-        return vchActivityDefinitionService.createActivityDefinition(sponsorContext, name, description, file, app);
+        return vchActivityDefinitionService.createActivityDefinition(sponsorContext, name, description, file, app.getApp());
     }
 
     @Operation(summary = "Retrieve all Activity Definitions", tags = { "Activity Definition" })

@@ -1,5 +1,6 @@
 package com.precisely.pem.controller;
 
+import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.dtos.responses.VCHActivityDefnPaginationRes;
@@ -38,7 +39,7 @@ class VCHActivityControllerTest {
         VCHCreateActivityDefinitionResp resp = new VCHCreateActivityDefinitionResp();
         Mockito.when(vchActivityDefinitionService.createActivityDefinition(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.any(MultipartFile.class),Mockito.anyString()))
                 .thenReturn(resp);
-        VCHCreateActivityDefinitionResp output = vchActivityController.createActivityDefinition(name,description,file,application,sponsorContext);
+        VCHCreateActivityDefinitionResp output = vchActivityController.createActivityDefinition(name,description,file, Application.PEM,sponsorContext);
         assertNotNull(output);
     }
 

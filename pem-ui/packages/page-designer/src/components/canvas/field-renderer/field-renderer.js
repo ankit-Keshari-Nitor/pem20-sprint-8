@@ -42,6 +42,7 @@ const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onF
       componentMapper={componentMapper}
       onFieldSelect={onFieldSelect}
       onFieldDelete={onFieldDelete}
+      previewMode={previewMode}
     />
   ) : (
     <FormFieldComponent field={data.component} id={data.id} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FileUploader as CarbonFileUploader } from '@carbon/react';
-import { FORM_FIELD_TYPE, editableProps } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, editableProps } from '../constant';
 import { FileAttachmentIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.FILE_UPLOADER;
@@ -33,8 +33,8 @@ export default FileUploader;
 // Config of Accordion for Left Palette & Right Palette
 FileUploader.config = {
   type,
-  label: 'File Uploader',
-  group: 'basic-input',
+  label: FORM_FIELD_LABEL.FILE_UPLOADER,
+  group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <FileAttachmentIcon />,
   editableProps: editableProps,
   advanceProps: []

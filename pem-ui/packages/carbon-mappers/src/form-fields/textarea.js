@@ -1,15 +1,13 @@
 import React, { useEffect } from 'react';
 import { TextArea as CarbonTextArea } from '@carbon/react';
-import { FORM_FIELD_TYPE, editableProps, minProps, maxProps, readOnly, helperText } from '../constant';
-import Label from './label';
+import { FORM_FIELD_TYPE, editableProps, minProps, maxProps, readOnly, helperText, FORM_FIELD_LABEL, FORM_FIELD_GROUPS } from '../constant';
 import useMinMaxInput from '../custom-hooks/use-min-max-input';
 import { TextAreaIcon } from '../icons';
-
 
 const type = FORM_FIELD_TYPE.TEXT_AREA;
 
 const TextArea = ({ field, id }) => {
-  const { type, labelText, isRequired, min, max, ...rest } = field;
+  const { labelText, isRequired, min, max, ...rest } = field;
   const { value, isValid, invalidText, valueChangeHandler, minChangeHandler, maxChangeHandler } = useMinMaxInput();
 
   useEffect(() => {
@@ -21,12 +19,7 @@ const TextArea = ({ field, id }) => {
     }
   }, [min, max, minChangeHandler, maxChangeHandler]);
 
-  return (
-    <>
-      <Label labelText={labelText} isRequired={isRequired} />
-      <CarbonTextArea data-testid={id} id={id} type={type} labelText="" value={value} invalid={isValid} invalidText={invalidText} onChange={valueChangeHandler} {...rest} />
-    </>
-  );
+  return <CarbonTextArea id={id} data-testid={id} labelText={labelText} value={value} invalid={isValid} onChange={valueChangeHandler} {...rest} />;
 };
 
 export default TextArea;
@@ -34,8 +27,8 @@ export default TextArea;
 // Config of Text Area for Left Palette
 TextArea.config = {
   type,
-  label: 'Text Area',
-  group: 'basic-input',
+  label: FORM_FIELD_LABEL.TEXT_AREA,
+  group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <TextAreaIcon />,
   editableProps: {
     Basic: [...editableProps.Basic, helperText],

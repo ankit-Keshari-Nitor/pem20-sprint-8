@@ -1,6 +1,6 @@
 import React from 'react';
 import { DatePicker as CarbonDatePicker, DatePickerInput } from '@carbon/react';
-import { FORM_FIELD_TYPE, editableProps, helperText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, editableProps, helperText } from '../constant';
 import Label from './label';
 import { DatepickerIcon } from './../icons';
 
@@ -24,8 +24,8 @@ export default DatePicker;
 // Config of Accordion for Left Palette & Right Palette
 DatePicker.config = {
   type,
-  label: 'DatePicker',
-  group: 'basic-input',
+  label: FORM_FIELD_LABEL.DATEPICKER,
+  group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <DatepickerIcon />,
   editableProps: {
     Basic: [...editableProps.Basic, helperText],

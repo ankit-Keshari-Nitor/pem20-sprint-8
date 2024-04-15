@@ -18,7 +18,7 @@ import {
 } from '../../utils/helpers';
 import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE } from '../../constants/constants';
 import ViewSchema from './../view-schema';
-import { Modal } from '@carbon/react';
+import { Button, Modal } from '@carbon/react';
 import Formpreview from '../preview-mode';
 
 export default function Designer({ componentMapper }) {
@@ -176,7 +176,7 @@ export default function Designer({ componentMapper }) {
     setSelectedFiledProps();
   };
 
-  const renderRow = (row, currentPath, renderRow) => {
+  const renderRow = (row, currentPath, renderRow, previewMode) => {
     return (
       <Row
         key={row.id}
@@ -187,13 +187,17 @@ export default function Designer({ componentMapper }) {
         onFieldSelect={onFieldSelect}
         renderRow={renderRow}
         onFieldDelete={onFieldDelete}
+        previewMode={previewMode}
       />
     );
   };
 
   return (
     <>
-      <div className="designer-container">
+      <div className="page-designer">
+        <div className="header-container">
+          <span className="header-title">Form builder name 01</span>
+        </div>
         <div className="components-tray">
           <ComponentsTray componentMapper={componentMapper} setOpen={setOpen} setOpenPreview={setOpenPreview} />
         </div>
@@ -201,7 +205,7 @@ export default function Designer({ componentMapper }) {
           <div className="canvas-wrapper">
             <Canvas layout={layout} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} onFieldSelect={onFieldSelect} onFieldDelete={onFieldDelete} />
           </div>
-          <div className="propsPanel">
+          <div className="props-panel">
             <PropsPanel
               layout={layout}
               selectedFiledProps={selectedFiledProps}
@@ -211,19 +215,29 @@ export default function Designer({ componentMapper }) {
             />
           </div>
         </div>
+
         <div className="button-wrapper">
-          <span className="cancel-button">
-            <span className="button-text">Cancel</span>
-          </span>
-          <span className="save-button">
-            <span className="button-text">Save</span>
-          </span>
+          <Button kind="secondary" className="cancel-button">
+            Cancel
+          </Button>
+          <Button kind="secondary" className="save-button">
+            Save
+          </Button>
         </div>
       </div>
+
       <Modal open={open} onRequestClose={() => setOpen(false)} passiveModal modalLabel="Schema" primaryButtonText="Close" secondaryButtonText="Cancel">
         <ViewSchema layout={layout} />
       </Modal>
-      <Modal open={openPreview} onRequestClose={() => setOpenPreview(false)} passiveModal modalLabel="Form Preview" primaryButtonText="Close" secondaryButtonText="Cancel">
+      <Modal
+        open={openPreview}
+        onRequestClose={() => setOpenPreview(false)}
+        passiveModal
+        modalLabel="Form Preview"
+        primaryButtonText="Close"
+        secondaryButtonText="Cancel"
+        className="preview-modal"
+      >
         <Formpreview layout={layout} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} onFieldSelect={onFieldSelect} onFieldDelete={onFieldDelete} />
       </Modal>
     </>

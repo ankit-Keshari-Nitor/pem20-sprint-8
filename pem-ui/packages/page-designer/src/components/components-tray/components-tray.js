@@ -1,10 +1,8 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Search, Close } from '@carbon/icons-react';
 
 import './components-tray.scss';
 import ComponentItem from './component-item';
 import { PALETTE_GROUPS, SIDEBAR_ITEM } from '../../constants/constants';
-import { Button as CarbonButton } from '@carbon/react';
 
 export default function ComponentsTray({ componentMapper, setOpen, setOpenPreview }) {
   const initialPaletteEntries = React.useRef(collectPaletteEntries(componentMapper));

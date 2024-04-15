@@ -3,8 +3,9 @@ import { useDrag } from 'react-dnd';
 import { ROW } from '../constants/constants';
 import Column from './Column';
 import { Grid, Column as Carboncolumn } from '@carbon/react';
+import classNames from 'classnames';
 
-const Row = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete }) => {
+const Row = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete, previewMode }) => {
   const ref = useRef(null);
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -24,7 +25,11 @@ const Row = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow
 
   const renderColumn = (column, currentPath, renderRow) => {
     return (
-      <Carboncolumn onClick={(e) => onFieldSelect(e, column, currentPath)} lg={column.customsize ? Number(column.customsize) : Number(column.defaultsize)} className="column-zone">
+      <Carboncolumn
+        onClick={(e) => onFieldSelect(e, column, currentPath)}
+        lg={column.customsize ? Number(column.customsize) : Number(column.defaultsize)}
+        className={classNames(!previewMode && 'column-zone')}
+      >
         <Column
           key={column.id}
           data={column}
@@ -34,6 +39,7 @@ const Row = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow
           onFieldSelect={onFieldSelect}
           renderRow={renderRow}
           onFieldDelete={onFieldDelete}
+          previewMode={previewMode}
         />
       </Carboncolumn>
     );
@@ -45,30 +51,9 @@ const Row = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow
           {data.children.map((column, index) => {
             const currentPath = `${path}-${index}`;
 
-            return (
-              <React.Fragment key={column.id}>
-                {/* <DropZone
-                data={{
-                  path: currentPath,
-                  childrenCount: data.children.length
-                }}
-                onDrop={handleDrop}
-                className="horizontalDrag gopal"
-              /> */}
-                {renderColumn(column, currentPath, renderRow)}
-              </React.Fragment>
-            );
+            return <React.Fragment key={column.id}>{renderColumn(column, currentPath, renderRow)}</React.Fragment>;
           })}
         </Grid>
-        {/* <DropZone
-          data={{
-            path: `${path}-${data.children.length}`,
-            childrenCount: data.children.length
-          }}
-          onDrop={handleDrop}
-          className="horizontalDrag 00"
-          isLast
-        /> */}
       </div>
     </div>
   );

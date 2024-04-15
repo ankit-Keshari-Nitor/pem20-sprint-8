@@ -1,16 +1,16 @@
 package com.precisely.pem.services;
 
-import com.precisely.pem.dtos.responses.VCHActivityDefnPaginationRes;
-import com.precisely.pem.dtos.responses.VCHCreateActivityDefinitionResp;
-import com.precisely.pem.dtos.responses.VCHGetActivitiyDefnByIdResp;
-import com.precisely.pem.dtos.shared.VCHActivityDefnDto;
-import com.precisely.pem.models.VCHActivityDefn;
-import com.precisely.pem.models.VCHActivityDefnData;
-import com.precisely.pem.models.VCHActivityDefnVersion;
-import com.precisely.pem.repositories.VCHActivityDefnDataRepo;
-import com.precisely.pem.repositories.VCHActivityDefnRepo;
-import com.precisely.pem.repositories.VCHActivityDefnVersionRepo;
-import com.precisely.pem.repositories.VCHSponsorRepo;
+import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
+import com.precisely.pem.dtos.responses.CreateActivityDefinitionResp;
+import com.precisely.pem.dtos.responses.GetActivitiyDefnByIdResp;
+import com.precisely.pem.dtos.shared.ActivityDefnDto;
+import com.precisely.pem.models.ActivityDefn;
+import com.precisely.pem.models.ActivityDefnData;
+import com.precisely.pem.models.ActivityDefnVersion;
+import com.precisely.pem.repositories.ActivityDefnDataRepo;
+import com.precisely.pem.repositories.ActivityDefnRepo;
+import com.precisely.pem.repositories.ActivityDefnVersionRepo;
+import com.precisely.pem.repositories.SponsorRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -42,13 +42,13 @@ class VCHActivityDefinitionServiceImplTest {
     @InjectMocks
     VCHActivityDefinitionServiceImpl vchActivityDefinitionService;
     @Mock
-    private VCHSponsorRepo vchSponsorRepo;
+    private SponsorRepo sponsorRepo;
     @Mock
-    private VCHActivityDefnRepo vchActivityDefnRepo;
+    private ActivityDefnRepo activityDefnRepo;
     @Mock
-    private VCHActivityDefnDataRepo vchActivityDefnDataRepo;
+    private ActivityDefnDataRepo activityDefnDataRepo;
     @Mock
-    private VCHActivityDefnVersionRepo vchActivityDefnVersionRepo;
+    private ActivityDefnVersionRepo activityDefnVersionRepo;
     @Mock
     private ModelMapper mapper;
     @Mock
@@ -70,15 +70,15 @@ class VCHActivityDefinitionServiceImplTest {
         int pageSize = 10;
         String sortBy = "sortBy";
         String sortDir = "sortDir";
-        Page<VCHActivityDefn> page = new PageImpl<>(getListOfVchActivityDefnObj());
-        Mockito.when(vchSponsorRepo.getSponsorKey(anyString())).thenReturn("cashbank");
-        Mockito.when(vchActivityDefnRepo.findByStatusAndSponsorContextAndApplicationAndByNameAndDescription(
+        Page<ActivityDefn> page = new PageImpl<>(getListOfVchActivityDefnObj());
+        Mockito.when(sponsorRepo.getSponsorKey(anyString())).thenReturn("cashbank");
+        Mockito.when(activityDefnRepo.findByStatusAndSponsorContextAndApplicationAndByNameAndDescription(
                 eq(status), eq("cashbank"), eq(application), eq(applicationName), eq(applicationDescription),
                 Mockito.any(Pageable.class))).thenReturn(page);
-        VCHActivityDefnDto dtoObj = new VCHActivityDefnDto();
+        ActivityDefnDto dtoObj = new ActivityDefnDto();
         dtoObj.setActivityDefnKey("activityDefnKey");
-        Mockito.when(mapper.map(Mockito.any(VCHActivityDefn.class), eq(VCHActivityDefnDto.class))).thenReturn(dtoObj);
-        VCHActivityDefnPaginationRes result = vchActivityDefinitionService.getAllDefinitionList(
+        Mockito.when(mapper.map(Mockito.any(ActivityDefn.class), eq(ActivityDefnDto.class))).thenReturn(dtoObj);
+        ActivityDefnPaginationRes result = vchActivityDefinitionService.getAllDefinitionList(
                 sponsorContext, applicationName, applicationDescription, status, application,
                 pageNo, pageSize, sortBy, sortDir);
         assertEquals(2, result.getContent().size());
@@ -86,94 +86,94 @@ class VCHActivityDefinitionServiceImplTest {
 
     @Test
     void testCreateActivityDefinition() throws SQLException, IOException {
-        Mockito.when(vchSponsorRepo.getSponsorKey(anyString())).thenReturn("test");
-        Mockito.when(vchActivityDefnRepo.save(Mockito.any())).thenReturn(getVchActivityDefnObj());
-        Mockito.when(vchActivityDefnDataRepo.save(Mockito.any())).thenReturn(getVchActivityDefnDataObj());
-        Mockito.when(vchActivityDefnVersionRepo.save(Mockito.any())).thenReturn(getVCHActivityDefnVersionObj());
+        Mockito.when(sponsorRepo.getSponsorKey(anyString())).thenReturn("test");
+        Mockito.when(activityDefnRepo.save(Mockito.any())).thenReturn(getVchActivityDefnObj());
+        Mockito.when(activityDefnDataRepo.save(Mockito.any())).thenReturn(getVchActivityDefnDataObj());
+        Mockito.when(activityDefnVersionRepo.save(Mockito.any())).thenReturn(getVCHActivityDefnVersionObj());
         MultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file.".getBytes());;
-        VCHCreateActivityDefinitionResp resp = vchActivityDefinitionService.createActivityDefinition(
+        CreateActivityDefinitionResp resp = vchActivityDefinitionService.createActivityDefinition(
                 "test", "test", "test", file, "PEM");
         assertNotNull(resp);
     }
 
     @Test
     void testFindByActivityDefnKeyAndSponsorKey() throws Exception {
-        Mockito.when(vchSponsorRepo.getSponsorKey(anyString())).thenReturn("test");
-        Mockito.when(vchActivityDefnRepo.findByActivityDefnKeyAndSponsorKey(anyString(),anyString()))
+        Mockito.when(sponsorRepo.getSponsorKey(anyString())).thenReturn("test");
+        Mockito.when(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(anyString(),anyString()))
                 .thenReturn(getVchActivityDefnObj());
-        VCHGetActivitiyDefnByIdResp resp;
+        GetActivitiyDefnByIdResp resp;
         resp = vchActivityDefinitionService.getActivityDefinitionByKey("test","test");
         assertNotNull(resp);
     }
 
-    public VCHActivityDefn getVchActivityDefnObj(){
-        VCHActivityDefn vchActivityDefn = new VCHActivityDefn();
-        vchActivityDefn.setActivityName("test");
-        vchActivityDefn.setActivityDescription("test");
-        vchActivityDefn.setActivityDefnKey(UUID.randomUUID().toString());
-        vchActivityDefn.setSponsorKey(UUID.randomUUID().toString());
-        vchActivityDefn.setDeleted(false);
-        vchActivityDefn.setApplication("PEM");
-        vchActivityDefn.setCreatedBy("test");
-        vchActivityDefn.setCreateTs(LocalDateTime.now());
-        vchActivityDefn.setModifyTs(LocalDateTime.now());
-        vchActivityDefn.setModifiedBy("test");
-        vchActivityDefn.setMigrationStatus(false);
-        return vchActivityDefn;
+    public ActivityDefn getVchActivityDefnObj(){
+        ActivityDefn activityDefn = new ActivityDefn();
+        activityDefn.setActivityName("test");
+        activityDefn.setActivityDescription("test");
+        activityDefn.setActivityDefnKey(UUID.randomUUID().toString());
+        activityDefn.setSponsorKey(UUID.randomUUID().toString());
+        activityDefn.setDeleted(false);
+        activityDefn.setApplication("PEM");
+        activityDefn.setCreatedBy("test");
+        activityDefn.setCreateTs(LocalDateTime.now());
+        activityDefn.setModifyTs(LocalDateTime.now());
+        activityDefn.setModifiedBy("test");
+        activityDefn.setMigrationStatus(false);
+        return activityDefn;
     }
 
-    public List<VCHActivityDefn> getListOfVchActivityDefnObj(){
-        VCHActivityDefn vchActivityDefn = new VCHActivityDefn();
-        vchActivityDefn.setActivityName("test");
-        vchActivityDefn.setActivityDescription("test");
-        vchActivityDefn.setActivityDefnKey(UUID.randomUUID().toString());
-        vchActivityDefn.setSponsorKey(UUID.randomUUID().toString());
-        vchActivityDefn.setDeleted(false);
-        vchActivityDefn.setApplication("PEM");
-        vchActivityDefn.setCreatedBy("test");
-        vchActivityDefn.setCreateTs(LocalDateTime.now());
-        vchActivityDefn.setModifyTs(LocalDateTime.now());
-        vchActivityDefn.setModifiedBy("test");
-        vchActivityDefn.setMigrationStatus(false);
+    public List<ActivityDefn> getListOfVchActivityDefnObj(){
+        ActivityDefn activityDefn = new ActivityDefn();
+        activityDefn.setActivityName("test");
+        activityDefn.setActivityDescription("test");
+        activityDefn.setActivityDefnKey(UUID.randomUUID().toString());
+        activityDefn.setSponsorKey(UUID.randomUUID().toString());
+        activityDefn.setDeleted(false);
+        activityDefn.setApplication("PEM");
+        activityDefn.setCreatedBy("test");
+        activityDefn.setCreateTs(LocalDateTime.now());
+        activityDefn.setModifyTs(LocalDateTime.now());
+        activityDefn.setModifiedBy("test");
+        activityDefn.setMigrationStatus(false);
 
-        VCHActivityDefn vchActivityDefn1 = new VCHActivityDefn();
-        vchActivityDefn1.setActivityName("test1");
-        vchActivityDefn1.setActivityDescription("test1");
-        vchActivityDefn1.setActivityDefnKey(UUID.randomUUID().toString());
-        vchActivityDefn1.setSponsorKey(UUID.randomUUID().toString());
-        vchActivityDefn1.setDeleted(false);
-        vchActivityDefn1.setApplication("PP");
-        vchActivityDefn1.setCreatedBy("test1");
-        vchActivityDefn1.setCreateTs(LocalDateTime.now());
-        vchActivityDefn1.setModifyTs(LocalDateTime.now());
-        vchActivityDefn1.setModifiedBy("test1");
-        vchActivityDefn1.setMigrationStatus(false);
-        return Arrays.asList(vchActivityDefn,vchActivityDefn1);
+        ActivityDefn activityDefn1 = new ActivityDefn();
+        activityDefn1.setActivityName("test1");
+        activityDefn1.setActivityDescription("test1");
+        activityDefn1.setActivityDefnKey(UUID.randomUUID().toString());
+        activityDefn1.setSponsorKey(UUID.randomUUID().toString());
+        activityDefn1.setDeleted(false);
+        activityDefn1.setApplication("PP");
+        activityDefn1.setCreatedBy("test1");
+        activityDefn1.setCreateTs(LocalDateTime.now());
+        activityDefn1.setModifyTs(LocalDateTime.now());
+        activityDefn1.setModifiedBy("test1");
+        activityDefn1.setMigrationStatus(false);
+        return Arrays.asList(activityDefn, activityDefn1);
     }
 
-    public VCHActivityDefnData getVchActivityDefnDataObj(){
-        VCHActivityDefnData vchActivityDefnData = new VCHActivityDefnData();
-        vchActivityDefnData.setActivityDefnDataKey("test");
-        vchActivityDefnData.setActivityDefnDataKey("test");
-        vchActivityDefnData.setCreatedBy("test");
-        vchActivityDefnData.setCreateTs(LocalDateTime.now());
-        return vchActivityDefnData;
+    public ActivityDefnData getVchActivityDefnDataObj(){
+        ActivityDefnData activityDefnData = new ActivityDefnData();
+        activityDefnData.setActivityDefnDataKey("test");
+        activityDefnData.setActivityDefnDataKey("test");
+        activityDefnData.setCreatedBy("test");
+        activityDefnData.setCreateTs(LocalDateTime.now());
+        return activityDefnData;
     }
 
-    public VCHActivityDefnVersion getVCHActivityDefnVersionObj(){
-        VCHActivityDefnVersion vchActivityDefnVersion = new VCHActivityDefnVersion();
-        vchActivityDefnVersion.setActivityDefnKeyVersion("test");
-        vchActivityDefnVersion.setActivityDefnKey("test");
-        vchActivityDefnVersion.setVersion("test");
-        vchActivityDefnVersion.setActivityDefnDataKey("test");
-        vchActivityDefnVersion.setCreatedBy("test");
-        vchActivityDefnVersion.setCreateTs(LocalDateTime.now());
-        vchActivityDefnVersion.setDefault(true);
-        vchActivityDefnVersion.setEncrypted(false);
-        vchActivityDefnVersion.setEncryptionKey("test");
-        vchActivityDefnVersion.setModifiedBy("test");
-        vchActivityDefnVersion.setModifyTs(LocalDateTime.now());
-        vchActivityDefnVersion.setStatus("FINAL");
-        return vchActivityDefnVersion;
+    public ActivityDefnVersion getVCHActivityDefnVersionObj(){
+        ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
+        activityDefnVersion.setActivityDefnKeyVersion("test");
+        activityDefnVersion.setActivityDefnKey("test");
+        activityDefnVersion.setVersion("test");
+        activityDefnVersion.setActivityDefnDataKey("test");
+        activityDefnVersion.setCreatedBy("test");
+        activityDefnVersion.setCreateTs(LocalDateTime.now());
+        activityDefnVersion.setDefault(true);
+        activityDefnVersion.setEncrypted(false);
+        activityDefnVersion.setEncryptionKey("test");
+        activityDefnVersion.setModifiedBy("test");
+        activityDefnVersion.setModifyTs(LocalDateTime.now());
+        activityDefnVersion.setStatus("FINAL");
+        return activityDefnVersion;
     }
 }

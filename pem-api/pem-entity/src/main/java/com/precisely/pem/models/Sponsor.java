@@ -11,7 +11,7 @@ import java.util.Date;
 @Entity
 @Data
 @Table(name = "VCH_SPONSOR")
-public class VCHSponsor {
+public class Sponsor {
     @Id
     @Column(name="SPONSOR_KEY")
     private String sponsorKey;

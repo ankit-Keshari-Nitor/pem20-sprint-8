@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VCHActivityDefnDto {
+public class ActivityDefnDto {
     public String activityDefnKey;
     public String sponsorKey;
     public String activityName;

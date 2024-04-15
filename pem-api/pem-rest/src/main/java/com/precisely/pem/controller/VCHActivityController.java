@@ -6,9 +6,9 @@ import com.precisely.pem.Validator.SpecialCharValidator;
 import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
-import com.precisely.pem.dtos.responses.VCHActivityDefnPaginationRes;
-import com.precisely.pem.dtos.responses.VCHCreateActivityDefinitionResp;
-import com.precisely.pem.dtos.responses.VCHGetActivitiyDefnByIdResp;
+import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
+import com.precisely.pem.dtos.responses.CreateActivityDefinitionResp;
+import com.precisely.pem.dtos.responses.GetActivitiyDefnByIdResp;
 import com.precisely.pem.services.VCHActivityDefinitionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,48 +37,60 @@ public class VCHActivityController {
     @Operation(summary = "Create an Activity Definition")
     @ApiResponses({
             @ApiResponse(responseCode = "201", content = {
-                    @Content(schema = @Schema(implementation = VCHCreateActivityDefinitionResp.class), mediaType = "application/json") }),
+                    @Content(schema = @Schema(implementation = CreateActivityDefinitionResp.class), mediaType = "application/json") }),
             @ApiResponse(responseCode = "400", description = "Exception in creating an Activity Definition", content = {
                     @Content(schema = @Schema()) }),
             @ApiResponse(responseCode = "422", content = { @Content(schema = @Schema()) }) })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public VCHCreateActivityDefinitionResp createActivityDefinition(@RequestPart(value = "name", required = true) @Size(min = 1, max = 80) @SpecialCharValidator String name,
-                                                                    @RequestPart(value = "description", required = false) @Size(min = 1, max = 255) String description,
-                                                                    @RequestPart(value = "file") @MultipartFileValidator MultipartFile file,
-                                                                    @RequestParam(value = "application", required = true) Application app,
-                                                                    @PathVariable(value = "sponsorContext", required = true) String sponsorContext) throws Exception {
+    public CreateActivityDefinitionResp createActivityDefinition(@RequestPart(value = "name", required = true) @Size(min = 1, max = 80) @SpecialCharValidator String name,
+                                                                 @RequestPart(value = "description", required = false) @Size(min = 1, max = 255) String description,
+                                                                 @RequestPart(value = "file") @MultipartFileValidator MultipartFile file,
+                                                                 @RequestParam(value = "application", required = true) Application app,
+                                                                 @PathVariable(value = "sponsorContext", required = true) String sponsorContext) throws Exception {
         return vchActivityDefinitionService.createActivityDefinition(sponsorContext, name, description, file, app.getApp());
     }
 
     @Operation(summary = "Retrieve all Activity Definitions", tags = { "Activity Definition" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = VCHActivityDefnPaginationRes.class), mediaType = "application/json") }),
+                    @Content(schema = @Schema(implementation = ActivityDefnPaginationRes.class), mediaType = "application/json") }),
             @ApiResponse(responseCode = "204", description = "There are no Definitions", content = {
                     @Content(schema = @Schema()) }),
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
     @GetMapping
-    public VCHActivityDefnPaginationRes getActivityDefinitionList(@RequestParam(value = "name", required = false) @Size(min = 1, max = 80) @SpecialCharValidator String name,
-                                                                  @RequestParam(value = "description", required = false) @Size(min = 1, max = 255) String description,
-                                                                  @RequestParam(value = "status", defaultValue = "DRAFT", required = true) String status,
-                                                                  @RequestParam(value = "application", defaultValue = "PEM", required = true) @LowerCaseValidator String application,
-                                                                  @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                                                  @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                                                  @RequestParam(value = "sortBy",  required = false) SortBy sortBy,
-                                                                  @RequestParam(value = "sortDir", required = false) SortDirection sortDir,
-                                                                  @PathVariable(value = "sponsorContext")String sponsorContext){
+    public ActivityDefnPaginationRes getActivityDefinitionList(@RequestParam(value = "name", required = false) @Size(min = 1, max = 80) @SpecialCharValidator String name,
+                                                               @RequestParam(value = "description", required = false) @Size(min = 1, max = 255) String description,
+                                                               @RequestParam(value = "status", defaultValue = "DRAFT", required = true) String status,
+                                                               @RequestParam(value = "application", defaultValue = "PEM", required = true) @LowerCaseValidator String application,
+                                                               @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                                               @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+                                                               @RequestParam(value = "sortBy",  required = false) SortBy sortBy,
+                                                               @RequestParam(value = "sortDir", required = false) SortDirection sortDir,
+                                                               @PathVariable(value = "sponsorContext")String sponsorContext){
         return vchActivityDefinitionService.getAllDefinitionList(sponsorContext,name,description,status,application,pageNo, pageSize, sortBy ==null? "modifyTs":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
     }
 
     @Operation(summary = "Get Activity Definitions by Key", tags = { "Activity Definition" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = VCHGetActivitiyDefnByIdResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
+                    @Content(schema = @Schema(implementation = GetActivitiyDefnByIdResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
             @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
                     @Content(schema = @Schema()) }),
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
     @GetMapping ("/{activityDefnKey}")
-    public VCHGetActivitiyDefnByIdResp getActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey) throws Exception {
+    public GetActivitiyDefnByIdResp getActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey) throws Exception {
        return  vchActivityDefinitionService.getActivityDefinitionByKey(sponsorContext, activityDefnKey);
+    }
+
+    @Operation(summary = "Create an Activity Definition Version")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", content = {
+                    @Content(schema = @Schema(implementation = CreateActivityDefinitionResp.class), mediaType = "application/json") }),
+            @ApiResponse(responseCode = "400", description = "Exception in creating an Activity Definition", content = {
+                    @Content(schema = @Schema()) }),
+            @ApiResponse(responseCode = "422", content = { @Content(schema = @Schema()) }) })
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public CreateActivityDefinitionResp createActivityDefinition(){
+        return null;
     }
 }

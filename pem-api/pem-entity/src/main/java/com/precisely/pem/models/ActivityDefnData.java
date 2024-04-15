@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @Table(name = "VCH_ACTIVITY_DEFN_DATA")
-public class VCHActivityDefnData {
+public class ActivityDefnData {
     @Id
     @Column(name="ACTIVITY_DEFN_DATA_KEY")
     private String activityDefnDataKey;
@@ -30,5 +30,5 @@ public class VCHActivityDefnData {
     private String modifiedBy;
 
     @OneToOne
-    private VCHActivityDefnVersion vchActivityDefnVersion;
+    private ActivityDefnVersion activityDefnVersion;
 }

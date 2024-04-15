@@ -4,15 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Blob;
 import java.time.LocalDateTime;
-import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VCHActivityDefnDataDto {
+public class ActivityDefnVersionDto {
+    public String activityDefnKeyVersion;
+    public String activityDefnKey;
     public String activityDefnDataKey;
-    public Blob defData;
+    public String version;
+    public String status;
+    public boolean isDefault;
+    public boolean isEncrypted;
+    public String encryptionKey;
     public LocalDateTime createTs;
     public String createdBy;
     public LocalDateTime modifyTs;

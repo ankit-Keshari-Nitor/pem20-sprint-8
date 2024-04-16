@@ -1,14 +1,13 @@
 package com.precisely.pem.filter;
 
-import com.precisely.pem.models.Company;
 import com.precisely.pem.services.SponsorService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
@@ -17,14 +16,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 @Component
+@Log4j2
 @WebFilter(filterName = "LoggingFilter", urlPatterns = "/*")
-public class LoggingFilter extends OncePerRequestFilter {
+public class TenantFilter extends OncePerRequestFilter {
 
-    private static final Logger LOG = LogManager.getLogger(LoggingFilter.class);
     @Autowired
     private SponsorService sponsorService;
 
@@ -33,20 +33,13 @@ public class LoggingFilter extends OncePerRequestFilter {
         try  {
             String sponsorContext = getSponsorContextFromURL(request);
 
-            if ("".equals(sponsorContext)) {
-                LOG.info("URL not compatible to extract Log Context Info, Using Header sponsor..");
-                if(Objects.nonNull(request.getHeader("sponsor"))){
-                    sponsorContext = request.getHeader("sponsor");
-                }else
-                    sponsorContext = "b2b";
-            }
             //Extract Company Name from DB and add into ThreadContext
             setSponsorDetailsInContext(sponsorContext);
 
             // Continue with the filter chain
             filterChain.doFilter(request, response);
         } catch (Exception exp){
-            LOG.error(" Log Context addition failed.");
+            log.error(" Log Context addition failed." + exp);
         } finally {
             // Clear MDC context when request completes
             ThreadContext.clearStack();
@@ -56,31 +49,23 @@ public class LoggingFilter extends OncePerRequestFilter {
     private static String getSponsorContextFromURL(HttpServletRequest request) {
         StringBuffer url = request.getRequestURL();
 
-        int startIndex = url.indexOf("/sponsors/");
-        if(startIndex == -1){
-            return "";
+        Pattern pattern = Pattern.compile("/sponsors/([^/]+)");
+        Matcher matcher = pattern.matcher(url);
+
+        // Checking if the pattern is found in the URL
+        if (matcher.find()) {
+            return matcher.group(1);
         }
-        startIndex += "/sponsors/".length();
-
-        int endIndex = url.indexOf("/", startIndex);
-
-        if(endIndex == -1){
-            return "";
-        }
-
-        return url.substring(startIndex, endIndex);
+        return "";
     }
 
     private void setSponsorDetailsInContext(String sponsorContext) {
-       String sponsorKey = sponsorService.getSponsorKey(sponsorContext);
-       if(Objects.nonNull(sponsorKey)){
-           Company company = sponsorService.getCompanyByKey(sponsorKey);
-           if(Objects.nonNull(company)){
-               // Set MDC context for logging here
-               ThreadContext.put("sponsor", company.getCompanyName());
-           }
+        String companyName = sponsorService.getActiveSponsorKeyBySponsorContext(sponsorContext);
+       if(!StringUtils.isEmpty(companyName)){
+           // Set MDC context for logging here
+           ThreadContext.put("sponsor", companyName);
        }else {
-           LOG.info("Sponsor Context Not Found for Log Context Info.");
+           log.info("Sponsor Context Not Found for Log Context Info.");
            ThreadContext.put("sponsor", "None");
        }
     }

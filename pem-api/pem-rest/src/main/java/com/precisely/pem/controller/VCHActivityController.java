@@ -10,8 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +22,8 @@ import java.sql.SQLException;
 @Tag(name = "Activity Definition", description = "Activity Definition management APIs")
 @RequestMapping("/sponsors/{sponsorContext}/v2/activityDefinitions")
 @RestController
+@Log4j2
 public class VCHActivityController {
-
-    private static final Logger LOG = LogManager.getLogger(VCHActivityController.class);
 
     public enum SORT_DIRECTION {
         ASC ("ASC"), DESC ("DESC");
@@ -93,10 +91,9 @@ public class VCHActivityController {
                                                                         @RequestParam(value = "sortBy",  required = false) SORT_BY sortBy,
                                                                         @RequestParam(value = "sortDir", required = false) SORT_DIRECTION sortDir,
                                                                         @PathVariable(value = "sponsorContext")String sponsorContext){
-        VCHActivityDefinitionPaginationRes res = new VCHActivityDefinitionPaginationRes();
-        LOG.info("Retrieve all Activity Definitions: Starts");
-        res = vchActivityDefinitionService.getAllDefinitionList(sponsorContext, pageNo, pageSize, sortBy ==null? "modifyTs":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
-        LOG.info("Retrieve all Activity Definitions: Ends");
+        log.info("Retrieve all Activity Definitions: Starts");
+        VCHActivityDefinitionPaginationRes res = vchActivityDefinitionService.getAllDefinitionList(sponsorContext, pageNo, pageSize, sortBy ==null? "modifyTs":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
+        log.info("Retrieve all Activity Definitions: Ends");
         return  res;
     }
 

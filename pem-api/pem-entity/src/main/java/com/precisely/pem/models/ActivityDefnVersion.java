@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "VCH_ACTIVITY_DEFN_VERSION")
+@Table(name = "ACTIVITY_DEFN_VERSION")
 public class ActivityDefnVersion {
     @Id
     @Column(name="ACTIVITY_DEFN_KEY_VERSION")
@@ -20,7 +20,7 @@ public class ActivityDefnVersion {
     private String activityDefnDataKey;
 
     @Column(name="VERSION")
-    private String version;
+    private int version;
 
     @Column(name="STATUS")
     private String status;

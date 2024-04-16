@@ -1,8 +1,9 @@
 package com.precisely.pem.services;
 
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
-import com.precisely.pem.dtos.responses.CreateActivityDefinitionResp;
-import com.precisely.pem.dtos.responses.GetActivitiyDefnByIdResp;
+import com.precisely.pem.dtos.responses.ActivityDefnResp;
+import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
+import com.precisely.pem.dtos.responses.GetActivityDefnByIdResp;
 import com.precisely.pem.dtos.shared.PaginationDto;
 import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
 import com.precisely.pem.dtos.shared.ActivityDefnDto;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.Link;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,7 +44,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionService {
+public class ActivityDefnServiceImpl implements ActivityDefnService {
     @Value("${pem.openapi.dev-url}")
     private String urlInfo;
 
@@ -57,7 +59,7 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
     @Autowired
     private ModelMapper mapper;
 
-    Logger logger = LoggerFactory.getLogger(VCHActivityDefinitionServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(ActivityDefnServiceImpl.class);
 
     @Override
     public ActivityDefnPaginationRes getAllDefinitionList(String sponsorContext,
@@ -116,8 +118,8 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public CreateActivityDefinitionResp createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException {
-        CreateActivityDefinitionResp vchCreateActivityDefinitionResp = new CreateActivityDefinitionResp();
+    public ActivityDefnResp createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException {
+        ActivityDefnResp vchActivityDefnResp = new ActivityDefnResp();
         ActivityDefn activityDefn = null;
         ActivityDefnData activityDefnData = null;
         ActivityDefnVersion activityDefnVersion = null;
@@ -149,7 +151,7 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
 
         ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
                 UUID.randomUUID().toString(), activityDefn.getActivityDefnKey(),
-                activityDefnData.getActivityDefnDataKey(), "0",
+                activityDefnData.getActivityDefnDataKey(), 0,
                 String.valueOf(ActivityDefnStatus.DRAFT), true, false,
                 "", LocalDateTime.now(), "", LocalDateTime.now(), ""
         );
@@ -160,15 +162,15 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
 
         logger.info("location : " + url);
 
-        vchCreateActivityDefinitionResp.setActivityDefnKey(activityDefn.getActivityDefnKey());
-        vchCreateActivityDefinitionResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
-        vchCreateActivityDefinitionResp.setLocation(url);
+        vchActivityDefnResp.setActivityDefnKey(activityDefn.getActivityDefnKey());
+        vchActivityDefnResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
+        vchActivityDefnResp.setLocation(url);
 
-        return vchCreateActivityDefinitionResp;
+        return vchActivityDefnResp;
     }
 
     @Override
-    public GetActivitiyDefnByIdResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception {
+    public GetActivityDefnByIdResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception {
 
         String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
         Optional<ActivityDefn> result = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, SponsorKey));;
@@ -176,6 +178,43 @@ public class VCHActivityDefinitionServiceImpl implements VCHActivityDefinitionSe
             throw  new Exception("ActivityDefn not found" );
         }
         ModelMapper mapper = new ModelMapper();
-        return mapper.map(result.get(), GetActivitiyDefnByIdResp.class);
+        return mapper.map(result.get(), GetActivityDefnByIdResp.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<ActivityDefnVersionResp> createActivityDefnVersion(String sponsorContext, String activityDefnKey, MultipartFile file) throws SQLException, IOException {
+
+        ActivityDefnData activityDefnData = null;
+        ActivityDefnVersion activityDefnVersion = null;
+        int version = 0;
+
+        activityDefnVersion = activityDefnVersionRepo.findDefaultVersion();
+        version = activityDefnVersion.getVersion();
+        activityDefnVersion.setDefault(false);
+        activityDefnVersionRepo.save(activityDefnVersion);
+
+        byte[] bytes = file.getBytes();
+        Blob blob = new SerialBlob(bytes);
+
+        ActivityDefnDataDto activityDefnDataDto = new ActivityDefnDataDto(
+                UUID.randomUUID().toString(), blob, LocalDateTime.now(),
+                "", LocalDateTime.now(), ""
+        );
+
+        //Populating the Activity Definition Version Object
+        activityDefnData = mapper.map(activityDefnDataDto, ActivityDefnData.class);
+        activityDefnData = activityDefnDataRepo.save(activityDefnData);
+
+        ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
+                UUID.randomUUID().toString(), activityDefnKey,
+                activityDefnData.getActivityDefnDataKey(), version++,
+                String.valueOf(ActivityDefnStatus.DRAFT), true, false,
+                "", LocalDateTime.now(), "", LocalDateTime.now(), ""
+        );
+        activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
+        activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
+
+        return null;
     }
 }

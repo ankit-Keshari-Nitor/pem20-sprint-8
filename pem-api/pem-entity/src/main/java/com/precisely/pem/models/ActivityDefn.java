@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "VCH_ACTIVITY_DEFN")
+@Table(name = "ACTIVITY_DEFN")
 public class ActivityDefn {
     @Id
     @Column(name="ACTIVITY_DEFN_KEY")
@@ -48,6 +48,6 @@ public class ActivityDefn {
     @Column(name="MIGRATION_STATUS")
     private boolean migrationStatus;
 
-    @OneToMany(mappedBy = "vchActivityDefnDetails", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "activityDefnDetails", cascade = CascadeType.ALL)
     private List<ActivityDefnVersion> versions;
 }

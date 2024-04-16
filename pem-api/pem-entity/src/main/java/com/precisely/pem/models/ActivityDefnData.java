@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "VCH_ACTIVITY_DEFN_DATA")
+@Table(name = "ACTIVITY_DEFN_DATA")
 public class ActivityDefnData {
     @Id
     @Column(name="ACTIVITY_DEFN_DATA_KEY")

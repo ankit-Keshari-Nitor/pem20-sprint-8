@@ -4,9 +4,9 @@ import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
-import com.precisely.pem.dtos.responses.CreateActivityDefinitionResp;
-import com.precisely.pem.dtos.responses.GetActivitiyDefnByIdResp;
-import com.precisely.pem.services.VCHActivityDefinitionService;
+import com.precisely.pem.dtos.responses.ActivityDefnResp;
+import com.precisely.pem.dtos.responses.GetActivityDefnByIdResp;
+import com.precisely.pem.services.ActivityDefnService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,7 +23,7 @@ class VCHActivityControllerTest {
     VCHActivityController vchActivityController;
 
     @Mock
-    VCHActivityDefinitionService vchActivityDefinitionService;
+    ActivityDefnService activityDefnService;
 
     @BeforeEach
     void setup() throws Exception{
@@ -36,10 +36,10 @@ class VCHActivityControllerTest {
         String description = "test";
         String application = "PEM";
         MultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file.".getBytes());;
-        CreateActivityDefinitionResp resp = new CreateActivityDefinitionResp();
-        Mockito.when(vchActivityDefinitionService.createActivityDefinition(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.any(MultipartFile.class),Mockito.anyString()))
+        ActivityDefnResp resp = new ActivityDefnResp();
+        Mockito.when(activityDefnService.createActivityDefinition(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.any(MultipartFile.class),Mockito.anyString()))
                 .thenReturn(resp);
-        CreateActivityDefinitionResp output = vchActivityController.createActivityDefinition(name,description,file, Application.PEM,sponsorContext);
+        ActivityDefnResp output = vchActivityController.createActivityDefinition(name,description,file, Application.PEM,sponsorContext);
         assertNotNull(output);
     }
 
@@ -48,7 +48,7 @@ class VCHActivityControllerTest {
         String sponsorContext = "test";
         String name = "test";
         ActivityDefnPaginationRes resp = new ActivityDefnPaginationRes();
-        Mockito.when(vchActivityDefinitionService.getAllDefinitionList(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString()))
+        Mockito.when(activityDefnService.getAllDefinitionList(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(resp);
         ActivityDefnPaginationRes output = vchActivityController.getActivityDefinitionList(sponsorContext,name,"DRAFT","PEM",1,1, SortBy.modify_ts, SortDirection.ASC,"cashbank");
         assertNotNull(output);
@@ -58,10 +58,10 @@ class VCHActivityControllerTest {
     void testGetActivityDefinitionById() throws Exception {
         String sponsorContext = "test";
         String activityDefnKey = "test";
-        GetActivitiyDefnByIdResp resp = new GetActivitiyDefnByIdResp();
-        Mockito.when(vchActivityDefinitionService.getActivityDefinitionByKey(Mockito.anyString(),Mockito.anyString()))
+        GetActivityDefnByIdResp resp = new GetActivityDefnByIdResp();
+        Mockito.when(activityDefnService.getActivityDefinitionByKey(Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(resp);
-        GetActivitiyDefnByIdResp output = vchActivityController.getActivityDefinitionByKey(sponsorContext,activityDefnKey);
+        GetActivityDefnByIdResp output = vchActivityController.getActivityDefinitionByKey(sponsorContext,activityDefnKey);
         assertNotNull(output);
     }
 }

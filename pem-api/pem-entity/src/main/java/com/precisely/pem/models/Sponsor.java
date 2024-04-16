@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Data
-@Table(name = "VCH_SPONSOR")
+@Table(name = "SPONSOR")
 public class Sponsor {
     @Id
     @Column(name="SPONSOR_KEY")

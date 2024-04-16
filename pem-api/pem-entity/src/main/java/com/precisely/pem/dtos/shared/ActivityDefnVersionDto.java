@@ -13,7 +13,7 @@ public class ActivityDefnVersionDto {
     public String activityDefnKeyVersion;
     public String activityDefnKey;
     public String activityDefnDataKey;
-    public String version;
+    public int version;
     public String status;
     public boolean isDefault;
     public boolean isEncrypted;

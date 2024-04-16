@@ -1,8 +1,8 @@
 package com.precisely.pem.services;
 
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
-import com.precisely.pem.dtos.responses.CreateActivityDefinitionResp;
-import com.precisely.pem.dtos.responses.GetActivitiyDefnByIdResp;
+import com.precisely.pem.dtos.responses.ActivityDefnResp;
+import com.precisely.pem.dtos.responses.GetActivityDefnByIdResp;
 import com.precisely.pem.dtos.shared.ActivityDefnDto;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
@@ -38,9 +38,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 
-class VCHActivityDefinitionServiceImplTest {
+class ActivityDefnServiceImplTest {
     @InjectMocks
-    VCHActivityDefinitionServiceImpl vchActivityDefinitionService;
+    ActivityDefnServiceImpl vchActivityDefinitionService;
     @Mock
     private SponsorRepo sponsorRepo;
     @Mock
@@ -91,7 +91,7 @@ class VCHActivityDefinitionServiceImplTest {
         Mockito.when(activityDefnDataRepo.save(Mockito.any())).thenReturn(getVchActivityDefnDataObj());
         Mockito.when(activityDefnVersionRepo.save(Mockito.any())).thenReturn(getVCHActivityDefnVersionObj());
         MultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file.".getBytes());;
-        CreateActivityDefinitionResp resp = vchActivityDefinitionService.createActivityDefinition(
+        ActivityDefnResp resp = vchActivityDefinitionService.createActivityDefinition(
                 "test", "test", "test", file, "PEM");
         assertNotNull(resp);
     }
@@ -101,7 +101,7 @@ class VCHActivityDefinitionServiceImplTest {
         Mockito.when(sponsorRepo.getSponsorKey(anyString())).thenReturn("test");
         Mockito.when(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(anyString(),anyString()))
                 .thenReturn(getVchActivityDefnObj());
-        GetActivitiyDefnByIdResp resp;
+        GetActivityDefnByIdResp resp;
         resp = vchActivityDefinitionService.getActivityDefinitionByKey("test","test");
         assertNotNull(resp);
     }
@@ -164,7 +164,7 @@ class VCHActivityDefinitionServiceImplTest {
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
         activityDefnVersion.setActivityDefnKeyVersion("test");
         activityDefnVersion.setActivityDefnKey("test");
-        activityDefnVersion.setVersion("test");
+        activityDefnVersion.setVersion(0);
         activityDefnVersion.setActivityDefnDataKey("test");
         activityDefnVersion.setCreatedBy("test");
         activityDefnVersion.setCreateTs(LocalDateTime.now());

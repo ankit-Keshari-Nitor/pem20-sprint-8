@@ -2,7 +2,7 @@
 <Configuration>
     <Properties>
         <Property name="logsDir">logs</Property>
-        <Property name="logPattern_log4j">[%d{M/d/yy H:mm:ss:SSS zzz}] %4r %-100c %p [%X{sponsor}] : %m%n%ex</Property>
+        <Property name="logPattern_log4j">[%d{M/d/yy H:mm:ss:SSS zzz}] %4r %-100c %p [%X{sponsor.name}] : %m%n%ex</Property>
     </Properties>
 
     <Appenders>

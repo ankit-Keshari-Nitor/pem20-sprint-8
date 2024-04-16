@@ -63,10 +63,10 @@ public class TenantFilter extends OncePerRequestFilter {
         String companyName = sponsorService.getActiveSponsorKeyBySponsorContext(sponsorContext);
        if(!StringUtils.isEmpty(companyName)){
            // Set MDC context for logging here
-           ThreadContext.put("sponsor", companyName);
+           ThreadContext.put("sponsor.name", companyName);
        }else {
-           log.info("Sponsor Context Not Found for Log Context Info.");
-           ThreadContext.put("sponsor", "None");
+           log.debug("No sponsor found with sponsor context : {}, Using None as the sponsor's name.",sponsorContext);
+           ThreadContext.put("sponsor.name", "None");
        }
     }
 }

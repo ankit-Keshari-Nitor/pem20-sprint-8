@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SponsorRepo extends JpaRepository<Sponsor,String> {
-    @Query(nativeQuery = true, value = "SELECT sponsor_key FROM VCH_SPONSOR WHERE domain_url = LOWER(:sponsorContext)")
+    @Query(nativeQuery = true, value = "SELECT sponsor_key FROM SPONSOR WHERE domain_url = LOWER(:sponsorContext)")
     String getSponsorKey(@Param("sponsorContext") String sponsorContext);
 }

@@ -4,10 +4,7 @@ import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.ActivityDefnResp;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.GetActivityDefnByIdResp;
-import com.precisely.pem.dtos.shared.PaginationDto;
-import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
-import com.precisely.pem.dtos.shared.ActivityDefnDto;
-import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
+import com.precisely.pem.dtos.shared.*;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
@@ -26,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.Link;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,10 +60,10 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
     Logger logger = LoggerFactory.getLogger(ActivityDefnServiceImpl.class);
 
     @Override
-    public ActivityDefnPaginationRes getAllDefinitionList(String sponsorContext,
-                                                          String applicationName, String applicationDescription,
-                                                          String status, String application, int pageNo, int pageSize, String sortBy,
-                                                          String sortDir) {
+    public ResponseEntity<Object> getAllDefinitionList(String sponsorContext,
+                                                       String applicationName, String applicationDescription,
+                                                       String status, String application, int pageNo, int pageSize, String sortBy,
+                                                       String sortDir) {
         ActivityDefnPaginationRes vchActivityDefinitionPaginationRes = new ActivityDefnPaginationRes();
         UriComponentsBuilder builder = UriComponentsBuilder.newInstance();
         PaginationDto paginationDto = new PaginationDto();
@@ -79,35 +77,41 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
         applicationDescription = (applicationDescription != null && !applicationDescription.isEmpty()) ? applicationDescription : "";
 
         Page<ActivityDefn> defnsPage = activityDefnRepo.findByStatusAndSponsorContextAndApplicationAndByNameAndDescription(status,
-                context,application,applicationName,applicationDescription,pageable);//name,desc
-        List<ActivityDefn> listOfDefns = defnsPage.getContent();
-        List<ActivityDefnDto> defnContent = new ArrayList<>();
+                context,application,applicationName,applicationDescription,pageable);
+        if(defnsPage != null && !defnsPage.isEmpty()) {
+            List<ActivityDefn> listOfDefns = defnsPage.getContent();
+            List<ActivityDefnDto> defnContent = new ArrayList<>();
 
-        defnContent = listOfDefns.stream()
-                .map(p ->
-                {
-                    ActivityDefnDto dtoObj = mapper.map(p, ActivityDefnDto.class);
-                    Link location = Link.of("/sponsors/" + sponsorContext +
-                            "/v2/activityDefinitions/" + dtoObj.getActivityDefnKey() + "/versions");
-                    dtoObj.setActivityVersionLink(urlInfo + location.getHref());
-                    return dtoObj;
-                }).collect(Collectors.toList());
+            defnContent = listOfDefns.stream()
+                    .map(p ->
+                    {
+                        ActivityDefnDto dtoObj = mapper.map(p, ActivityDefnDto.class);
+                        Link location = Link.of("/sponsors/" + sponsorContext +
+                                "/v2/activityDefinitions/" + dtoObj.getActivityDefnKey() + "/versions");
+                        dtoObj.setActivityVersionLink(urlInfo + location.getHref());
+                        return dtoObj;
+                    }).collect(Collectors.toList());
 
-        int totalPage = defnsPage.getTotalPages();
-        long totalElements = defnsPage.getTotalElements();
-        int numberOfElements = defnsPage.getNumberOfElements();
-        int size = defnsPage.getSize();
+            int totalPage = defnsPage.getTotalPages();
+            long totalElements = defnsPage.getTotalElements();
+            int size = defnsPage.getSize();
 
 
-        paginationDto.setNumber(numberOfElements);
-        paginationDto.setSize(size);
-        paginationDto.setTotalPages(totalPage);
-        paginationDto.setTotalElements(totalElements);
+            paginationDto.setNumber(pageNo);
+            paginationDto.setSize(size);
+            paginationDto.setTotalPages(totalPage);
+            paginationDto.setTotalElements(totalElements);
 
-        vchActivityDefinitionPaginationRes.setContent(defnContent);
-        vchActivityDefinitionPaginationRes.setPageContent(paginationDto);
+            vchActivityDefinitionPaginationRes.setContent(defnContent);
+            vchActivityDefinitionPaginationRes.setPageContent(paginationDto);
 
-        return vchActivityDefinitionPaginationRes;
+            return ResponseEntity.ok().body(vchActivityDefinitionPaginationRes);
+        }else{
+            ErrorResponseDto errorDto = new ErrorResponseDto();
+            errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
+            errorDto.setErrorDescription("No Data Found");
+            return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+        }
     }
 
     private ActivityDefnDto mapToDTO(ActivityDefn activityDefn){
@@ -118,8 +122,8 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ActivityDefnResp createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException {
-        ActivityDefnResp vchActivityDefnResp = new ActivityDefnResp();
+    public ResponseEntity<Object> createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException {
+        ActivityDefnResp activityDefnResp = new ActivityDefnResp();
         ActivityDefn activityDefn = null;
         ActivityDefnData activityDefnData = null;
         ActivityDefnVersion activityDefnVersion = null;
@@ -162,59 +166,25 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
 
         logger.info("location : " + url);
 
-        vchActivityDefnResp.setActivityDefnKey(activityDefn.getActivityDefnKey());
-        vchActivityDefnResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
-        vchActivityDefnResp.setLocation(url);
+        activityDefnResp.setActivityDefnKey(activityDefn.getActivityDefnKey());
+        activityDefnResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
+        activityDefnResp.setLocation(url);
 
-        return vchActivityDefnResp;
+        return new ResponseEntity<>(activityDefnResp,HttpStatus.CREATED);
     }
 
     @Override
-    public GetActivityDefnByIdResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception {
+    public ResponseEntity<Object> getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception {
 
         String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
         Optional<ActivityDefn> result = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, SponsorKey));;
         if(result.isEmpty()){
-            throw  new Exception("ActivityDefn not found" );
+            ErrorResponseDto errorDto = new ErrorResponseDto();
+            errorDto.setErrorDescription("No data Found");
+            errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
+            return new ResponseEntity<>(errorDto,HttpStatus.NOT_FOUND);
         }
         ModelMapper mapper = new ModelMapper();
-        return mapper.map(result.get(), GetActivityDefnByIdResp.class);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ActivityDefnVersionResp> createActivityDefnVersion(String sponsorContext, String activityDefnKey, MultipartFile file) throws SQLException, IOException {
-
-        ActivityDefnData activityDefnData = null;
-        ActivityDefnVersion activityDefnVersion = null;
-        int version = 0;
-
-        activityDefnVersion = activityDefnVersionRepo.findDefaultVersion();
-        version = activityDefnVersion.getVersion();
-        activityDefnVersion.setDefault(false);
-        activityDefnVersionRepo.save(activityDefnVersion);
-
-        byte[] bytes = file.getBytes();
-        Blob blob = new SerialBlob(bytes);
-
-        ActivityDefnDataDto activityDefnDataDto = new ActivityDefnDataDto(
-                UUID.randomUUID().toString(), blob, LocalDateTime.now(),
-                "", LocalDateTime.now(), ""
-        );
-
-        //Populating the Activity Definition Version Object
-        activityDefnData = mapper.map(activityDefnDataDto, ActivityDefnData.class);
-        activityDefnData = activityDefnDataRepo.save(activityDefnData);
-
-        ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
-                UUID.randomUUID().toString(), activityDefnKey,
-                activityDefnData.getActivityDefnDataKey(), version++,
-                String.valueOf(ActivityDefnStatus.DRAFT), true, false,
-                "", LocalDateTime.now(), "", LocalDateTime.now(), ""
-        );
-        activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
-        activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
-
-        return null;
+        return ResponseEntity.ok().body(mapper.map(result.get(), ActivityDefnDto.class));
     }
 }

@@ -46,8 +46,8 @@ public class ActivityDefnVersion {
     @Column(name="MODIFIED_BY")
     private String modifiedBy;
 
-    @ManyToOne
-    @JoinColumn(name = "VCHAD_ACTIVITY_DEFN_KEY")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "activity_Defn_Details")
     private ActivityDefn activityDefnDetails;
 
     @OneToOne(cascade = CascadeType.ALL)

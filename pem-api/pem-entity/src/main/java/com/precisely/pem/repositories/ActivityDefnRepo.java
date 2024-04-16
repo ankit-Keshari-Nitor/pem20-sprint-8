@@ -16,7 +16,7 @@ public interface ActivityDefnRepo extends JpaRepository<ActivityDefn,String> {
     @Query(nativeQuery = true,value = "SELECT a.activity_defn_key,a.sponsor_key,a.activity_name, " +
             "a.activity_description, a.create_ts,a.created_by,a.modify_ts,a.modified_by, a.application, " +
             "a.is_deleted, a.migration_status " +
-            "FROM VCH_ACTIVITY_DEFN a JOIN VCH_ACTIVITY_DEFN_VERSION b " +
+            "FROM ACTIVITY_DEFN a JOIN ACTIVITY_DEFN_VERSION b " +
             "ON a.activity_defn_key = b.activity_defn_key " +
             "WHERE  b.status=:status " +
             "AND a.sponsor_key=:sponsorContext " +

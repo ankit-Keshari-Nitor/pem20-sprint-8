@@ -12,14 +12,12 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public interface ActivityDefnService {
-    public ActivityDefnPaginationRes getAllDefinitionList(String sponsorContext,
+    public ResponseEntity<Object> getAllDefinitionList(String sponsorContext,
                                                           String applicationName, String applicationDescription,
                                                           String status, String application, int pageNo, int pageSize, String sortBy,
                                                           String sortDir);
 
-    public ActivityDefnResp createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException;
+    public ResponseEntity<Object> createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException;
 
-    public GetActivityDefnByIdResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception;
-
-    public ResponseEntity<ActivityDefnVersionResp> createActivityDefnVersion(String sponsorContext, String activityDefnKey, MultipartFile file) throws SQLException, IOException;
+    public ResponseEntity<Object> getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception;
 }

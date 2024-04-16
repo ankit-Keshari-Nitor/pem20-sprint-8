@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 @Component
 @Log4j2
-@WebFilter(filterName = "LoggingFilter", urlPatterns = "/*")
+@WebFilter(filterName = "TenantFilter", urlPatterns = "/*")
 public class TenantFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -60,7 +60,7 @@ public class TenantFilter extends OncePerRequestFilter {
     }
 
     private void setSponsorDetailsInContext(String sponsorContext) {
-        String companyName = sponsorService.getActiveSponsorKeyBySponsorContext(sponsorContext);
+        String companyName = sponsorService.getCompanyNameForActiveSponsorsBySponsorContext(sponsorContext);
        if(!StringUtils.isEmpty(companyName)){
            // Set MDC context for logging here
            ThreadContext.put("sponsor.name", companyName);

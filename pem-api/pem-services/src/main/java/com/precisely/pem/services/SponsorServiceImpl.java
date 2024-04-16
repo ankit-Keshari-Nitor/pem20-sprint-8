@@ -14,7 +14,7 @@ public class SponsorServiceImpl implements SponsorService {
     }
 
     @Override
-    public String getActiveSponsorKeyBySponsorContext(String sponsorContext){
-        return sponsorRepo.getActiveSponsorKeyBySponsorContext(sponsorContext);
+    public String getCompanyNameForActiveSponsorsBySponsorContext(String sponsorContext){
+        return sponsorRepo.getCompanyNameForActiveSponsorsBySponsorContext(sponsorContext);
     }
 }

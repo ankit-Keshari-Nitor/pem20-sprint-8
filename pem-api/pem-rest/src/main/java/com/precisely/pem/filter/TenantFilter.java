@@ -60,7 +60,7 @@ public class TenantFilter extends OncePerRequestFilter {
     }
 
     private void setSponsorDetailsInContext(String sponsorContext) {
-        String companyName = sponsorService.getCompanyNameForActiveSponsorsBySponsorContext(sponsorContext);
+        String companyName = sponsorService.getActiveSponsorNameBySponsorContext(sponsorContext);
        if(!StringUtils.isEmpty(companyName)){
            // Set MDC context for logging here
            ThreadContext.put("sponsor.name", companyName);

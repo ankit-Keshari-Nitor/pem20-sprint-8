@@ -1,7 +1,5 @@
 package com.precisely.pem.services;
 
-import com.precisely.pem.models.Company;
-import com.precisely.pem.repositories.CompanyRepo;
 import com.precisely.pem.repositories.VCHSponsorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,22 +8,13 @@ import org.springframework.stereotype.Service;
 public class SponsorServiceImpl implements SponsorService {
 
     private final VCHSponsorRepo sponsorRepo;
-
-    private final CompanyRepo companyRepo;
-
     @Autowired
-    SponsorServiceImpl(VCHSponsorRepo sponsorRepo, CompanyRepo companyRepo){
+    SponsorServiceImpl(VCHSponsorRepo sponsorRepo){
         this.sponsorRepo = sponsorRepo;
-        this.companyRepo = companyRepo;
     }
 
     @Override
-    public String getSponsorKey(String sponsorContext) {
-        return sponsorRepo.getCompanyKey(sponsorContext);
-    }
-
-    @Override
-    public Company getCompanyByKey(String companyKey) {
-        return companyRepo.findById(companyKey).get();
+    public String getActiveSponsorKeyBySponsorContext(String sponsorContext){
+        return sponsorRepo.getActiveSponsorKeyBySponsorContext(sponsorContext);
     }
 }

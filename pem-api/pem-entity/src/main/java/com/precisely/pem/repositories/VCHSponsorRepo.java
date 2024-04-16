@@ -11,6 +11,7 @@ public interface VCHSponsorRepo extends JpaRepository<VCHSponsor,String> {
     @Query(nativeQuery = true, value = "SELECT sponsor_key FROM VCH_SPONSOR WHERE domain_url = LOWER(:sponsorContext)")
     String getSponsorKey(@Param("sponsorContext") String sponsorContext);
 
-    @Query(value = "SELECT companyKey FROM VCHSponsor WHERE domainUrl = :sponsorContext")
-    String getCompanyKey(@Param("sponsorContext") String sponsorContext);
+    @Query(value = "SELECT company.companyName FROM VCHSponsor sponsor INNER JOIN Company company ON sponsor.companyKey = company.companyKey " +
+            "WHERE sponsor.domainUrl = LOWER(:sponsorContext) AND sponsor.sponsorStatus='APPROVED'")
+    String getActiveSponsorKeyBySponsorContext(@Param("sponsorContext") String sponsorContext);
 }

@@ -96,9 +96,8 @@ public class VCHActivityController {
                                                                         @RequestParam(value = "sortBy",  required = false) SORT_BY sortBy,
                                                                         @RequestParam(value = "sortDir", required = false) SORT_DIRECTION sortDir,
                                                                         @PathVariable(value = "sponsorContext")String sponsorContext){
-        VCHActivityDefinitionPaginationRes res = new VCHActivityDefinitionPaginationRes();
         log.info("Retrieve all Activity Definitions: Starts");
-        res = vchActivityDefinitionService.getAllDefinitionList(sponsorContext, pageNo, pageSize, sortBy ==null? "modifyTs":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
+        VCHActivityDefinitionPaginationRes res = vchActivityDefinitionService.getAllDefinitionList(sponsorContext, pageNo, pageSize, sortBy ==null? "modifyTs":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
         log.info("Retrieve all Activity Definitions: Ends");
         return  res;
     }

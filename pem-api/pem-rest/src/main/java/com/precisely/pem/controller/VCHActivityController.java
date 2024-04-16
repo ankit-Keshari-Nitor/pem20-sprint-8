@@ -1,8 +1,10 @@
 package com.precisely.pem.controller;
 
+import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.dtos.responses.VCHActivityDefinitionPaginationRes;
 import com.precisely.pem.dtos.responses.VCHCreateActivityDefinitionResp;
 import com.precisely.pem.dtos.shared.VCHActivityDefnDto;
+import com.precisely.pem.services.ActivityDefinitionVersionService;
 import com.precisely.pem.services.VCHActivityDefinitionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,8 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +24,8 @@ import java.sql.SQLException;
 @Tag(name = "Activity Definition", description = "Activity Definition management APIs")
 @RequestMapping("/sponsors/{sponsorContext}/v2/activityDefinitions")
 @RestController
+@Log4j2
 public class VCHActivityController {
-
-    private static final Logger LOG = LogManager.getLogger(VCHActivityController.class);
 
     public enum SORT_DIRECTION {
         ASC ("ASC"), DESC ("DESC");
@@ -64,6 +64,9 @@ public class VCHActivityController {
     @Autowired
     VCHActivityDefinitionService vchActivityDefinitionService;
 
+    @Autowired
+    ActivityDefinitionVersionService activityDefinitionVersionService;
+
     @Operation(summary = "Create an Activity Definition")
     @ApiResponses({
             @ApiResponse(responseCode = "201", content = {
@@ -94,9 +97,9 @@ public class VCHActivityController {
                                                                         @RequestParam(value = "sortDir", required = false) SORT_DIRECTION sortDir,
                                                                         @PathVariable(value = "sponsorContext")String sponsorContext){
         VCHActivityDefinitionPaginationRes res = new VCHActivityDefinitionPaginationRes();
-        LOG.info("Retrieve all Activity Definitions: Starts");
+        log.info("Retrieve all Activity Definitions: Starts");
         res = vchActivityDefinitionService.getAllDefinitionList(sponsorContext, pageNo, pageSize, sortBy ==null? "modifyTs":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
-        LOG.info("Retrieve all Activity Definitions: Ends");
+        log.info("Retrieve all Activity Definitions: Ends");
         return  res;
     }
 
@@ -110,5 +113,17 @@ public class VCHActivityController {
     @GetMapping ("/{activityDefnKey}")
     public VCHActivityDefnDto getActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey) throws Exception {
        return  vchActivityDefinitionService.getActivityDefinitionByKey(sponsorContext, activityDefnKey);
+    }
+
+    @Operation(summary = "Mark Activity Definition Version Status as Final", tags = { "Activity Definition Version" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = VCHActivityDefnDto.class), mediaType = "application/json") }),
+            @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
+                    @Content(schema = @Schema()) }),
+            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
+    @PostMapping("/{activityDefnKey}/versions/{activityDefnVersionKey}/actions/markAsFinal")
+    public MarkAsFinalActivityDefinitionVersionResp markActivityDefinitionStatusAsFinal(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
+        return  activityDefinitionVersionService.markAsFinalActivityDefinitionVersion(activityDefnVersionKey);
     }
 }

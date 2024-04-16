@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class SponsorServiceImpl implements SponsorService {
 
-    private VCHSponsorRepo sponsorRepo;
+    private final VCHSponsorRepo sponsorRepo;
 
-    private CompanyRepo companyRepo;
+    private final CompanyRepo companyRepo;
 
     @Autowired
     SponsorServiceImpl(VCHSponsorRepo sponsorRepo, CompanyRepo companyRepo){

@@ -30,7 +30,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<Object> handleCommonException(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleCommonException(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
         errResp.setErrorCode(HttpStatus.BAD_REQUEST.value());
         errResp.setErrorDescription(ex.getMessage());

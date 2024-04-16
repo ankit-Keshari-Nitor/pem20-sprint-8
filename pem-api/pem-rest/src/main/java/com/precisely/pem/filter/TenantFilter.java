@@ -1,0 +1,72 @@
+package com.precisely.pem.filter;
+
+import com.precisely.pem.services.SponsorService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.ThreadContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+@Order(value = Ordered.HIGHEST_PRECEDENCE)
+@Component
+@Log4j2
+@WebFilter(filterName = "TenantFilter", urlPatterns = "/*")
+public class TenantFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private SponsorService sponsorService;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        try  {
+            String sponsorContext = getSponsorContextFromURL(request);
+
+            //Extract Company Name from DB and add into ThreadContext
+            setSponsorDetailsInContext(sponsorContext);
+
+            // Continue with the filter chain
+            filterChain.doFilter(request, response);
+        } catch (Exception exp){
+            log.error(" Log Context addition failed." + exp);
+        } finally {
+            // Clear MDC context when request completes
+            ThreadContext.clearStack();
+        }
+    }
+
+    private static String getSponsorContextFromURL(HttpServletRequest request) {
+        StringBuffer url = request.getRequestURL();
+
+        Pattern pattern = Pattern.compile("/sponsors/([^/]+)");
+        Matcher matcher = pattern.matcher(url);
+
+        // Checking if the pattern is found in the URL
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return "";
+    }
+
+    private void setSponsorDetailsInContext(String sponsorContext) {
+        String companyName = sponsorService.getActiveSponsorNameBySponsorContext(sponsorContext);
+       if(!StringUtils.isEmpty(companyName)){
+           // Set MDC context for logging here
+           ThreadContext.put("sponsor.name", companyName);
+       }else {
+           log.debug("No sponsor found with sponsor context : {}, Using None as the sponsor's name.",sponsorContext);
+           ThreadContext.put("sponsor.name", "None");
+       }
+    }
+}

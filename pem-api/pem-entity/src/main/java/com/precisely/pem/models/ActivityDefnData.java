@@ -29,6 +29,7 @@ public class ActivityDefnData {
     @Column(name="MODIFIED_BY")
     private String modifiedBy;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "activity_Defn_Version")
     private ActivityDefnVersion activityDefnVersion;
 }

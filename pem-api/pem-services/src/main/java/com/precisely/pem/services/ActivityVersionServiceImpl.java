@@ -108,7 +108,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         activityDefn = activityDefnRepo.findById(activityDefnKey);
 
-        activityDefn.get().getVersions().stream().count();
+        int version = activityDefn.get().getVersions().size();
 
         logger.info("count : " + (long) activityDefn.get().getVersions().size());
 
@@ -127,7 +127,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
                 UUID.randomUUID().toString(), activityDefnKey,
-                activityDefnData.getActivityDefnDataKey(), 0,
+                activityDefnData.getActivityDefnDataKey(), version,
                 status, isDefault, isEncrypted,
                 "", LocalDateTime.now(), "", LocalDateTime.now(), ""
         );
@@ -138,7 +138,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         logger.info("location : " + request.getRequestURL().toString());
 
-        //activityDefnVersionResp.setVersion();
+        activityDefnVersionResp.setVersion(activityDefnVersionDto.getVersion());
         activityDefnVersionResp.setName(activityDefn.get().getActivityName());
         activityDefnVersionResp.setLocation(url);
 

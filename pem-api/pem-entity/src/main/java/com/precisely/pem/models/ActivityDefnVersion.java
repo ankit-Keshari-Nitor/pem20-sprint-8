@@ -46,10 +46,11 @@ public class ActivityDefnVersion {
     @Column(name="MODIFIED_BY")
     private String modifiedBy;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "activity_Defn_Details")
-    private ActivityDefn activityDefnDetails;
+    private ActivityDefn activityDefn;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private ActivityDefnData contentData;
+    @OneToOne
+    @JoinColumn(name = "activity_Defn_Data")
+    private ActivityDefnData activityDefnData;
 }

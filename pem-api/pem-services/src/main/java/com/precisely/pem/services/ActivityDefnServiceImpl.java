@@ -124,7 +124,7 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Object> createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException {
         ActivityDefnResp activityDefnResp = new ActivityDefnResp();
-        ActivityDefn activityDefn = null;
+        ActivityDefn activityDefnobj = null;
         ActivityDefnData activityDefnData = null;
         ActivityDefnVersion activityDefnVersion = null;
         UriComponentsBuilder builder = UriComponentsBuilder.newInstance();
@@ -137,8 +137,8 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
                 UUID.randomUUID().toString(), sponsorRepo.getSponsorKey(sponsorContext), name,
                 description, LocalDateTime.now(), "", LocalDateTime.now(), "",
                 app, false, false,null);
-        activityDefn = mapper.map(activityDefnDto, ActivityDefn.class);
-        activityDefn = activityDefnRepo.save(activityDefn);
+        activityDefnobj = mapper.map(activityDefnDto, ActivityDefn.class);
+        activityDefnobj = activityDefnRepo.save(activityDefnobj);
 
         //Populating the Activity Definition Data Object
         byte[] bytes = file.getBytes();
@@ -154,7 +154,7 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
         activityDefnData = activityDefnDataRepo.save(activityDefnData);
 
         ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
-                UUID.randomUUID().toString(), activityDefn.getActivityDefnKey(),
+                UUID.randomUUID().toString(), activityDefnobj.getActivityDefnKey(),
                 activityDefnData.getActivityDefnDataKey(), 0,
                 String.valueOf(ActivityDefnStatus.DRAFT), true, false,
                 "", LocalDateTime.now(), "", LocalDateTime.now(), ""
@@ -162,11 +162,11 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
         activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
         activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
 
-        String url = urlInfo + builder.path("/sponsors/{sponsorContext}/v2/activityDefinitions").buildAndExpand(sponsorContext).toUriString() + "/" + activityDefn.getActivityDefnKey();
+        String url = urlInfo + builder.path("/sponsors/{sponsorContext}/v2/activityDefinitions").buildAndExpand(sponsorContext).toUriString() + "/" + activityDefnobj.getActivityDefnKey();
 
         logger.info("location : " + url);
 
-        activityDefnResp.setActivityDefnKey(activityDefn.getActivityDefnKey());
+        activityDefnResp.setActivityDefnKey(activityDefnobj.getActivityDefnKey());
         activityDefnResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
         activityDefnResp.setLocation(url);
 

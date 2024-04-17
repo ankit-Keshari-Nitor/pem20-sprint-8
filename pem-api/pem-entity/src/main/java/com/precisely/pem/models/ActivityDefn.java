@@ -48,6 +48,6 @@ public class ActivityDefn {
     @Column(name="MIGRATION_STATUS")
     private boolean migrationStatus;
 
-    @OneToMany(mappedBy = "activityDefnDetails", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "activityDefn", cascade = CascadeType.ALL)
     private List<ActivityDefnVersion> versions;
 }

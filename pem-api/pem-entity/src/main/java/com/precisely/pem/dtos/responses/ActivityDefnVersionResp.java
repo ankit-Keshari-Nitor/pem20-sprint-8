@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class ActivityDefnVersionResp {
     public String location;
     public String name;
-    public String version;
+    public int version;
 }

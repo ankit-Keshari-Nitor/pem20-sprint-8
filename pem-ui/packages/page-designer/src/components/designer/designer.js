@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 import './designer.scss';
 
-import Row from '../../elements/Row';
+import Row from '../../elements/custom-row';
 import Canvas from '../canvas';
 import ComponentsTray from '../components-tray/components-tray';
 import PropsPanel from '../props-panel/props-panel';

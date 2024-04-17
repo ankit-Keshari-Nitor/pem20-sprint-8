@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { ROW } from '../constants/constants';
-import Column from './column';
+import Column from './custom-column';
 import { Grid, Column as Carboncolumn } from '@carbon/react';
 import classNames from 'classnames';
 

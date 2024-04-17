@@ -5,8 +5,11 @@ export const COMPONENT = 'component';
 export const GROUP = 'group';
 export const ACCORDION = 'accordion';
 export const TAB = 'tab';
+export const DEFAULTTITLE = 'Title';
 export const CUSTOM_COLUMN = 'customColumn';
+export const SUBTAB = 'subTab';
 export const CUSTOM_SIZE = 'customsize';
+export const CUSTOM_TITLE = 'customTitle';
 
 export const PALETTE_GROUPS = [
   {

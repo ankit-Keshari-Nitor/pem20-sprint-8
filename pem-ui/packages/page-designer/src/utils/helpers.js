@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { ROW, COLUMN, COMPONENT, GROUP, TAB, ACCORDION, CUSTOM_SIZE } from '../constants/constants';
+import { ROW, COLUMN, COMPONENT, GROUP, TAB, ACCORDION, CUSTOM_SIZE, SUBTAB, DEFAULTTITLE } from '../constants/constants';
 
 // a little function to help us with reordering the result
 export const reorder = (list, startIndex, endIndex) => {
@@ -100,7 +100,7 @@ export const updateConfigChildToChildren = (children, splitDropZonePath, item, r
   const nodeChildren = updatedChildren[curIndex];
   updatedChildren[curIndex] = {
     ...nodeChildren,
-    children: addChildToChildren(nodeChildren.children, splitItemChildrenPath, item)
+    children: updateConfigChildToChildren(nodeChildren.children, splitItemChildrenPath, item, rest)
   };
 
   return updatedChildren;
@@ -138,7 +138,7 @@ export const addChildToChildren = (children, splitDropZonePath, item) => {
 
 export const updateChildToChildren = (children, splitDropZonePath, propsName, newValue) => {
   if (splitDropZonePath.length === 1) {
-    if (propsName === CUSTOM_SIZE) {
+    if (propsName === CUSTOM_SIZE || propsName === 'tabTitle') {
       const dropZoneIndex = Number(splitDropZonePath[0]);
       return update(children, dropZoneIndex, propsName, newValue);
     } else {
@@ -286,13 +286,28 @@ export const handleMoveSidebarComponentIntoParent = (layout, splitDropZonePath, 
         maintype: item.component.type,
         ...item
       };
-    } else if (item.component.type === TAB || item.component.type === ACCORDION) {
+    } else if (item.component.type === ACCORDION) {
       newLayoutStructure = {
         id: uuid(),
         type: item.component.type,
         maintype: item.component.type,
         children: [],
         component: item.component
+      };
+    } else if (item.component.type === TAB) {
+      newLayoutStructure = {
+        id: uuid(),
+        type: item.component.type,
+        maintype: item.component.type,
+        children: [
+          {
+            id: uuid(),
+            tabTitle: DEFAULTTITLE,
+            type: SUBTAB,
+            children: []
+          }
+        ]
+        //component: item.component
       };
     } else {
       newLayoutStructure = {
@@ -361,11 +376,19 @@ export const nestedLayoutView = (childLayout, childSchema) => {
         break;
       }
       case TAB: {
-        const { icon, label, group, ...others } = item.component;
         childSchema.push({
           id: item.id,
           type: item.type,
-          ...others,
+          children: []
+        });
+        nestedLayoutView(childLayout[index]?.children, childSchema[index].children);
+        break;
+      }
+      case SUBTAB: {
+        const { id, tabTitle } = item;
+        childSchema.push({
+          id,
+          tabTitle,
           children: []
         });
         nestedLayoutView(childLayout[index]?.children, childSchema[index].children);

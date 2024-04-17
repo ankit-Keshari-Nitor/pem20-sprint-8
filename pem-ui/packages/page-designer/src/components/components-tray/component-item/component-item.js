@@ -6,7 +6,7 @@ import './component-item.scss';
 
 const ComponentItem = ({ data }) => {
   const { type, label, icon } = data.component;
-  
+
   const [{ opacity }, drag] = useDrag({
     item: { id: uuid(), type: data.type, component: data.component },
     collect: (monitor) => ({
@@ -16,20 +16,10 @@ const ComponentItem = ({ data }) => {
 
   return (
     <div ref={drag} style={{ opacity }}>
-      <button className="palette-field" data-field-type={type} title={`Create ${getIndefiniteArticle(type)} ${label} element`}>
+      <button className="palette-field" data-field-type={type} title={label}>
         {icon}
-        <span className="palette-field-text">{label}</span>
       </button>
     </div>
   );
 };
 export default ComponentItem;
-
-// helpers ///////////
-function getIndefiniteArticle(type) {
-  if (['image'].includes(type)) {
-    return 'an';
-  }
-
-  return 'a';
-}

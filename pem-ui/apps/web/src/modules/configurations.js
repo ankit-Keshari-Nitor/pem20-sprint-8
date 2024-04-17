@@ -30,11 +30,18 @@ const sideNavConfig = [
     resourceKey: 'DIVISIONS.VIEW'
   },
   {
+    label: 'pem:sideNav.designer',
+    to: '/activities/designer',
+    title: 'pem:sideNav.designer',
+    resourceKey: 'WORKFLOW.VIEW'
+  },
+  {
     label: 'pem:sideNav.workflow',
     to: '/activities/workflow',
     title: 'pem:sideNav.workflow',
     resourceKey: 'WORKFLOW.VIEW'
-  }
+  },
+
 ];
 
 const headerMenuList = [

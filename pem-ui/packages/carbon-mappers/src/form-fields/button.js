@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button as CarbonButton } from '@carbon/react';
-import { FORM_FIELD_TYPE, editableProps } from '../constant';
-import { ButtonCentered } from '@carbon/icons-react';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, editableProps } from '../constant';
+import { ButtonIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.BUTTON;
 
-const Button = ({field, id}) => {
+const Button = ({ field, id }) => {
   const { type, labelText, ...rest } = field;
 
   return (
@@ -20,9 +20,9 @@ export default Button;
 // Config of Button for Left Palette & Right Palette
 Button.config = {
   type,
-  label: 'Button',
-  group: 'action',
-  icon: <ButtonCentered />,
+  label: FORM_FIELD_LABEL.BUTTON,
+  group: FORM_FIELD_GROUPS.ACTION,
+  icon: <ButtonIcon />,
   editableProps: {
     Basic: [...editableProps.Basic],
     Condition: [...editableProps.Condition]

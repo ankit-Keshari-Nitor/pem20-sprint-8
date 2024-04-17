@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { TextInput as CarbonTextInput } from '@carbon/react';
-import { FORM_FIELD_TYPE, editableProps, minProps, maxProps, readOnly, helperText } from '../constant';
-import Label from './label';
+import { FORM_FIELD_TYPE, editableProps, minProps, maxProps, readOnly, helperText, FORM_FIELD_LABEL, FORM_FIELD_GROUPS } from '../constant';
 import useMinMaxInput from '../custom-hooks/use-min-max-input';
-import { Txt } from '@carbon/icons-react';
+import { TextInputIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.TEXT_INPUT;
 
 const TextInput = ({ field, id }) => {
-  const { type, labelText, isRequired, min, max, ...rest } = field;
+  console.log('field', field);
+  const { labelText, helperText, disabled, isRequired, min, max, ...rest } = field;
   const { value, isValid, invalidText, valueChangeHandler, minChangeHandler, maxChangeHandler } = useMinMaxInput();
 
   useEffect(() => {
@@ -21,10 +21,19 @@ const TextInput = ({ field, id }) => {
   }, [min, max, minChangeHandler, maxChangeHandler]);
 
   return (
-    <>
-      <Label labelText={labelText} isRequired={isRequired} />
-      <CarbonTextInput data-testid={id} id={id} type={type} labelText="" value={value} invalid={isValid} invalidText={invalidText} onChange={valueChangeHandler} {...rest} />
-    </>
+    <CarbonTextInput
+      type={FORM_FIELD_TYPE.TEXT}
+      data-testid={id}
+      id={id}
+      labelText={labelText}
+      helperText={helperText}
+      disabled={disabled}
+      value={value}
+      invalid={isValid}
+      // invalidText={invalidText}
+      onChange={valueChangeHandler}
+      {...rest}
+    />
   );
 };
 
@@ -33,9 +42,9 @@ export default TextInput;
 // Config of Accordion for Left Palette & Right Palette
 TextInput.config = {
   type,
-  label: 'Text Input',
-  group: 'basic-input',
-  icon: <Txt />,
+  label: FORM_FIELD_LABEL.TEXT_INPUT,
+  group: FORM_FIELD_GROUPS.BASIC_INPUT,
+  icon: <TextInputIcon />,
   editableProps: {
     Basic: [...editableProps.Basic, helperText],
     Condition: [...editableProps.Condition, readOnly]

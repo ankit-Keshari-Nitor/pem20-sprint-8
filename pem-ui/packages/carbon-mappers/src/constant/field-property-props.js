@@ -26,6 +26,12 @@ export const helperText = {
   value: ''
 };
 
+export const hrefText = {
+  propsName: 'hrefText',
+  label: 'Href',
+  value: ''
+};
+
 export const readOnly = {
   propsName: 'readOnly',
   label: 'ReadOnly',

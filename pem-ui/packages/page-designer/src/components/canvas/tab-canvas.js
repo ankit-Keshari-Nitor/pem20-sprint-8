@@ -2,12 +2,12 @@ import React from 'react';
 import FieldRenderer from './field-renderer/field-renderer';
 import { DropZone } from '../../elements';
 
-const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, selectedField, deleteFormField, path }) => {
+const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, onFieldSelect, onFieldDelete, path, previewMode }) => {
   const renderComponent = (component, currentPath, renderRow) => {
     return (
       <div
         onClick={(e) => {
-          selectedField(e, component, currentPath);
+          !previewMode && onFieldSelect(e, component, currentPath);
         }}
       >
         <FieldRenderer
@@ -17,8 +17,9 @@ const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, selectedFie
           componentMapper={componentMapper}
           renderRow={renderRow}
           handleDrop={handleDrop}
-          deleteFormField={deleteFormField}
-          selectedField={selectedField}
+          onFieldDelete={onFieldDelete}
+          onFieldSelect={onFieldSelect}
+          previewMode={previewMode}
         />
       </div>
     );
@@ -30,26 +31,30 @@ const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, selectedFie
         const currentPath = `${path}-${index}`;
         return (
           <React.Fragment key={component.id}>
-            <DropZone
-              data={{
-                path: currentPath,
-                childrenCount: layout.length
-              }}
-              onDrop={handleDrop}
-              path={currentPath}
-            />
+            {!previewMode && (
+              <DropZone
+                data={{
+                  path: currentPath,
+                  childrenCount: layout.length
+                }}
+                onDrop={handleDrop}
+                path={currentPath}
+              />
+            )}
             {renderComponent(component, currentPath, renderRow)}
           </React.Fragment>
         );
       })}
-      <DropZone
-        data={{
-          path: `${path}-${layout.length}`,
-          childrenCount: layout.length
-        }}
-        onDrop={handleDrop}
-        isLast
-      />
+      {!previewMode && (
+        <DropZone
+          data={{
+            path: `${path}-${layout.length}`,
+            childrenCount: layout.length
+          }}
+          onDrop={handleDrop}
+          isLast
+        />
+      )}
     </>
   );
 };

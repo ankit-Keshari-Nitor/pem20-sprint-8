@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { COLUMN } from '../constants/constants';
-import DropZone from './DropZone';
+import DropZone from './drop-zone';
 import FieldRenderer from '../components/canvas/field-renderer/field-renderer';
 
-const Column = ({ data, handleDrop, path, componentMapper, selectedField, renderRow, deleteFormField }) => {
+const Column = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete, previewMode }) => {
   const ref = useRef(null);
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -26,7 +26,7 @@ const Column = ({ data, handleDrop, path, componentMapper, selectedField, render
     return (
       <div
         onClick={(e) => {
-          selectedField(e, component, currentPath);
+          !previewMode && onFieldSelect(e, component, currentPath);
         }}
       >
         <FieldRenderer
@@ -36,8 +36,9 @@ const Column = ({ data, handleDrop, path, componentMapper, selectedField, render
           componentMapper={componentMapper}
           renderRow={renderRow}
           handleDrop={handleDrop}
-          deleteFormField={deleteFormField}
-          selectedField={selectedField}
+          onFieldDelete={onFieldDelete}
+          onFieldSelect={onFieldSelect}
+          previewMode={previewMode}
         />
       </div>
     );
@@ -48,23 +49,27 @@ const Column = ({ data, handleDrop, path, componentMapper, selectedField, render
       {data?.children === undefined ? (
         <>
           <React.Fragment key={data.id}>
+            {!previewMode && (
+              <DropZone
+                data={{
+                  path: path,
+                  childrenCount: data.length
+                }}
+                onDrop={handleDrop}
+              />
+            )}
+            {renderComponent(data, path)}
+          </React.Fragment>
+          {!previewMode && (
             <DropZone
               data={{
-                path: path,
+                path: `${path}-${data.length}`,
                 childrenCount: data.length
               }}
               onDrop={handleDrop}
+              isLast
             />
-            {renderComponent(data, path)}
-          </React.Fragment>
-          <DropZone
-            data={{
-              path: `${path}-${data.length}`,
-              childrenCount: data.length
-            }}
-            onDrop={handleDrop}
-            isLast
-          />
+          )}
         </>
       ) : (
         <>
@@ -72,25 +77,29 @@ const Column = ({ data, handleDrop, path, componentMapper, selectedField, render
             const currentPath = `${path}-${index}`;
             return (
               <React.Fragment key={component.id}>
-                <DropZone
-                  data={{
-                    path: currentPath,
-                    childrenCount: data.children.length
-                  }}
-                  onDrop={handleDrop}
-                />
+                {!previewMode && (
+                  <DropZone
+                    data={{
+                      path: currentPath,
+                      childrenCount: data.children.length
+                    }}
+                    onDrop={handleDrop}
+                  />
+                )}
                 {renderComponent(component, currentPath)}
               </React.Fragment>
             );
           })}
-          <DropZone
-            data={{
-              path: `${path}-${data.children.length}`,
-              childrenCount: data.children.length
-            }}
-            onDrop={handleDrop}
-            isLast
-          />
+          {!previewMode && (
+            <DropZone
+              data={{
+                path: `${path}-${data.children.length}`,
+                childrenCount: data.children.length
+              }}
+              onDrop={handleDrop}
+              isLast
+            />
+          )}
         </>
       )}
     </div>

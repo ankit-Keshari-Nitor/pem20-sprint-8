@@ -1,11 +1,10 @@
 import React from 'react';
 import Canvas from '../canvas';
 import { Form } from '@carbon/react';
-import { Stack } from '@carbon/react';
 import { Button } from '@carbon/react';
 import './preview-mode.scss';
 
-const Formpreview = ({ layout, handleDrop, renderRow, componentMapper, onFieldSelect, onFieldDelete }) => {
+const FormPreview = ({ layout, handleDrop, renderRow, componentMapper, onFieldSelect, onFieldDelete }) => {
   console.log(layout);
   return (
     <div className="view-schema-container">
@@ -21,4 +20,4 @@ const Formpreview = ({ layout, handleDrop, renderRow, componentMapper, onFieldSe
   );
 };
 
-export default Formpreview;
+export default FormPreview;

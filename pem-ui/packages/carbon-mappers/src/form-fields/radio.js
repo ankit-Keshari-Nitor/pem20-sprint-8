@@ -1,7 +1,6 @@
 import React from 'react';
-import { RadioButton as CarbonRadioButton, RadioButtonGroup } from '@carbon/react';
+import { RadioButton as CarbonRadioButton } from '@carbon/react';
 import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, editableProps } from '../constant';
-import Label from './label';
 import { RadioIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.RADIO;

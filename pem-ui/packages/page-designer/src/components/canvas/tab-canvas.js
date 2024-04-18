@@ -2,7 +2,7 @@ import React from 'react';
 import FieldRenderer from './field-renderer/field-renderer';
 import { DropZone } from '../../elements';
 
-const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, onFieldSelect, onFieldDelete, path, previewMode }) => {
+const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, onFieldSelect, onFieldDelete, path, previewMode, onChangeHandle }) => {
   const renderComponent = (component, currentPath, renderRow) => {
     return (
       <div
@@ -20,6 +20,7 @@ const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, onFieldSele
           onFieldDelete={onFieldDelete}
           onFieldSelect={onFieldSelect}
           previewMode={previewMode}
+          onChangeHandle={onChangeHandle}
         />
       </div>
     );

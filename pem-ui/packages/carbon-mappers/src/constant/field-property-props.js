@@ -1,51 +1,79 @@
-export const editableProps = {
-  Basic: [
-    {
-      propsName: 'labelText',
-      label: 'Label',
-      value: 'Label Text'
-    }
-  ],
-  Condition: [
-    {
-      propsName: 'disabled',
-      label: 'Disabled',
-      value: false
-    },
-    {
-      propsName: 'isRequired',
-      label: 'IsRequired',
-      value: false
-    }
-  ]
+// export const editableProps = {
+//   Basic: [
+//     {
+//       propsName: 'labelText',
+//       label: 'Label',
+//       value: 'Label Text',
+//       type: 'TextInput'
+//     }
+//   ],
+//   Condition: [
+//     {
+//       propsName: 'disabled',
+//       label: 'Disabled',
+//       value: false,
+//       type: 'Toggle'
+//     }
+//     // {
+//     //   propsName: 'isRequired',
+//     //   label: 'IsRequired',
+//     //   value: false
+//     // }
+//   ]
+// };
+
+export const labelText = {
+  propsName: 'labelText',
+  label: 'Label',
+  value: 'Label Text',
+  type: 'TextInput'
+};
+
+export const isDisabled = {
+  propsName: 'disabled',
+  label: 'Disabled',
+  value: false,
+  type: 'Toggle'
+};
+
+export const isRequired = {
+  propsName: 'isRequired',
+  label: 'IsRequired',
+  value: false,
+  type: 'Toggle'
 };
 
 export const helperText = {
   propsName: 'helperText',
   label: 'Helper Text',
-  value: ''
+  value: '',
+  type: 'TextInput'
 };
 
 export const hrefText = {
   propsName: 'hrefText',
   label: 'Href',
-  value: ''
+  value: '',
+  type: 'TextInput'
 };
 
 export const readOnly = {
   propsName: 'readOnly',
   label: 'ReadOnly',
-  value: false
+  value: false,
+  type: 'Toggle'
 };
 
 export const minProps = {
   propsName: 'min',
   label: 'Min Value',
-  value: ''
+  value: '',
+  type: 'TextInput'
 };
 
 export const maxProps = {
   propsName: 'max',
   label: 'Max Value',
-  value: ''
+  value: '',
+  type: 'TextInput'
 };

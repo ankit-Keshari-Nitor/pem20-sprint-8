@@ -4,10 +4,10 @@ import { GroupIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.GROUP;
 
-const Group = ({ renderRow, row, currentPath, previewMode }) => {
+const Group = ({ renderRow, row, currentPath, previewMode, onChangeHandle }) => {
   return (
     <div className="group" data-testid={'group-id'} id={'group-id '}>
-      {renderRow(row, currentPath, renderRow, previewMode)}
+      {renderRow(row, currentPath, renderRow, previewMode, onChangeHandle)}
     </div>
   );
 };

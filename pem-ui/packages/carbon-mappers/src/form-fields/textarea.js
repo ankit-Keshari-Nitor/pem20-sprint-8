@@ -1,25 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextArea as CarbonTextArea } from '@carbon/react';
-import { FORM_FIELD_TYPE, editableProps, minProps, maxProps, readOnly, helperText, FORM_FIELD_LABEL, FORM_FIELD_GROUPS } from '../constant';
-import useMinMaxInput from '../custom-hooks/use-min-max-input';
+import { FORM_FIELD_TYPE, minProps, maxProps, readOnly, helperText, FORM_FIELD_LABEL, FORM_FIELD_GROUPS, isRequired, labelText, isDisabled } from '../constant';
 import { TextAreaIcon } from '../icons';
 
 const type = FORM_FIELD_TYPE.TEXT_AREA;
 
-const TextArea = ({ field, id }) => {
-  const { labelText, isRequired, min, max, ...rest } = field;
-  const { value, isValid, invalidText, valueChangeHandler, minChangeHandler, maxChangeHandler } = useMinMaxInput();
+const TextArea = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
+  const { labelText, isRequired, value, min, max, ...rest } = field;
+  const [fieldValue, setFieldValue] = useState();
 
   useEffect(() => {
-    if (min !== undefined) {
-      minChangeHandler(min);
+    if (previewMode) {
+      onChangeHandle({ isRequired, min, max, currentPath, value: value ? value : '' });
+      setFieldValue(value ? value : '');
     }
-    if (max !== undefined) {
-      maxChangeHandler(max);
-    }
-  }, [min, max, minChangeHandler, maxChangeHandler]);
+  }, [field]);
 
-  return <CarbonTextArea id={id} data-testid={id} labelText={labelText} value={value} invalid={isValid} onChange={valueChangeHandler} {...rest} />;
+  return (
+    <CarbonTextArea
+      id={id}
+      data-testid={id}
+      labelText={labelText}
+      value={fieldValue}
+      onChange={(e) => {
+        previewMode && onChangeHandle({ isRequired, min, max, currentPath, value: e.target.value });
+        setFieldValue(e.target.value);
+      }}
+      {...rest}
+    />
+  );
 };
 
 export default TextArea;
@@ -31,8 +40,8 @@ TextArea.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <TextAreaIcon />,
   editableProps: {
-    Basic: [...editableProps.Basic, helperText],
-    Condition: [...editableProps.Condition, readOnly]
+    Basic: [labelText, helperText, isDisabled, readOnly],
+    Condition: [isRequired]
   },
   advanceProps: [minProps, maxProps]
 };

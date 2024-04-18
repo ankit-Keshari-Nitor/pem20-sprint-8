@@ -1,2 +1,2 @@
-import FormPreview from './form-preview';
-export default FormPreview;
+import Formpreview from './Formpreview';
+export default Formpreview;

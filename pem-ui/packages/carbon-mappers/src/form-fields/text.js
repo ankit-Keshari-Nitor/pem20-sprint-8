@@ -1,6 +1,6 @@
 import React from 'react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, editableProps } from '../constant';
-import { TextIcon } from '../icons';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, labelText } from '../constant';
+import { TextIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.TEXT;
 
@@ -23,7 +23,7 @@ Text.config = {
   group: FORM_FIELD_GROUPS.ACTION,
   icon: <TextIcon />,
   editableProps: {
-    Basic: [...editableProps.Basic],
+    Basic: [labelText],
     Condition: []
   },
   advanceProps: []

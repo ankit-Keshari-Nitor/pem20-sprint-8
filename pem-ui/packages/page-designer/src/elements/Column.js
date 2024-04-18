@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { COLUMN } from '../constants/constants';
-import DropZone from './drop-zone';
+import DropZone from './DropZone';
 import FieldRenderer from '../components/canvas/field-renderer/field-renderer';
 
-const Column = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete, previewMode }) => {
+const Column = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete, previewMode, onChangeHandle }) => {
   const ref = useRef(null);
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -39,6 +39,7 @@ const Column = ({ data, handleDrop, path, componentMapper, onFieldSelect, render
           onFieldDelete={onFieldDelete}
           onFieldSelect={onFieldSelect}
           previewMode={previewMode}
+          onChangeHandle={onChangeHandle}
         />
       </div>
     );

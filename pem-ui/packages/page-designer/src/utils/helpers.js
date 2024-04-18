@@ -162,6 +162,27 @@ export const updateChildToChildren = (children, splitDropZonePath, propsName, ne
   return updatedChildren;
 };
 
+export const updatePreviewChildToChildren = (children, splitDropZonePath, newValue) => {
+  if (splitDropZonePath.length === 1) {
+    const updatedItem = { ...children[splitDropZonePath[0]] };
+    const deletedLayout = handleRemoveItemFromLayout(children, splitDropZonePath);
+    return updateConfigChildToChildren(deletedLayout, splitDropZonePath, updatedItem, newValue);
+  }
+
+  const updatedChildren = [...children];
+  const curIndex = Number(splitDropZonePath.slice(0, 1));
+
+  // Update the specific node's children
+  const splitItemChildrenPath = splitDropZonePath.slice(1);
+  const nodeChildren = updatedChildren[curIndex];
+  updatedChildren[curIndex] = {
+    ...nodeChildren,
+    children: updatePreviewChildToChildren(nodeChildren.children, splitItemChildrenPath, newValue)
+  };
+
+  return updatedChildren;
+};
+
 export const handleMoveWithinParent = (layout, splitDropZonePath, splitItemPath) => {
   return reorderChildren(layout, splitDropZonePath, splitItemPath);
 };

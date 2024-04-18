@@ -97,7 +97,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           <>
                             {editableProps[key].map((item, idx) => {
                               return (
-                                key === 'Basic' && (
+                                key === 'Basic' &&
+                                (item.type === 'TextInput' ? (
                                   <TextInput
                                     key={idx}
                                     id={String(idx)}
@@ -106,7 +107,24 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     value={item.value}
                                     onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value, selectedFiledProps?.currentPathDetail)}
                                   />
-                                )
+                                ) : (
+                                  item.type === 'Toggle' && (
+                                    <ul key={idx}>
+                                      <li>
+                                        <Toggle
+                                          key={idx}
+                                          id={'toggle-' + String(idx) + '-' + selectedFiledProps?.id}
+                                          className="right-palette-form-item "
+                                          labelText={item.label}
+                                          defaultToggled={item.value}
+                                          toggled={item.value}
+                                          onClick={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, !item.value, selectedFiledProps?.currentPathDetail)}
+                                          hideLabel
+                                        />
+                                      </li>
+                                    </ul>
+                                  )
+                                ))
                               );
                             })}
                           </>

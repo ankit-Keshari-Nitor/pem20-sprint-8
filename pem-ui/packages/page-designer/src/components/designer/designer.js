@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 import './designer.scss';
 
-import Row from '../../elements/custom-row';
+import Row from '../../elements/Row';
 import Canvas from '../canvas';
 import ComponentsTray from '../components-tray/components-tray';
 import PropsPanel from '../props-panel/props-panel';
@@ -29,6 +29,7 @@ export default function Designer({ componentMapper }) {
   const [selectedFiledProps, setSelectedFiledProps] = useState();
   const [open, setOpen] = useState(false);
   const [openPreview, setOpenPreview] = useState(false);
+  const [deletedFieldPath, setDeletedFieldPath] = useState();
 
   const handleDrop = useCallback(
     (dropZone, item) => {
@@ -171,12 +172,13 @@ export default function Designer({ componentMapper }) {
 
   const onFieldDelete = (e, path) => {
     e.stopPropagation();
+    setDeletedFieldPath(path);
     const splitDropZonePath = path.split('-');
     setLayout(handleRemoveItemFromLayout(layout, splitDropZonePath));
     setSelectedFiledProps();
   };
 
-  const renderRow = (row, currentPath, renderRow, previewMode) => {
+  const renderRow = (row, currentPath, renderRow, previewMode, onChangeHandle) => {
     return (
       <Row
         key={row.id}
@@ -188,6 +190,7 @@ export default function Designer({ componentMapper }) {
         renderRow={renderRow}
         onFieldDelete={onFieldDelete}
         previewMode={previewMode}
+        onChangeHandle={onChangeHandle}
       />
     );
   };
@@ -238,7 +241,16 @@ export default function Designer({ componentMapper }) {
         secondaryButtonText="Cancel"
         className="preview-modal"
       >
-        <Formpreview layout={layout} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} onFieldSelect={onFieldSelect} onFieldDelete={onFieldDelete} />
+        <Formpreview
+          layout={layout}
+          deletedFieldPath={deletedFieldPath}
+          handleDrop={handleDrop}
+          renderRow={renderRow}
+          componentMapper={componentMapper}
+          onFieldSelect={onFieldSelect}
+          onFieldDelete={onFieldDelete}
+          openPreview={openPreview}
+        />
       </Modal>
     </>
   );

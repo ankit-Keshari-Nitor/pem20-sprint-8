@@ -4,7 +4,7 @@
   flex-direction: column;
   padding: 1rem;
   box-shadow: 0px 0px 5px -2px;
-  cursor: move;
+  //cursor: move;
 }
 
 .element:hover {
@@ -19,13 +19,24 @@
   margin-bottom: 8px;
 }
 
-.element .delete-icon {
-  position: absolute;
-  top: 4px;
-  right: 4px;
+.drag-icon {
+  cursor: move;
+}
+
+.element .custom-field-grid .delete-icon {
+  // position: absolute;
+  // top: 4px;
+  // right: 4px;
+  display: flex;
+  justify-content: center;
   cursor: pointer;
 }
 
 .form-fields {
   margin: 0.5rem;
+}
+
+.custom-field-grid {
+  --cds-grid-gutter-start: none;
+  padding-inline: unset;
 }

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, editableProps } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, labelText } from '../constant';
 import { NewTab } from '@carbon/icons-react';
 import TabCanvas from '../../../page-designer/src/components/canvas/tab-canvas';
 
 const type = FORM_FIELD_TYPE.TAB;
 
-const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, onFieldSelect, onFieldDelete, previewMode }) => {
+const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, onFieldSelect, onFieldDelete, previewMode, onChangeHandle }) => {
   return (
     <Tabs data-testid={'test-tab'}>
       <TabList aria-label="List of tabs">
@@ -36,6 +36,7 @@ const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, o
                 onFieldSelect={onFieldSelect}
                 onFieldDelete={onFieldDelete}
                 previewMode={previewMode}
+                onChangeHandle={onChangeHandle}
               />
             </TabPanel>
           );
@@ -54,7 +55,7 @@ CustomTab.config = {
   group: FORM_FIELD_GROUPS.PANEL,
   icon: <NewTab />,
   editableProps: {
-    Basic: [...editableProps.Basic],
+    Basic: [labelText],
     Condition: []
   },
   advanceProps: []

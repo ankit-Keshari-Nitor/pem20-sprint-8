@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "VCH_COMPANY")
+@Table(name = "COMPANY")
 public class Company {
     @Id
     @Column(name="COMPANY_KEY")

@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Size;
+import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +31,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "Activity Definition", description = "Activity Definition management APIs")
 @RequestMapping("/sponsors/{sponsorContext}/v2/activityDefinitions")
 @RestController
+@Log4j2
 public class ActivityController {
 
     @Autowired
     ActivityDefnService activityDefnService;
-
-    Logger logger = LoggerFactory.getLogger(ActivityController.class);
 
     @Operation(summary = "Create an Activity Definition")
     @ApiResponses({

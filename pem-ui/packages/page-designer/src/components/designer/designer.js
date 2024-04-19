@@ -19,7 +19,7 @@ import {
 import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Modal } from '@carbon/react';
-import Formpreview from '../preview-mode';
+import FormPreview from '../preview-mode';
 
 export default function Designer({ componentMapper }) {
   const initialLayout = INITIAL_DATA.layout;
@@ -241,7 +241,7 @@ export default function Designer({ componentMapper }) {
         secondaryButtonText="Cancel"
         className="preview-modal"
       >
-        <Formpreview
+        <FormPreview
           layout={layout}
           deletedFieldPath={deletedFieldPath}
           handleDrop={handleDrop}

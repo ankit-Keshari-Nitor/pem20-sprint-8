@@ -5,7 +5,7 @@ import { Button } from '@carbon/react';
 import './preview-mode.scss';
 import { updatePreviewChildToChildren } from '../../utils/helpers';
 
-const Formpreview = ({ layout, deletedFieldPath, handleDrop, renderRow, componentMapper, onFieldSelect, onFieldDelete, openPreview }) => {
+const FormPreview = ({ layout, deletedFieldPath, handleDrop, renderRow, componentMapper, onFieldSelect, onFieldDelete, openPreview }) => {
   const [formRenderSchema, setFormRenderSchema] = useState([]);
   const [formFieldsData, setFormFieldsData] = useState([]);
   useEffect(() => {
@@ -73,4 +73,4 @@ const Formpreview = ({ layout, deletedFieldPath, handleDrop, renderRow, componen
   );
 };
 
-export default Formpreview;
+export default FormPreview;

@@ -14,7 +14,7 @@ dependencies {
     implementation project(":pem-rest")
     implementation project(":pem-common")
     implementation project(":pem-services")
-    implementation 'org.springframework.boot:spring-boot-starter-advice'
+    //implementation 'org.springframework.boot:spring-boot-starter-advice'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation 'org.springframework.boot:spring-boot-gradle-plugin:3.0.4'

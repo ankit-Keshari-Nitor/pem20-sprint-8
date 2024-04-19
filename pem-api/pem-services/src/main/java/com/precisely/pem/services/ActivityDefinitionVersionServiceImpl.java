@@ -1,7 +1,6 @@
 package com.precisely.pem.services;
 
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
-import com.precisely.pem.dtos.shared.VCHActivityDefnDto;
 import com.precisely.pem.models.VCHActivityDefnVersion;
 import com.precisely.pem.repositories.VCHActivityDefnVersionRepo;
 import com.precisely.pem.util.ActivityDefnStatus;

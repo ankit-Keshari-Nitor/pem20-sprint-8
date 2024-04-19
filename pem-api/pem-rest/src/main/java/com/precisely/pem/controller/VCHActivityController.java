@@ -117,7 +117,7 @@ public class VCHActivityController {
     @Operation(summary = "Mark Activity Definition Version Status as Final", tags = { "Activity Definition Version" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = VCHActivityDefnDto.class), mediaType = "application/json") }),
+                    @Content(schema = @Schema(implementation = MarkAsFinalActivityDefinitionVersionResp.class), mediaType = "application/json") }),
             @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
                     @Content(schema = @Schema()) }),
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })

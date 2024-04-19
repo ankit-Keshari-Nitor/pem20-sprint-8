@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "VCH_ACTIVITY_DEFN_VERSION")
-public class VCHActivityDefnVersion {
+@Table(name = "ACTIVITY_DEFN_VERSION")
+public class ActivityDefnVersion {
     @Id
     @Column(name="ACTIVITY_DEFN_KEY_VERSION")
     private String activityDefnKeyVersion;
@@ -20,7 +20,7 @@ public class VCHActivityDefnVersion {
     private String activityDefnDataKey;
 
     @Column(name="VERSION")
-    private String version;
+    private int version;
 
     @Column(name="STATUS")
     private String status;
@@ -47,9 +47,10 @@ public class VCHActivityDefnVersion {
     private String modifiedBy;
 
     @ManyToOne
-    @JoinColumn(name = "VCHAD_ACTIVITY_DEFN_KEY")
-    private VCHActivityDefn vchActivityDefnDetails;
+    @JoinColumn(name = "activity_Defn_Details")
+    private ActivityDefn activityDefn;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private VCHActivityDefnData contentData;
+    @OneToOne
+    @JoinColumn(name = "activity_Defn_Data")
+    private ActivityDefnData activityDefnData;
 }

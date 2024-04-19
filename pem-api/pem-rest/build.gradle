@@ -17,8 +17,8 @@ configurations {
 dependencies {
     implementation project(":pem-entity")
     implementation project(":pem-services")
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web',
-            version: '3.2.0'
+    implementation project(":pem-common")
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.2.4'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.3.0'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '3.2.0'
     implementation group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '3.2.0'
@@ -30,6 +30,7 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.9.0'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.9.0'
     testImplementation 'org.springframework:spring-mock:2.0.8'
+
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '3.2.4'
 
 }

@@ -5,14 +5,12 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "VCH_ACTIVITY_DEFN")
-public class VCHActivityDefn {
+@Table(name = "ACTIVITY_DEFN")
+public class ActivityDefn {
     @Id
     @Column(name="ACTIVITY_DEFN_KEY")
     private String activityDefnKey;
@@ -50,6 +48,6 @@ public class VCHActivityDefn {
     @Column(name="MIGRATION_STATUS")
     private boolean migrationStatus;
 
-    @OneToMany(mappedBy = "vchActivityDefnDetails", cascade = CascadeType.ALL)
-    private List<VCHActivityDefnVersion> versions;
+    @OneToMany(mappedBy = "activityDefn", cascade = CascadeType.ALL)
+    private List<ActivityDefnVersion> versions;
 }

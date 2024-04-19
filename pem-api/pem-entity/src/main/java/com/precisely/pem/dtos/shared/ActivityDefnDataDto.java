@@ -4,20 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Blob;
 import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VCHActivityDefnDto {
-    public String activityDefnKey;
-    public String sponsorKey;
-    public String activityName;
-    public String activityDescription;
+public class ActivityDefnDataDto {
+    public String activityDefnDataKey;
+    public Blob defData;
     public LocalDateTime createTs;
     public String createdBy;
     public LocalDateTime modifyTs;
     public String modifiedBy;
-    public String application;
-    public boolean isDeleted;
-    public boolean migrationStatus;
 }

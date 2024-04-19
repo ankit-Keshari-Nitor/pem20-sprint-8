@@ -38,8 +38,6 @@ public class TenantFilter extends OncePerRequestFilter {
 
             // Continue with the filter chain
             filterChain.doFilter(request, response);
-        } catch (Exception exp){
-            log.error(" Log Context addition failed." + exp);
         } finally {
             // Clear MDC context when request completes
             ThreadContext.clearStack();

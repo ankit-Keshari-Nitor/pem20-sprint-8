@@ -57,5 +57,11 @@ public class ResponseExceptionHandler{
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 
-
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<Object> handleGeneralException(Exception ex, WebRequest request) {
+        ErrorResponseDto errResp = new ErrorResponseDto();
+        errResp.setErrorCode(1010);
+        errResp.setErrorDescription(ex.getLocalizedMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
+    }
 }

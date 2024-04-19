@@ -155,7 +155,7 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
 
         ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
                 UUID.randomUUID().toString(), activityDefnobj.getActivityDefnKey(),
-                activityDefnData.getActivityDefnDataKey(), 0,
+                activityDefnData.getActivityDefnDataKey(), 1,
                 String.valueOf(ActivityDefnStatus.DRAFT), true, false,
                 "", LocalDateTime.now(), "", LocalDateTime.now(), ""
         );

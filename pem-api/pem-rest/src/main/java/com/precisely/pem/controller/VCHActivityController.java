@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -123,6 +124,8 @@ public class VCHActivityController {
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
     @PostMapping("/{activityDefnKey}/versions/{activityDefnVersionKey}/actions/markAsFinal")
     public MarkAsFinalActivityDefinitionVersionResp markActivityDefinitionStatusAsFinal(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
+        if(log.isEnabled(Level.INFO))
+            log.info("Retrieve all Activity Definitions: Starts");
         return  activityDefinitionVersionService.markAsFinalActivityDefinitionVersion(activityDefnVersionKey);
     }
 }

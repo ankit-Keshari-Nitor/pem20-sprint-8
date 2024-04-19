@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="logsDir">logs</Property>
+        <Property name="logPattern_log4j">[%d{M/d/yy H:mm:ss:SSS zzz}] %4r %-100c %p [%X{sponsor.name}] : %m%n%ex</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="stdout" target="SYSTEM_OUT">
+            <PatternLayout pattern="${logPattern_log4j}" />
+        </Console>
+        <Console name="stderr" target="SYSTEM_ERR">
+            <PatternLayout pattern="${logPattern_log4j}" />
+        </Console>
+
+        <RollingFile name="APIMessages" fileName="${logsDir}/API_Messages.log"
+                     filePattern="${logsDir}/API_Messages_%i.log.gz" append="true">
+            <PatternLayout>
+                <pattern>${logPattern_log4j}</pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="100MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" />
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="APIMessages" level="${env:fileRootLoggerLevel:-info}" />
+            <AppenderRef ref="stdout" level="info" />
+            <AppenderRef ref="stderr" level="off" />
+        </Root>
+    </Loggers>
+
+</Configuration>

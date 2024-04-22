@@ -1,9 +1,9 @@
 package com.precisely.pem.services;
 
+import com.precisely.pem.commonUtil.ApplicationConstants;
+import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.ActivityDefnResp;
-import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
-import com.precisely.pem.dtos.responses.GetActivityDefnByIdResp;
 import com.precisely.pem.dtos.shared.*;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
@@ -12,7 +12,6 @@ import com.precisely.pem.repositories.ActivityDefnDataRepo;
 import com.precisely.pem.repositories.ActivityDefnRepo;
 import com.precisely.pem.repositories.ActivityDefnVersionRepo;
 import com.precisely.pem.repositories.SponsorRepo;
-import com.precisely.pem.util.ActivityDefnStatus;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -155,9 +154,10 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
 
         ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
                 UUID.randomUUID().toString(), activityDefnobj.getActivityDefnKey(),
-                activityDefnData.getActivityDefnDataKey(), 1,
-                String.valueOf(ActivityDefnStatus.DRAFT), true, false,
-                "", LocalDateTime.now(), "", LocalDateTime.now(), ""
+                activityDefnData.getActivityDefnDataKey(), ApplicationConstants.DEFAULT_VERSION,
+                String.valueOf(Status.DRAFT), true, false,
+                "", LocalDateTime.now(), "", LocalDateTime.now(),
+                "", ApplicationConstants.SCHEMA_VERSION
         );
         activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
         activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);

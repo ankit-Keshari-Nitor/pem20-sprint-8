@@ -1,10 +1,13 @@
 package com.precisely.pem.services;
 
+import com.precisely.pem.commonUtil.ApplicationConstants;
+import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.PaginationDto;
+import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
@@ -100,9 +103,8 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
     @Override
     public ResponseEntity<Object> createActivityDefnVersion(String sponsorContext, String activityDefnKey,
-                                                            MultipartFile file, boolean isEncrypted,
-                                                            boolean isDefault, String status,
-                                                            HttpServletRequest request) throws SQLException, IOException {
+                                                            MultipartFile file, boolean isEncrypted, String app,
+                                                            HttpServletRequest request) throws OnlyOneDraftVersionException, IOException, SQLException {
         Optional<ActivityDefn> activityDefn = null;
         ActivityDefnData activityDefnData = null;
         ActivityDefnVersion activityDefnVersion = null;
@@ -110,9 +112,13 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         activityDefn = activityDefnRepo.findById(activityDefnKey);
 
-        int version = activityDefn.get().getVersions().size();
+        double version = activityDefn.get().getVersions().size();
+        List<ActivityDefnVersion> defnVersions = activityDefn.get().getVersions();
+        if(defnVersions.stream().anyMatch(s -> s.getStatus().equalsIgnoreCase(Status.DRAFT.toString()))){
+            throw new OnlyOneDraftVersionException("A version with Draft version already exists. Kindly verify the version");
+        }
 
-        logger.info("count : " + (long) activityDefn.get().getVersions().size());
+        logger.info("count : " + activityDefn.get().getVersions().size());
 
         //Populating the Activity Definition Data Object
         byte[] bytes = file.getBytes();
@@ -129,9 +135,10 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
                 UUID.randomUUID().toString(), activityDefnKey,
-                activityDefnData.getActivityDefnDataKey(), version++,
-                status, isDefault, isEncrypted,
-                "", LocalDateTime.now(), "", LocalDateTime.now(), ""
+                activityDefnData.getActivityDefnDataKey(), ++version,
+                Status.DRAFT.toString(), false, isEncrypted,
+                "", LocalDateTime.now(), "", LocalDateTime.now(),
+                "", ApplicationConstants.SCHEMA_VERSION
         );
         activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
         activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
@@ -140,8 +147,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         logger.info("location : " + request.getRequestURL().toString());
 
-        activityDefnVersionResp.setVersion(activityDefnVersionDto.getVersion());
-        activityDefnVersionResp.setName(activityDefn.get().getActivityName());
+        activityDefnVersionResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
         activityDefnVersionResp.setLocation(url);
 
         return new ResponseEntity<>(activityDefnVersionResp, HttpStatus.CREATED);

@@ -67,7 +67,7 @@ class ActivityVersionServiceImplTest {
 
     private ActivityDefnVersion getVersion() {
         ActivityDefnVersion v1 = new ActivityDefnVersion();
-        v1.setVersion(1);
+        v1.setVersion(1.0);
         v1.setStatus("DRAFT");
         v1.setEncrypted(false);
         v1.setDefault(false);
@@ -76,14 +76,14 @@ class ActivityVersionServiceImplTest {
     }
     private List<ActivityDefnVersion> getVersionList() {
         ActivityDefnVersion v1 = new ActivityDefnVersion();
-        v1.setVersion(1);
+        v1.setVersion(1.0);
         v1.setStatus("DRAFT");
         v1.setEncrypted(false);
         v1.setDefault(false);
         v1.setEncryptionKey("123");
 
         ActivityDefnVersion v2 = new ActivityDefnVersion();
-        v2.setVersion(1);
+        v2.setVersion(1.0);
         v2.setStatus("DRAFT");
         v2.setEncrypted(false);
         v2.setDefault(false);

@@ -13,7 +13,7 @@ public class ActivityDefnVersionDto {
     public String activityDefnKeyVersion;
     public String activityDefnKey;
     public String activityDefnDataKey;
-    public int version;
+    public Double version;
     public String status;
     public boolean isDefault;
     public boolean isEncrypted;
@@ -22,4 +22,5 @@ public class ActivityDefnVersionDto {
     public String createdBy;
     public LocalDateTime modifyTs;
     public String modifiedBy;
+    public Double schemaVersion;
 }

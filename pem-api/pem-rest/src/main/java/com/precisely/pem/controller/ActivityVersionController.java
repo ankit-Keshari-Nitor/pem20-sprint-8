@@ -1,12 +1,14 @@
 package com.precisely.pem.controller;
 
 import com.precisely.pem.Validator.MultipartFileValidator;
+import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
+import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.services.ActivityVersionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -81,9 +83,8 @@ public class ActivityVersionController {
                                                            @PathVariable(value = "activityDefnKey")String activityDefnKey,
                                                            @RequestPart(value = "file") @MultipartFileValidator MultipartFile file,
                                                            @RequestParam(value = "isEncrypted") boolean isEncrypted,
-                                                           @RequestParam(value = "isDefault") boolean isDefault,
-                                                           @RequestParam(value = "status") Status status,
-                                                           HttpServletRequest request) throws SQLException, IOException {
-        return activityVersionService.createActivityDefnVersion(sponsorContext, activityDefnKey, file, isEncrypted, isDefault, status.getStatus(), request);
+                                                           @RequestParam(value = "application") Application app,
+                                                           HttpServletRequest request) throws SQLException, IOException, OnlyOneDraftVersionException {
+        return activityVersionService.createActivityDefnVersion(sponsorContext, activityDefnKey, file, isEncrypted, app.getApp(), request);
     }
 }

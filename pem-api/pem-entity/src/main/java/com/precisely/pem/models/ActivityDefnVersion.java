@@ -19,8 +19,8 @@ public class ActivityDefnVersion {
     @Column(name="ACTIVITY_DEFN_DATA_KEY")
     private String activityDefnDataKey;
 
-    @Column(name="VERSION")
-    private int version;
+    @Column(name="VERSION", columnDefinition="Decimal(10,1)")
+    private Double version;
 
     @Column(name="STATUS")
     private String status;
@@ -45,6 +45,9 @@ public class ActivityDefnVersion {
 
     @Column(name="MODIFIED_BY")
     private String modifiedBy;
+
+    @Column(name="SCHEMA_VERSION", columnDefinition="Decimal(10,2)")
+    private Double schemaVersion;
 
     @ManyToOne
     @JoinColumn(name = "activity_Defn_Details")

@@ -41,6 +41,14 @@ public class ResponseExceptionHandler{
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 
+    @ExceptionHandler(OnlyOneDraftVersionException.class)
+    protected ResponseEntity<Object> handleVersionConflict(Exception ex, WebRequest request) {
+        ErrorResponseDto errResp = new ErrorResponseDto();
+        errResp.setErrorCode(1010);
+        errResp.setErrorDescription("A version with DRAFT status already exists. Kindly Verify");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
+    }
+
     @ExceptionHandler(InvalidPreferencesFormatException.class)
     protected ResponseEntity<Object> handleCaseConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();

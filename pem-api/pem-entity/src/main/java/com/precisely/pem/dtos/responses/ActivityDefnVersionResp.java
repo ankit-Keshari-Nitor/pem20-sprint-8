@@ -9,6 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ActivityDefnVersionResp {
     public String location;
-    public String name;
-    public int version;
+    public String activityDefnVersionKey;
 }

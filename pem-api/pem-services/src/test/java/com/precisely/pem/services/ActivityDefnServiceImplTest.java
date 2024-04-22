@@ -1,8 +1,5 @@
 package com.precisely.pem.services;
 
-import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
-import com.precisely.pem.dtos.responses.ActivityDefnResp;
-import com.precisely.pem.dtos.responses.GetActivityDefnByIdResp;
 import com.precisely.pem.dtos.shared.ActivityDefnDto;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
@@ -33,10 +30,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
 
 
 class ActivityDefnServiceImplTest {
@@ -165,7 +161,7 @@ class ActivityDefnServiceImplTest {
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
         activityDefnVersion.setActivityDefnKeyVersion("test");
         activityDefnVersion.setActivityDefnKey("test");
-        activityDefnVersion.setVersion(0);
+        activityDefnVersion.setVersion(0.0);
         activityDefnVersion.setActivityDefnDataKey("test");
         activityDefnVersion.setCreatedBy("test");
         activityDefnVersion.setCreateTs(LocalDateTime.now());

@@ -1,5 +1,6 @@
 package com.precisely.pem.services;
 
+import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
@@ -13,7 +14,6 @@ import com.precisely.pem.repositories.ActivityDefnDataRepo;
 import com.precisely.pem.repositories.ActivityDefnRepo;
 import com.precisely.pem.repositories.ActivityDefnVersionRepo;
 import com.precisely.pem.repositories.SponsorRepo;
-import com.precisely.pem.util.ActivityDefnStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -156,7 +156,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             throw  new Exception("Activity Definition Version not found" );
         }
 
-        activityDefnVersion.get().setStatus(String.valueOf(ActivityDefnStatus.FINAL));
+        activityDefnVersion.get().setStatus(String.valueOf(Status.FINAL));
         activityDefnVersion.get().setModifyTs(LocalDateTime.now());
         ActivityDefnVersion savedActivityDefnVersion =  activityDefnVersionRepo.save(activityDefnVersion.get());
         ModelMapper mapper = new ModelMapper();

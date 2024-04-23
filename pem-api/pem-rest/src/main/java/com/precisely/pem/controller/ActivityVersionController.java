@@ -103,6 +103,6 @@ public class ActivityVersionController {
     public ResponseEntity<Object> markActivityDefinitionStatusAsFinal(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
         if(log.isEnabled(Level.INFO))
             log.info("Retrieve all Activity Definitions: Starts");
-        return  new ResponseEntity<>(activityVersionService.markAsFinalActivityDefinitionVersion(activityDefnVersionKey), HttpStatus.CREATED);
+        return  new ResponseEntity<>(activityVersionService.markAsFinalActivityDefinitionVersion(activityDefnVersionKey), HttpStatus.OK);
     }
 }

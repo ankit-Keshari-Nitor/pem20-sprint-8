@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-
+import { View, IbmWatsonDiscovery } from '@carbon/icons-react';
 import './components-tray.scss';
 import ComponentItem from './component-item';
 import { PALETTE_GROUPS, SIDEBAR_ITEM } from '../../constants/constants';
@@ -60,13 +60,12 @@ export default function ComponentsTray({ componentMapper, setOpen, setOpenPrevie
         return <ComponentItem key={index} data={entry} />;
       })}
       {/* Header */}
-      <div className="palette-header">
-        {/* <span className="palette-header-text-1">Components</span> */}
-        <span onClick={() => setOpen(true)} className="palette-header-text-2">
-          View Schema
+      <div style={{ display: 'flex' }}>
+        <span onClick={() => setOpen(true)} className="icons-container" style={{ marginRight: '8px' }}>
+          <View style={{ color: ' #5E718D' }} />
         </span>
-        <span onClick={() => setOpenPreview(true)} className="palette-header-text-3">
-          Preview
+        <span onClick={() => setOpenPreview(true)} className="icons-container">
+          <IbmWatsonDiscovery style={{ color: '#5E718D' }} />
         </span>
       </div>
       {/* Search Box */}

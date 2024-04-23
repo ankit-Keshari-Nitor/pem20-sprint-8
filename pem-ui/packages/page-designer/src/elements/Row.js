@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { ROW } from '../constants/constants';
-import Column from './custom-column';
+import Column from './Column';
 import { Grid, Column as Carboncolumn } from '@carbon/react';
 import classNames from 'classnames';
 
-const Row = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete, previewMode }) => {
+const Row = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete, previewMode, onChangeHandle }) => {
   const ref = useRef(null);
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -40,6 +40,7 @@ const Row = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow
           renderRow={renderRow}
           onFieldDelete={onFieldDelete}
           previewMode={previewMode}
+          onChangeHandle={onChangeHandle}
         />
       </Carboncolumn>
     );

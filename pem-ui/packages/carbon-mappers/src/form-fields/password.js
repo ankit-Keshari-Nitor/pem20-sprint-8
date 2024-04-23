@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextInput as CarbonTextInput } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, editableProps, helperText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, helperText, isDisabled, labelText, readOnly } from '../constant';
 import { Password as PasswordIcon } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.PASSWORD;
@@ -20,8 +20,8 @@ Password.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <PasswordIcon />,
   editableProps: {
-    Basic: [...editableProps.Basic, helperText],
-    Condition: [...editableProps.Condition]
+    Basic: [labelText, helperText, isDisabled, readOnly],
+    Condition: []
   },
   advanceProps: []
 };

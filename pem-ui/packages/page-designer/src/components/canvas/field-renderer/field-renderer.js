@@ -4,8 +4,9 @@ import { TrashCan } from '@carbon/icons-react';
 
 import './field-renderer.scss';
 import { COMPONENT } from '../../../constants/constants';
+import { Column, Grid } from '@carbon/react';
 
-const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onFieldDelete, onFieldSelect, previewMode }) => {
+const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onFieldDelete, onFieldSelect, previewMode, onChangeHandle }) => {
   let compent_type;
   let dragItem;
   var isNestedBlock = false;
@@ -43,21 +44,43 @@ const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onF
       onFieldSelect={onFieldSelect}
       onFieldDelete={onFieldDelete}
       previewMode={previewMode}
+      onChangeHandle={onChangeHandle}
     />
   ) : (
-    <FormFieldComponent field={data.component} id={data.id} />
+    <FormFieldComponent field={data.component} id={data.id} currentPath={path} onChangeHandle={onChangeHandle} previewMode={previewMode} />
   );
   drag(ref);
   return !previewMode ? (
     <div ref={ref} style={{ opacity }}>
       <div className="element">
-        <span className="delete-icon">
-          <TrashCan onClick={(e) => onFieldDelete(e, path)} />
-        </span>
-        {formFieldData}
+        <Grid className="custom-field-grid">
+          <Column lg={14}> {formFieldData}</Column>
+          <Column lg={2}>
+            <Grid>
+              <Column lg={1}>
+                <span className="delete-icon">
+                  <TrashCan onClick={(e) => onFieldDelete(e, path)} />
+                </span>
+              </Column>
+              <Column lg={1}>
+                <span className="drag-icon">
+                  <TrashCan onClick={(e) => onFieldDelete(e, path)} />
+                </span>
+              </Column>
+            </Grid>
+          </Column>
+        </Grid>
       </div>
     </div>
   ) : (
+    // <div ref={ref} style={{ opacity }}>
+    //   <div className="element">
+    //     <span className="delete-icon">
+    //       <TrashCan onClick={(e) => onFieldDelete(e, path)} />
+    //     </span>
+    //     {formFieldData}
+    //   </div>
+    // </div>
     formFieldData
   );
 };

@@ -65,7 +65,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .cancel-button {
@@ -83,7 +83,7 @@
 
 .base {
   cursor: move;
-  background-color: #ffffff;
+  //background-color: #ffffff;
 }
 
 .row {

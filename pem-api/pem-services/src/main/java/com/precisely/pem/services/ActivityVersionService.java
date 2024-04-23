@@ -1,6 +1,7 @@
 package com.precisely.pem.services;
 
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
+import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -15,4 +16,6 @@ public interface ActivityVersionService {
     ActivityDefnVersionDto getVersionDefinitionById(String activityDefnKey, String sponsorContext, String versionId) throws Exception;
 
     ResponseEntity<Object> createActivityDefnVersion(String sponsorContext, String activityDefnKey, MultipartFile file, boolean isEncrypted, boolean isDefault, String status, HttpServletRequest request) throws SQLException, IOException;
+
+    MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersion(String activityDefnVersionKey) throws Exception;
 }

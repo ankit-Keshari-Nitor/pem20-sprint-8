@@ -1,7 +1,9 @@
 package com.precisely.pem.services;
 
+import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
+import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.PaginationDto;
@@ -145,5 +147,19 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         activityDefnVersionResp.setLocation(url);
 
         return new ResponseEntity<>(activityDefnVersionResp, HttpStatus.CREATED);
+    }
+
+    @Override
+    public MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersion(String activityDefnVersionKey) throws Exception {
+        Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
+        if(activityDefnVersion.isEmpty()){
+            throw  new Exception("Activity Definition Version not found" );
+        }
+
+        activityDefnVersion.get().setStatus(String.valueOf(Status.FINAL));
+        activityDefnVersion.get().setModifyTs(LocalDateTime.now());
+        ActivityDefnVersion savedActivityDefnVersion =  activityDefnVersionRepo.save(activityDefnVersion.get());
+        ModelMapper mapper = new ModelMapper();
+        return mapper.map(savedActivityDefnVersion, MarkAsFinalActivityDefinitionVersionResp.class);
     }
 }

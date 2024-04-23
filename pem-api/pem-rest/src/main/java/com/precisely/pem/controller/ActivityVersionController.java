@@ -7,6 +7,7 @@ import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
+import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.ErrorResponseDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
@@ -19,11 +20,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Size;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +43,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Tag(name = "Activity Definition Version", description = "Activity Definition Version Management APIs")
 @RequestMapping("/sponsors/{sponsorContext}/v2/activityDefinitions/{activityDefnKey}/versions")
 @RestController
+@Log4j2
 public class ActivityVersionController {
     Logger logger = LoggerFactory.getLogger(ActivityVersionController.class);
     @Autowired
@@ -97,5 +102,19 @@ public class ActivityVersionController {
         HttpHeaders headers = new HttpHeaders();
         headers.set("location", activityDefnVersionResp.getLocation());
         return new ResponseEntity<>(activityDefnVersionResp, headers, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Mark Activity Definition Version Status as Final", tags = { "Activity Definition Version" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = MarkAsFinalActivityDefinitionVersionResp.class), mediaType = "application/json") }),
+            @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
+                    @Content(schema = @Schema()) }),
+            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
+    @PostMapping("/{activityDefnVersionKey}/actions/markAsFinal")
+    public ResponseEntity<Object> markActivityDefinitionStatusAsFinal(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
+        if(log.isEnabled(Level.INFO))
+            log.info("Retrieve all Activity Definitions: Starts");
+        return  new ResponseEntity<>(activityVersionService.markAsFinalActivityDefinitionVersion(activityDefnVersionKey), HttpStatus.OK);
     }
 }

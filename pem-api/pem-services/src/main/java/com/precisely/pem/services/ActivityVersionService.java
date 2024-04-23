@@ -2,6 +2,7 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
+import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,4 +16,6 @@ public interface ActivityVersionService {
     ActivityDefnVersionDto getVersionDefinitionById(String activityDefnKey, String sponsorContext, Double versionId) throws Exception;
 
     ActivityDefnVersionResp createActivityDefnVersion(String sponsorContext, String activityDefnKey, MultipartFile file, boolean isEncrypted, String app) throws OnlyOneDraftVersionException, IOException, SQLException;
+
+    MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersion(String activityDefnVersionKey) throws Exception;
 }

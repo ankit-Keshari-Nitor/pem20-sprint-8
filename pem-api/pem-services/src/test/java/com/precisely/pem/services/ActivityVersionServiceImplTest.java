@@ -13,6 +13,7 @@ import com.precisely.pem.repositories.ActivityDefnRepo;
 import com.precisely.pem.repositories.ActivityDefnVersionRepo;
 import com.precisely.pem.repositories.SponsorRepo;
 import jakarta.servlet.http.HttpServletRequest;
+import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -34,8 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 
 class ActivityVersionServiceImplTest {
@@ -136,4 +136,33 @@ class ActivityVersionServiceImplTest {
         ActivityDefnVersionResp resp = activityVersionService.createActivityDefnVersion("test", "test", file, false, "test");
         assertNotNull(resp);
     }
+
+    @Test
+    void updateMarkAsFinal() throws Exception {
+        Optional<ActivityDefnVersion> activityDefnVersion = Optional.of(new ActivityDefnVersion());
+        Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString())).thenReturn(activityDefnVersion);
+
+        Mockito.when(activityDefnVersionRepo.save(activityDefnVersion.get())).thenReturn(activityDefnVersion.get());
+
+        MarkAsFinalActivityDefinitionVersionResp dto = new MarkAsFinalActivityDefinitionVersionResp();
+        Mockito.when(mapper.map(Mockito.any(ActivityDefnVersion.class),eq(MarkAsFinalActivityDefinitionVersionResp.class)))
+                .thenReturn(dto);
+        MarkAsFinalActivityDefinitionVersionResp resp = activityVersionService.
+                markAsFinalActivityDefinitionVersion("9ec7e29e-9cbe-4298-bb67-a53f86868592");
+
+        assertEquals("FINAL",resp.getStatus());
+        assertNotNull(resp.getModifyTs());
+    }
+
+    @Test
+    void testUpdateMarkAsFinalIfActivityVersionNotFound(){
+        Optional<ActivityDefnVersion> activityDefnVersion = Optional.empty();
+        Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString())).thenReturn(activityDefnVersion);
+        Exception exception = assertThrows(Exception.class, () ->{
+            activityVersionService.
+                    markAsFinalActivityDefinitionVersion("9ec7e29e-9cbe-4298-bb67-a53f86868592");
+        });
+        assertEquals(exception.getMessage(),"Activity Definition Version not found");
+    }
+
 }

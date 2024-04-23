@@ -8,6 +8,7 @@ import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
+import com.precisely.pem.dtos.shared.ErrorResponseDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.services.ActivityVersionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,18 +43,18 @@ public class ActivityVersionController {
             @ApiResponse(responseCode = "200", content = {
                     @Content(schema = @Schema(implementation = ActivityVersionDefnPaginationResp.class), mediaType = "application/json") }),
             @ApiResponse(responseCode = "204", description = "There are no Versions for Definitions", content = {
-                    @Content(schema = @Schema()) }),
-            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
-    @GetMapping
-    public ActivityVersionDefnPaginationResp getActivityVersionDefinitionList(@PathVariable(value = "activityDefnKey") String activityDefnKey,
-                                                                              @RequestParam(value = "isDefault",required = false, defaultValue = "false") boolean isDefault,
-                                                                              @RequestParam(value = "description", required = false) @Size(min = 1, max = 255) String description,
-                                                                              @RequestParam(value = "status", defaultValue = "DRAFT", required = true) Status status,
-                                                                              @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                                                              @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                                                              @RequestParam(value = "sortBy", defaultValue = "modify_ts" ,required = false) SortBy sortBy,
-                                                                              @RequestParam(value = "sortDir", defaultValue = "DESC", required = false) SortDirection sortDir,
-                                                                              @PathVariable(value = "sponsorContext")String sponsorContext){
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class)) }),
+            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = ErrorResponseDto.class)) }) })
+    @GetMapping()
+    public ResponseEntity<Object> getActivityVersionDefinitionList(@PathVariable(value = "activityDefnKey") String activityDefnKey,
+                                                                   @RequestParam(value = "isDefault",required = false, defaultValue = "false") boolean isDefault,
+                                                                   @RequestParam(value = "description", required = false) @Size(min = 1, max = 255) String description,
+                                                                   @RequestParam(value = "status", defaultValue = "DRAFT", required = true) Status status,
+                                                                   @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                                                   @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+                                                                   @RequestParam(value = "sortBy", defaultValue = "modify_ts" ,required = false) SortBy sortBy,
+                                                                   @RequestParam(value = "sortDir", defaultValue = "DESC", required = false) SortDirection sortDir,
+                                                                   @PathVariable(value = "sponsorContext")String sponsorContext){
         return activityVersionService.getAllVersionDefinitionList(sponsorContext,activityDefnKey,description,isDefault,pageNo, pageSize, sortBy ==null? "modify_ts":sortBy.name(), sortDir ==null? "ASC":sortDir.name(),status.getStatus());
     }
 
@@ -62,11 +63,11 @@ public class ActivityVersionController {
             @ApiResponse(responseCode = "200", content = {
                     @Content(schema = @Schema(implementation = ActivityDefnVersionDto.class), mediaType = "application/json") }),
             @ApiResponse(responseCode = "204", description = "There are no Versions for Definitions", content = {
-                    @Content(schema = @Schema()) }),
-            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class)) }),
+            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = ErrorResponseDto.class)) }) })
     @GetMapping("/{versionId}")
-    public ActivityDefnVersionDto getActivityVersionDefinitionById(@PathVariable(value = "activityDefnKey", required = true) String activityDefnKey,
-                                                                   @RequestParam(value = "versionId", required = true) String versionId,
+    public ResponseEntity<Object> getActivityVersionDefinitionById(@PathVariable(value = "activityDefnKey", required = true) String activityDefnKey,
+                                                                   @PathVariable(value = "versionId", required = true) Double versionId,
                                                                    @PathVariable(value = "sponsorContext", required = true)String sponsorContext) throws Exception {
         return activityVersionService.getVersionDefinitionById(activityDefnKey,sponsorContext,versionId);
     }

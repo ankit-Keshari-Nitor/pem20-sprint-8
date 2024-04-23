@@ -17,9 +17,11 @@ public class FileValidation implements ConstraintValidator<MultipartFileValidato
     public boolean isValid(MultipartFile file, ConstraintValidatorContext constraintValidatorContext) {
          if (file.isEmpty()) {
             throw new MultipartException("File is empty");
-        }else if(!Objects.requireNonNull(file.getContentType()).contains("xml")) {
+        }else if(!file.getOriginalFilename().endsWith(".xml")) {
+             throw new InvalidFileException("Invalid File type");
+         }/*else if(!Objects.requireNonNull(file.getContentType()).contains("xml")) {
             throw new InvalidFileException("Invalid File type");
-        }
+        }*/
         return true;
     }
 }

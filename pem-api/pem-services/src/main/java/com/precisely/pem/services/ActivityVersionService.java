@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public interface ActivityVersionService {
-    ActivityVersionDefnPaginationResp getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status);
+    ResponseEntity<Object> getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status);
 
-    ActivityDefnVersionDto getVersionDefinitionById(String activityDefnKey, String sponsorContext, String versionId) throws Exception;
+    ResponseEntity<Object> getVersionDefinitionById(String activityDefnKey, String sponsorContext, Double versionId) throws Exception;
 
     ResponseEntity<Object> createActivityDefnVersion(String sponsorContext, String activityDefnKey, MultipartFile file, boolean isEncrypted, String app, HttpServletRequest request) throws OnlyOneDraftVersionException, IOException, SQLException;
 }

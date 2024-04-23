@@ -19,7 +19,7 @@ public class ActivityDefn {
     @Size(min = 1, max = 50)
     private String sponsorKey;
 
-    @Column(name="ACTIVITY_NAME")
+    @Column(name="ACTIVITY_NAME", unique = true)
     @Size(min = 1, max = 80)
     private String activityName;
 

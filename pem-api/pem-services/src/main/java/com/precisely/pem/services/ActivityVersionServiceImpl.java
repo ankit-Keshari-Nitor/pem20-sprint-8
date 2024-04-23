@@ -6,6 +6,7 @@ import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
+import com.precisely.pem.dtos.shared.ErrorResponseDto;
 import com.precisely.pem.dtos.shared.PaginationDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.models.ActivityDefn;
@@ -55,7 +56,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     @Autowired
     private ModelMapper mapper;
     @Override
-    public ActivityVersionDefnPaginationResp getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status) {
+    public ResponseEntity<Object> getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status) {
         ActivityVersionDefnPaginationResp activityVersionDefnPaginationResp = new ActivityVersionDefnPaginationResp();
         PaginationDto paginationDto = new PaginationDto();
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
@@ -67,39 +68,49 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         description = (description != null && !description.isEmpty()) ? description : "";
 
         Page<ActivityDefnVersion> defnsPage = activityDefnVersionRepo.findVersionList(context,description,activityDefnKey,status,pageable);
-        List<ActivityDefnVersion> listOfDefns = defnsPage.getContent();
-        List<ActivityDefnVersionDto> defnContent = new ArrayList<>();
+        if(defnsPage != null && !defnsPage.isEmpty()) {
+            List<ActivityDefnVersion> listOfDefns = defnsPage.getContent();
+            List<ActivityDefnVersionDto> defnContent = new ArrayList<>();
 
-        defnContent = listOfDefns.stream()
-                .map(p -> mapper.map(p, ActivityDefnVersionDto.class))
-                .collect(Collectors.toList());
+            defnContent = listOfDefns.stream()
+                    .map(p -> mapper.map(p, ActivityDefnVersionDto.class))
+                    .collect(Collectors.toList());
 
-        int totalPage = defnsPage.getTotalPages();
-        long totalElements = defnsPage.getTotalElements();
-        int numberOfElements = defnsPage.getNumberOfElements();
-        int size = defnsPage.getSize();
+            int totalPage = defnsPage.getTotalPages();
+            long totalElements = defnsPage.getTotalElements();
+            int numberOfElements = defnsPage.getNumberOfElements();
+            int size = defnsPage.getSize();
 
 
-        paginationDto.setNumber(numberOfElements);
-        paginationDto.setSize(size);
-        paginationDto.setTotalPages(totalPage);
-        paginationDto.setTotalElements(totalElements);
+            paginationDto.setNumber(numberOfElements);
+            paginationDto.setSize(size);
+            paginationDto.setTotalPages(totalPage);
+            paginationDto.setTotalElements(totalElements);
 
-        activityVersionDefnPaginationResp.setContent(defnContent);
-        activityVersionDefnPaginationResp.setPage(paginationDto);
+            activityVersionDefnPaginationResp.setContent(defnContent);
+            activityVersionDefnPaginationResp.setPage(paginationDto);
 
-        return activityVersionDefnPaginationResp;
+            return ResponseEntity.ok().body(activityVersionDefnPaginationResp);
+        }else{
+            ErrorResponseDto errorDto = new ErrorResponseDto();
+            errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
+            errorDto.setErrorDescription("No Data Found");
+            return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+        }
     }
 
     @Override
-    public ActivityDefnVersionDto getVersionDefinitionById(String activityDefnKey, String sponsorContext, String versionId) throws Exception {
+    public ResponseEntity<Object> getVersionDefinitionById(String activityDefnKey, String sponsorContext, Double versionId) throws Exception {
         String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
         Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findVersion(activityDefnKey, SponsorKey,versionId));
         if(result.isEmpty()){
-            throw  new Exception("ActivityDefn not found" );
+            ErrorResponseDto errorDto = new ErrorResponseDto();
+            errorDto.setErrorDescription("No data Found");
+            errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
+            return new ResponseEntity<>(errorDto,HttpStatus.NOT_FOUND);
         }
         ModelMapper mapper = new ModelMapper();
-        return mapper.map(result.get(), ActivityDefnVersionDto.class);
+        return ResponseEntity.ok().body(mapper.map(result.get(), ActivityDefnVersionDto.class));
     }
 
     @Override

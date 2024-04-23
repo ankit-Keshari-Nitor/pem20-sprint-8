@@ -2,6 +2,7 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.commonUtil.ApplicationConstants;
 import com.precisely.pem.commonUtil.Status;
+import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.ActivityDefnResp;
 import com.precisely.pem.dtos.shared.*;
@@ -12,9 +13,9 @@ import com.precisely.pem.repositories.ActivityDefnDataRepo;
 import com.precisely.pem.repositories.ActivityDefnRepo;
 import com.precisely.pem.repositories.ActivityDefnVersionRepo;
 import com.precisely.pem.repositories.SponsorRepo;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.Link;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -41,6 +41,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+@Log4j2
 @Service
 public class ActivityDefnServiceImpl implements ActivityDefnService {
     @Value("${pem.openapi.dev-url}")
@@ -57,13 +61,11 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
     @Autowired
     private ModelMapper mapper;
 
-    Logger logger = LoggerFactory.getLogger(ActivityDefnServiceImpl.class);
-
     @Override
-    public ResponseEntity<Object> getAllDefinitionList(String sponsorContext,
+    public ActivityDefnPaginationRes getAllDefinitionList(String sponsorContext,
                                                        String applicationName, String applicationDescription,
                                                        String status, String application, int pageNo, int pageSize, String sortBy,
-                                                       String sortDir) {
+                                                       String sortDir) throws Exception {
         ActivityDefnPaginationRes vchActivityDefinitionPaginationRes = new ActivityDefnPaginationRes();
         UriComponentsBuilder builder = UriComponentsBuilder.newInstance();
         PaginationDto paginationDto = new PaginationDto();
@@ -78,59 +80,46 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
 
         Page<ActivityDefn> defnsPage = activityDefnRepo.findByStatusAndSponsorContextAndApplicationAndByNameAndDescription(status,
                 context,application,applicationName,applicationDescription,pageable);
-        if(defnsPage != null && !defnsPage.isEmpty()) {
-            List<ActivityDefn> listOfDefns = defnsPage.getContent();
-            List<ActivityDefnDto> defnContent = new ArrayList<>();
-
-            defnContent = listOfDefns.stream()
-                    .map(p ->
-                    {
-                        ActivityDefnDto dtoObj = mapper.map(p, ActivityDefnDto.class);
-                        Link location = Link.of("/sponsors/" + sponsorContext +
-                                "/v2/activityDefinitions/" + dtoObj.getActivityDefnKey() + "/versions");
-                        dtoObj.setActivityVersionLink(urlInfo + location.getHref());
-                        return dtoObj;
-                    }).collect(Collectors.toList());
-
-            int totalPage = defnsPage.getTotalPages();
-            long totalElements = defnsPage.getTotalElements();
-            int size = defnsPage.getSize();
-
-
-            paginationDto.setNumber(pageNo);
-            paginationDto.setSize(size);
-            paginationDto.setTotalPages(totalPage);
-            paginationDto.setTotalElements(totalElements);
-
-            vchActivityDefinitionPaginationRes.setContent(defnContent);
-            vchActivityDefinitionPaginationRes.setPageContent(paginationDto);
-
-            return ResponseEntity.ok().body(vchActivityDefinitionPaginationRes);
-        }else{
-            ErrorResponseDto errorDto = new ErrorResponseDto();
-            errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-            errorDto.setErrorDescription("No Data Found");
-            return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+        if(defnsPage == null || defnsPage.isEmpty()) {
+                ErrorResponseDto errorDto = new ErrorResponseDto();
+                errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
+                errorDto.setErrorDescription("No Data Found");
+                throw new Exception("No entries found for the combination");
         }
-    }
+        List<ActivityDefn> listOfDefns = defnsPage.getContent();
+        List<ActivityDefnListResp> defnContent = new ArrayList<>();
 
-    private ActivityDefnDto mapToDTO(ActivityDefn activityDefn){
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(activityDefn, ActivityDefnDto.class);
-    }
+        defnContent = listOfDefns.stream()
+                .map(p ->
+                {
+                    return mapper.map(p, ActivityDefnListResp.class);
+                }).collect(Collectors.toList());
 
+        int totalPage = defnsPage.getTotalPages();
+        long totalElements = defnsPage.getTotalElements();
+        int size = defnsPage.getSize();
+
+        paginationDto.setNumber(pageNo);
+        paginationDto.setSize(size);
+        paginationDto.setTotalPages(totalPage);
+        paginationDto.setTotalElements(totalElements);
+
+        vchActivityDefinitionPaginationRes.setContent(defnContent);
+        vchActivityDefinitionPaginationRes.setPageContent(paginationDto);
+
+        return vchActivityDefinitionPaginationRes;
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<Object> createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException {
+    public ActivityDefnResp createActivityDefinition(String sponsorContext, String name, String description, MultipartFile file, String app) throws IOException, SQLException {
         ActivityDefnResp activityDefnResp = new ActivityDefnResp();
         ActivityDefn activityDefnobj = null;
         ActivityDefnData activityDefnData = null;
         ActivityDefnVersion activityDefnVersion = null;
-        UriComponentsBuilder builder = UriComponentsBuilder.newInstance();
         ModelMapper mapper = new ModelMapper();
 
-        logger.info("sponsorkey : " + sponsorRepo.getSponsorKey(sponsorContext));
+        log.info("sponsorkey : " + sponsorRepo.getSponsorKey(sponsorContext));
 
         //Populating the Activity Definition Object
         ActivityDefnDto activityDefnDto = new ActivityDefnDto(
@@ -163,22 +152,14 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
         activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
         activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
 
-        String url = urlInfo + builder.path("/sponsors/{sponsorContext}/v2/activityDefinitions").buildAndExpand(sponsorContext).toUriString() + "/" + activityDefnobj.getActivityDefnKey();
-
-        logger.info("location : " + url);
-
         activityDefnResp.setActivityDefnKey(activityDefnobj.getActivityDefnKey());
         activityDefnResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
-        activityDefnResp.setLocation(url);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("location", url);
-
-        return new ResponseEntity<>(activityDefnResp, headers, HttpStatus.CREATED);
+        return activityDefnResp;
     }
 
     @Override
-    public ResponseEntity<Object> getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception {
+    public ActivityDefnListResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception {
 
         String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
         Optional<ActivityDefn> result = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, SponsorKey));;
@@ -186,9 +167,9 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
             ErrorResponseDto errorDto = new ErrorResponseDto();
             errorDto.setErrorDescription("No data Found");
             errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-            return new ResponseEntity<>(errorDto,HttpStatus.NOT_FOUND);
+            throw new Exception("No entries found for the combination");
         }
         ModelMapper mapper = new ModelMapper();
-        return ResponseEntity.ok().body(mapper.map(result.get(), ActivityDefnDto.class));
+        return mapper.map(result.get(), ActivityDefnListResp.class);
     }
 }

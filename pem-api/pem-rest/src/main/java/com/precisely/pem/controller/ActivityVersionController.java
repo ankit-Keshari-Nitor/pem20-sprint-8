@@ -22,6 +22,9 @@ import jakarta.validation.constraints.Size;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +32,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Tag(name = "Activity Definition Version", description = "Activity Definition Version Management APIs")
 @RequestMapping("/sponsors/{sponsorContext}/v2/activityDefinitions/{activityDefnKey}/versions")
@@ -54,8 +60,8 @@ public class ActivityVersionController {
                                                                    @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
                                                                    @RequestParam(value = "sortBy", defaultValue = "modify_ts" ,required = false) SortBy sortBy,
                                                                    @RequestParam(value = "sortDir", defaultValue = "DESC", required = false) SortDirection sortDir,
-                                                                   @PathVariable(value = "sponsorContext")String sponsorContext){
-        return activityVersionService.getAllVersionDefinitionList(sponsorContext,activityDefnKey,description,isDefault,pageNo, pageSize, sortBy ==null? "modify_ts":sortBy.name(), sortDir ==null? "ASC":sortDir.name(),status.getStatus());
+                                                                   @PathVariable(value = "sponsorContext")String sponsorContext) throws Exception {
+        return new ResponseEntity<>(activityVersionService.getAllVersionDefinitionList(sponsorContext,activityDefnKey,description,isDefault,pageNo, pageSize, sortBy ==null? "modify_ts":sortBy.name(), sortDir ==null? "ASC":sortDir.name(),status.getStatus()),HttpStatus.OK);
     }
 
     @Operation(summary = "Get Version of Activity Definition", tags = { "Activity Definition Version" })
@@ -69,7 +75,7 @@ public class ActivityVersionController {
     public ResponseEntity<Object> getActivityVersionDefinitionById(@PathVariable(value = "activityDefnKey", required = true) String activityDefnKey,
                                                                    @PathVariable(value = "versionId", required = true) Double versionId,
                                                                    @PathVariable(value = "sponsorContext", required = true)String sponsorContext) throws Exception {
-        return activityVersionService.getVersionDefinitionById(activityDefnKey,sponsorContext,versionId);
+        return new ResponseEntity<>(activityVersionService.getVersionDefinitionById(activityDefnKey,sponsorContext,versionId), HttpStatus.OK);
     }
 
     @Operation(summary = "Create an Activity Definition Version")
@@ -84,8 +90,12 @@ public class ActivityVersionController {
                                                            @PathVariable(value = "activityDefnKey")String activityDefnKey,
                                                            @RequestPart(value = "file") @MultipartFileValidator MultipartFile file,
                                                            @RequestParam(value = "isEncrypted") boolean isEncrypted,
-                                                           @RequestParam(value = "application") Application app,
-                                                           HttpServletRequest request) throws SQLException, IOException, OnlyOneDraftVersionException {
-        return activityVersionService.createActivityDefnVersion(sponsorContext, activityDefnKey, file, isEncrypted, app.getApp(), request);
+                                                           @RequestParam(value = "application") Application app) throws SQLException, IOException, OnlyOneDraftVersionException {
+        ActivityDefnVersionResp activityDefnVersionResp = activityVersionService.createActivityDefnVersion(sponsorContext, activityDefnKey, file, isEncrypted, app.getApp());
+        Link link = linkTo(methodOn(ActivityVersionController.class).createActivityDefinition(sponsorContext, activityDefnKey, file, isEncrypted, app)).withSelfRel();
+        activityDefnVersionResp.setLocation(link.getHref());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("location", activityDefnVersionResp.getLocation());
+        return new ResponseEntity<>(activityDefnVersionResp, headers, HttpStatus.CREATED);
     }
 }

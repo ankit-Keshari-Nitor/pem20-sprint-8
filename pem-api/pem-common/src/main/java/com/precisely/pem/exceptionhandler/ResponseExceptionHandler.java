@@ -1,6 +1,7 @@
 package com.precisely.pem.exceptionhandler;
 
 import com.precisely.pem.dtos.shared.ErrorResponseDto;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -49,6 +50,14 @@ public class ResponseExceptionHandler{
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<Object> handleNameConflict(ConstraintViolationException ex, WebRequest request) {
+        ErrorResponseDto errResp = new ErrorResponseDto();
+        errResp.setErrorCode(1010);
+        errResp.setErrorDescription("A definition with the name already exist. Kindly change the name.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
+    }
+
     @ExceptionHandler(InvalidPreferencesFormatException.class)
     protected ResponseEntity<Object> handleCaseConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
@@ -65,5 +74,11 @@ public class ResponseExceptionHandler{
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 
-
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<Object> handleGeneralException(Exception ex, WebRequest request) {
+        ErrorResponseDto errResp = new ErrorResponseDto();
+        errResp.setErrorCode(1010);
+        errResp.setErrorDescription(ex.getLocalizedMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
+    }
 }

@@ -16,7 +16,6 @@ import com.precisely.pem.repositories.ActivityDefnDataRepo;
 import com.precisely.pem.repositories.ActivityDefnRepo;
 import com.precisely.pem.repositories.ActivityDefnVersionRepo;
 import com.precisely.pem.repositories.SponsorRepo;
-import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,7 +54,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     @Autowired
     private ModelMapper mapper;
     @Override
-    public ResponseEntity<Object> getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status) {
+    public ActivityVersionDefnPaginationResp getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status) throws Exception {
         ActivityVersionDefnPaginationResp activityVersionDefnPaginationResp = new ActivityVersionDefnPaginationResp();
         PaginationDto paginationDto = new PaginationDto();
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
@@ -68,7 +66,12 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         description = (description != null && !description.isEmpty()) ? description : "";
 
         Page<ActivityDefnVersion> defnsPage = activityDefnVersionRepo.findVersionList(context,description,activityDefnKey,status,pageable);
-        if(defnsPage != null && !defnsPage.isEmpty()) {
+        if(defnsPage == null || defnsPage.isEmpty()) {
+            ErrorResponseDto errorDto = new ErrorResponseDto();
+            errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
+            errorDto.setErrorDescription("No Data Found");
+            throw new Exception("No entries found for the combination");
+        }
             List<ActivityDefnVersion> listOfDefns = defnsPage.getContent();
             List<ActivityDefnVersionDto> defnContent = new ArrayList<>();
 
@@ -90,33 +93,26 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             activityVersionDefnPaginationResp.setContent(defnContent);
             activityVersionDefnPaginationResp.setPage(paginationDto);
 
-            return ResponseEntity.ok().body(activityVersionDefnPaginationResp);
-        }else{
-            ErrorResponseDto errorDto = new ErrorResponseDto();
-            errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-            errorDto.setErrorDescription("No Data Found");
-            return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
-        }
+            return activityVersionDefnPaginationResp;
     }
 
     @Override
-    public ResponseEntity<Object> getVersionDefinitionById(String activityDefnKey, String sponsorContext, Double versionId) throws Exception {
+    public ActivityDefnVersionDto getVersionDefinitionById(String activityDefnKey, String sponsorContext, Double versionId) throws Exception {
         String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
         Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findVersion(activityDefnKey, SponsorKey,versionId));
         if(result.isEmpty()){
             ErrorResponseDto errorDto = new ErrorResponseDto();
             errorDto.setErrorDescription("No data Found");
             errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-            return new ResponseEntity<>(errorDto,HttpStatus.NOT_FOUND);
+            throw new Exception("No entries found for the combination");
         }
         ModelMapper mapper = new ModelMapper();
-        return ResponseEntity.ok().body(mapper.map(result.get(), ActivityDefnVersionDto.class));
+        return mapper.map(result.get(), ActivityDefnVersionDto.class);
     }
 
     @Override
-    public ResponseEntity<Object> createActivityDefnVersion(String sponsorContext, String activityDefnKey,
-                                                            MultipartFile file, boolean isEncrypted, String app,
-                                                            HttpServletRequest request) throws OnlyOneDraftVersionException, IOException, SQLException {
+    public ActivityDefnVersionResp createActivityDefnVersion(String sponsorContext, String activityDefnKey,
+                                                            MultipartFile file, boolean isEncrypted, String app) throws OnlyOneDraftVersionException, IOException, SQLException {
         Optional<ActivityDefn> activityDefn = null;
         ActivityDefnData activityDefnData = null;
         ActivityDefnVersion activityDefnVersion = null;
@@ -155,16 +151,8 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
         activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
 
-        String url = request.getRequestURL().toString() + "/" + activityDefnVersion.getActivityDefnKeyVersion();
-
-        logger.info("location : " + request.getRequestURL().toString());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("location", url);
-
         activityDefnVersionResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
-        activityDefnVersionResp.setLocation(url);
 
-        return new ResponseEntity<>(activityDefnVersionResp, headers, HttpStatus.CREATED);
+        return activityDefnVersionResp;
     }
 }

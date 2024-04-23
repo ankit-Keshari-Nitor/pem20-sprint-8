@@ -1,19 +1,18 @@
 package com.precisely.pem.services;
 
+import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 public interface ActivityVersionService {
-    ResponseEntity<Object> getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status);
+    ActivityVersionDefnPaginationResp getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status) throws Exception;
 
-    ResponseEntity<Object> getVersionDefinitionById(String activityDefnKey, String sponsorContext, Double versionId) throws Exception;
+    ActivityDefnVersionDto getVersionDefinitionById(String activityDefnKey, String sponsorContext, Double versionId) throws Exception;
 
-    ResponseEntity<Object> createActivityDefnVersion(String sponsorContext, String activityDefnKey, MultipartFile file, boolean isEncrypted, String app, HttpServletRequest request) throws OnlyOneDraftVersionException, IOException, SQLException;
+    ActivityDefnVersionResp createActivityDefnVersion(String sponsorContext, String activityDefnKey, MultipartFile file, boolean isEncrypted, String app) throws OnlyOneDraftVersionException, IOException, SQLException;
 }

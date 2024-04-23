@@ -1,12 +1,12 @@
 package com.precisely.pem.controller;
 
-import com.precisely.pem.Validator.LowerCaseValidator;
 import com.precisely.pem.Validator.MultipartFileValidator;
 import com.precisely.pem.Validator.SpecialCharValidator;
 import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
+import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.ActivityDefnResp;
 import com.precisely.pem.dtos.shared.ActivityDefnDto;
@@ -20,13 +20,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Size;
 import lombok.extern.log4j.Log4j2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Tag(name = "Activity Definition", description = "Activity Definition management APIs")
 @RequestMapping("/sponsors/{sponsorContext}/v2/activityDefinitions")
@@ -50,7 +57,12 @@ public class ActivityController {
                                                            @RequestPart(value = "file") @MultipartFileValidator MultipartFile file,
                                                            @RequestParam(value = "application", required = true) Application app,
                                                            @PathVariable(value = "sponsorContext", required = true) String sponsorContext) throws Exception {
-        return activityDefnService.createActivityDefinition(sponsorContext, name, description, file, app.getApp());
+        ActivityDefnResp activityDefnResp = activityDefnService.createActivityDefinition(sponsorContext, name, description, file, app.getApp());
+        Link link = linkTo(methodOn(ActivityController.class).createActivityDefinition(name, description, file, app, sponsorContext)).withSelfRel();
+        activityDefnResp.setLocation(link.getHref());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("location", activityDefnResp.getLocation());
+        return new ResponseEntity<>(activityDefnResp, headers, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Retrieve all Activity Definitions", tags = { "Activity Definition" })
@@ -70,8 +82,22 @@ public class ActivityController {
                                                             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
                                                             @RequestParam(value = "sortBy", defaultValue = "modify_ts" ,required = false) SortBy sortBy,
                                                             @RequestParam(value = "sortDir", defaultValue = "DESC", required = false) SortDirection sortDir,
-                                                            @PathVariable(value = "sponsorContext")String sponsorContext){
-        return activityDefnService.getAllDefinitionList(sponsorContext,name,description,status.getStatus(),application.getApp(),pageNo, pageSize, sortBy ==null? "modify_ts":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
+                                                            @PathVariable(value = "sponsorContext")String sponsorContext) throws Exception {
+        ActivityDefnPaginationRes activityDefnPaginationRes = activityDefnService.getAllDefinitionList(sponsorContext,name,description,status.getStatus(),application.getApp(),pageNo, pageSize, sortBy ==null? "modify_ts":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
+        activityDefnPaginationRes.getContent().stream()
+                .map(p ->
+                {
+                    Link link = null;
+                    try {
+                        link = linkTo(methodOn(ActivityController.class).getActivityDefinitionByKey(sponsorContext, p.getActivityDefnKey())).withSelfRel();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    p.setActivityVersionLink(link.getHref());
+                    return p;
+                }).collect(Collectors.toList());
+
+        return new ResponseEntity<>(activityDefnPaginationRes, HttpStatus.OK);
     }
 
     @Operation(summary = "Get Activity Definition by Key", tags = { "Activity Definition" })
@@ -83,6 +109,9 @@ public class ActivityController {
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }) })
     @GetMapping ("/{activityDefnKey}")
     public ResponseEntity<Object> getActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey) throws Exception {
-        return  activityDefnService.getActivityDefinitionByKey(sponsorContext, activityDefnKey);
+        ActivityDefnListResp activityDefnListResp = activityDefnService.getActivityDefinitionByKey(sponsorContext, activityDefnKey);
+        Link link = linkTo(methodOn(ActivityController.class).getActivityDefinitionByKey(sponsorContext,activityDefnKey)).withSelfRel();
+        activityDefnListResp.setActivityVersionLink(link.getHref());
+        return new ResponseEntity<>(activityDefnListResp,HttpStatus.OK);
     }
 }

@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -147,9 +148,12 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         logger.info("location : " + request.getRequestURL().toString());
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("location", url);
+
         activityDefnVersionResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
         activityDefnVersionResp.setLocation(url);
 
-        return new ResponseEntity<>(activityDefnVersionResp, HttpStatus.CREATED);
+        return new ResponseEntity<>(activityDefnVersionResp, headers, HttpStatus.CREATED);
     }
 }

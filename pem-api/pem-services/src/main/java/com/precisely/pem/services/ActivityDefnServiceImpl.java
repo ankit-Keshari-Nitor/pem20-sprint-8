@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.Link;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -170,7 +171,10 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
         activityDefnResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
         activityDefnResp.setLocation(url);
 
-        return new ResponseEntity<>(activityDefnResp,HttpStatus.CREATED);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("location", url);
+
+        return new ResponseEntity<>(activityDefnResp, headers, HttpStatus.CREATED);
     }
 
     @Override

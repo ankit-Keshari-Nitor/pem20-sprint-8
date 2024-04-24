@@ -1,5 +1,6 @@
 package com.precisely.pem.services;
 
+import com.precisely.pem.dtos.responses.SponsorInfo;
 import com.precisely.pem.repositories.SponsorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class SponsorServiceImpl implements SponsorService {
     }
 
     @Override
-    public String getActiveSponsorNameBySponsorContext(String sponsorContext){
-        return sponsorRepo.getActiveSponsorNameBySponsorContext(sponsorContext);
+    public SponsorInfo getActiveSponsorNameBySponsorContext(String sponsorContext){
+        return sponsorRepo.getActiveSponsorInfoBySponsorContext(sponsorContext);
     }
 }

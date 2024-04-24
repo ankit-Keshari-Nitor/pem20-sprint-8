@@ -131,6 +131,7 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
         ModelMapper mapper = new ModelMapper();
 
         logger.info("sponsorkey : " + sponsorRepo.getSponsorKey(sponsorContext));
+        //TODO use like this and change Logger to log4j2: TenantContext.getTenantContext().getSponsorKey();
 
         //Populating the Activity Definition Object
         ActivityDefnDto activityDefnDto = new ActivityDefnDto(

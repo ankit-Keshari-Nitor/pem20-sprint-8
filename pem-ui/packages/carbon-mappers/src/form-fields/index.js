@@ -11,6 +11,6 @@ import Link from './link';
 import Group from './group';
 import Tab from './tab';
 import Toggle from './toggle';
-import Text from './test';
+import Text from './text';
 
 export const formFields = [Group, TextInput, Textarea, Text, Select, Checkbox, Button, Accordion, Tab, RadioButton, Toggle, DatePicker, Link, FileUploader];

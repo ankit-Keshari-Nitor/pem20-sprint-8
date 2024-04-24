@@ -84,7 +84,7 @@ export const updateConfigChildToChildren = (children, splitDropZonePath, item, r
       newLayoutStructure = {
         type: COLUMN,
         id: uuid(),
-        defaultsize: '4',
+        defaultsize: '16',
         children: item.length ? [item] : []
       };
     }
@@ -106,6 +106,18 @@ export const updateConfigChildToChildren = (children, splitDropZonePath, item, r
   return updatedChildren;
 };
 
+export const indexForChild = (layout, splitDropZonePath, idx) => {
+  if (splitDropZonePath.length === 1) {
+    idx = layout[splitDropZonePath[0]].children.length;
+    return idx;
+  }
+  const updatedChildren = [...layout];
+  const curIndex = Number(splitDropZonePath.slice(0, 1));
+  const splitItemChildrenPath = splitDropZonePath.slice(1);
+  const nodeChildren = updatedChildren[curIndex];
+  return indexForChild(nodeChildren.children, splitItemChildrenPath, idx);
+};
+
 export const addChildToChildren = (children, splitDropZonePath, item) => {
   if (splitDropZonePath.length === 1) {
     const dropZoneIndex = Number(splitDropZonePath[0]);
@@ -114,7 +126,7 @@ export const addChildToChildren = (children, splitDropZonePath, item) => {
       newLayoutStructure = {
         type: COLUMN,
         id: uuid(),
-        defaultsize: '4',
+        defaultsize: '16',
         children: item.length ? [item] : []
       };
     }

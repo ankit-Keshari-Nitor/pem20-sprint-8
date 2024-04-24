@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useDrag } from 'react-dnd';
-import { TrashCan } from '@carbon/icons-react';
+import { TrashCan, Draggable } from '@carbon/icons-react';
 
 import './field-renderer.scss';
 import { COMPONENT } from '../../../constants/constants';
@@ -54,20 +54,16 @@ const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onF
     <div ref={ref} style={{ opacity }}>
       <div className="element">
         <Grid className="custom-field-grid">
+          <Column lg={1}>
+            <span className="drag-icon">
+              <Draggable />
+            </span>
+          </Column>
           <Column lg={14}> {formFieldData}</Column>
-          <Column lg={2}>
-            <Grid>
-              <Column lg={1}>
-                <span className="delete-icon">
-                  <TrashCan onClick={(e) => onFieldDelete(e, path)} />
-                </span>
-              </Column>
-              <Column lg={1}>
-                <span className="drag-icon">
-                  <TrashCan onClick={(e) => onFieldDelete(e, path)} />
-                </span>
-              </Column>
-            </Grid>
+          <Column lg={1}>
+            <span className="delete-icon">
+              <TrashCan onClick={(e) => onFieldDelete(e, path)} />
+            </span>
           </Column>
         </Grid>
       </div>

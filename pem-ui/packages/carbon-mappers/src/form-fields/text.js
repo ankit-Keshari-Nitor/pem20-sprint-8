@@ -1,6 +1,6 @@
 import React from 'react';
 import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, labelText } from '../constant';
-import { TextIcon } from './../icons';
+import { TextIcon } from '../icons';
 
 const type = FORM_FIELD_TYPE.TEXT;
 
@@ -8,9 +8,9 @@ const Text = ({ field, id }) => {
   const { labelText } = field;
 
   return (
-    <p data-testid={id} id={id}>
+    <span data-testid={id} id={id}>
       {labelText}
-    </p>
+    </span>
   );
 };
 

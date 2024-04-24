@@ -10,7 +10,7 @@ export default function Canvas({ layout, handleDrop, renderRow, componentMapper,
         onClick={(e) => {
           !previewMode && onFieldSelect(e, component, currentPath);
         }}
-        className={classNames(previewMode && 'form-fields')}
+        className={classNames(previewMode ? 'form-fields' : 'canvas-form-fields')}
       >
         <FieldRenderer
           key={component.id}

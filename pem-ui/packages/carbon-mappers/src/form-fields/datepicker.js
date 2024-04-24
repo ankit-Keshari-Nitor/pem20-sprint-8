@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DatePicker as CarbonDatePicker, DatePickerInput } from '@carbon/react';
 import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, helperText, isDisabled, isRequired, labelText } from '../constant';
-import Label from './label';
 import { DatepickerIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.DATEPICKER;

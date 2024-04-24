@@ -10,6 +10,7 @@ export const CUSTOM_COLUMN = 'customColumn';
 export const SUBTAB = 'subTab';
 export const CUSTOM_SIZE = 'customsize';
 export const CUSTOM_TITLE = 'customTitle';
+export const TEXT_INPUT = 'textinput';
 
 export const PALETTE_GROUPS = [
   {

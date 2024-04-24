@@ -7,13 +7,8 @@
   overflow-y: auto;
 }
 
-.right-palette-container .palette-header {
-  font-size: 14px;
-  font-weight: bold;
-  color: hsl(225, 10%, 15%);
-  padding: 12px 0px;
-  background: #e2e2e2;
-  user-select: none;
+.right-palette-container .tab-panel {
+  padding: 8px;
 }
 
 .right-palette-form-item {

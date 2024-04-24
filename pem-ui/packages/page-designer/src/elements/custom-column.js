@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { COLUMN } from '../constants/constants';
-import DropZone from './DropZone';
+import DropZone from './drop-zone';
 import FieldRenderer from '../components/canvas/field-renderer/field-renderer';
 
 const Column = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete, previewMode, onChangeHandle }) => {

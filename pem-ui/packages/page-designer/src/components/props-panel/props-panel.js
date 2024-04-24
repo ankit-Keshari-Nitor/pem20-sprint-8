@@ -44,7 +44,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
       let childLength = false;
       let index = path[0];
       if (path.length === 1) {
-        childLength = layout[0]?.children.length > 1 ? true : false;
+        childLength = layout[0]?.children?.length > 1 ? true : false;
       } else {
         path.shift();
         return isLastChild(path, layout[index]?.children);
@@ -57,9 +57,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     <div className="right-palette-container">
       {selectedFiledProps && (
         <>
-          {/* Form Field Id */}
-          {/* <div className="palette-header">{selectedFiledProps?.id}</div> */}
-          {/* Form Field Tabs */}
           <Tabs>
             <TabList aria-label="List of tabs" contained>
               <Tab>Properties</Tab>
@@ -67,7 +64,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
               <Tab>Condition</Tab>
             </TabList>
             <TabPanels>
-              <TabPanel>
+              <TabPanel className="tab-panel">
                 {/* To Show the Add Tab Button */}
                 {selectedFiledProps?.type === TAB && (
                   <Button
@@ -145,7 +142,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                       );
                     })}
                     {/* Column Delete  */}
-                    {/* {isLastChild(selectedFiledProps?.currentPathDetail.split('-').slice(0, -1), layout) && (
+                    {isLastChild(selectedFiledProps?.currentPathDetail.split('-').slice(0, -1), layout) && (
                       <div className="delete-column">
                         <Button
                           kind="danger--tertiary"
@@ -156,7 +153,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           Delete Column
                         </Button>
                       </div>
-                    )} */}
+                    )}
                   </>
                 )}
                 {/* Tab SubTitle  */}
@@ -175,7 +172,31 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                   </>
                 )}
               </TabPanel>
-              <TabPanel>
+              <TabPanel className="tab-panel">
+                {/* Advance Properties Field  */}
+                {advanceProps && advanceProps.length > 0 && (
+                  <>
+                    {advanceProps.map((advncProps, idx) => {
+                      return (
+                        <TextInput
+                          key={idx}
+                          id={String(idx)}
+                          className="right-palette-form-item"
+                          labelText={advncProps.label}
+                          value={advncProps.value}
+                          onChange={(e) => {
+                            if (isNaN(e.target.value)) {
+                              e.preventDefault();
+                              handleSchemaChanges(selectedFiledProps?.id, 'advance', advncProps.propsName, e.target.value, selectedFiledProps?.currentPathDetail);
+                            } else {
+                              handleSchemaChanges(selectedFiledProps?.id, 'advance', advncProps.propsName, e.target.value, selectedFiledProps?.currentPathDetail);
+                            }
+                          }}
+                        />
+                      );
+                    })}
+                  </>
+                )}
                 {/* Validation Properties Field  */}
                 {editableProps &&
                   Object.keys(editableProps).map((key, idx) => {
@@ -208,32 +229,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                       </>
                     );
                   })}
-                {/* Advance Properties Field  */}
-                {advanceProps && advanceProps.length > 0 && (
-                  <>
-                    {advanceProps.map((advncProps, idx) => {
-                      return (
-                        <TextInput
-                          key={idx}
-                          id={String(idx)}
-                          className="right-palette-form-item"
-                          labelText={advncProps.label}
-                          value={advncProps.value}
-                          onChange={(e) => {
-                            if (isNaN(e.target.value)) {
-                              e.preventDefault();
-                              handleSchemaChanges(selectedFiledProps?.id, 'advance', advncProps.propsName, e.target.value, selectedFiledProps?.currentPathDetail);
-                            } else {
-                              handleSchemaChanges(selectedFiledProps?.id, 'advance', advncProps.propsName, e.target.value, selectedFiledProps?.currentPathDetail);
-                            }
-                          }}
-                        />
-                      );
-                    })}
-                  </>
-                )}
               </TabPanel>
-              <TabPanel>Conditional Props</TabPanel>
+              <TabPanel className="tab-panel">Conditional Props</TabPanel>
             </TabPanels>
           </Tabs>
         </>

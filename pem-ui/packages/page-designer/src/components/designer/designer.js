@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 import './designer.scss';
 
-import Row from '../../elements/Row';
+import Row from '../../elements/custom-row';
 import Canvas from '../canvas';
 import ComponentsTray from '../components-tray/components-tray';
 import PropsPanel from '../props-panel/props-panel';
@@ -14,11 +14,12 @@ import {
   handleRemoveItemFromLayout,
   updateChildToChildren,
   addChildToChildren,
-  findChildComponentById
+  findChildComponentById,
+  indexForChild
 } from '../../utils/helpers';
 import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE } from '../../constants/constants';
 import ViewSchema from './../view-schema';
-import { Button, Modal } from '@carbon/react';
+import { Button, Grid, Modal, Column } from '@carbon/react';
 import FormPreview from '../preview-mode';
 
 export default function Designer({ componentMapper }) {
@@ -137,12 +138,15 @@ export default function Designer({ componentMapper }) {
 
   const handleSchemaChanges = (id, key, propsName, newValue, currentPathDetail) => {
     const componentPosition = currentPathDetail.split('-');
+    // console.log('componentPosition', componentPosition, currentPathDetail);
     if (key === SUBTAB) {
-      componentPosition.push('0');
+      const position = indexForChild(layout, componentPosition, 0);
+      componentPosition.push(position);
       const newLayout = addChildToChildren(layout, componentPosition, { id: uuid(), tabTitle: DEFAULTTITLE, type: SUBTAB, children: [] });
       setLayout([...newLayout]);
     } else if (key === CUSTOM_COLUMN) {
-      componentPosition.push('0');
+      const position = indexForChild(layout, componentPosition, 0);
+      componentPosition.push(position);
       const newLayout = addChildToChildren(layout, componentPosition, []);
       setLayout([...newLayout]);
     } else if (key === CUSTOM_TITLE) {
@@ -199,34 +203,55 @@ export default function Designer({ componentMapper }) {
     <>
       <div className="page-designer">
         <div className="header-container">
-          <span className="header-title">Form builder name 01</span>
-        </div>
-        <div className="components-tray">
-          <ComponentsTray componentMapper={componentMapper} setOpen={setOpen} setOpenPreview={setOpenPreview} />
+          <Grid>
+            <Column sm={4}>
+              <span className="header-title">Form builder name 01</span>
+            </Column>
+            <Column sm={{ span: 2, offset: 12 }} style={{ marginLeft: '0.5rem' }}>
+              <Button kind="secondary" size="sm" onClick={() => setOpen(true)}>
+                View Schema
+              </Button>
+            </Column>
+            <Column sm={2} style={{ marginLeft: '1.5rem' }}>
+              <Button kind="secondary" size="sm" onClick={() => setOpenPreview(true)}>
+                Preview
+              </Button>
+            </Column>
+          </Grid>
         </div>
         <div className="layout-container">
-          <div className="canvas-wrapper">
-            <Canvas layout={layout} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} onFieldSelect={onFieldSelect} onFieldDelete={onFieldDelete} />
+          <div className="layout-container-wrapper">
+            <div className="components-tray">
+              <ComponentsTray componentMapper={componentMapper} />
+            </div>
+            <div className="canvas-wrapper">
+              <Canvas layout={layout} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} onFieldSelect={onFieldSelect} onFieldDelete={onFieldDelete} />
+            </div>
           </div>
-          <div className="props-panel">
-            <PropsPanel
-              layout={layout}
-              selectedFiledProps={selectedFiledProps}
-              handleSchemaChanges={handleSchemaChanges}
-              columnSizeCustomization={columnSizeCustomization}
-              onFieldDelete={onFieldDelete}
-            />
-          </div>
+          {selectedFiledProps && (
+            <div className="props-panel">
+              <PropsPanel
+                layout={layout}
+                selectedFiledProps={selectedFiledProps}
+                handleSchemaChanges={handleSchemaChanges}
+                columnSizeCustomization={columnSizeCustomization}
+                onFieldDelete={onFieldDelete}
+              />
+            </div>
+          )}
         </div>
-
-        <div className="button-wrapper">
-          <Button kind="secondary" className="cancel-button">
-            Cancel
-          </Button>
-          <Button kind="secondary" className="save-button">
-            Save
-          </Button>
-        </div>
+        <Grid>
+          <Column sm={{ span: 2, offset: 12 }}>
+            <Button kind="secondary" className="cancel-button" size="sm">
+              Cancel
+            </Button>
+          </Column>
+          <Column sm={2}>
+            <Button kind="secondary" className="save-button" size="sm">
+              Save
+            </Button>
+          </Column>
+        </Grid>
       </div>
 
       <Modal open={open} onRequestClose={() => setOpen(false)} passiveModal modalLabel="Schema" primaryButtonText="Close" secondaryButtonText="Cancel">
@@ -250,6 +275,7 @@ export default function Designer({ componentMapper }) {
           onFieldSelect={onFieldSelect}
           onFieldDelete={onFieldDelete}
           openPreview={openPreview}
+          dataTestid={'form-preview-id'}
         />
       </Modal>
     </>

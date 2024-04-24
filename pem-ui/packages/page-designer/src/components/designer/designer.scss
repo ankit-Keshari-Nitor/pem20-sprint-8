@@ -3,7 +3,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f1f1f1;
+  background-color: #ffffff;
 }
 
 .header-container {
@@ -12,6 +12,8 @@
   display: flex;
   align-items: center;
   padding: 16px;
+  background-color: #f1f1f1;
+  justify-content: space-between;
 }
 
 .header-title {
@@ -23,37 +25,54 @@
   text-align: left;
 }
 
-.components-tray {
-  width: 100%;
-  height: 64px;
+.button-layout {
   display: flex;
-  background-color: #ffffff;
+  align-items: center;
+  justify-content: center;
 }
 
 .layout-container {
   width: 100%;
-  height: calc(100vh - 112px);
+  height: calc(100vh - 102px);
   display: flex;
   flex-direction: row;
   background-color: #ffffff;
 }
 
-.layout-container .canvas-wrapper {
+.layout-container-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  background-color: #ffffff;
+}
+
+.components-tray {
+  width: 64px;
+  display: flex;
+  max-width: 64px;
+  position: sticky;
+  background-color: #ffffff;
+  overflow-y: auto;
+  margin: 0.5rem;
+}
+
+.canvas-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  padding: 0.5rem;
+  margin: 0.5rem;
   overflow: auto;
-  margin: 0px 16px 16px 16px;
   border: 1px dashed #a3a5a7;
+  padding: 0.5rem;
 }
 
 .layout-container .props-panel {
-  width: 335px;
+  width: 321px;
   padding: 8px;
   display: flex;
-  min-width: 335px;
+  min-width: 321px;
   position: sticky;
   background-color: #e2e2e2;
 }
@@ -88,7 +107,7 @@
 
 .row {
   padding: 0;
-  border: 1px solid gray;
+  // border: 1px solid gray;
 }
 
 .row:focus {
@@ -97,7 +116,7 @@
 
 .column {
   flex: 1 1 100%;
-  // border: 1px solid gray;
+  padding: 0.5rem;
 }
 
 .columns {
@@ -121,7 +140,10 @@
 }
 
 .dropZone:not(.horizontalDrag).isLast {
-  flex: 1 1 auto;
+  height: 24px;
+  flex: 0 0 auto;
+  transition: 200ms all;
+  margin-bottom: 20px;
 }
 
 .dropZone.active,
@@ -145,7 +167,7 @@
 }
 
 .column-zone {
-  border: 1px dotted;
+  border: 2px dotted;
   margin: 0.5rem;
   min-height: 100px;
 }

@@ -20,15 +20,16 @@
 }
 
 .drag-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: move;
 }
 
-.element .custom-field-grid .delete-icon {
-  // position: absolute;
-  // top: 4px;
-  // right: 4px;
+.delete-icon {
   display: flex;
   justify-content: center;
+  align-items: center;
   cursor: pointer;
 }
 
@@ -36,7 +37,12 @@
   margin: 0.5rem;
 }
 
+.canvas-form-fields {
+  width: 70%;
+}
+
 .custom-field-grid {
   --cds-grid-gutter-start: none;
   padding-inline: unset;
+  align-items: center;
 }

@@ -5,7 +5,7 @@ import { Button } from '@carbon/react';
 import './preview-mode.scss';
 import { updatePreviewChildToChildren } from '../../utils/helpers';
 
-const FormPreview = ({ layout, deletedFieldPath, handleDrop, renderRow, componentMapper, onFieldSelect, onFieldDelete, openPreview }) => {
+const FormPreview = ({ layout, deletedFieldPath, renderRow, componentMapper, onFieldDelete, openPreview, dataTestid }) => {
   const [formRenderSchema, setFormRenderSchema] = useState([]);
   const [formFieldsData, setFormFieldsData] = useState([]);
   useEffect(() => {
@@ -21,7 +21,7 @@ const FormPreview = ({ layout, deletedFieldPath, handleDrop, renderRow, componen
       }
       return true;
     });
-  }, [deletedFieldPath]);
+  }, [deletedFieldPath, formFieldsData]);
 
   const onChangeHandle = (fieldData) => {
     let check = true;
@@ -43,7 +43,7 @@ const FormPreview = ({ layout, deletedFieldPath, handleDrop, renderRow, componen
     let errorHandler = { invalidText: '' };
     formFieldsData.map((fieldItem) => {
       errorHandler.invalid = false;
-      if (fieldItem.isRequired && fieldItem.value.length <= 0) {
+      if (fieldItem.isRequired && (fieldItem.value.length <= 0 || fieldItem.value === false)) {
         errorHandler.invalid = true;
         errorHandler.invalidText = 'This field is required!!';
       }
@@ -62,7 +62,7 @@ const FormPreview = ({ layout, deletedFieldPath, handleDrop, renderRow, componen
   };
 
   return (
-    <div className="view-schema-container">
+    <div data-testid={dataTestid} className="view-schema-container">
       <Form aria-label="form">
         {/* <TextInput invalid={true} id="text-input-1" type="text" labelText="Text input label" helperText="Optional help text" /> */}
         <Canvas layout={formRenderSchema} renderRow={renderRow} componentMapper={componentMapper} previewMode onChangeHandle={onChangeHandle} />

@@ -14,8 +14,7 @@ export const FORM_FIELD_TYPE = {
   NUMBER: 'numberinput',
   PASSWORD: 'password',
   TAB: 'tab',
-  TOGGLE: 'toggle',
-  TEXT: 'text'
+  TOGGLE: 'toggle'
 };
 
 export const FORM_FIELD_LABEL = {

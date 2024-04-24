@@ -18,8 +18,8 @@ const Checkbox = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
 
   return (
     <CarbonCheckbox
-      data-testid={id}
-      id={id}
+      data-testid={`${id}-${previewMode}`}
+      id={`${id}-${previewMode}`}
       type={type}
       labelText={labelText}
       checked={isChecked}

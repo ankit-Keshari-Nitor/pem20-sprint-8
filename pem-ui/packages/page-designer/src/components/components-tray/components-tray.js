@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './components-tray.scss';
 import ComponentItem from './component-item';
 import { SIDEBAR_ITEM } from '../../constants/constants';
 
 export default function ComponentsTray({ componentMapper }) {
   const initialPaletteEntries = React.useRef(collectPaletteEntries(componentMapper));
+  const [paletteEntries, setPaletteEntries] = useState(initialPaletteEntries.current);
 
   return (
     <div className="palette">
-      {initialPaletteEntries &&
-        initialPaletteEntries.current.map((entry, index) => {
-          return <ComponentItem key={index} data={entry} />;
-        })}
+      {paletteEntries.map((entry, index) => {
+        return <ComponentItem key={index} data={entry} />;
+      })}
     </div>
   );
 }

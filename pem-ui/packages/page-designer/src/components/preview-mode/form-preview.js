@@ -21,7 +21,7 @@ const FormPreview = ({ layout, deletedFieldPath, renderRow, componentMapper, onF
       }
       return true;
     });
-  }, [deletedFieldPath, formFieldsData]);
+  }, [deletedFieldPath]);
 
   const onChangeHandle = (fieldData) => {
     let check = true;

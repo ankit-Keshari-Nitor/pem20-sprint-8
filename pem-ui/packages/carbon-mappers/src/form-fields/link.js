@@ -23,7 +23,7 @@ Link.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <LinkIcon />,
   editableProps: {
-    Basic: [labelText]
+    Basic: [labelText, hrefText]
   },
-  advanceProps: [hrefText]
+  advanceProps: []
 };

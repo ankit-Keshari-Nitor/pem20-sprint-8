@@ -5,10 +5,10 @@ import { RadioIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.RADIO;
 
-const RadioButton = ({ field, id }) => {
+const RadioButton = ({ field, id, previewMode }) => {
   const { type, labelText, isRequired, ...rest } = field;
 
-  return <CarbonRadioButton data-testid={id} id={id} labelText={labelText} value={id} {...rest} />;
+  return <CarbonRadioButton data-testid={`${id}-${previewMode}`} id={`${id}-${previewMode}`} labelText={labelText} value={id} {...rest} />;
 };
 
 export default RadioButton;

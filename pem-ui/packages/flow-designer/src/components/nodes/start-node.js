@@ -1,15 +1,18 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import { Handle, Position } from 'reactflow';
+import './task-node.css';
 
-export default function StartNode({ data, isConnectable }) {
+export default function StartNode(nodeConfig) {
   return (
-    <div style={{ border: '1px solid #61E897' }}>
+    <div className="start-node-container">
       <Handle
+        id="start-node-right"
         type="source"
         position={Position.Right}
-        style={{ width: '16px', height: '16px', background: '#61E897' }}
+        style={{ background: '#61E897' }}
         onConnect={(params) => console.log('Right handle onConnect', params)}
-        isConnectable={isConnectable}
+        isConnectable={nodeConfig?.isConnectable}
       />
     </div>
   );

@@ -13,8 +13,6 @@ function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
     targetPosition
   });
 
-  //import { Popover, PopoverContent } from '@carbon/react';
-
   const onEdgeClick = () => {
     setEdges((edges) => edges.filter((edge) => edge.id !== id));
   };

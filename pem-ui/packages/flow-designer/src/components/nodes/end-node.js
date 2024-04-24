@@ -7,7 +7,7 @@ export default function EndNode({ data, isConnectable }) {
       <Handle
         type="target"
         position={Position.Left}
-        style={{ background: '#ED3E32', width: '8px', height: '8px' }}
+        style={{ background: '#ED3E32', width: '16px', height: '16px' }}
         onConnect={(params) => console.log('Left handle onConnect', params)}
         isConnectable={isConnectable}
       />

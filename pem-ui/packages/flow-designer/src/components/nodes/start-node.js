@@ -7,7 +7,7 @@ export default function StartNode({ data, isConnectable }) {
       <Handle
         type="source"
         position={Position.Right}
-        style={{ width: '8px', height: '8px', background: '#61E897' }}
+        style={{ width: '16px', height: '16px', background: '#61E897' }}
         onConnect={(params) => console.log('Right handle onConnect', params)}
         isConnectable={isConnectable}
       />

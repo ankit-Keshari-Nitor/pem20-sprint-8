@@ -46,7 +46,7 @@ public class ResponseExceptionHandler{
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<Object> handleCharacterConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1010);
+        errResp.setErrorCode(1005);
         errResp.setErrorDescription("Illegal character introduced. Kindly check your string.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
@@ -54,7 +54,7 @@ public class ResponseExceptionHandler{
     @ExceptionHandler(OnlyOneDraftVersionException.class)
     protected ResponseEntity<Object> handleVersionConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1010);
+        errResp.setErrorCode(1006);
         errResp.setErrorDescription("A version with DRAFT status already exists. Kindly Verify");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
@@ -62,7 +62,7 @@ public class ResponseExceptionHandler{
     @ExceptionHandler(ConstraintViolationException.class)
     protected ResponseEntity<Object> handleNameConflict(ConstraintViolationException ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1010);
+        errResp.setErrorCode(1007);
         errResp.setErrorDescription("A definition with the name already exist. Kindly change the name.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
@@ -70,7 +70,7 @@ public class ResponseExceptionHandler{
     @ExceptionHandler(InvalidPreferencesFormatException.class)
     protected ResponseEntity<Object> handleCaseConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1010);
+        errResp.setErrorCode(1008);
         errResp.setErrorDescription("Invalid format for given string. Please check your input.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
@@ -86,7 +86,7 @@ public class ResponseExceptionHandler{
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleGeneralException(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1010);
+        errResp.setErrorCode(5000);
         errResp.setErrorDescription(ex.getLocalizedMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }

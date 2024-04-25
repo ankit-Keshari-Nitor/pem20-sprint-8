@@ -15,8 +15,8 @@ public class ActivityDefnVersionDto {
     public String activityDefnDataKey;
     public Double version;
     public String status;
-    public boolean isDefault;
-    public boolean isEncrypted;
+    public Boolean isDefault;
+    public Boolean isEncrypted;
     public String encryptionKey;
     public LocalDateTime createTs;
     public String createdBy;

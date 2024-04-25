@@ -18,7 +18,7 @@ public class ActivityDefnDto {
     public LocalDateTime modifyTs;
     public String modifiedBy;
     public String application;
-    public boolean isDeleted;
-    public boolean migrationStatus;
+    public Boolean isDeleted;
+    public Boolean migrationStatus;
     public String activityVersionLink;
 }

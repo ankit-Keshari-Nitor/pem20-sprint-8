@@ -46,11 +46,16 @@ public class ActivityController {
     @Operation(summary = "Create an Activity Definition")
     @ApiResponses({
             @ApiResponse(responseCode = "201", content = {
-                    @Content(schema = @Schema(implementation = ActivityDefnResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
+                    @Content(schema = @Schema(implementation = ActivityDefnResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityDefnResp.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
             @ApiResponse(responseCode = "400", description = "Exception in creating an Activity Definition", content = {
-                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
-            @ApiResponse(responseCode = "422", content = { @Content(schema = @Schema()) }) })
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "422", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)})
+    })
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Object> createActivityDefinition(@RequestPart(value = "name", required = true) @Size(min = 1, max = 80) @SpecialCharValidator String name,
                                                            @RequestPart(value = "description", required = false) @Size(min = 1, max = 255) String description,
                                                            @RequestPart(value = "file") @MultipartFileValidator MultipartFile file,
@@ -67,11 +72,15 @@ public class ActivityController {
     @Operation(summary = "Retrieve all Activity Definitions", tags = { "Activity Definition" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = ActivityDefnPaginationRes.class), mediaType = "application/json") }),
+                    @Content(schema = @Schema(implementation = ActivityDefnPaginationRes.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityDefnPaginationRes.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
             @ApiResponse(responseCode = "404", description = "There are no Definitions", content = {
-                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = "application/json") }),
-            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = ErrorResponseDto.class),
-                    mediaType = "application/json") }) })
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
+    })
     @GetMapping
     public ResponseEntity<Object> getActivityDefinitionList(@RequestParam(value = "name", required = false) @Size(min = 1, max = 80) String name,
                                                             @RequestParam(value = "description", required = false) @Size(min = 1, max = 255) String description,
@@ -102,10 +111,15 @@ public class ActivityController {
     @Operation(summary = "Get Activity Definition by Key", tags = { "Activity Definition" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ActivityDefnDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ActivityDefnDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
             @ApiResponse(responseCode = "404", description = "Activity Definition not found", content = {
-                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
-            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }) })
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
+    })
     @GetMapping ("/{activityDefnKey}")
     public ResponseEntity<Object> getActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey) throws Exception {
         ActivityDefnListResp activityDefnListResp = activityDefnService.getActivityDefinitionByKey(sponsorContext, activityDefnKey);

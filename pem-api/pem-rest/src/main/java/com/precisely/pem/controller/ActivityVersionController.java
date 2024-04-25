@@ -45,17 +45,22 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @Log4j2
 public class ActivityVersionController {
-    Logger logger = LoggerFactory.getLogger(ActivityVersionController.class);
+
     @Autowired
     ActivityVersionService activityVersionService;
 
     @Operation(summary = "Retrieve all Versions of Activity Definition", tags = { "Activity Definition Version" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = ActivityVersionDefnPaginationResp.class), mediaType = "application/json") }),
+                    @Content(schema = @Schema(implementation = ActivityVersionDefnPaginationResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityVersionDefnPaginationResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
             @ApiResponse(responseCode = "204", description = "There are no Versions for Definitions", content = {
-                    @Content(schema = @Schema(implementation = ErrorResponseDto.class)) }),
-            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = ErrorResponseDto.class)) }) })
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+    })
     @GetMapping()
     public ResponseEntity<Object> getActivityVersionDefinitionList(@PathVariable(value = "activityDefnKey") String activityDefnKey,
                                                                    @RequestParam(value = "isDefault",required = false, defaultValue = "false") boolean isDefault,
@@ -72,10 +77,15 @@ public class ActivityVersionController {
     @Operation(summary = "Get Version of Activity Definition", tags = { "Activity Definition Version" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = ActivityDefnVersionDto.class), mediaType = "application/json") }),
+                    @Content(schema = @Schema(implementation = ActivityDefnVersionDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityDefnVersionDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
             @ApiResponse(responseCode = "204", description = "There are no Versions for Definitions", content = {
-                    @Content(schema = @Schema(implementation = ErrorResponseDto.class)) }),
-            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = ErrorResponseDto.class)) }) })
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+    })
     @GetMapping("/{versionId}")
     public ResponseEntity<Object> getActivityVersionDefinitionById(@PathVariable(value = "activityDefnKey", required = true) String activityDefnKey,
                                                                    @PathVariable(value = "versionId", required = true) Double versionId,
@@ -86,10 +96,15 @@ public class ActivityVersionController {
     @Operation(summary = "Create an Activity Definition Version")
     @ApiResponses({
             @ApiResponse(responseCode = "201", content = {
-                    @Content(schema = @Schema(implementation = ActivityDefnVersionResp.class), mediaType = "application/json") }),
+                    @Content(schema = @Schema(implementation = ActivityDefnVersionResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityDefnVersionResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
             @ApiResponse(responseCode = "400", description = "Exception in creating a version for given Activity Definition", content = {
-                    @Content(schema = @Schema()) }),
-            @ApiResponse(responseCode = "422", content = { @Content(schema = @Schema()) }) })
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "422", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+    })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Object> createActivityDefinition(@PathVariable(value = "sponsorContext")String sponsorContext,
                                                            @PathVariable(value = "activityDefnKey")String activityDefnKey,
@@ -107,10 +122,15 @@ public class ActivityVersionController {
     @Operation(summary = "Mark Activity Definition Version Status as Final", tags = { "Activity Definition Version" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = MarkAsFinalActivityDefinitionVersionResp.class), mediaType = "application/json") }),
+                    @Content(schema = @Schema(implementation = MarkAsFinalActivityDefinitionVersionResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = MarkAsFinalActivityDefinitionVersionResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
             @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
-                    @Content(schema = @Schema()) }),
-            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+    })
     @PostMapping("/{activityDefnVersionKey}/actions/markAsFinal")
     public ResponseEntity<Object> markActivityDefinitionStatusAsFinal(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
         if(log.isEnabled(Level.INFO))

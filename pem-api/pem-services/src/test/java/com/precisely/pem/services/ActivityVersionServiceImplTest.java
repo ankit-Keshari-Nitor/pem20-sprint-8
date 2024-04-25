@@ -88,8 +88,8 @@ class ActivityVersionServiceImplTest {
         ActivityDefnVersion v1 = new ActivityDefnVersion();
         v1.setVersion(1.0);
         v1.setStatus("DRAFT");
-        v1.setEncrypted(false);
-        v1.setDefault(false);
+        v1.setIsEncrypted(false);
+        v1.setIsDefault(false);
         v1.setEncryptionKey("123");
         return v1;
     }
@@ -97,15 +97,15 @@ class ActivityVersionServiceImplTest {
         ActivityDefnVersion v1 = new ActivityDefnVersion();
         v1.setVersion(1.0);
         v1.setStatus("DRAFT");
-        v1.setEncrypted(false);
-        v1.setDefault(false);
+        v1.setIsEncrypted(false);
+        v1.setIsDefault(false);
         v1.setEncryptionKey("123");
 
         ActivityDefnVersion v2 = new ActivityDefnVersion();
         v2.setVersion(2.0);
         v2.setStatus("DRAFT");
-        v2.setEncrypted(false);
-        v2.setDefault(false);
+        v2.setIsEncrypted(false);
+        v2.setIsDefault(false);
         v2.setEncryptionKey("123");
         return Arrays.asList(v1,v2);
     }

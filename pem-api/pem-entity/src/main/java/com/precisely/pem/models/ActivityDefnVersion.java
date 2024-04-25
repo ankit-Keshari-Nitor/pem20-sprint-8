@@ -26,10 +26,10 @@ public class ActivityDefnVersion {
     private String status;
 
     @Column(name="IS_DEFAULT")
-    private boolean isDefault;
+    private Boolean isDefault;
 
     @Column(name="IS_ENCRYPTED")
-    private boolean isEncrypted;
+    private Boolean isEncrypted;
 
     @Column(name="ENCRYPTION_KEY")
     private String encryptionKey;

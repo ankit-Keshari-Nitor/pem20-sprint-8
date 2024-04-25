@@ -108,7 +108,7 @@ class ActivityDefnServiceImplTest {
         activityDefn.setActivityDescription("test");
         activityDefn.setActivityDefnKey(UUID.randomUUID().toString());
         activityDefn.setSponsorKey(UUID.randomUUID().toString());
-        activityDefn.setDeleted(false);
+        activityDefn.setIsDeleted(false);
         activityDefn.setApplication("PEM");
         activityDefn.setCreatedBy("test");
         activityDefn.setCreateTs(LocalDateTime.now());
@@ -124,7 +124,7 @@ class ActivityDefnServiceImplTest {
         activityDefn.setActivityDescription("test");
         activityDefn.setActivityDefnKey(UUID.randomUUID().toString());
         activityDefn.setSponsorKey(UUID.randomUUID().toString());
-        activityDefn.setDeleted(false);
+        activityDefn.setIsDeleted(false);
         activityDefn.setApplication("PEM");
         activityDefn.setCreatedBy("test");
         activityDefn.setCreateTs(LocalDateTime.now());
@@ -137,7 +137,7 @@ class ActivityDefnServiceImplTest {
         activityDefn1.setActivityDescription("test1");
         activityDefn1.setActivityDefnKey(UUID.randomUUID().toString());
         activityDefn1.setSponsorKey(UUID.randomUUID().toString());
-        activityDefn1.setDeleted(false);
+        activityDefn1.setIsDeleted(false);
         activityDefn1.setApplication("PP");
         activityDefn1.setCreatedBy("test1");
         activityDefn1.setCreateTs(LocalDateTime.now());
@@ -164,8 +164,8 @@ class ActivityDefnServiceImplTest {
         activityDefnVersion.setActivityDefnDataKey("test");
         activityDefnVersion.setCreatedBy("test");
         activityDefnVersion.setCreateTs(LocalDateTime.now());
-        activityDefnVersion.setDefault(true);
-        activityDefnVersion.setEncrypted(false);
+        activityDefnVersion.setIsDefault(true);
+        activityDefnVersion.setIsEncrypted(false);
         activityDefnVersion.setEncryptionKey("test");
         activityDefnVersion.setModifiedBy("test");
         activityDefnVersion.setModifyTs(LocalDateTime.now());

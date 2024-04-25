@@ -61,7 +61,7 @@ public class ActivityVersionController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
     })
-    @GetMapping()
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Object> getActivityVersionDefinitionList(@PathVariable(value = "activityDefnKey") String activityDefnKey,
                                                                    @RequestParam(value = "isDefault",required = false, defaultValue = "false") boolean isDefault,
                                                                    @RequestParam(value = "description", required = false) @Size(min = 1, max = 255) String description,
@@ -86,7 +86,7 @@ public class ActivityVersionController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
     })
-    @GetMapping("/{versionId}")
+    @GetMapping(value = "/{versionId}", produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Object> getActivityVersionDefinitionById(@PathVariable(value = "activityDefnKey", required = true) String activityDefnKey,
                                                                    @PathVariable(value = "versionId", required = true) Double versionId,
                                                                    @PathVariable(value = "sponsorContext", required = true)String sponsorContext) throws Exception {
@@ -105,7 +105,7 @@ public class ActivityVersionController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
     })
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Object> createActivityDefinition(@PathVariable(value = "sponsorContext")String sponsorContext,
                                                            @PathVariable(value = "activityDefnKey")String activityDefnKey,
                                                            @RequestPart(value = "file") @MultipartFileValidator MultipartFile file,
@@ -131,7 +131,7 @@ public class ActivityVersionController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
     })
-    @PostMapping("/{activityDefnVersionKey}/actions/markAsFinal")
+    @PostMapping(value = "/{activityDefnVersionKey}/actions/markAsFinal", produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Object> markActivityDefinitionStatusAsFinal(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
         if(log.isEnabled(Level.INFO))
             log.info("Retrieve all Activity Definitions: Starts");

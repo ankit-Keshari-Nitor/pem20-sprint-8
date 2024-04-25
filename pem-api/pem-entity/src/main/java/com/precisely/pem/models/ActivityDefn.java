@@ -43,10 +43,10 @@ public class ActivityDefn {
     private String application;
 
     @Column(name="IS_DELETED")
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @Column(name="MIGRATION_STATUS")
-    private boolean migrationStatus;
+    private Boolean migrationStatus;
 
     @OneToMany(mappedBy = "activityDefn", cascade = CascadeType.ALL)
     private List<ActivityDefnVersion> versions;

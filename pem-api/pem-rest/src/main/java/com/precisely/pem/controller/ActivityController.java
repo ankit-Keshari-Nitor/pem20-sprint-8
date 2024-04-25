@@ -81,7 +81,7 @@ public class ActivityController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
     })
-    @GetMapping
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Object> getActivityDefinitionList(@RequestParam(value = "name", required = false) @Size(min = 1, max = 80) String name,
                                                             @RequestParam(value = "description", required = false) @Size(min = 1, max = 255) String description,
                                                             @RequestParam(value = "status", defaultValue = "DRAFT", required = true) Status status,
@@ -111,8 +111,8 @@ public class ActivityController {
     @Operation(summary = "Get Activity Definition by Key", tags = { "Activity Definition" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = ActivityDefnDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
-                    @Content(schema = @Schema(implementation = ActivityDefnDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
+                    @Content(schema = @Schema(implementation = ActivityDefnListResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityDefnListResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
             @ApiResponse(responseCode = "404", description = "Activity Definition not found", content = {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
@@ -120,7 +120,7 @@ public class ActivityController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
     })
-    @GetMapping ("/{activityDefnKey}")
+    @GetMapping (value = "/{activityDefnKey}", produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Object> getActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey) throws Exception {
         ActivityDefnListResp activityDefnListResp = activityDefnService.getActivityDefinitionByKey(sponsorContext, activityDefnKey);
         Link link = linkTo(methodOn(ActivityController.class).getActivityDefinitionByKey(sponsorContext,activityDefnKey)).withSelfRel();

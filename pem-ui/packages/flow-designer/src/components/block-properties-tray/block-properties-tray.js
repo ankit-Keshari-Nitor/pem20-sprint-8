@@ -2,7 +2,7 @@ import React from 'react';
 
 import './block-properties-tray.scss';
 import { NODE_TYPE } from '../../constants';
-import { ApprovalTaskDefinitionForm } from '../block-definition-forms';
+import { ApprovalTaskDefinitionForm, ApiTaskDefinitionForm, GatewayTaskDefinitionForm, SponsorTaskDefinitionForm} from '../block-definition-forms';
 import { CrossIcon } from './../../icons';
 
 export default function BlockPropertiesTray({ selectedNode, setOpenPropertiesBlock }) {
@@ -10,6 +10,12 @@ export default function BlockPropertiesTray({ selectedNode, setOpenPropertiesBlo
     switch (selectedNode && selectedNode.type) {
       case NODE_TYPE.APPROVAL:
         return <ApprovalTaskDefinitionForm selectedNode={selectedNode} />;
+      case NODE_TYPE.SPONSOR:
+        return <SponsorTaskDefinitionForm selectedNode={selectedNode} />;
+      case NODE_TYPE.API:
+        return <ApiTaskDefinitionForm selectedNode={selectedNode} />;
+      case NODE_TYPE.GATEWAY:
+        return <GatewayTaskDefinitionForm selectedNode={selectedNode} />;
       default:
         return null;
     }

@@ -6,6 +6,7 @@ import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.ActivityDefnResp;
 import com.precisely.pem.dtos.shared.*;
+import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
@@ -59,7 +60,7 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
     public ActivityDefnPaginationRes getAllDefinitionList(String sponsorContext,
                                                        String applicationName, String applicationDescription,
                                                        String status, String application, int pageNo, int pageSize, String sortBy,
-                                                       String sortDir) throws Exception {
+                                                       String sortDir) throws ResourceNotFoundException {
         ActivityDefnPaginationRes vchActivityDefinitionPaginationRes = new ActivityDefnPaginationRes();
         UriComponentsBuilder builder = UriComponentsBuilder.newInstance();
         PaginationDto paginationDto = new PaginationDto();
@@ -78,7 +79,7 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
                 ErrorResponseDto errorDto = new ErrorResponseDto();
                 errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
                 errorDto.setErrorDescription("No Data Found");
-                throw new Exception("No entries found for the combination");
+                throw new ResourceNotFoundException("Data not found for the query param combination.");
         }
         List<ActivityDefn> listOfDefns = defnsPage.getContent();
         List<ActivityDefnListResp> defnContent = new ArrayList<>();

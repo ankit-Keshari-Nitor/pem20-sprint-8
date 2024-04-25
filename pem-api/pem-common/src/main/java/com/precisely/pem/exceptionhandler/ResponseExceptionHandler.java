@@ -22,7 +22,7 @@ public class ResponseExceptionHandler{
     @ExceptionHandler({MultipartException.class, SizeLimitExceededException.class})
     protected ResponseEntity<Object> handleConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1010);
+        errResp.setErrorCode(1002);
         errResp.setErrorDescription("File is either empty or file size exceeds 10MB.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
@@ -30,10 +30,19 @@ public class ResponseExceptionHandler{
     @ExceptionHandler(InvalidFileException.class)
     protected ResponseEntity<Object> handleFormatConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1010);
+        errResp.setErrorCode(1003);
         errResp.setErrorDescription("File is invalid. Please upload xml file");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    protected ResponseEntity<Object> handleResourceConflict(Exception ex, WebRequest request) {
+        ErrorResponseDto errResp = new ErrorResponseDto();
+        errResp.setErrorCode(1004);
+        errResp.setErrorDescription("Data not found for the query param combination.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<Object> handleCharacterConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
@@ -69,7 +78,7 @@ public class ResponseExceptionHandler{
     @ExceptionHandler(HandlerMethodValidationException.class)
     protected ResponseEntity<Object> handleGeneralConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1010);
+        errResp.setErrorCode(1001);
         errResp.setErrorDescription("Validation Failure");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }

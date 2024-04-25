@@ -3,9 +3,7 @@ package com.precisely.pem.services;
 import com.precisely.pem.commonUtil.ApplicationConstants;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.commonUtil.Status;
-import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
-import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
-import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
+import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.ErrorResponseDto;
@@ -75,10 +73,10 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             throw new Exception("No entries found for the combination");
         }
             List<ActivityDefnVersion> listOfDefns = defnsPage.getContent();
-            List<ActivityDefnVersionDto> defnContent = new ArrayList<>();
+            List<ActivityDefnVersionListResp> defnContent = new ArrayList<>();
 
             defnContent = listOfDefns.stream()
-                    .map(p -> mapper.map(p, ActivityDefnVersionDto.class))
+                    .map(p -> mapper.map(p, ActivityDefnVersionListResp.class))
                     .collect(Collectors.toList());
 
             int totalPage = defnsPage.getTotalPages();

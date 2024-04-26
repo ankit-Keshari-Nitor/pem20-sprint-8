@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public interface ActivityVersionService {
     ActivityVersionDefnPaginationResp getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status) throws Exception;
 
-    ActivityDefnVersionDto getVersionDefinitionById(String activityDefnKey, String sponsorContext, Double versionId) throws Exception;
+    ActivityDefnVersionDto getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnKeyVersion) throws Exception;
 
     ActivityDefnVersionResp createActivityDefnVersion(String sponsorContext, String activityDefnKey, MultipartFile file, boolean isEncrypted, String app) throws OnlyOneDraftVersionException, IOException, SQLException;
 

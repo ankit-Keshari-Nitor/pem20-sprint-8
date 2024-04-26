@@ -97,9 +97,9 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     }
 
     @Override
-    public ActivityDefnVersionDto getVersionDefinitionById(String activityDefnKey, String sponsorContext, Double versionId) throws Exception {
+    public ActivityDefnVersionDto getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnKeyVersion) throws Exception {
         String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
-        Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findVersion(activityDefnKey, SponsorKey,versionId));
+        Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findVersion(activityDefnKey, SponsorKey, activityDefnKeyVersion));
         if(result.isEmpty()){
             ErrorResponseDto errorDto = new ErrorResponseDto();
             errorDto.setErrorDescription("No data Found");

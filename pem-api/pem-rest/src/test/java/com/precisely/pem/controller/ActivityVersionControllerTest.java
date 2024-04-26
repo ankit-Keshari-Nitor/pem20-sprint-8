@@ -52,14 +52,14 @@ class ActivityVersionControllerTest {
     @Test
     void testGetActivityDefinitionVersionById() throws Exception {
         ActivityDefnVersionDto resp = new ActivityDefnVersionDto();
-        Mockito.when(activityVersionService.getVersionDefinitionById(Mockito.anyString(),Mockito.anyString(),Mockito.anyDouble()))
+        Mockito.when(activityVersionService.getVersionDefinitionById(Mockito.anyString(),Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(resp);
-        ResponseEntity<Object> output = activityVersionController.getActivityVersionDefinitionById("test",1.0,"test");
+        ResponseEntity<Object> output = activityVersionController.getActivityVersionDefinitionById("test","test","test");
         assertNotNull(output);
     }
 
     @Test
-    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException {
+    void testPostCreateActivityDefnVersion() throws Exception {
         MultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file.".getBytes());
         ActivityDefnVersionResp resp = new ActivityDefnVersionResp();
         Mockito.when(activityVersionService.createActivityDefnVersion(Mockito.anyString(),Mockito.anyString(),Mockito.any(MultipartFile.class),Mockito.anyBoolean(),Mockito.anyString()))

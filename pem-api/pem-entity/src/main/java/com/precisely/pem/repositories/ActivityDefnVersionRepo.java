@@ -31,6 +31,6 @@ public interface ActivityDefnVersionRepo extends JpaRepository<ActivityDefnVersi
             "ON a.activity_defn_key = b.activity_defn_key WHERE " +
             "a.activity_defn_key =:activityDefnKey " +
             "AND b.sponsor_key=:context " +
-            "AND a.version=:versionId")
-    ActivityDefnVersion findVersion(@Param("activityDefnKey")String activityDefnKey,@Param("context") String context,@Param("versionId") Double versionId);
+            "AND a.activity_defn_key_version=:activityDefnKeyVersion")
+    ActivityDefnVersion findVersion(@Param("activityDefnKey")String activityDefnKey,@Param("context") String context,@Param("activityDefnKeyVersion") String activityDefnKeyVersion);
 }

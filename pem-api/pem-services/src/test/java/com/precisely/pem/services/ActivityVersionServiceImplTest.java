@@ -113,9 +113,9 @@ class ActivityVersionServiceImplTest {
     @Test
     void testGetAllVersionDefinitionById() throws Exception {
         Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString())).thenReturn("cashbank");
-        Mockito.when(activityDefnVersionRepo.findVersion(Mockito.anyString(), Mockito.anyString(),Mockito.anyDouble()))
+        Mockito.when(activityDefnVersionRepo.findVersion(Mockito.anyString(), Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(getVersion());
-        ActivityDefnVersionDto dto = activityVersionService.getVersionDefinitionById("test", "test", 1.0);
+        ActivityDefnVersionDto dto = activityVersionService.getVersionDefinitionById("test", "test", "test");
         assertNotNull(dto);
     }
     @Test

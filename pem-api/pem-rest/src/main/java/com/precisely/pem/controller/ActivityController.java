@@ -62,7 +62,7 @@ public class ActivityController {
                                                            @RequestParam(value = "application", required = true) Application app,
                                                            @PathVariable(value = "sponsorContext", required = true) String sponsorContext) throws Exception {
         ActivityDefnResp activityDefnResp = activityDefnService.createActivityDefinition(sponsorContext, name, description, file, app.getApp());
-        Link link = linkTo(methodOn(ActivityController.class).createActivityDefinition(name, description, file, app, sponsorContext)).withSelfRel();
+        Link link = linkTo(methodOn(ActivityController.class).getActivityDefinitionByKey(sponsorContext, activityDefnResp.getActivityDefnKey())).withSelfRel();
         activityDefnResp.setLocation(link.getHref());
         HttpHeaders headers = new HttpHeaders();
         headers.set("location", activityDefnResp.getLocation());

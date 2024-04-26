@@ -5,6 +5,7 @@ import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
+import com.precisely.pem.dtos.responses.ActivityDefnVersionListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
@@ -77,8 +78,8 @@ public class ActivityVersionController {
     @Operation(summary = "Get Version of Activity Definition", tags = { "Activity Definition Version" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = ActivityDefnVersionDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
-                    @Content(schema = @Schema(implementation = ActivityDefnVersionDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+                    @Content(schema = @Schema(implementation = ActivityDefnVersionListResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityDefnVersionListResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
             @ApiResponse(responseCode = "204", description = "There are no Versions for Definitions", content = {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
@@ -86,11 +87,11 @@ public class ActivityVersionController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
     })
-    @GetMapping(value = "/{versionId}", produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(value = "/{activityDefnVersionKey}", produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Object> getActivityVersionDefinitionById(@PathVariable(value = "activityDefnKey", required = true) String activityDefnKey,
-                                                                   @PathVariable(value = "versionId", required = true) Double versionId,
+                                                                   @PathVariable(value = "activityDefnVersionKey", required = true) String activityDefnKeyVersion,
                                                                    @PathVariable(value = "sponsorContext", required = true)String sponsorContext) throws Exception {
-        return new ResponseEntity<>(activityVersionService.getVersionDefinitionById(activityDefnKey,sponsorContext,versionId), HttpStatus.OK);
+        return new ResponseEntity<>(activityVersionService.getVersionDefinitionById(activityDefnKey,sponsorContext,activityDefnKeyVersion), HttpStatus.OK);
     }
 
     @Operation(summary = "Create an Activity Definition Version")
@@ -110,9 +111,9 @@ public class ActivityVersionController {
                                                            @PathVariable(value = "activityDefnKey")String activityDefnKey,
                                                            @RequestPart(value = "file") @MultipartFileValidator MultipartFile file,
                                                            @RequestParam(value = "isEncrypted") boolean isEncrypted,
-                                                           @RequestParam(value = "application") Application app) throws SQLException, IOException, OnlyOneDraftVersionException {
+                                                           @RequestParam(value = "application") Application app) throws Exception {
         ActivityDefnVersionResp activityDefnVersionResp = activityVersionService.createActivityDefnVersion(sponsorContext, activityDefnKey, file, isEncrypted, app.getApp());
-        Link link = linkTo(methodOn(ActivityVersionController.class).createActivityDefinition(sponsorContext, activityDefnKey, file, isEncrypted, app)).withSelfRel();
+        Link link = linkTo(methodOn(ActivityVersionController.class).getActivityVersionDefinitionById(activityDefnKey, activityDefnVersionResp.getActivityDefnVersionKey(), sponsorContext)).withSelfRel();
         activityDefnVersionResp.setLocation(link.getHref());
         HttpHeaders headers = new HttpHeaders();
         headers.set("location", activityDefnVersionResp.getLocation());

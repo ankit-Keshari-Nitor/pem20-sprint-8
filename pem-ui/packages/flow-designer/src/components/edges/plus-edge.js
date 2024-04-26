@@ -1,11 +1,9 @@
 import React from 'react';
-import { BaseEdge, EdgeLabelRenderer, getBezierPath, getMarkerEnd, useReactFlow } from 'reactflow';
-import './cross-edge.css';
+import { BaseEdge, EdgeLabelRenderer, getBezierPath, getMarkerEnd } from 'reactflow';
 import EdgeAddButton from './buttons/edge-add-button';
 
 function PlusEdge(props) {
   const { sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = { stroke: '#000' }, arrowHeadType, markerEndId } = props;
-  const { setEdges } = useReactFlow();
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,

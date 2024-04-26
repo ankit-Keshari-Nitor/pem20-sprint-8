@@ -19,13 +19,7 @@ export default function TaskNode(nodeConfig) {
       className="task-node-container"
       style={{ borderColor: borderColor, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
     >
-      <Handle
-        id="left"
-        type="target"
-        position={Position.Left}
-        style={{ background: borderColor }}
-        isConnectable={nodeConfig?.isConnectable}
-      />
+      <Handle id="left" type="target" position={Position.Left} style={{ background: borderColor }} isConnectable={nodeConfig?.isConnectable} />
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <label style={{ color: borderColor }}>{editableProps?.name}</label>
         <label>{taskName}</label>
@@ -51,13 +45,7 @@ export default function TaskNode(nodeConfig) {
           </PopoverContent>
         </Popover>
       </div>
-      <Handle
-        id="right"
-        type="source"
-        position={Position.Right}
-        style={{ background: borderColor }}
-        isConnectable={nodeConfig?.isConnectable}
-      />
+      <Handle id="right" type="source" position={Position.Right} style={{ background: borderColor }} isConnectable={nodeConfig?.isConnectable} />
     </div>
   );
 }

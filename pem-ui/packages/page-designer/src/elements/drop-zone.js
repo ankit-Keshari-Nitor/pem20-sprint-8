@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { useDrop } from 'react-dnd';
 import { COMPONENT, SIDEBAR_ITEM, ROW, COLUMN } from '../constants/constants';
+import { ColumnPlusIcon } from '../icon';
 
 const ACCEPTS = [SIDEBAR_ITEM, COMPONENT, ROW, COLUMN];
 
@@ -61,7 +62,11 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
   });
 
   const isActive = isOver && canDrop;
-  return <div className={classNames('dropZone', { active: isActive, isLast }, className)} ref={drop} />;
+  return (
+    <div className={classNames('dropZone', { active: isActive, isLast }, className)} ref={drop}>
+      {className === 'plus-icon' && <ColumnPlusIcon />}
+    </div>
+  );
 };
 
 export default DropZone;

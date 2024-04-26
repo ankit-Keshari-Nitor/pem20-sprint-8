@@ -6,10 +6,11 @@ import './field-renderer.scss';
 import { COMPONENT } from '../../../constants/constants';
 import { Column, Grid } from '@carbon/react';
 
-const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onFieldDelete, onFieldSelect, previewMode, onChangeHandle }) => {
+const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onFieldDelete, onFieldSelect, previewMode, onChangeHandle, colSize = 16 }) => {
   let compent_type;
   let dragItem;
   var isNestedBlock = false;
+  const NewcolSize = Number(colSize) - 2;
   if (data.maintype) {
     compent_type = data.maintype;
     isNestedBlock = true;
@@ -59,7 +60,7 @@ const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onF
               <Draggable />
             </span>
           </Column>
-          <Column lg={14}> {formFieldData}</Column>
+          <Column lg={NewcolSize <= 0 ? 16 : NewcolSize}> {formFieldData}</Column>
           <Column lg={1}>
             <span className="delete-icon">
               <TrashCan onClick={(e) => onFieldDelete(e, path)} />

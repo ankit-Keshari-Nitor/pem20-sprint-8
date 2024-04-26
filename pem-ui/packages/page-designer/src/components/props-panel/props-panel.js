@@ -86,11 +86,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                     value={componentType}
                   >
                     {componentTypes.map((item, index) => {
-                      if (item.component.type === 'group' || item.component.type === 'accordion' || item.component.type === 'tab') {
-                        return null;
-                      } else {
-                        return <SelectItem key={index} value={item.component.type} text={item.component.type} />;
-                      }
+                      return <SelectItem key={index} value={item.component.type} text={item.component.type} />;
                     })}
                   </Select>
                 )}

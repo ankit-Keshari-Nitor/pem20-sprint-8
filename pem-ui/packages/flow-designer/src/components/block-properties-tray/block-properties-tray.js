@@ -4,21 +4,21 @@ import { NODE_TYPE } from '../../constants';
 import {
   ApiTaskDefinitionForm,
   ApprovalTaskDefinitionForm,
-  GatewayTaskDefinitionForm,
+  AttributeTaskDefinitionForm,
   SponsorTaskDefinitionForm} from '../block-definition-forms';
 import { CrossIcon } from './../../icons';
 
 export default function BlockPropertiesTray({ selectedNode, setOpenPropertiesBlock }) {
   const getForm = (selectedNode) => {
     switch (selectedNode && selectedNode.type) {
-      case NODE_TYPE.APPROVAL:
-        return <ApprovalTaskDefinitionForm selectedNode={selectedNode} />;
-      case NODE_TYPE.SPONSOR:
-        return <SponsorTaskDefinitionForm selectedNode={selectedNode} />;
-      case NODE_TYPE.GATEWAY:
-        return <GatewayTaskDefinitionForm selectedNode={selectedNode} />;
       case NODE_TYPE.API:
         return <ApiTaskDefinitionForm selectedNode={selectedNode} />;
+      case NODE_TYPE.APPROVAL:
+        return <ApprovalTaskDefinitionForm selectedNode={selectedNode} />;
+      case NODE_TYPE.ATTRIBUTE:
+        return <AttributeTaskDefinitionForm selectedNode={selectedNode} />;
+      case NODE_TYPE.SPONSOR:
+        return <SponsorTaskDefinitionForm selectedNode={selectedNode} />;
       default:
         return null;
     }

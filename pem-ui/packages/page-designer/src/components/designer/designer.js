@@ -100,7 +100,7 @@ export default function Designer({ componentMapper }) {
       let fieldData = findChildComponentById(layout, componentDetail.id);
 
       filedTypeConfig?.editableProps?.Basic.map((basicEditPops) => {
-        if (fieldData.component[basicEditPops.propsName]) {
+        if (fieldData?.component[basicEditPops?.propsName]) {
           return (basicEditPops.value = fieldData.component[basicEditPops?.propsName]);
         } else {
           return (basicEditPops.value = '');
@@ -108,7 +108,7 @@ export default function Designer({ componentMapper }) {
       });
 
       filedTypeConfig?.editableProps?.Condition?.map((conditionEditPops) => {
-        if (fieldData.component[conditionEditPops.propsName]) {
+        if (fieldData?.component[conditionEditPops?.propsName]) {
           return (conditionEditPops.value = fieldData.component[conditionEditPops?.propsName]);
         } else {
           return (conditionEditPops.value = false);
@@ -116,7 +116,7 @@ export default function Designer({ componentMapper }) {
       });
 
       filedTypeConfig?.advanceProps.map((advancePops) => {
-        if (fieldData.component[advancePops.propsName]) {
+        if (fieldData?.component[advancePops?.propsName]) {
           return (advancePops.value = fieldData.component[advancePops?.propsName]);
         } else {
           return (advancePops.value = { value: '', message: '' });
@@ -186,9 +186,9 @@ export default function Designer({ componentMapper }) {
     setDeletedFieldPath(path);
     const splitDropZonePath = path.split('-');
     const oldLayout = handleRemoveItemFromLayout(layout, splitDropZonePath);
-    const updatedLayout = addChildToChildren(oldLayout, splitDropZonePath, { id: uuid(), type: COMPONENT, component: { ...newItem.component } });
+    const updatedLayout = handleMoveSidebarComponentIntoParent(oldLayout, splitDropZonePath, { id: uuid(), type: COMPONENT, component: { ...newItem.component } });
     setLayout(updatedLayout);
-    //setSelectedFiledProps();
+    onFieldSelect(e, { id: uuid(), type: COMPONENT, component: { ...newItem.component } }, path);
   };
 
   const renderRow = (row, currentPath, renderRow, previewMode, onChangeHandle) => {

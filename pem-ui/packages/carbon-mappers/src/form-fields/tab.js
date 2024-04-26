@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE } from '../constant';
 import { NewTab } from '@carbon/icons-react';
 import TabCanvas from '../../../page-designer/src/components/canvas/tab-canvas';
 

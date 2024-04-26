@@ -10,7 +10,7 @@ const EdgeAddButton = (props) => {
   console.log('props', props);
   const [openContextMenu, setOpenContextMenu] = useState(false);
 
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const [labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
     sourcePosition,

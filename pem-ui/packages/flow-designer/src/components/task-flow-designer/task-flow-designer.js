@@ -6,7 +6,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import 'reactflow/dist/style.css';
 import './task-flow-designer.scss';
 
-import BlockTray from '../blocks-tray';
+import BlockTray from '../block-tray';
 import { CATEGORY_TYPES } from '../../constants';
 import BlockPropertiesTray from '../block-properties-tray/block-properties-tray';
 
@@ -17,7 +17,6 @@ const TaskFlowDesigner = ({
   taskFlowWrapper,
   taskNodes,
   taskEdges,
-  elements,
   onTaskNodesChange,
   onTaskEdgesChange,
   setTaskFlowInstance,

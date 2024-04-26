@@ -1,3 +1,3 @@
+import WorkFlowDesigner from './components/workflow-designer/workflow-designer';
 import './index.css';
-import WorkFlowDesigner from './components/work-flow-designer';
 export default WorkFlowDesigner;

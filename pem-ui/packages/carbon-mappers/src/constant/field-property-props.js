@@ -1,27 +1,3 @@
-// export const editableProps = {
-//   Basic: [
-//     {
-//       propsName: 'labelText',
-//       label: 'Label',
-//       value: 'Label Text',
-//       type: 'TextInput'
-//     }
-//   ],
-//   Condition: [
-//     {
-//       propsName: 'disabled',
-//       label: 'Disabled',
-//       value: false,
-//       type: 'Toggle'
-//     }
-//     // {
-//     //   propsName: 'isRequired',
-//     //   label: 'IsRequired',
-//     //   value: false
-//     // }
-//   ]
-// };
-
 export const labelText = {
   propsName: 'labelText',
   label: 'Label',
@@ -39,7 +15,10 @@ export const isDisabled = {
 export const isRequired = {
   propsName: 'isRequired',
   label: 'IsRequired',
-  value: false,
+  value: {
+    value: false,
+    message: ''
+  },
   type: 'Toggle'
 };
 
@@ -67,13 +46,19 @@ export const readOnly = {
 export const minProps = {
   propsName: 'min',
   label: 'Min Value',
-  value: '',
+  value: {
+    value: '',
+    message: ''
+  },
   type: 'TextInput'
 };
 
 export const maxProps = {
   propsName: 'max',
   label: 'Max Value',
-  value: '',
+  value: {
+    value: '',
+    message: ''
+  },
   type: 'TextInput'
 };

@@ -3,11 +3,14 @@ import { Toggle, TextInput, Button, Select, SelectItem, Tabs, TabList, Tab, TabP
 
 import './props-panel.scss';
 import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE } from '../../constants/constants';
+import { collectPaletteEntries } from '../../utils/helpers';
 
-export default function PropsPanel({ layout, selectedFiledProps, handleSchemaChanges, columnSizeCustomization, onFieldDelete }) {
+export default function PropsPanel({ layout, selectedFiledProps, handleSchemaChanges, columnSizeCustomization, onFieldDelete, componentMapper, replaceComponet }) {
   const [editableProps, setEditableProps] = React.useState({});
   const [advanceProps, setAdvanceProps] = React.useState([]);
   const [componentStyle, setComponentStyle] = React.useState([]);
+  const [componentType, setComponentType] = React.useState();
+  const [componentTypes, setComponentTypes] = React.useState([]);
   const [tabSubTitle, setTabSubTitle] = React.useState();
   const items = [
     { text: '1' },
@@ -32,7 +35,9 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setAdvanceProps(selectedFiledProps?.component?.advanceProps);
     setComponentStyle(selectedFiledProps?.component?.style);
     setTabSubTitle(selectedFiledProps?.component?.tabTitle);
-  }, [selectedFiledProps]);
+    setComponentType(selectedFiledProps.component.type);
+    setComponentTypes(collectPaletteEntries(componentMapper));
+  }, [selectedFiledProps, componentMapper]);
 
   const handleChange = (e) => {
     columnSizeCustomization(e.target.value, selectedFiledProps.currentPathDetail);
@@ -53,6 +58,11 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     }
   };
 
+  const handleComponentTypeChange = (e) => {
+    const newComponent = componentTypes.filter((items) => items.component.type === e.target.value)[0];
+    replaceComponet(e, selectedFiledProps.currentPathDetail, newComponent);
+    setComponentType(e.target.value);
+  };
   return (
     <div className="right-palette-container">
       {selectedFiledProps && (
@@ -65,6 +75,21 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
             </TabList>
             <TabPanels>
               <TabPanel className="tab-panel">
+                {/* Component Types Select */}
+                {componentStyle === undefined && tabSubTitle === undefined && (
+                  <Select
+                    className="component-types"
+                    id={String(selectedFiledProps.id)}
+                    labelText="Component Types"
+                    onChange={handleComponentTypeChange}
+                    defaultValue={componentType}
+                    value={componentType}
+                  >
+                    {componentTypes.map((item, index) => {
+                      return <SelectItem key={index} value={item.component.type} text={item.component.type} />;
+                    })}
+                  </Select>
+                )}
                 {/* To Show the Add Tab Button */}
                 {selectedFiledProps?.type === TAB && (
                   <Button
@@ -110,11 +135,11 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       <li>
                                         <Toggle
                                           key={idx}
-                                          id={'toggle-' + String(idx) + '-' + selectedFiledProps?.id}
+                                          id={'toggle-' + key + '-' + String(idx) + '-' + selectedFiledProps?.id}
                                           className="right-palette-form-item "
                                           labelText={item.label}
-                                          defaultToggled={item.value}
-                                          toggled={item.value}
+                                          defaultToggled={Boolean(item.value)}
+                                          toggled={Boolean(item.value)}
                                           onClick={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, !item.value, selectedFiledProps?.currentPathDetail)}
                                           hideLabel
                                         />
@@ -178,21 +203,84 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                   <>
                     {advanceProps.map((advncProps, idx) => {
                       return (
-                        <TextInput
-                          key={idx}
-                          id={String(idx)}
-                          className="right-palette-form-item"
-                          labelText={advncProps.label}
-                          value={advncProps.value}
-                          onChange={(e) => {
-                            if (isNaN(e.target.value)) {
-                              e.preventDefault();
-                              handleSchemaChanges(selectedFiledProps?.id, 'advance', advncProps.propsName, e.target.value, selectedFiledProps?.currentPathDetail);
-                            } else {
-                              handleSchemaChanges(selectedFiledProps?.id, 'advance', advncProps.propsName, e.target.value, selectedFiledProps?.currentPathDetail);
-                            }
-                          }}
-                        />
+                        <>
+                          {advncProps.type === 'TextInput' && (
+                            <TextInput
+                              key={idx}
+                              id={String(idx)}
+                              className="right-palette-form-item"
+                              labelText={advncProps.label}
+                              value={advncProps.value.value}
+                              onChange={(e) => {
+                                if (isNaN(e.target.value)) {
+                                  e.preventDefault();
+                                  handleSchemaChanges(
+                                    selectedFiledProps?.id,
+                                    'advance',
+                                    advncProps.propsName,
+                                    { value: e.target.value, message: advncProps.value.message },
+                                    selectedFiledProps?.currentPathDetail
+                                  );
+                                } else {
+                                  handleSchemaChanges(
+                                    selectedFiledProps?.id,
+                                    'advance',
+                                    advncProps.propsName,
+                                    { value: e.target.value, message: advncProps.value.message },
+                                    selectedFiledProps?.currentPathDetail
+                                  );
+                                }
+                              }}
+                            />
+                          )}
+                          {advncProps.type === 'Toggle' && (
+                            <Toggle
+                              key={idx}
+                              id={'toggle-' + String(idx) + '-' + selectedFiledProps?.id}
+                              className="right-palette-form-item "
+                              labelText={advncProps.label}
+                              defaultToggled={Boolean(advncProps.value.value)}
+                              toggled={Boolean(advncProps.value.value)}
+                              onClick={(e) =>
+                                handleSchemaChanges(
+                                  selectedFiledProps?.id,
+                                  'advance',
+                                  advncProps.propsName,
+                                  { value: !advncProps.value.value, message: advncProps.value.message },
+                                  selectedFiledProps?.currentPathDetail
+                                )
+                              }
+                              hideLabel
+                            />
+                          )}
+                          <TextInput
+                            key={`${idx}-'message'`}
+                            id={String(idx)}
+                            className="right-palette-form-item"
+                            labelText={'Message'}
+                            value={advncProps.value.message}
+                            onChange={(e) => {
+                              if (isNaN(e.target.value)) {
+                                e.preventDefault();
+                                handleSchemaChanges(
+                                  selectedFiledProps?.id,
+                                  'advance',
+                                  advncProps.propsName,
+                                  { value: advncProps.value.value, message: e.target.value },
+                                  selectedFiledProps?.currentPathDetail
+                                );
+                              } else {
+                                handleSchemaChanges(
+                                  selectedFiledProps?.id,
+                                  'advance',
+                                  advncProps.propsName,
+                                  { value: advncProps.value.value, messag: e.target.value },
+                                  selectedFiledProps?.currentPathDetail
+                                );
+                              }
+                            }}
+                          />
+                        </>
                       );
                     })}
                   </>
@@ -204,7 +292,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                       <>
                         {editableProps[key] && editableProps[key].length > 0 && (
                           <>
-                            {editableProps[key].map((item, idx) => {
+                            {/* {editableProps[key].map((item, idx) => {
                               return (
                                 key === 'Condition' && (
                                   <ul key={idx}>
@@ -223,7 +311,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                   </ul>
                                 )
                               );
-                            })}
+                            })} */}
                           </>
                         )}
                       </>

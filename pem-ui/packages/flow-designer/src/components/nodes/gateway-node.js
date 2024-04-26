@@ -17,39 +17,11 @@ export default function GatewayNode(nodeConfig) {
       onDoubleClick={onDoubleClick}
       className="gateway-node-container"
     >
-      <Handle
-        id="left"
-        type="target"
-        position={Position.Left}
-        style={{ background: '#565656' }}
-        onConnect={(params) => console.log('Left handle onConnect', params)}
-        isConnectable={nodeConfig?.isConnectable}
-      />
+      <Handle id="left" type="target" position={Position.Left} style={{ background: '#565656' }} isConnectable={nodeConfig?.isConnectable} />
       <GatewayNodeIcon />
-      <Handle
-        id="top"
-        type="source"
-        position={Position.Top}
-        style={{ background: '#565656' }}
-        onConnect={(params) => console.log('Right handle onConnect', params)}
-        isConnectable={nodeConfig?.isConnectable}
-      />
-      <Handle
-        id="bottom"
-        type="source"
-        position={Position.Bottom}
-        style={{ background: '#565656' }}
-        onConnect={(params) => console.log('Right handle onConnect', params)}
-        isConnectable={nodeConfig?.isConnectable}
-      />
-      <Handle
-        id="right"
-        type="source"
-        position={Position.Right}
-        style={{ background: '#565656' }}
-        onConnect={(params) => console.log('Right handle onConnect', params)}
-        isConnectable={nodeConfig?.isConnectable}
-      />
+      <Handle id="top" type="source" position={Position.Top} style={{ background: '#565656' }} isConnectable={nodeConfig?.isConnectable} />
+      <Handle id="bottom" type="source" position={Position.Bottom} style={{ background: '#565656' }} isConnectable={nodeConfig?.isConnectable} />
+      <Handle id="right" type="source" position={Position.Right} style={{ background: '#565656' }} isConnectable={nodeConfig?.isConnectable} />
     </div>
   );
 }

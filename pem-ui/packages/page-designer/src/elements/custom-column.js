@@ -4,7 +4,7 @@ import { COLUMN } from '../constants/constants';
 import DropZone from './drop-zone';
 import FieldRenderer from '../components/canvas/field-renderer/field-renderer';
 
-const Column = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete, previewMode, onChangeHandle }) => {
+const Column = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete, previewMode, onChangeHandle, colSize }) => {
   const ref = useRef(null);
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -40,6 +40,7 @@ const Column = ({ data, handleDrop, path, componentMapper, onFieldSelect, render
           onFieldSelect={onFieldSelect}
           previewMode={previewMode}
           onChangeHandle={onChangeHandle}
+          colSize={colSize}
         />
       </div>
     );
@@ -99,6 +100,7 @@ const Column = ({ data, handleDrop, path, componentMapper, onFieldSelect, render
               }}
               onDrop={handleDrop}
               isLast
+              className={data.children.length === 0 && 'plus-icon'}
             />
           )}
         </>

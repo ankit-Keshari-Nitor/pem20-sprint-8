@@ -1,8 +1,9 @@
 import React from 'react';
 import { Form, Link, Select, SelectItem, TextArea, FileUploader, TextInput, Checkbox, Button, Tabs, TabList, Tab, TabPanels, TabPanel, Column, Grid } from '@carbon/react';
 import './api-task-definition.scss';
-import ExitValidation from '../exit-validation';
-import { ElippsisIcon } from '../../icons';
+import ExitValidationFrom from '../../exit-validation-form';
+import { ElippsisIcon } from '../../../icons';
+import ApiDefineForm from './api-define-form';
 
 export default function ApiTaskDefinitionForm({ selectedNode }) {
   return (
@@ -16,28 +17,7 @@ export default function ApiTaskDefinitionForm({ selectedNode }) {
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <Form aria-label="approval form">
-              <Grid>
-                <Column className="col-margin" lg={16}>
-                  <TextInput id="one" labelText="Name" />
-                </Column>
-                <Column className="col-margin" lg={16}>
-                  <TextArea id="one" labelText="Description" />
-                </Column>
-              </Grid>
-              <Grid className="buttons-wrapper-grid">
-                <Column lg={8}>
-                  <Button type="button" kind="secondary" className="cancel-button">
-                    Cancel
-                  </Button>
-                </Column>
-                <Column lg={8}>
-                  <Button type="submit" kind="secondary" className="save-button">
-                    Save
-                  </Button>
-                </Column>
-              </Grid>
-            </Form>
+            <ApiDefineForm id={'api-define-from'} />
           </TabPanel>
           {/* Properties Form */}
           <TabPanel>
@@ -49,14 +29,18 @@ export default function ApiTaskDefinitionForm({ selectedNode }) {
                     <SelectItem value="option-1" text="Option 1" />
                     <SelectItem value="option-2" text="Option 2" />
                   </Select>
-                  <Button size="md" kind="secondary" hasIconOnly renderIcon={ElippsisIcon}>.</Button>
+                  <Button size="md" kind="secondary" hasIconOnly renderIcon={ElippsisIcon}>
+                    .
+                  </Button>
                 </Column>
                 <Column className="col-margin" lg={8}>
                   <Checkbox labelText="Host Prefix" id="checkbox-label-1" />
                 </Column>
                 <Column className="col-margin" lg={16}>
                   <TextInput id="one" labelText="URL" placeholder="Enter URL" />
-                  <Button size="md" kind="secondary" hasIconOnly renderIcon={ElippsisIcon}>.</Button>
+                  <Button size="md" kind="secondary" hasIconOnly renderIcon={ElippsisIcon}>
+                    .
+                  </Button>
                 </Column>
                 <Column className="col-margin" lg={8}>
                   <Select id={`select-1`} labelText="Request Method">
@@ -121,7 +105,7 @@ export default function ApiTaskDefinitionForm({ selectedNode }) {
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>
-            <ExitValidation />
+            <ExitValidationFrom />
           </TabPanel>
         </TabPanels>
       </Tabs>

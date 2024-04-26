@@ -41,6 +41,7 @@ const Row = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow
           onFieldDelete={onFieldDelete}
           previewMode={previewMode}
           onChangeHandle={onChangeHandle}
+          colSize={column.customsize}
         />
       </Carboncolumn>
     );

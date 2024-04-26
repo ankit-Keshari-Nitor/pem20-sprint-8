@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { ROW, COLUMN, COMPONENT, GROUP, TAB, ACCORDION, CUSTOM_SIZE, SUBTAB, DEFAULTTITLE } from '../constants/constants';
+import { ROW, COLUMN, COMPONENT, GROUP, TAB, ACCORDION, CUSTOM_SIZE, SUBTAB, DEFAULTTITLE, SIDEBAR_ITEM } from '../constants/constants';
 
 // a little function to help us with reordering the result
 export const reorder = (list, startIndex, endIndex) => {
@@ -332,6 +332,7 @@ export const handleMoveSidebarComponentIntoParent = (layout, splitDropZonePath, 
         id: uuid(),
         type: item.component.type,
         maintype: item.component.type,
+        component: item.component,
         children: [
           {
             id: uuid(),
@@ -340,7 +341,6 @@ export const handleMoveSidebarComponentIntoParent = (layout, splitDropZonePath, 
             children: []
           }
         ]
-        //component: item.component
       };
     } else {
       newLayoutStructure = {
@@ -452,4 +452,48 @@ export const findChildComponentById = (array, id) => {
       if (innerResult) return innerResult;
     }
   }
+};
+
+export const formValidation = (formLayout) => {
+  formLayout.forEach((fieldItem, index) => {
+    switch (fieldItem.type) {
+      case COMPONENT: {
+        fieldItem.component.invalid = false;
+        if (fieldItem.component?.isRequired?.value && (fieldItem.component?.value === undefined || fieldItem.component?.value.length <= 0)) {
+          fieldItem.component.invalid = true;
+          fieldItem.component.invalidText = fieldItem.component?.isRequired.message;
+        }
+        if (fieldItem.component?.min?.value && fieldItem.component?.value !== undefined && fieldItem.component?.value.length < Number(fieldItem.component?.min?.value.trim())) {
+          fieldItem.component.invalid = true;
+          fieldItem.component.invalidText = fieldItem.component?.min.message;
+        }
+        if (fieldItem.component?.max?.value && fieldItem.component?.value !== undefined && fieldItem.component?.value.length > Number(fieldItem.component?.max?.value.trim())) {
+          fieldItem.component.invalid = true;
+          fieldItem.component.invalidText = fieldItem.component?.max.message;
+        }
+        break;
+      }
+      default: {
+        formValidation(formLayout[index]?.children);
+      }
+    }
+  });
+  return formLayout;
+};
+
+export const collectPaletteEntries = (formFields) => {
+  return Object.entries(formFields)
+    .map(([type, formField]) => {
+      const { config: fieldConfig } = formField;
+      return {
+        type: SIDEBAR_ITEM,
+        component: {
+          type: type,
+          label: fieldConfig.label,
+          group: fieldConfig.group,
+          icon: fieldConfig.icon
+        }
+      };
+    })
+    .filter(({ type }) => type !== 'default');
 };

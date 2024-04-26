@@ -17,7 +17,7 @@ import {
   findChildComponentById,
   indexForChild
 } from '../../utils/helpers';
-import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE } from '../../constants/constants';
+import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE, TAB } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Grid, Modal, Column } from '@carbon/react';
 import FormPreview from '../preview-mode';
@@ -91,7 +91,7 @@ export default function Designer({ componentMapper }) {
   const onFieldSelect = (e, componentDetail, currentPathDetail) => {
     e.stopPropagation();
     let filedTypeConfig;
-    if (componentDetail.type === COMPONENT || componentDetail.type === ACCORDION) {
+    if (componentDetail.type === COMPONENT || componentDetail.type === ACCORDION || componentDetail.type === TAB) {
       if (componentDetail.maintype) {
         filedTypeConfig = componentMapper[componentDetail.maintype].config;
       } else {
@@ -100,7 +100,7 @@ export default function Designer({ componentMapper }) {
       let fieldData = findChildComponentById(layout, componentDetail.id);
 
       filedTypeConfig?.editableProps?.Basic.map((basicEditPops) => {
-        if (fieldData.component[basicEditPops.propsName]) {
+        if (fieldData?.component[basicEditPops?.propsName]) {
           return (basicEditPops.value = fieldData.component[basicEditPops?.propsName]);
         } else {
           return (basicEditPops.value = '');
@@ -108,7 +108,7 @@ export default function Designer({ componentMapper }) {
       });
 
       filedTypeConfig?.editableProps?.Condition?.map((conditionEditPops) => {
-        if (fieldData.component[conditionEditPops.propsName]) {
+        if (fieldData?.component[conditionEditPops?.propsName]) {
           return (conditionEditPops.value = fieldData.component[conditionEditPops?.propsName]);
         } else {
           return (conditionEditPops.value = false);
@@ -116,10 +116,10 @@ export default function Designer({ componentMapper }) {
       });
 
       filedTypeConfig?.advanceProps.map((advancePops) => {
-        if (fieldData.component[advancePops.propsName]) {
+        if (fieldData?.component[advancePops?.propsName]) {
           return (advancePops.value = fieldData.component[advancePops?.propsName]);
         } else {
-          return (advancePops.value = '');
+          return (advancePops.value = { value: '', message: '' });
         }
       });
     } else if (componentDetail.type === COLUMN) {
@@ -138,7 +138,6 @@ export default function Designer({ componentMapper }) {
 
   const handleSchemaChanges = (id, key, propsName, newValue, currentPathDetail) => {
     const componentPosition = currentPathDetail.split('-');
-    // console.log('componentPosition', componentPosition, currentPathDetail);
     if (key === SUBTAB) {
       const position = indexForChild(layout, componentPosition, 0);
       componentPosition.push(position);
@@ -182,6 +181,16 @@ export default function Designer({ componentMapper }) {
     setSelectedFiledProps();
   };
 
+  const replaceComponet = (e, path, newItem) => {
+    e.stopPropagation();
+    setDeletedFieldPath(path);
+    const splitDropZonePath = path.split('-');
+    const oldLayout = handleRemoveItemFromLayout(layout, splitDropZonePath);
+    const updatedLayout = handleMoveSidebarComponentIntoParent(oldLayout, splitDropZonePath, { id: uuid(), type: COMPONENT, component: { ...newItem.component } });
+    setLayout(updatedLayout);
+    onFieldSelect(e, { id: uuid(), type: COMPONENT, component: { ...newItem.component } }, path);
+  };
+
   const renderRow = (row, currentPath, renderRow, previewMode, onChangeHandle) => {
     return (
       <Row
@@ -198,7 +207,6 @@ export default function Designer({ componentMapper }) {
       />
     );
   };
-
   return (
     <>
       <div className="page-designer">
@@ -236,6 +244,8 @@ export default function Designer({ componentMapper }) {
                 handleSchemaChanges={handleSchemaChanges}
                 columnSizeCustomization={columnSizeCustomization}
                 onFieldDelete={onFieldDelete}
+                componentMapper={componentMapper}
+                replaceComponet={replaceComponet}
               />
             </div>
           )}

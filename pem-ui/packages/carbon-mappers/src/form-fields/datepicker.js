@@ -10,7 +10,6 @@ const DatePicker = ({ field, id, currentPath, onChangeHandle, previewMode }) => 
   const [fieldValue, setFieldValue] = useState();
   useEffect(() => {
     if (previewMode) {
-      onChangeHandle({ isRequired, currentPath, value: value ? value : '' });
       setFieldValue(value ? value : '');
     }
   }, [field]);
@@ -23,7 +22,7 @@ const DatePicker = ({ field, id, currentPath, onChangeHandle, previewMode }) => 
         datePickerType="single"
         value={fieldValue}
         onChange={(e) => {
-          previewMode && onChangeHandle({ isRequired, currentPath, value: e });
+          previewMode && onChangeHandle(currentPath, e);
           setFieldValue(e);
         }}
       >
@@ -43,7 +42,7 @@ DatePicker.config = {
   icon: <DatepickerIcon />,
   editableProps: {
     Basic: [labelText, helperText, isDisabled],
-    Condition: [isRequired]
+    Condition: []
   },
-  advanceProps: []
+  advanceProps: [isRequired]
 };

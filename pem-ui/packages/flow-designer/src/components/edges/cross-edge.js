@@ -1,8 +1,8 @@
 import React from 'react';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, useReactFlow } from 'reactflow';
-import './custom-edge.css';
+import './cross-edge.css';
 
-function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = { stroke: '#000' }, markerEnd }) {
+function CrossEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = { stroke: '#000' }, markerEnd }) {
   const { setEdges } = useReactFlow();
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -39,4 +39,4 @@ function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
   );
 }
 
-export default CustomEdge;
+export default CrossEdge;

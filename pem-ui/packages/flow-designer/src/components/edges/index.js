@@ -1,3 +1,4 @@
-import CustomEdge from "./custom-edge"
+import CrossEdge from './cross-edge';
+import PlusEdge from './plus-edge';
 
-export { CustomEdge }
+export { CrossEdge, PlusEdge };

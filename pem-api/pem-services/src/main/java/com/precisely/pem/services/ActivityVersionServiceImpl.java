@@ -97,7 +97,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     }
 
     @Override
-    public ActivityDefnVersionDto getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnKeyVersion) throws Exception {
+    public ActivityDefnVersionListResp getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnKeyVersion) throws Exception {
         String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
         Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findVersion(activityDefnKey, SponsorKey, activityDefnKeyVersion));
         if(result.isEmpty()){
@@ -107,7 +107,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             throw new Exception("No entries found for the combination");
         }
         ModelMapper mapper = new ModelMapper();
-        return mapper.map(result.get(), ActivityDefnVersionDto.class);
+        return mapper.map(result.get(), ActivityDefnVersionListResp.class);
     }
 
     @Override

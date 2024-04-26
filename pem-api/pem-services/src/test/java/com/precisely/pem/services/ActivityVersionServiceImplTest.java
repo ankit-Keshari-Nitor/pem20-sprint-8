@@ -1,6 +1,7 @@
 package com.precisely.pem.services;
 
 
+import com.precisely.pem.dtos.responses.ActivityDefnVersionListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
@@ -115,7 +116,7 @@ class ActivityVersionServiceImplTest {
         Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString())).thenReturn("cashbank");
         Mockito.when(activityDefnVersionRepo.findVersion(Mockito.anyString(), Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(getVersion());
-        ActivityDefnVersionDto dto = activityVersionService.getVersionDefinitionById("test", "test", "test");
+        ActivityDefnVersionListResp dto = activityVersionService.getVersionDefinitionById("test", "test", "test");
         assertNotNull(dto);
     }
     @Test

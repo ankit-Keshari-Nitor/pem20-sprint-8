@@ -1,5 +1,6 @@
 package com.precisely.pem.services;
 
+import com.precisely.pem.dtos.responses.ActivityDefnVersionListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
 public interface ActivityVersionService {
     ActivityVersionDefnPaginationResp getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status) throws Exception;
 
-    ActivityDefnVersionDto getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnKeyVersion) throws Exception;
+    ActivityDefnVersionListResp getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnKeyVersion) throws Exception;
 
     ActivityDefnVersionResp createActivityDefnVersion(String sponsorContext, String activityDefnKey, MultipartFile file, boolean isEncrypted, String app) throws OnlyOneDraftVersionException, IOException, SQLException;
 

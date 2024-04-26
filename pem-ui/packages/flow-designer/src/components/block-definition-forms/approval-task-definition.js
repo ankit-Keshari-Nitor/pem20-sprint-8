@@ -3,7 +3,7 @@ import { Form, Select, SelectItem, TextArea, TextInput, Checkbox, Button, Modal,
 import './approval-task-definition.scss';
 import ExitValidation from '../exit-validation';
 
-export default function ApprovalForm({ selectedNode }) {
+export default function ApprovalTaskDefinitionForm({ selectedNode }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="form">

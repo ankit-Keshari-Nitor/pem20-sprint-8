@@ -11,7 +11,6 @@ export default function StartNode(nodeConfig) {
         type="source"
         position={Position.Right}
         style={{ background: '#61E897' }}
-        onConnect={(params) => console.log('Right handle onConnect', params)}
         isConnectable={nodeConfig?.isConnectable}
       />
     </div>

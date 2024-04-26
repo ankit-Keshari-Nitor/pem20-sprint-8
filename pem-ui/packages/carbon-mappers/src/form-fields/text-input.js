@@ -11,7 +11,6 @@ const TextInput = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
 
   useEffect(() => {
     if (previewMode) {
-      onChangeHandle({ isRequired, min, max, currentPath, value: value ? value : '' });
       setFieldValue(value ? value : '');
     }
   }, [field]);
@@ -26,10 +25,8 @@ const TextInput = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
         disabled={disabled}
         defaultValue={''}
         value={fieldValue}
-        //invalid={isValid}
-        //invalidText={invalidText}
         onChange={(e) => {
-          previewMode && onChangeHandle({ isRequired, min, max, currentPath, value: e.target.value });
+          previewMode && onChangeHandle(currentPath, e.target.value);
           setFieldValue(e.target.value);
         }}
         {...rest}
@@ -49,7 +46,7 @@ TextInput.config = {
   icon: <TextInputIcon />,
   editableProps: {
     Basic: [labelText, helperText, isDisabled, readOnly],
-    Condition: [isRequired]
+    Condition: []
   },
-  advanceProps: [minProps, maxProps]
+  advanceProps: [minProps, maxProps, isRequired]
 };

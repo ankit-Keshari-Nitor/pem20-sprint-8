@@ -5,9 +5,8 @@ import ExitValidation from '../exit-validation/exit-validation';
 
 export default function SponsorTaskDefinitionForm({ selectedNode }) {
   const [open, setOpen] = useState(false);
-
   return (
-    <div className="activity-form">
+    <div className="activity-form" data-testid="test-form-render">
       <Tabs>
         <TabList aria-label="List of tabs" contained>
           <Tab>Define</Tab>
@@ -62,7 +61,7 @@ export default function SponsorTaskDefinitionForm({ selectedNode }) {
         </TabPanels>
       </Tabs>
       <Modal open={open} onRequestClose={() => setOpen(false)} isFullWidth modalHeading="Confirmation" primaryButtonText="Delete" secondaryButtonText="Cancel">
-        Do you want to delete Sponsor task-01’?
+        Do you want to delete Sponsor task-01?
       </Modal>
     </div>
   );

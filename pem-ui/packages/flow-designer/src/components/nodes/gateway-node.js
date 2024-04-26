@@ -22,7 +22,6 @@ export default function GatewayNode(nodeConfig) {
         type="target"
         position={Position.Left}
         style={{ background: '#565656' }}
-        onConnect={(params) => console.log('Left handle onConnect', params)}
         isConnectable={nodeConfig?.isConnectable}
       />
       <GatewayNodeIcon />
@@ -31,7 +30,6 @@ export default function GatewayNode(nodeConfig) {
         type="source"
         position={Position.Top}
         style={{ background: '#565656' }}
-        onConnect={(params) => console.log('Right handle onConnect', params)}
         isConnectable={nodeConfig?.isConnectable}
       />
       <Handle
@@ -39,7 +37,6 @@ export default function GatewayNode(nodeConfig) {
         type="source"
         position={Position.Bottom}
         style={{ background: '#565656' }}
-        onConnect={(params) => console.log('Right handle onConnect', params)}
         isConnectable={nodeConfig?.isConnectable}
       />
       <Handle
@@ -47,7 +44,6 @@ export default function GatewayNode(nodeConfig) {
         type="source"
         position={Position.Right}
         style={{ background: '#565656' }}
-        onConnect={(params) => console.log('Right handle onConnect', params)}
         isConnectable={nodeConfig?.isConnectable}
       />
     </div>

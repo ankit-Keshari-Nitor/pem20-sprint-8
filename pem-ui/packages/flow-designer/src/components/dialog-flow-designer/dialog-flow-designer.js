@@ -4,32 +4,31 @@ import ReactFlow, { ReactFlowProvider, Controls, Background } from 'reactflow';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
 import 'reactflow/dist/style.css';
-import './task-flow-designer.scss';
+import './dialog-flow-designer.scss';
 
-import BlockTray from '../blocks-tray';
+import BlockTray from '../block-tray';
 import { CATEGORY_TYPES } from '../../constants';
 import BlockPropertiesTray from '../block-properties-tray/block-properties-tray';
 
-const TaskFlowDesigner = ({
+const DialogFlowDesigner = ({
   connectionLineStyle,
   defaultViewport,
   snapGrid,
-  taskFlowWrapper,
-  taskNodes,
-  taskEdges,
-  elements,
-  onTaskNodesChange,
-  onTaskEdgesChange,
-  setTaskFlowInstance,
-  onTaskNodeConnect,
-  onTaskNodeDrop,
-  onTaskNodeDragOver,
-  onTaskNodeClick,
-  TASK_NODE_TYPES,
-  TASK_EDGE_TYPES,
-  openTaskPropertiesBlock,
-  selectedTaskNode,
-  setOpenTaskPropertiesBlock
+  dialogFlowWrapper,
+  dialogNodes,
+  dialogEdges,
+  onDialogNodesChange,
+  onDialogEdgesChange,
+  setDialogFlowInstance,
+  onDialogNodeConnect,
+  onDialogNodeDrop,
+  onDialogNodeDragOver,
+  onDialogNodeClick,
+  DIALOG_NODE_TYPES,
+  DIALOG_EDGE_TYPES,
+  openDialogPropertiesBlock,
+  selectedDialogNode,
+  setOpenDialogPropertiesBlock
 }) => {
   return (
     <div className="dnd-flow">
@@ -38,23 +37,23 @@ const TaskFlowDesigner = ({
           <div className="dnd-flow">
             {/* Tasks Block */}
             <div className="task-tray-container">
-              <BlockTray category={CATEGORY_TYPES.TASK} />
+              <BlockTray category={CATEGORY_TYPES.DIALOG} />
             </div>
             {/* Flow Designer Block  */}
             <ReactFlowProvider>
-              <div className="reactflow-wrapper" ref={taskFlowWrapper}>
+              <div className="reactflow-wrapper" ref={dialogFlowWrapper}>
                 <ReactFlow
-                  nodes={taskNodes}
-                  edges={taskEdges}
-                  onNodesChange={onTaskNodesChange}
-                  onEdgesChange={onTaskEdgesChange}
-                  onInit={setTaskFlowInstance}
-                  onConnect={onTaskNodeConnect}
-                  onDrop={onTaskNodeDrop}
-                  onDragOver={onTaskNodeDragOver}
-                  onNodeClick={onTaskNodeClick}
-                  nodeTypes={TASK_NODE_TYPES}
-                  edgeTypes={TASK_EDGE_TYPES}
+                  nodes={dialogNodes}
+                  edges={dialogEdges}
+                  onNodesChange={onDialogNodesChange}
+                  onEdgesChange={onDialogEdgesChange}
+                  onConnect={onDialogNodeConnect}
+                  onDrop={onDialogNodeDrop}
+                  onDragOver={onDialogNodeDragOver}
+                  onNodeClick={onDialogNodeClick}
+                  nodeTypes={DIALOG_NODE_TYPES}
+                  edgeTypes={DIALOG_EDGE_TYPES}
+                  onInit={setDialogFlowInstance}
                   connectionLineStyle={connectionLineStyle}
                   defaultViewport={defaultViewport}
                   snapGrid={snapGrid}
@@ -66,13 +65,13 @@ const TaskFlowDesigner = ({
             </ReactFlowProvider>
           </div>
         </Panel>
-        {openTaskPropertiesBlock && (
+        {openDialogPropertiesBlock && (
           <>
             <PanelResizeHandle />
             <Panel defaultSize={40} minSize={20} maxSize={70}>
               <div className="dnd-flow">
                 <div className="task-activity-container">
-                  <BlockPropertiesTray selectedNode={selectedTaskNode} setOpenPropertiesBlock={setOpenTaskPropertiesBlock} />
+                  <BlockPropertiesTray selectedNode={selectedDialogNode} setOpenPropertiesBlock={setOpenDialogPropertiesBlock} />
                 </div>
               </div>
             </Panel>
@@ -83,4 +82,4 @@ const TaskFlowDesigner = ({
   );
 };
 
-export default TaskFlowDesigner;
+export default DialogFlowDesigner;

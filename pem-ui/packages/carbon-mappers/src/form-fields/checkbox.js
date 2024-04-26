@@ -11,7 +11,6 @@ const Checkbox = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
   const [isChecked, setIsChecked] = useState(false);
   useEffect(() => {
     if (previewMode) {
-      onChangeHandle({ isRequired, currentPath, value: value ? value : false });
       setIsChecked(value ? value : false);
     }
   }, [field]);
@@ -24,7 +23,7 @@ const Checkbox = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
       labelText={labelText}
       checked={isChecked}
       onChange={(e) => {
-        previewMode && onChangeHandle({ isRequired, currentPath, value: !isChecked });
+        previewMode && onChangeHandle(currentPath, !isChecked);
         setIsChecked(!isChecked);
       }}
       {...rest}
@@ -42,7 +41,7 @@ Checkbox.config = {
   icon: <CheckboxIcon />,
   editableProps: {
     Basic: [labelText, isDisabled, readOnly],
-    Condition: [isRequired]
+    Condition: []
   },
-  advanceProps: []
+  advanceProps: [isRequired]
 };

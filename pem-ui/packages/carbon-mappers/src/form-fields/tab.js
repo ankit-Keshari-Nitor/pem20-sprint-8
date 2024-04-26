@@ -55,7 +55,7 @@ CustomTab.config = {
   group: FORM_FIELD_GROUPS.PANEL,
   icon: <NewTab />,
   editableProps: {
-    Basic: [labelText],
+    Basic: [],
     Condition: []
   },
   advanceProps: []

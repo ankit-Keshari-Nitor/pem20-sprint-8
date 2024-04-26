@@ -59,3 +59,7 @@
   text-align: center;
   color: #3e3e3e;
 }
+
+.dnd-node-field-text::first-letter {
+  text-transform: capitalize;
+}

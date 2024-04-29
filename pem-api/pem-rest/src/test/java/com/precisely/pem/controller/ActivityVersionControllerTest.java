@@ -4,6 +4,7 @@ import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
+import com.precisely.pem.dtos.responses.ActivityDefnVersionListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
@@ -51,7 +52,7 @@ class ActivityVersionControllerTest {
 
     @Test
     void testGetActivityDefinitionVersionById() throws Exception {
-        ActivityDefnVersionDto resp = new ActivityDefnVersionDto();
+        ActivityDefnVersionListResp resp = new ActivityDefnVersionListResp();
         Mockito.when(activityVersionService.getVersionDefinitionById(Mockito.anyString(),Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(resp);
         ResponseEntity<Object> output = activityVersionController.getActivityVersionDefinitionById("test","test","test");

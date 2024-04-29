@@ -1,5 +1,7 @@
 package com.precisely.pem.filter;
 
+import com.precisely.pem.dtos.responses.SponsorInfo;
+import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.services.SponsorService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,10 +61,12 @@ public class TenantFilter extends OncePerRequestFilter {
     }
 
     private void setSponsorDetailsInContext(String sponsorContext) {
-        String companyName = sponsorService.getActiveSponsorNameBySponsorContext(sponsorContext);
-       if(!StringUtils.isEmpty(companyName)){
+       SponsorInfo sponsorInfo = sponsorService.getActiveSponsorNameBySponsorContext(sponsorContext);
+       if(Objects.nonNull(sponsorInfo) && !StringUtils.isEmpty(sponsorInfo.getCompanyName())){
            // Set MDC context for logging here
-           ThreadContext.put("sponsor.name", companyName);
+           ThreadContext.put("sponsor.name", sponsorInfo.getCompanyName());
+           //Set Tenant Information in TenantContext to be used in Controller Layers
+           TenantContext.setTenantContext(sponsorInfo);
        }else {
            log.debug("No sponsor found with sponsor context : {}, Using None as the sponsor's name.",sponsorContext);
            ThreadContext.put("sponsor.name", "None");

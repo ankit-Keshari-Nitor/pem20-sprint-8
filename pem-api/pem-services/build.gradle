@@ -9,6 +9,10 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    all*.exclude module: 'spring-boot-starter-logging'
+}
+
 dependencies {
     implementation project(":pem-entity")
     implementation project(':pem-common')

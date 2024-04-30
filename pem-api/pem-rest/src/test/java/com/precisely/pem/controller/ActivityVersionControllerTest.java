@@ -34,7 +34,7 @@ class ActivityVersionControllerTest {
 
         ResponseEntity<Object> resp = activityVersionController.markActivityDefinitionStatusAsFinal("hsbc","fd2dfe53-b38c-40cf-acb7-9850d1930858","9ec7e29e-9cbe-4298-bb67-a53f86868592");
         assertNotNull(resp);
-        assertEquals(resp.getStatusCode(), HttpStatus.CREATED);
+        assertEquals(resp.getStatusCode(), HttpStatus.OK);
     }
 
     @Test

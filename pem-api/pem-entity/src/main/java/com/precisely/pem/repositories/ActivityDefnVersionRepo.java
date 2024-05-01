@@ -4,9 +4,13 @@ import com.precisely.pem.models.ActivityDefnVersion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Repository
 public interface ActivityDefnVersionRepo extends JpaRepository<ActivityDefnVersion,String> {
@@ -31,4 +35,14 @@ public interface ActivityDefnVersionRepo extends JpaRepository<ActivityDefnVersi
             "AND b.sponsor_key=:context " +
             "AND a.version=:versionId")
     ActivityDefnVersion findVersion(@Param("activityDefnKey")String activityDefnKey,@Param("context") String context,@Param("versionId") String versionId);
+    //OPTIMIZE: replace this Native query with JPQL
+
+
+    List<ActivityDefnVersion> findByActivityDefnKey(String activityDefinitionKey);
+
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM ActivityDefnVersion a WHERE a.activityDefnKeyVersion IN :keys")
+    void deleteByKeys(@Param("keys") List<String> keys);
 }

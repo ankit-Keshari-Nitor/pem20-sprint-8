@@ -1,9 +1,7 @@
 package com.precisely.pem.services;
 
-import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
-import com.precisely.pem.dtos.responses.ActivityDefnResp;
-import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
-import com.precisely.pem.dtos.responses.GetActivityDefnByIdResp;
+import com.precisely.pem.commonUtil.Status;
+import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.*;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
@@ -187,5 +185,55 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
         }
         ModelMapper mapper = new ModelMapper();
         return ResponseEntity.ok().body(mapper.map(result.get(), ActivityDefnDto.class));
+    }
+
+    @Override
+    public DeleteActivityDefinition deleteActivityDefinitionById(String sponsorContext, String activityDefnKey) throws Exception {
+        String sponsorKey = TenantContext.getTenantContext().getSponsorKey();
+        Optional<ActivityDefn> activityDefnOptional = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, sponsorKey));;
+        if(activityDefnOptional.isEmpty()){
+            throw  new Exception("Activity Definition not found" );
+        }
+        if(activityDefnOptional.get().isDeleted()){
+            throw  new Exception("Activity Definition Already Deleted" );
+        }
+
+        /*
+        Conditions
+            1.All Versions are in DRAFT, hard delete all Data from tables
+            2.If any one Version apart from DRAFT present, Mark that status as DELETE and IS_DELETED in Activity Defn as TRUE and hard Delete all DRAFT Versions
+         */
+        List<ActivityDefnVersion> activityDefnVersions = activityDefnVersionRepo.findByActivityDefnKey(activityDefnOptional.get().getActivityDefnKey());
+
+        //check count of Versions with Status other than DRAFT
+        long count = activityDefnVersions.stream().filter(activityDefnVersion -> !activityDefnVersion.getStatus().equalsIgnoreCase(Status.DRAFT.toString())).count();
+
+        DeleteActivityDefinition response = DeleteActivityDefinition.builder().totalActivityVersions(activityDefnVersions.size()).build();
+        if(count == 0 ){
+            response.setActivityVersionsSoftDeleted(0);
+            response.setActivityVersionsHardDeleted(activityDefnVersions.size());
+            activityDefnRepo.deleteById(activityDefnKey);
+
+        }else {
+            //find Non-Draft Version and Update those with Soft Delete
+            List<ActivityDefnVersion> nonDraftActivityDefnVersions = activityDefnVersions.stream()
+                    .filter(activityDefnVersion -> !activityDefnVersion.getStatus().equalsIgnoreCase(Status.DRAFT.toString()))
+                    .peek(activityDefnVersion -> activityDefnVersion.setStatus(Status.DELETE.getStatus())).toList();
+
+            List<String> draftActivityDefnVersions = activityDefnVersions.stream()
+                    .filter(activityDefnVersion -> activityDefnVersion.getStatus().equalsIgnoreCase(Status.DRAFT.toString()))
+                    .map(ActivityDefnVersion::getActivityDefnKeyVersion)
+                    .toList();
+            activityDefnVersionRepo.deleteByKeys(draftActivityDefnVersions);
+
+            activityDefnVersionRepo.saveAll(nonDraftActivityDefnVersions);
+
+            activityDefnOptional.get().setDeleted(Boolean.TRUE);
+            activityDefnRepo.save(activityDefnOptional.get());
+
+            response.setActivityVersionsSoftDeleted(nonDraftActivityDefnVersions.size());
+            response.setActivityVersionsHardDeleted(draftActivityDefnVersions.size());
+        }
+        return response;
     }
 }

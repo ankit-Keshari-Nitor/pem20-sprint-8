@@ -10,9 +10,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ActivityDefnRepo extends JpaRepository<ActivityDefn,String> {
+
     Page<ActivityDefn> findAllBySponsorKey(String sponsorKey, Pageable pageable);
 
     ActivityDefn findByActivityDefnKeyAndSponsorKey(String activityDefnKey, String sponsorKey);
+
     @Query(nativeQuery = true,value = "SELECT a.activity_defn_key,a.sponsor_key,a.activity_name, " +
             "a.activity_description, a.create_ts,a.created_by,a.modify_ts,a.modified_by, a.application, " +
             "a.is_deleted, a.migration_status " +

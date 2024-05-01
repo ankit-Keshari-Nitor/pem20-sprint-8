@@ -1,9 +1,8 @@
 package com.precisely.pem.services;
 
-import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
-import com.precisely.pem.dtos.responses.ActivityDefnResp;
-import com.precisely.pem.dtos.responses.GetActivityDefnByIdResp;
+import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityDefnDto;
+import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
@@ -13,10 +12,7 @@ import com.precisely.pem.repositories.ActivityDefnVersionRepo;
 import com.precisely.pem.repositories.SponsorRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,9 +30,9 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
 
 
 class ActivityDefnServiceImplTest {
@@ -58,6 +54,7 @@ class ActivityDefnServiceImplTest {
     @BeforeEach
     public void setup(){
         MockitoAnnotations.openMocks(this);
+        TenantContext.setTenantContext(SponsorInfo.builder().sponsorKey("8ad41d89-5067-42f2-b310-2e27aa1a21d1").build());
     }
 
     @Test
@@ -105,6 +102,55 @@ class ActivityDefnServiceImplTest {
         ResponseEntity<Object> resp;
         resp = activityDefinitionService.getActivityDefinitionByKey("test","test");
         assertNotNull(resp);
+    }
+
+    @Test
+    void deleteActivityDefinition_WithAllDraftVersions() throws Exception {
+        Mockito.when(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+                .thenReturn(getVchActivityDefnObj());
+
+        Mockito.when(activityDefnVersionRepo.findByActivityDefnKey(ArgumentMatchers.anyString())).thenReturn(getAllDraftVersionList());
+
+        DeleteActivityDefinition response = activityDefinitionService.deleteActivityDefinitionById("test_sponsor","test_key");
+        assertNotNull(response);
+        assertEquals(2,response.getTotalActivityVersions());
+        assertEquals(2,response.getActivityVersionsHardDeleted());
+    }
+
+    @Test
+    void deleteActivityDefinition_WithPartialDraftVersions() throws Exception {
+        Mockito.when(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+                .thenReturn(getVchActivityDefnObj());
+
+        Mockito.when(activityDefnVersionRepo.findByActivityDefnKey(ArgumentMatchers.anyString())).thenReturn(getPartialDraftVersionList());
+
+        DeleteActivityDefinition response = activityDefinitionService.deleteActivityDefinitionById("test_sponsor","test_key");
+        assertNotNull(response);
+        assertEquals(2,response.getTotalActivityVersions());
+        assertEquals(1,response.getActivityVersionsHardDeleted());
+        assertEquals(1,response.getActivityVersionsSoftDeleted());
+    }
+
+    @Test
+    void deleteActivityDefinition_NotFoundActivityDefinition() throws Exception {
+        Mockito.when(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+                .thenReturn(null );
+
+        Exception exception = assertThrows(Exception.class, () ->{
+            activityDefinitionService.deleteActivityDefinitionById("test_sponsor","test_key");
+        });
+        assertEquals(exception.getMessage(),"Activity Definition not found");
+    }
+
+    @Test
+    void deleteActivityDefinition_AlreadyDeletedActivityDefinition(){
+        Mockito.when(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+                .thenReturn(getDeletedVchActivityDefnObj() );
+
+        Exception exception = assertThrows(Exception.class, () ->{
+            activityDefinitionService.deleteActivityDefinitionById("test_sponsor","test_key");
+        });
+        assertEquals(exception.getMessage(),"Activity Definition Already Deleted");
     }
 
     public ActivityDefn getVchActivityDefnObj(){
@@ -176,5 +222,55 @@ class ActivityDefnServiceImplTest {
         activityDefnVersion.setModifyTs(LocalDateTime.now());
         activityDefnVersion.setStatus("FINAL");
         return activityDefnVersion;
+    }
+
+    public ActivityDefn getDeletedVchActivityDefnObj(){
+        ActivityDefn activityDefn = new ActivityDefn();
+        activityDefn.setActivityName("test");
+        activityDefn.setActivityDescription("test");
+        activityDefn.setActivityDefnKey(UUID.randomUUID().toString());
+        activityDefn.setSponsorKey(UUID.randomUUID().toString());
+        activityDefn.setDeleted(Boolean.TRUE);
+        activityDefn.setApplication("PEM");
+        activityDefn.setCreatedBy("test");
+        activityDefn.setCreateTs(LocalDateTime.now());
+        activityDefn.setModifyTs(LocalDateTime.now());
+        activityDefn.setModifiedBy("test");
+        activityDefn.setMigrationStatus(false);
+        return activityDefn;
+    }
+
+    private List<ActivityDefnVersion> getAllDraftVersionList() {
+        ActivityDefnVersion v1 = new ActivityDefnVersion();
+        v1.setVersion(1);
+        v1.setStatus("DRAFT");
+        v1.setEncrypted(false);
+        v1.setDefault(false);
+        v1.setEncryptionKey("123");
+
+        ActivityDefnVersion v2 = new ActivityDefnVersion();
+        v2.setVersion(1);
+        v2.setStatus("DRAFT");
+        v2.setEncrypted(false);
+        v2.setDefault(false);
+        v2.setEncryptionKey("123");
+        return Arrays.asList(v1,v2);
+    }
+
+    private List<ActivityDefnVersion> getPartialDraftVersionList() {
+        ActivityDefnVersion v1 = new ActivityDefnVersion();
+        v1.setVersion(1);
+        v1.setStatus("DRAFT");
+        v1.setEncrypted(false);
+        v1.setDefault(false);
+        v1.setEncryptionKey("123");
+
+        ActivityDefnVersion v2 = new ActivityDefnVersion();
+        v2.setVersion(1);
+        v2.setStatus("FINAL");
+        v2.setEncrypted(false);
+        v2.setDefault(false);
+        v2.setEncryptionKey("123");
+        return Arrays.asList(v1,v2);
     }
 }

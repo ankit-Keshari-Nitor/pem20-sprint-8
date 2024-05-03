@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
-public class BaseFields {
+public class BaseEntity {
     @Column(name="CREATE_TS")
     private LocalDateTime createTs;
 

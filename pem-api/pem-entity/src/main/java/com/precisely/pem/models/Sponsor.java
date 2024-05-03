@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @Table(name = "SPONSOR")
-public class Sponsor extends BaseFields {
+public class Sponsor extends BaseEntity {
     @Id
     @Column(name="SPONSOR_KEY")
     private String sponsorKey;

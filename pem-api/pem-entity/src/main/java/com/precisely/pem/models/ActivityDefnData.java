@@ -10,7 +10,7 @@ import java.sql.Blob;
 @Entity
 @Data
 @Table(name = "ACTIVITY_DEFN_DATA")
-public class ActivityDefnData extends BaseFields {
+public class ActivityDefnData extends BaseEntity {
     @Id
     @Column(name="ACTIVITY_DEFN_DATA_KEY")
     private String activityDefnDataKey;

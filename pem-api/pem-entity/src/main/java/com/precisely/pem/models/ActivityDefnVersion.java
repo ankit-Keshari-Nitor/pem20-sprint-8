@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @Table(name = "ACTIVITY_DEFN_VERSION")
-public class ActivityDefnVersion extends BaseFields {
+public class ActivityDefnVersion extends BaseEntity {
     @Id
     @Column(name="ACTIVITY_DEFN_KEY_VERSION")
     private String activityDefnKeyVersion;

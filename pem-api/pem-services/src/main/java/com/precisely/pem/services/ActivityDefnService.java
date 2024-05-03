@@ -5,9 +5,7 @@ import com.precisely.pem.dtos.requests.ActivityDefnReq;
 import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.ActivityDefnResp;
-import com.precisely.pem.dtos.responses.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
+import com.precisely.pem.dtos.responses.DeleteActivityDefinition;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -18,4 +16,5 @@ public interface ActivityDefnService {
                                                           String sortBy, String sortDir) throws Exception;
     public ActivityDefnResp createActivityDefinition(String sponsorContext, ActivityDefnReq activityDefnReq) throws IOException, SQLException;
     public ActivityDefnListResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception;
+    DeleteActivityDefinition deleteActivityDefinitionById(String sponsorContext, String activityDefnKey) throws Exception;
 }

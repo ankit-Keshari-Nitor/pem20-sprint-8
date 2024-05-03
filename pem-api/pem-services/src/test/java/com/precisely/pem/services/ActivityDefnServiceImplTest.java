@@ -237,7 +237,7 @@ class ActivityDefnServiceImplTest {
         activityDefn.setActivityDescription("test");
         activityDefn.setActivityDefnKey(UUID.randomUUID().toString());
         activityDefn.setSponsorKey(UUID.randomUUID().toString());
-        activityDefn.setDeleted(Boolean.TRUE);
+        activityDefn.setIsDeleted(Boolean.TRUE);
         activityDefn.setApplication("PEM");
         activityDefn.setCreatedBy("test");
         activityDefn.setCreateTs(LocalDateTime.now());
@@ -249,34 +249,34 @@ class ActivityDefnServiceImplTest {
 
     private List<ActivityDefnVersion> getAllDraftVersionList() {
         ActivityDefnVersion v1 = new ActivityDefnVersion();
-        v1.setVersion(1);
+        v1.setVersion(1.0);
         v1.setStatus("DRAFT");
-        v1.setEncrypted(false);
-        v1.setDefault(false);
+        v1.setIsEncrypted(false);
+        v1.setIsDefault(false);
         v1.setEncryptionKey("123");
 
         ActivityDefnVersion v2 = new ActivityDefnVersion();
-        v2.setVersion(1);
+        v2.setVersion(1.0);
         v2.setStatus("DRAFT");
-        v2.setEncrypted(false);
-        v2.setDefault(false);
+        v2.setIsEncrypted(false);
+        v2.setIsDefault(false);
         v2.setEncryptionKey("123");
         return Arrays.asList(v1,v2);
     }
 
     private List<ActivityDefnVersion> getPartialDraftVersionList() {
         ActivityDefnVersion v1 = new ActivityDefnVersion();
-        v1.setVersion(1);
+        v1.setVersion(1.0);
         v1.setStatus("DRAFT");
-        v1.setEncrypted(false);
-        v1.setDefault(false);
+        v1.setIsEncrypted(false);
+        v1.setIsDefault(false);
         v1.setEncryptionKey("123");
 
         ActivityDefnVersion v2 = new ActivityDefnVersion();
-        v2.setVersion(1);
+        v2.setVersion(1.0);
         v2.setStatus("FINAL");
-        v2.setEncrypted(false);
-        v2.setDefault(false);
+        v2.setIsEncrypted(false);
+        v2.setIsDefault(false);
         v2.setEncryptionKey("123");
         return Arrays.asList(v1,v2);
     }

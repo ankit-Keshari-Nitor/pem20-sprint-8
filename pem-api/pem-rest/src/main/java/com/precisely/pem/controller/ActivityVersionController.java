@@ -72,8 +72,8 @@ public class ActivityVersionController {
     @Operation(summary = "Get Version of Activity Definition", tags = { "Activity Definition Version" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = ActivityDefnVersionDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
-                    @Content(schema = @Schema(implementation = ActivityDefnVersionDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+                    @Content(schema = @Schema(implementation = ActivityDefnVersionResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityDefnVersionResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
             @ApiResponse(responseCode = "204", description = "There are no Versions for Definitions", content = {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
@@ -81,11 +81,11 @@ public class ActivityVersionController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
     })
-    @GetMapping("/{versionId}")
+    @GetMapping("/{activityDefnVersionKey}")
     public ResponseEntity<Object> getActivityVersionDefinitionById(@PathVariable(value = "activityDefnKey", required = true) String activityDefnKey,
-                                                                   @PathVariable(value = "versionId", required = true) Double versionId,
+                                                                   @PathVariable(value = "activityDefnVersionKey", required = true) String activityDefnVersionKey,
                                                                    @PathVariable(value = "sponsorContext", required = true)String sponsorContext) throws Exception {
-        return new ResponseEntity<>(activityVersionService.getVersionDefinitionById(activityDefnKey,sponsorContext,versionId), HttpStatus.OK);
+        return new ResponseEntity<>(activityVersionService.getVersionDefinitionById(activityDefnKey,sponsorContext,activityDefnVersionKey), HttpStatus.OK);
     }
 
     @Operation(summary = "Create an Activity Definition Version")

@@ -13,5 +13,5 @@ public interface ActivityDefnVersionRepo extends JpaRepository<ActivityDefnVersi
     ActivityDefnVersion findDefaultVersion();
     Page<ActivityDefnVersion> findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndActivityVersionDescriptionContaining(String activityDefnKey, String status, String context, String description, Pageable pageable);
     Page<ActivityDefnVersion> findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(String activityDefnKey, String status, String context, Pageable pageable);
-    ActivityDefnVersion findByActivityDefnKeyAndVersionAndActivityDefnSponsorKey(String activityDefnKey,Double version, String context);
+    ActivityDefnVersion findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(String activityDefnKey, String activityDefnVersionKey, String context);
 }

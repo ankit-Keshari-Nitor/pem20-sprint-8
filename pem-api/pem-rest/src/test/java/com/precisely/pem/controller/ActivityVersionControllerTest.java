@@ -52,9 +52,9 @@ class ActivityVersionControllerTest {
     @Test
     void testGetActivityDefinitionVersionById() throws Exception {
         ActivityDefnVersionListResp resp = new ActivityDefnVersionListResp();
-        Mockito.when(activityVersionService.getVersionDefinitionById(Mockito.anyString(),Mockito.anyString(),Mockito.anyDouble()))
+        Mockito.when(activityVersionService.getVersionDefinitionById(Mockito.anyString(),Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(resp);
-        ResponseEntity<Object> output = activityVersionController.getActivityVersionDefinitionById("test",1.0,"test");
+        ResponseEntity<Object> output = activityVersionController.getActivityVersionDefinitionById("test","test","test");
         assertNotNull(output);
     }
 

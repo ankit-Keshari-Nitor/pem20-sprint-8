@@ -23,4 +23,5 @@ public class ActivityDefnVersionDto {
     public LocalDateTime modifyTs;
     public String modifiedBy;
     public Double schemaVersion;
+    public String activityVersionDescription;
 }

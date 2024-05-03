@@ -4,6 +4,7 @@ import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
+import com.precisely.pem.dtos.requests.ActivityDefnReq;
 import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.ActivityDefnResp;
@@ -43,9 +44,10 @@ class ActivityControllerTest {
         MultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file.".getBytes());
 
         ActivityDefnResp resp = new ActivityDefnResp();
-        Mockito.when(activityDefnService.createActivityDefinition(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.any(MultipartFile.class),Mockito.anyString()))
+        Mockito.when(activityDefnService.createActivityDefinition(Mockito.anyString(),Mockito.any(ActivityDefnReq.class)))
                 .thenReturn(resp);
-        ResponseEntity<Object> output = activityController.createActivityDefinition(name,description,file, Application.PEM,sponsorContext);
+        ActivityDefnReq req = new ActivityDefnReq();
+        ResponseEntity<Object> output = activityController.createActivityDefinition(req,sponsorContext);
         assertNotNull(output);
     }
 
@@ -58,7 +60,7 @@ class ActivityControllerTest {
         resp.setContent(listResp);
         Mockito.when(activityDefnService.getAllDefinitionList(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(resp);
-        ResponseEntity<Object> output = activityController.getActivityDefinitionList(sponsorContext,name, Status.DRAFT,Application.PEM,1,1, SortBy.modify_ts, SortDirection.ASC,"cashbank");
+        ResponseEntity<Object> output = activityController.getActivityDefinitionList(sponsorContext,name, Status.DRAFT,Application.PEM,1,1, SortBy.modifyTs, SortDirection.ASC,"cashbank");
         assertNotNull(output);
     }
 

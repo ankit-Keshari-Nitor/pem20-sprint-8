@@ -1,4 +1,4 @@
-package com.precisely.pem.dtos.shared;
+package com.precisely.pem.exceptionhandler;
 
 import lombok.Data;
 

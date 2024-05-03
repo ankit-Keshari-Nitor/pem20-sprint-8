@@ -1,9 +1,12 @@
 package com.precisely.pem.services;
 
 
+import com.precisely.pem.commonUtil.Application;
+import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
+import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.models.ActivityDefn;
@@ -13,8 +16,6 @@ import com.precisely.pem.repositories.ActivityDefnDataRepo;
 import com.precisely.pem.repositories.ActivityDefnRepo;
 import com.precisely.pem.repositories.ActivityDefnVersionRepo;
 import com.precisely.pem.repositories.SponsorRepo;
-import jakarta.servlet.http.HttpServletRequest;
-import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -25,8 +26,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -70,9 +69,8 @@ class ActivityVersionServiceImplTest {
         Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString()))
                 .thenReturn("cashbank");
         Page<ActivityDefnVersion> defnsPage = new PageImpl<>(getVersionList());
-        Mockito.when(activityDefnVersionRepo.findVersionList(eq(sponsorContext),
-                        eq(applicationDescription),eq(activityDefnKey),
-                        eq(status),Mockito.any(Pageable.class)))
+        Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndActivityVersionDescriptionContaining(eq(activityDefnKey),eq(status),eq(sponsorContext),
+                        eq(applicationDescription),Mockito.any(Pageable.class)))
                 .thenReturn(defnsPage);
         ActivityDefnVersionDto dto = new ActivityDefnVersionDto();
         Mockito.when(mapper.map(Mockito.any(ActivityDefnVersion.class),eq(ActivityDefnVersionDto.class)))
@@ -114,9 +112,9 @@ class ActivityVersionServiceImplTest {
     @Test
     void testGetAllVersionDefinitionById() throws Exception {
         Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString())).thenReturn("cashbank");
-        Mockito.when(activityDefnVersionRepo.findVersion(Mockito.anyString(), Mockito.anyString(),Mockito.anyString()))
+        Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndVersionAndActivityDefnSponsorKey(Mockito.anyString(), Mockito.anyDouble(),Mockito.anyString()))
                 .thenReturn(getVersion());
-        ActivityDefnVersionListResp dto = activityVersionService.getVersionDefinitionById("test", "test", "test");
+        ActivityDefnVersionListResp dto = activityVersionService.getVersionDefinitionById("test", "test", 1.0);
         assertNotNull(dto);
     }
     @Test
@@ -133,8 +131,12 @@ class ActivityVersionServiceImplTest {
         Mockito.when(activityDefnDataRepo.save(Mockito.any())).thenReturn(activityDefnData);
         Mockito.when(activityDefnVersionRepo.save(Mockito.any())).thenReturn(activityDefnVersion);
 
-        MultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file.".getBytes());;
-        ActivityDefnVersionResp resp = activityVersionService.createActivityDefnVersion("test", "test", file, false, "test");
+        MultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file.".getBytes());
+        ActivityVersionReq activityVersionReq = new ActivityVersionReq();
+        activityVersionReq.setIsEncrypted(true);
+        activityVersionReq.setFile(file);
+        activityVersionReq.setApplication(Application.PEM);
+        ActivityDefnVersionResp resp = activityVersionService.createActivityDefnVersion("test", "test", activityVersionReq);
         assertNotNull(resp);
     }
 

@@ -2,12 +2,15 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.commonUtil.ApplicationConstants;
 import com.precisely.pem.commonUtil.Status;
-import com.precisely.pem.commonUtil.Status;
-import com.precisely.pem.dtos.responses.*;
+import com.precisely.pem.dtos.requests.ActivityVersionReq;
+import com.precisely.pem.dtos.responses.ActivityDefnVersionListResp;
+import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
+import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
+import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
-import com.precisely.pem.dtos.shared.ErrorResponseDto;
 import com.precisely.pem.dtos.shared.PaginationDto;
+import com.precisely.pem.exceptionhandler.ErrorResponseDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
@@ -24,10 +27,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
@@ -60,46 +61,48 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
-        System.out.println(sort.get());
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         String context = sponsorRepo.getSponsorKey(sponsorContext);
-        description = (description != null && !description.isEmpty()) ? description : "";
+        Page<ActivityDefnVersion> defnsPage = null;
+        if(description != null && !description.isEmpty())
+            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndActivityVersionDescriptionContaining(activityDefnKey,status,context,description,pageable);
+        else
+            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(activityDefnKey,status,context,pageable);
 
-        Page<ActivityDefnVersion> defnsPage = activityDefnVersionRepo.findVersionList(context,description,activityDefnKey,status,pageable);
         if(defnsPage == null || defnsPage.isEmpty()) {
             ErrorResponseDto errorDto = new ErrorResponseDto();
             errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
             errorDto.setErrorDescription("No Data Found");
             throw new Exception("No entries found for the combination");
         }
-            List<ActivityDefnVersion> listOfDefns = defnsPage.getContent();
-            List<ActivityDefnVersionListResp> defnContent = new ArrayList<>();
+        List<ActivityDefnVersion> listOfDefns = defnsPage.getContent();
+        List<ActivityDefnVersionListResp> defnContent = new ArrayList<>();
 
-            defnContent = listOfDefns.stream()
-                    .map(p -> mapper.map(p, ActivityDefnVersionListResp.class))
-                    .collect(Collectors.toList());
+        defnContent = listOfDefns.stream()
+                .map(p -> mapper.map(p, ActivityDefnVersionListResp.class))
+                .collect(Collectors.toList());
 
-            int totalPage = defnsPage.getTotalPages();
-            long totalElements = defnsPage.getTotalElements();
-            int numberOfElements = defnsPage.getNumberOfElements();
-            int size = defnsPage.getSize();
+        int totalPage = defnsPage.getTotalPages();
+        long totalElements = defnsPage.getTotalElements();
+        int numberOfElements = defnsPage.getNumberOfElements();
+        int size = defnsPage.getSize();
 
 
-            paginationDto.setNumber(numberOfElements);
-            paginationDto.setSize(size);
-            paginationDto.setTotalPages(totalPage);
-            paginationDto.setTotalElements(totalElements);
+        paginationDto.setNumber(numberOfElements);
+        paginationDto.setSize(size);
+        paginationDto.setTotalPages(totalPage);
+        paginationDto.setTotalElements(totalElements);
 
-            activityVersionDefnPaginationResp.setContent(defnContent);
-            activityVersionDefnPaginationResp.setPage(paginationDto);
+        activityVersionDefnPaginationResp.setContent(defnContent);
+        activityVersionDefnPaginationResp.setPage(paginationDto);
 
-            return activityVersionDefnPaginationResp;
+        return activityVersionDefnPaginationResp;
     }
 
     @Override
-    public ActivityDefnVersionListResp getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnKeyVersion) throws Exception {
+    public ActivityDefnVersionListResp getVersionDefinitionById(String activityDefnKey, String sponsorContext, Double versionId) throws Exception {
         String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
-        Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findVersion(activityDefnKey, SponsorKey, activityDefnKeyVersion));
+        Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findByActivityDefnKeyAndVersionAndActivityDefnSponsorKey(activityDefnKey,versionId,SponsorKey));
         if(result.isEmpty()){
             ErrorResponseDto errorDto = new ErrorResponseDto();
             errorDto.setErrorDescription("No data Found");
@@ -112,7 +115,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
     @Override
     public ActivityDefnVersionResp createActivityDefnVersion(String sponsorContext, String activityDefnKey,
-                                                            MultipartFile file, boolean isEncrypted, String app) throws OnlyOneDraftVersionException, IOException, SQLException {
+                                                             ActivityVersionReq activityVersionReq) throws OnlyOneDraftVersionException, IOException, SQLException {
         Optional<ActivityDefn> activityDefn = null;
         ActivityDefnData activityDefnData = null;
         ActivityDefnVersion activityDefnVersion = null;
@@ -129,7 +132,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         logger.info("count : " + activityDefn.get().getVersions().size());
 
         //Populating the Activity Definition Data Object
-        byte[] bytes = file.getBytes();
+        byte[] bytes = activityVersionReq.getFile().getBytes();
         Blob blob = new SerialBlob(bytes);
 
         ActivityDefnDataDto vchActivityDefnDataDto = new ActivityDefnDataDto(
@@ -144,9 +147,9 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
                 UUID.randomUUID().toString(), activityDefnKey,
                 activityDefnData.getActivityDefnDataKey(), ++version,
-                Status.DRAFT.toString(), false, isEncrypted,
+                Status.DRAFT.toString(), false, activityVersionReq.getIsEncrypted(),
                 "", LocalDateTime.now(), "", LocalDateTime.now(),
-                "", ApplicationConstants.SCHEMA_VERSION
+                "", ApplicationConstants.SCHEMA_VERSION,activityVersionReq.getActivityVersionDescription()
         );
         activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
         activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);

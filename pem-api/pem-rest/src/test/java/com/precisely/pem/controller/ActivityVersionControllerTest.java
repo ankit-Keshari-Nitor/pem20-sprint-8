@@ -1,14 +1,13 @@
 package com.precisely.pem.controller;
 
-import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
+import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
-import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.services.ActivityVersionService;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,26 +45,27 @@ class ActivityVersionControllerTest {
         ActivityVersionDefnPaginationResp resp = new ActivityVersionDefnPaginationResp();
         Mockito.when(activityVersionService.getAllVersionDefinitionList(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyBoolean(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(resp);
-        ResponseEntity<Object> output = activityVersionController.getActivityVersionDefinitionList("test",false,"test", Status.DRAFT,0,1, SortBy.modify_ts, SortDirection.ASC,"cashbank");
+        ResponseEntity<Object> output = activityVersionController.getActivityVersionDefinitionList("test",false,"test", Status.DRAFT,0,1, SortBy.modifyTs, SortDirection.ASC,"cashbank");
         assertNotNull(output);
     }
 
     @Test
     void testGetActivityDefinitionVersionById() throws Exception {
         ActivityDefnVersionListResp resp = new ActivityDefnVersionListResp();
-        Mockito.when(activityVersionService.getVersionDefinitionById(Mockito.anyString(),Mockito.anyString(),Mockito.anyString()))
+        Mockito.when(activityVersionService.getVersionDefinitionById(Mockito.anyString(),Mockito.anyString(),Mockito.anyDouble()))
                 .thenReturn(resp);
-        ResponseEntity<Object> output = activityVersionController.getActivityVersionDefinitionById("test","test","test");
+        ResponseEntity<Object> output = activityVersionController.getActivityVersionDefinitionById("test",1.0,"test");
         assertNotNull(output);
     }
 
     @Test
-    void testPostCreateActivityDefnVersion() throws Exception {
+    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException {
         MultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file.".getBytes());
         ActivityDefnVersionResp resp = new ActivityDefnVersionResp();
-        Mockito.when(activityVersionService.createActivityDefnVersion(Mockito.anyString(),Mockito.anyString(),Mockito.any(MultipartFile.class),Mockito.anyBoolean(),Mockito.anyString()))
+        Mockito.when(activityVersionService.createActivityDefnVersion(Mockito.anyString(),Mockito.anyString(),Mockito.any(ActivityVersionReq.class)))
                 .thenReturn(resp);
-        ResponseEntity<Object> output = activityVersionController.createActivityDefinition("test","test",file,false, Application.PEM);
+        ActivityVersionReq activityVersionReq = new ActivityVersionReq();
+        ResponseEntity<Object> output = activityVersionController.createActivityDefinition("test","test",activityVersionReq);
         assertNotNull(output);
     }
 

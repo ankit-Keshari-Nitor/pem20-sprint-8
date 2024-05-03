@@ -1,5 +1,7 @@
 package com.precisely.pem.services;
 
+import com.precisely.pem.commonUtil.Application;
+import com.precisely.pem.dtos.requests.ActivityDefnReq;
 import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.shared.ActivityDefnDto;
 import com.precisely.pem.models.ActivityDefn;
@@ -19,7 +21,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -70,7 +71,7 @@ class ActivityDefnServiceImplTest {
         String sortDir = "sortDir";
         Page<ActivityDefn> page = new PageImpl<>(getListOfVchActivityDefnObj());
         Mockito.when(sponsorRepo.getSponsorKey(anyString())).thenReturn("cashbank");
-        Mockito.when(activityDefnRepo.findByStatusAndSponsorContextAndApplicationAndByNameAndDescription(
+        Mockito.when(activityDefnRepo.findBySponsorKeyAndActivityNameAndActivityDescriptionContainingAndApplicationAndVersionsStatus(
                 eq(status), eq("cashbank"), eq(application), eq(applicationName), eq(applicationDescription),
                 Mockito.any(Pageable.class))).thenReturn(page);
         ActivityDefnDto dtoObj = new ActivityDefnDto();
@@ -88,8 +89,14 @@ class ActivityDefnServiceImplTest {
         Mockito.when(activityDefnDataRepo.save(Mockito.any())).thenReturn(getVchActivityDefnDataObj());
         Mockito.when(activityDefnVersionRepo.save(Mockito.any())).thenReturn(getVCHActivityDefnVersionObj());
         MultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file.".getBytes());;
-        assertNotNull(activityDefinitionService.createActivityDefinition(
-                "test", "test", "test", file, "PEM"));
+
+        ActivityDefnReq activityDefnReq = new ActivityDefnReq();
+        activityDefnReq.setApplication(Application.PEM);
+        activityDefnReq.setDescription("desc");
+        activityDefnReq.setName("test");
+        activityDefnReq.setFile(file);
+
+        assertNotNull(activityDefinitionService.createActivityDefinition("test",activityDefnReq));
     }
 
     @Test

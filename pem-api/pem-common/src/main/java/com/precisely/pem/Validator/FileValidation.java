@@ -12,16 +12,16 @@ import java.util.Objects;
 public class FileValidation implements ConstraintValidator<MultipartFileValidator, MultipartFile> {
 
     private static final long FILE_SIZE = 1048576;
-    @SneakyThrows
+
     @Override
-    public boolean isValid(MultipartFile file, ConstraintValidatorContext constraintValidatorContext) {
-         if (file.isEmpty()) {
-            throw new MultipartException("File is empty");
-        }else if(!file.getOriginalFilename().endsWith(".xml")) {
-             throw new InvalidFileException("Invalid File type");
-         }/*else if(!Objects.requireNonNull(file.getContentType()).contains("xml")) {
-            throw new InvalidFileException("Invalid File type");
-        }*/
+    public boolean isValid(MultipartFile multipartFile, ConstraintValidatorContext constraintValidatorContext) {
+        if (!(multipartFile != null
+                && !multipartFile.isEmpty()
+                && Objects.requireNonNull(multipartFile.getContentType()).endsWith("xml")
+                && Objects.requireNonNull(multipartFile.getOriginalFilename()).endsWith(".xml")
+                && multipartFile.getSize() != 0L)) {
+            throw new MultipartException("There is an issue with the File.Kindly check.");
+        }
         return true;
     }
 }

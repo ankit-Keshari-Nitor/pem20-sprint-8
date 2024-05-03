@@ -1,11 +1,13 @@
 package com.precisely.pem.exceptionhandler;
 
-import com.precisely.pem.dtos.shared.ErrorResponseDto;
 import jakarta.validation.ConstraintViolationException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -13,6 +15,8 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import org.springframework.web.multipart.MultipartException;
 
 import javax.naming.SizeLimitExceededException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDateTime;
 import java.util.prefs.InvalidPreferencesFormatException;
 
 @ControllerAdvice
@@ -81,6 +85,20 @@ public class ResponseExceptionHandler{
         errResp.setErrorCode(1001);
         errResp.setErrorDescription("Validation Failure");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        JSONArray jsonArray = new JSONArray();
+        ex.getBindingResult().getFieldErrors().forEach(objectError -> {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("fieldName",objectError.getField());
+            jsonObject.put("fieldValue",objectError.getRejectedValue());
+            jsonObject.put("code",objectError.getCode());
+            jsonObject.put("time", LocalDateTime.now());
+            jsonArray.put(jsonObject);
+        });
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonArray.toString());
     }
 
     @ExceptionHandler(Exception.class)

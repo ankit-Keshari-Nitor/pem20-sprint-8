@@ -69,7 +69,7 @@ class ActivityVersionServiceImplTest {
         Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString()))
                 .thenReturn("cashbank");
         Page<ActivityDefnVersion> defnsPage = new PageImpl<>(getVersionList());
-        Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndActivityVersionDescriptionContaining(eq(activityDefnKey),eq(status),eq(sponsorContext),
+        Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndDescriptionContaining(eq(activityDefnKey),eq(status),eq(sponsorContext),
                         eq(applicationDescription),Mockito.any(Pageable.class)))
                 .thenReturn(defnsPage);
         ActivityDefnVersionDto dto = new ActivityDefnVersionDto();

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface ActivityDefnVersionRepo extends JpaRepository<ActivityDefnVersion,String> {
     @Query(nativeQuery = true, value = "SELECT * FROM ACTIVITY_DEFN_VERSION WHERE IS_DEFAULT = 1")
     ActivityDefnVersion findDefaultVersion();
-    Page<ActivityDefnVersion> findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndActivityVersionDescriptionContaining(String activityDefnKey, String status, String context, String description, Pageable pageable);
+    Page<ActivityDefnVersion> findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndDescriptionContaining(String activityDefnKey, String status, String context, String description, Pageable pageable);
     Page<ActivityDefnVersion> findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(String activityDefnKey, String status, String context, Pageable pageable);
     ActivityDefnVersion findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(String activityDefnKey, String activityDefnVersionKey, String context);
 }

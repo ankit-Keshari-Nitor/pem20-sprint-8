@@ -65,7 +65,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         String context = sponsorRepo.getSponsorKey(sponsorContext);
         Page<ActivityDefnVersion> defnsPage = null;
         if(description != null && !description.isEmpty())
-            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndActivityVersionDescriptionContaining(activityDefnKey,status,context,description,pageable);
+            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndDescriptionContaining(activityDefnKey,status,context,description,pageable);
         else
             defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(activityDefnKey,status,context,pageable);
 

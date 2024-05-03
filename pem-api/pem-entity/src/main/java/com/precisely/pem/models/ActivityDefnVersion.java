@@ -16,8 +16,8 @@ public class ActivityDefnVersion extends HouseKeepingFields{
     @Column(name="ACTIVITY_DEFN_KEY")
     private String activityDefnKey;
 
-    @Column(name="ACTIVITY_VERSION_DESCRIPTION")
-    private String activityVersionDescription;
+    @Column(name="DESCRIPTION")
+    private String description;
 
     @Column(name="ACTIVITY_DEFN_DATA_KEY")
     private String activityDefnDataKey;

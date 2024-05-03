@@ -22,5 +22,5 @@ public class ActivityVersionReq {
 
     @NotEmpty
     @SpecialCharValidator
-    private String activityVersionDescription;
+    private String description;
 }

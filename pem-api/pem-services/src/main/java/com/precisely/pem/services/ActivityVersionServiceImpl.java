@@ -149,7 +149,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
                 activityDefnData.getActivityDefnDataKey(), ++version,
                 Status.DRAFT.toString(), false, activityVersionReq.getIsEncrypted(),
                 "", LocalDateTime.now(), "", LocalDateTime.now(),
-                "", ApplicationConstants.SCHEMA_VERSION,activityVersionReq.getActivityVersionDescription()
+                "", ApplicationConstants.SCHEMA_VERSION,activityVersionReq.getDescription()
         );
         activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
         activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);

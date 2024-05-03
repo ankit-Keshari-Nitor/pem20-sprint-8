@@ -12,6 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ActivityVersionDefnPaginationResp {
-    private List<ActivityDefnVersionDto> content;
+    private List<ActivityDefnVersionListResp> content;
     private PaginationDto page;
 }

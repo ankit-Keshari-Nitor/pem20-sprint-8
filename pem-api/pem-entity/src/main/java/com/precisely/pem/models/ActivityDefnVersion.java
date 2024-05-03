@@ -2,13 +2,13 @@ package com.precisely.pem.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
-
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @Table(name = "ACTIVITY_DEFN_VERSION")
-public class ActivityDefnVersion {
+public class ActivityDefnVersion extends BaseEntity {
     @Id
     @Column(name="ACTIVITY_DEFN_KEY_VERSION")
     private String activityDefnKeyVersion;
@@ -16,35 +16,29 @@ public class ActivityDefnVersion {
     @Column(name="ACTIVITY_DEFN_KEY")
     private String activityDefnKey;
 
+    @Column(name="DESCRIPTION")
+    private String description;
+
     @Column(name="ACTIVITY_DEFN_DATA_KEY")
     private String activityDefnDataKey;
 
-    @Column(name="VERSION")
-    private int version;
+    @Column(name="VERSION", columnDefinition="Decimal(10,1)")
+    private Double version;
 
     @Column(name="STATUS")
     private String status;
 
     @Column(name="IS_DEFAULT")
-    private boolean isDefault;
+    private Boolean isDefault;
 
     @Column(name="IS_ENCRYPTED")
-    private boolean isEncrypted;
+    private Boolean isEncrypted;
 
     @Column(name="ENCRYPTION_KEY")
     private String encryptionKey;
 
-    @Column(name="CREATE_TS")
-    private LocalDateTime createTs;
-
-    @Column(name="CREATED_BY")
-    private String createdBy;
-
-    @Column(name="MODIFY_TS")
-    private LocalDateTime modifyTs;
-
-    @Column(name="MODIFIED_BY")
-    private String modifiedBy;
+    @Column(name="SCHEMA_VERSION", columnDefinition="Decimal(10,2)")
+    private Double schemaVersion;
 
     @ManyToOne
     @JoinColumn(name = "activity_Defn_Details")

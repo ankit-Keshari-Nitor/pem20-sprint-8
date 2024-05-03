@@ -28,7 +28,4 @@ public class ActivityDefnReq {
     @NotNull
     private Application application;
 
-    @NotEmpty
-    @SpecialCharValidator
-    private String activityVersionDescription;
 }

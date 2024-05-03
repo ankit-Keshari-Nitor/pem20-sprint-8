@@ -156,7 +156,7 @@
                     activityDefnData.getActivityDefnDataKey(), ApplicationConstants.DEFAULT_VERSION,
                     String.valueOf(Status.DRAFT), true, false,
                     "", LocalDateTime.now(), "", LocalDateTime.now(),
-                    "", ApplicationConstants.SCHEMA_VERSION,activityDefnReq.getActivityVersionDescription());
+                    "", ApplicationConstants.SCHEMA_VERSION,activityDefnReq.getDescription());
             activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
             activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
 

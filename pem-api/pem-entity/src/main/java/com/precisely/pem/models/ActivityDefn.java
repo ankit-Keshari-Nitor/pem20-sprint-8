@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "ACTIVITY_DEFN")
-public class ActivityDefn extends HouseKeepingFields{
+public class ActivityDefn extends BaseFields {
     @Id
     @Column(name="ACTIVITY_DEFN_KEY")
     private String activityDefnKey;

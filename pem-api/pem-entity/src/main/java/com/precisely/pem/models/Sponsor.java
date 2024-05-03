@@ -7,13 +7,11 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Date;
-
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @Table(name = "SPONSOR")
-public class Sponsor extends HouseKeepingFields{
+public class Sponsor extends BaseFields {
     @Id
     @Column(name="SPONSOR_KEY")
     private String sponsorKey;

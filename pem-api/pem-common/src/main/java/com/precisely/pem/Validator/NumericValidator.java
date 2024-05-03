@@ -5,12 +5,12 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-@Constraint(validatedBy = FileValidation.class)
+@Constraint(validatedBy = LowerCaseValidation.class)
 @Target({ElementType.PARAMETER,ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface MultipartFileValidator {
-    String message() default "Must be 8 characters long and combination of uppercase letters, lowercase letters, numbers, special characters.";
+public @interface NumericValidator {
+    String message() default "Only numbers allowed.";
 
     Class<?>[] groups() default {};
 

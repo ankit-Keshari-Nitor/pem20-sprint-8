@@ -3,14 +3,15 @@ package com.precisely.pem.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @Table(name = "ACTIVITY_DEFN")
-public class ActivityDefn {
+public class ActivityDefn extends BaseEntity {
     @Id
     @Column(name="ACTIVITY_DEFN_KEY")
     private String activityDefnKey;
@@ -19,7 +20,7 @@ public class ActivityDefn {
     @Size(min = 1, max = 50)
     private String sponsorKey;
 
-    @Column(name="ACTIVITY_NAME")
+    @Column(name="ACTIVITY_NAME", unique = true)
     @Size(min = 1, max = 80)
     private String activityName;
 
@@ -27,23 +28,11 @@ public class ActivityDefn {
     @Size(min = 1, max = 255)
     private String activityDescription;
 
-    @Column(name="CREATE_TS")
-    private LocalDateTime createTs;
-
-    @Column(name="CREATED_BY")
-    private String createdBy;
-
-    @Column(name="MODIFY_TS")
-    private LocalDateTime modifyTs;
-
-    @Column(name="MODIFIED_BY")
-    private String modifiedBy;
-
     @Column(name="APPLICATION")
     private String application;
 
     @Column(name="IS_DELETED")
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @Column(name="MIGRATION_STATUS")
     private boolean migrationStatus;

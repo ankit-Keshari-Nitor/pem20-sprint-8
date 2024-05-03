@@ -5,13 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.util.Date;
-
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @Table(name = "SPONSOR")
-public class Sponsor {
+public class Sponsor extends BaseEntity {
     @Id
     @Column(name="SPONSOR_KEY")
     private String sponsorKey;
@@ -24,18 +24,6 @@ public class Sponsor {
 
     @Column(name="DOMAIN_URL")
     private String domainUrl;
-
-    @Column(name="CREATE_TS")
-    private Date createTs;
-
-    @Column(name="CREATED_BY")
-    private String createdBy;
-
-    @Column(name="MODIFY_TS")
-    private Date modifyTs;
-
-    @Column(name="MODIFIED_BY")
-    private String modifiedBy;
 
     @Column(name="REGISTRATION_MODE")
     private String registrationMode;

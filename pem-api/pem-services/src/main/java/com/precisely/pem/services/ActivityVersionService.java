@@ -1,10 +1,8 @@
 package com.precisely.pem.services;
 
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
-import com.precisely.pem.dtos.responses.ActivityDefnVersionListResp;
-import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
-import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
-import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
+import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
+import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 
 import java.io.IOException;
@@ -18,4 +16,7 @@ public interface ActivityVersionService {
     ActivityDefnVersionResp createActivityDefnVersion(String sponsorContext, String activityDefnKey, ActivityVersionReq activityVersionReq) throws OnlyOneDraftVersionException, IOException, SQLException;
 
     MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersion(String activityDefnVersionKey) throws Exception;
+
+    UpdateActivityDefnVersionResp updateActivityDefnVersion(String sponsorContext, String activityDefnKey,String activityDefnVersionKey
+                                                            ,UpdateActivityVersionReq updateActivityVersionReq) throws Exception ;
 }

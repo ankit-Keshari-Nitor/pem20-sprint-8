@@ -6,7 +6,7 @@
     import com.precisely.pem.dtos.responses.ActivityDefnListResp;
     import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
     import com.precisely.pem.dtos.responses.ActivityDefnResp;
-    import com.precisely.pem.dtos.responses.ActivityDefnUpdateResp;
+    import com.precisely.pem.dtos.responses.MessageResp;
     import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
     import com.precisely.pem.dtos.shared.ActivityDefnDto;
     import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
@@ -184,7 +184,7 @@
 
         @Override
         @Transactional(rollbackFor = Exception.class)
-        public ActivityDefnUpdateResp updateActivityDefinitionByKey(String sponsorContext, String name, String description, String activityDefnKey) throws Exception{
+        public MessageResp updateActivityDefinitionByKey(String sponsorContext, String name, String description, String activityDefnKey) throws Exception{
             String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
             Optional<ActivityDefn> activityDefn = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, SponsorKey));
             if(activityDefn.isEmpty()){
@@ -196,10 +196,9 @@
             activityDefn.get().setActivityName(name);
             activityDefn.get().setActivityDescription(description);
             ActivityDefn savedActivityDefn = activityDefnRepo.save(activityDefn.get());
-            ActivityDefnUpdateResp activityDefnUpdateResp = new ActivityDefnUpdateResp();
-            activityDefnUpdateResp.setResponse("Activity Name & Description Update successful");
-            ModelMapper mapper = new ModelMapper();
-            return mapper.map(activityDefnUpdateResp, ActivityDefnUpdateResp.class);
+            MessageResp messsageResp = new MessageResp();
+            messsageResp.setResponse("Activity Name & Description Update successful");
+            return messsageResp;
 
         }
     }

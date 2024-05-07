@@ -5,7 +5,7 @@ import com.precisely.pem.dtos.requests.ActivityDefnReq;
 import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.ActivityDefnResp;
-import com.precisely.pem.dtos.responses.ActivityDefnUpdateResp;
+import com.precisely.pem.dtos.responses.MessageResp;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -16,5 +16,5 @@ public interface ActivityDefnService {
                                                           String sortBy, String sortDir) throws Exception;
     public ActivityDefnResp createActivityDefinition(String sponsorContext, ActivityDefnReq activityDefnReq) throws IOException, SQLException;
     public ActivityDefnListResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception;
-    public ActivityDefnUpdateResp updateActivityDefinitionByKey(String sponsorContext, String name, String description, String activityDefnKey) throws Exception;
+    public MessageResp updateActivityDefinitionByKey(String sponsorContext, String name, String description, String activityDefnKey) throws Exception;
 }

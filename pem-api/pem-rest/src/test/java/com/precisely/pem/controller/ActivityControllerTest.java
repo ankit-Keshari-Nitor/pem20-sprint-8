@@ -8,7 +8,7 @@ import com.precisely.pem.dtos.requests.ActivityDefnReq;
 import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.ActivityDefnResp;
-import com.precisely.pem.dtos.responses.ActivityDefnUpdateResp;
+import com.precisely.pem.dtos.responses.MessageResp;
 import com.precisely.pem.services.ActivityDefnService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,7 +82,7 @@ class ActivityControllerTest {
         String activityDefnKey = "test";
         String name = "test";
         String description = "test";
-        ActivityDefnUpdateResp resp = new ActivityDefnUpdateResp();
+        MessageResp resp = new MessageResp();
         Mockito.when(activityDefnService.updateActivityDefinitionByKey(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(resp);
         ResponseEntity<Object> output = activityController.updateActivityDefinitionByKey(sponsorContext, name,description, activityDefnKey);

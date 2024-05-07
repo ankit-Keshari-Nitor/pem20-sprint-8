@@ -3,6 +3,6 @@ package com.precisely.pem.dtos.responses;
 import lombok.Data;
 
 @Data
-public class ActivityDefnUpdateResp {
+public class MessageResp {
     public String response;
 }

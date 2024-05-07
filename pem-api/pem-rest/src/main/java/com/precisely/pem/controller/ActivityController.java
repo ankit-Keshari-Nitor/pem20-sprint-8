@@ -133,7 +133,7 @@ public class ActivityController {
             @ApiResponse(responseCode = "404", description = "Activity Definition not found", content = {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }) })
-    @DeleteMapping("/{activityDefnKey}")
+    @DeleteMapping(value = "/{activityDefnKey}" , produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Object> deleteActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey) throws Exception {
         return  new ResponseEntity<>(activityDefnService.deleteActivityDefinitionById(sponsorContext, activityDefnKey), HttpStatus.OK);
     }

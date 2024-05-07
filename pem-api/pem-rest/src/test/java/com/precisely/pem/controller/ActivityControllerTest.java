@@ -5,16 +5,12 @@ import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityDefnReq;
-import com.precisely.pem.dtos.responses.ActivityDefnListResp;
-import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
-import com.precisely.pem.dtos.responses.ActivityDefnResp;
+import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.services.ActivityDefnService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ActivityControllerTest {
@@ -73,5 +70,15 @@ class ActivityControllerTest {
                 .thenReturn(resp);
         ResponseEntity<Object> output = activityController.getActivityDefinitionByKey(sponsorContext,activityDefnKey);
         assertNotNull(output);
+    }
+
+    @Test
+    void deleteActivityDefinitionById() throws Exception {
+        Mockito.when(activityDefnService.deleteActivityDefinitionById(ArgumentMatchers.anyString(),ArgumentMatchers.anyString()))
+                .thenReturn(DeleteActivityDefinition.builder().build());
+
+        ResponseEntity<Object> resp = activityController.deleteActivityDefinitionByKey("hsbc","fd2dfe53-b38c-40cf-acb7-9850d1930858");
+        assertNotNull(resp);
+        assertEquals(resp.getStatusCode(), HttpStatus.OK);
     }
 }

@@ -12,10 +12,7 @@ import com.precisely.pem.exceptionhandler.ErrorResponseDto;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
-import com.precisely.pem.repositories.ActivityDefnDataRepo;
-import com.precisely.pem.repositories.ActivityDefnRepo;
-import com.precisely.pem.repositories.ActivityDefnVersionRepo;
-import com.precisely.pem.repositories.SponsorRepo;
+import com.precisely.pem.repositories.*;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +49,8 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
     @Autowired
     private ModelMapper mapper;
 
+    @Autowired
+    private ActivityDefinitionVersionCustomRepo activityDefinitionVersionCustomRepo;
     @Override
     public ActivityDefnPaginationRes getAllDefinitionList(String sponsorContext, String name,
                                                           String description, String application, String status,
@@ -197,36 +196,24 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
             1.All Versions are in DRAFT, hard delete all Data from tables
             2.If any one Version apart from DRAFT present, Mark that status as DELETE and IS_DELETED in Activity Defn as TRUE and hard Delete all DRAFT Versions
          */
-        List<ActivityDefnVersion> activityDefnVersions = activityDefnVersionRepo.findByActivityDefnKey(activityDefnOptional.get().getActivityDefnKey());
-
         //check count of Versions with Status other than DRAFT
-        long count = activityDefnVersions.stream().filter(activityDefnVersion -> !activityDefnVersion.getStatus().equalsIgnoreCase(Status.DRAFT.toString())).count();
+        long count = activityDefnVersionRepo.countByActivityDefnKeyAndStatusNot(activityDefnOptional.get().getActivityDefnKey(),Status.DRAFT.getStatus());
 
-        DeleteActivityDefinition response = DeleteActivityDefinition.builder().totalActivityVersions(activityDefnVersions.size()).build();
+        DeleteActivityDefinition response = DeleteActivityDefinition.builder().build();
         if (count == 0) {
-            response.setActivityVersionsSoftDeleted(0);
-            response.setActivityVersionsHardDeleted(activityDefnVersions.size());
             activityDefnRepo.deleteById(activityDefnKey);
+            response.setResponse("Activity Definition Records Deleted Successfully");
 
         } else {
-            //find Non-Draft Version and Update those with Soft Delete
-            List<ActivityDefnVersion> nonDraftActivityDefnVersions = activityDefnVersions.stream()
-                    .filter(activityDefnVersion -> !activityDefnVersion.getStatus().equalsIgnoreCase(Status.DRAFT.toString()))
-                    .peek(activityDefnVersion -> activityDefnVersion.setStatus(Status.DELETE.getStatus())).toList();
-
-            List<String> draftActivityDefnVersions = activityDefnVersions.stream()
-                    .filter(activityDefnVersion -> activityDefnVersion.getStatus().equalsIgnoreCase(Status.DRAFT.toString()))
-                    .map(ActivityDefnVersion::getActivityDefnKeyVersion)
-                    .toList();
-            activityDefnVersionRepo.deleteByKeys(draftActivityDefnVersions);
-
-            activityDefnVersionRepo.saveAll(nonDraftActivityDefnVersions);
+            //Update Non-Draft Version with Soft Delete
+            int updated = activityDefinitionVersionCustomRepo.updateActivityDefinitionVersion(Status.DELETE,Status.DRAFT,activityDefnOptional.get().getActivityDefnKey());
+            //Hard Delete Draft Version with Soft Delete
+            int deleted = activityDefinitionVersionCustomRepo.deleteByActivityDefnKeyAndStatus(activityDefnOptional.get().getActivityDefnKey(),Status.DRAFT.getStatus());
 
             activityDefnOptional.get().setIsDeleted(Boolean.TRUE);
             activityDefnRepo.save(activityDefnOptional.get());
 
-            response.setActivityVersionsSoftDeleted(nonDraftActivityDefnVersions.size());
-            response.setActivityVersionsHardDeleted(draftActivityDefnVersions.size());
+            response.setResponse("Activity Definition Records Deleted Successfully");
         }
         return response;
     }

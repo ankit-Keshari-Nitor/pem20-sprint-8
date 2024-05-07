@@ -6,7 +6,5 @@ import lombok.Data;
 @Data
 @Builder
 public class DeleteActivityDefinition {
-    private Integer totalActivityVersions;
-    private Integer activityVersionsHardDeleted;
-    private Integer activityVersionsSoftDeleted;
+    private String response;
 }

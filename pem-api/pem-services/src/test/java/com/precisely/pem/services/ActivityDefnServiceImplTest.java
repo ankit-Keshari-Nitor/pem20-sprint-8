@@ -120,8 +120,6 @@ class ActivityDefnServiceImplTest {
 
         DeleteActivityDefinition response = activityDefinitionService.deleteActivityDefinitionById("test_sponsor","test_key");
         assertNotNull(response);
-        assertEquals(2,response.getTotalActivityVersions());
-        assertEquals(2,response.getActivityVersionsHardDeleted());
     }
 
     @Test
@@ -133,9 +131,6 @@ class ActivityDefnServiceImplTest {
 
         DeleteActivityDefinition response = activityDefinitionService.deleteActivityDefinitionById("test_sponsor","test_key");
         assertNotNull(response);
-        assertEquals(2,response.getTotalActivityVersions());
-        assertEquals(1,response.getActivityVersionsHardDeleted());
-        assertEquals(1,response.getActivityVersionsSoftDeleted());
     }
 
     @Test

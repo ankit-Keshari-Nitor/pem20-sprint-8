@@ -22,7 +22,7 @@ const AppAuthHandler = () => {
     },
     onPostAuthenticate: () => {
       //const { setAppDetails} = Shell.useApplicationInfo();
-      window.sessionStorage.setItem('defaultRoute', '/manage/myorganization');
+      window.sessionStorage.setItem('defaultRoute', '/directories/partners');
       window.sessionStorage.setItem('appContext', JSON.stringify({ organization: { organizationKey: 'DEFAULT', organizationName: 'Default Organization' } }));
       //setAppDetails({defaultRoute: '/manage/myorganization'})
     },

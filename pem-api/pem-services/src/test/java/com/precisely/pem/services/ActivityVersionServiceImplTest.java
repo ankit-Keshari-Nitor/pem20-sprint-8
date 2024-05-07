@@ -3,8 +3,10 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
-import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
-import com.precisely.pem.dtos.responses.*;
+import com.precisely.pem.dtos.responses.ActivityDefnVersionListResp;
+import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
+import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
+import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.models.ActivityDefn;
@@ -164,70 +166,6 @@ class ActivityVersionServiceImplTest {
                     markAsFinalActivityDefinitionVersion("9ec7e29e-9cbe-4298-bb67-a53f86868592");
         });
         assertEquals(exception.getMessage(),"Activity Definition Version not found");
-    }
-
-    @Test
-    void updateActivityDefinitionVersion() throws Exception {
-
-        MultipartFile multipartFile = new MockMultipartFile("emptyFile", new byte[0]);
-
-        Optional<ActivityDefnVersion> activityDefnVersion = Optional.of(new ActivityDefnVersion());
-        Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString())).thenReturn(activityDefnVersion);
-
-        Mockito.when(activityDefnVersionRepo.save(activityDefnVersion.get())).thenReturn(activityDefnVersion.get());
-
-        ActivityDefnData activityDefnData = new ActivityDefnData();
-        activityDefnData.setActivityDefnDataKey("9ec7e29e-9cbe-4298-bb67-a53f86868592");
-
-        Optional<ActivityDefnData> optionalActivityDefnData = Optional.of(activityDefnData);
-
-        Mockito.when(activityDefnDataRepo.findById(Mockito.any())).thenReturn(optionalActivityDefnData);
-
-        Mockito.when(activityDefnDataRepo.save(activityDefnData)).thenReturn(activityDefnData);
-
-        UpdateActivityDefnVersionResp resp = activityVersionService.
-                updateActivityDefnVersion("hsbc","9ec7e29e-9cbe-4298-bb67-a53f86868592","9ec7e29e-9cbe-4298-bb67-a53f86868592",
-                        UpdateActivityVersionReq.builder().description("updated").file(multipartFile).isEncrypted(Boolean.TRUE).build());
-
-        assertNotNull(resp);
-        assertEquals("updated",resp.getDescription());
-
-    }
-
-    @Test
-    void updateActivityDefinitionVersion_ActivityDefnVersionNotFound() throws Exception {
-
-        MultipartFile multipartFile = new MockMultipartFile("emptyFile", new byte[0]);
-
-        Optional<ActivityDefnVersion> activityDefnVersion = Optional.empty();
-        Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString())).thenReturn(activityDefnVersion);
-
-        Exception exception = assertThrows(Exception.class, () ->{
-            activityVersionService.
-                    updateActivityDefnVersion("hsbc","9ec7e29e-9cbe-4298-bb67-a53f86868592","9ec7e29e-9cbe-4298-bb67-a53f86868592",
-                            UpdateActivityVersionReq.builder().description("updated").file(multipartFile).isEncrypted(Boolean.TRUE).build());
-        });
-        assertEquals(exception.getMessage(),"Activity Definition Version not found");
-
-    }
-
-
-    @Test
-    void updateActivityDefinitionVersion_ActivityDefnDataNotFound() throws Exception {
-
-        MultipartFile multipartFile = new MockMultipartFile("emptyFile", new byte[0]);
-
-        Optional<ActivityDefnVersion> activityDefnVersion = Optional.of(new ActivityDefnVersion());
-        Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString())).thenReturn(activityDefnVersion);
-
-
-        Exception exception = assertThrows(Exception.class, () ->{
-            activityVersionService.
-                    updateActivityDefnVersion("hsbc","9ec7e29e-9cbe-4298-bb67-a53f86868592","9ec7e29e-9cbe-4298-bb67-a53f86868592",
-                            UpdateActivityVersionReq.builder().description("updated").file(multipartFile).isEncrypted(Boolean.TRUE).build());
-        });
-        assertEquals(exception.getMessage(),"Activity Definition Version Data not found");
-
     }
 
 }

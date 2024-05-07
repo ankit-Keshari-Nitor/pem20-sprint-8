@@ -4,11 +4,9 @@ import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
-import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
-import com.precisely.pem.dtos.responses.UpdateActivityDefnVersionResp;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.exceptionhandler.ErrorResponseDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
@@ -130,30 +128,7 @@ public class ActivityVersionController {
     @PostMapping("/{activityDefnVersionKey}/actions/markAsFinal")
     public ResponseEntity<Object> markActivityDefinitionStatusAsFinal(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
         if(log.isEnabled(Level.INFO))
-            log.info("Mark Activity Definition Version Status: Starts");
+            log.info("Retrieve all Activity Definitions: Starts");
         return  new ResponseEntity<>(activityVersionService.markAsFinalActivityDefinitionVersion(activityDefnVersionKey), HttpStatus.OK);
-    }
-
-
-    @Operation(summary = "Update Activity Definition Version", tags = { "Activity Definition Version" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = UpdateActivityDefnVersionResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
-                    @Content(schema = @Schema(implementation = UpdateActivityDefnVersionResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
-            @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
-                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
-                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
-            @ApiResponse(responseCode = "500", content = {
-                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
-                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
-    })
-    @PutMapping( value = "/{activityDefnVersionKey}" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
-    public ResponseEntity<Object> updateActivityDefinitionVersion(@PathVariable(value = "sponsorContext")String sponsorContext,
-                                                                      @PathVariable(value = "activityDefnKey")String activityDefnKey,
-                                                                      @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey,
-                                                                      @ModelAttribute @Valid UpdateActivityVersionReq updateActivityVersionReq) throws Exception {
-        if(log.isEnabled(Level.INFO))
-            log.info("Update Activity Definition Version: Starts");
-        return  new ResponseEntity<>(activityVersionService.updateActivityDefnVersion(sponsorContext,activityDefnKey,activityDefnVersionKey,updateActivityVersionReq), HttpStatus.OK);
     }
 }

@@ -3,8 +3,10 @@ package com.precisely.pem.services;
 import com.precisely.pem.commonUtil.ApplicationConstants;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
-import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
-import com.precisely.pem.dtos.responses.*;
+import com.precisely.pem.dtos.responses.ActivityDefnVersionListResp;
+import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
+import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
+import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.PaginationDto;
@@ -17,7 +19,6 @@ import com.precisely.pem.repositories.ActivityDefnDataRepo;
 import com.precisely.pem.repositories.ActivityDefnRepo;
 import com.precisely.pem.repositories.ActivityDefnVersionRepo;
 import com.precisely.pem.repositories.SponsorRepo;
-import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +42,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@Log4j2
 public class ActivityVersionServiceImpl implements ActivityVersionService{
+    Logger logger = LoggerFactory.getLogger(ActivityVersionServiceImpl.class);
     @Autowired
     private SponsorRepo sponsorRepo;
     @Autowired
@@ -128,7 +129,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             throw new OnlyOneDraftVersionException("A version with Draft version already exists. Kindly verify the version");
         }
 
-        log.info("count : " + activityDefn.get().getVersions().size());
+        logger.info("count : " + activityDefn.get().getVersions().size());
 
         //Populating the Activity Definition Data Object
         byte[] bytes = activityVersionReq.getFile().getBytes();
@@ -171,41 +172,5 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         ActivityDefnVersion savedActivityDefnVersion =  activityDefnVersionRepo.save(activityDefnVersion.get());
         ModelMapper mapper = new ModelMapper();
         return mapper.map(savedActivityDefnVersion, MarkAsFinalActivityDefinitionVersionResp.class);
-    }
-
-    @Override
-    public UpdateActivityDefnVersionResp updateActivityDefnVersion(String sponsorContext, String activityDefnKey, String activityDefnVersionKey, UpdateActivityVersionReq updateActivityVersionReq) throws Exception {
-
-        Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
-        if(activityDefnVersion.isEmpty()){
-            throw  new Exception("Activity Definition Version not found" );
-        }
-
-        Optional<ActivityDefnData> activityDefnData = activityDefnDataRepo.findById(activityDefnVersion.get().getActivityDefnDataKey());
-        if(activityDefnData.isEmpty()){
-            throw  new Exception("Activity Definition Version Data not found" );
-        }
-
-        //Populating the Activity Definition Data Object
-        byte[] bytes = updateActivityVersionReq.getFile().getBytes();
-        Blob blob = new SerialBlob(bytes);
-
-        activityDefnData.get().setDefData(blob);
-        activityDefnData.get().setModifyTs(LocalDateTime.now());
-
-        activityDefnDataRepo.save(activityDefnData.get());
-
-        activityDefnVersion.get().setIsEncrypted(updateActivityVersionReq.getIsEncrypted());
-        activityDefnVersion.get().setDescription(updateActivityVersionReq.getDescription());
-        activityDefnVersion.get().setModifyTs(LocalDateTime.now());
-        activityDefnVersionRepo.save(activityDefnVersion.get());
-
-
-        return UpdateActivityDefnVersionResp.builder()
-                .activityDefnKey(activityDefnKey)
-                .activityDefnVersionKey(activityDefnVersion.get().getActivityDefnKeyVersion())
-                .isEncrypted(activityDefnVersion.get().getIsEncrypted())
-                .description(activityDefnVersion.get().getDescription())
-                .build();
     }
 }

@@ -6,6 +6,7 @@
     import com.precisely.pem.dtos.responses.ActivityDefnListResp;
     import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
     import com.precisely.pem.dtos.responses.ActivityDefnResp;
+    import com.precisely.pem.dtos.responses.MessageResp;
     import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
     import com.precisely.pem.dtos.shared.ActivityDefnDto;
     import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
@@ -179,5 +180,25 @@
             }
             ModelMapper mapper = new ModelMapper();
             return mapper.map(result.get(), ActivityDefnListResp.class);
+        }
+
+        @Override
+        @Transactional(rollbackFor = Exception.class)
+        public MessageResp updateActivityDefinitionByKey(String sponsorContext, String name, String description, String activityDefnKey) throws Exception{
+            String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
+            Optional<ActivityDefn> activityDefn = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, SponsorKey));
+            if(activityDefn.isEmpty()){
+                ErrorResponseDto errorDto = new ErrorResponseDto();
+                errorDto.setErrorDescription("No data Found");
+                errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
+                throw new Exception("No entries found for the combination");
+            }
+            activityDefn.get().setActivityName(name);
+            activityDefn.get().setActivityDescription(description);
+            ActivityDefn savedActivityDefn = activityDefnRepo.save(activityDefn.get());
+            MessageResp messsageResp = new MessageResp();
+            messsageResp.setResponse("Activity Name & Description Update successful");
+            return messsageResp;
+
         }
     }

@@ -82,7 +82,7 @@ class ActivityControllerTest {
         String activityDefnKey = "test";
         String name = "test";
         String description = "test";
-        MessageResp resp = new MessageResp();
+        MessageResp resp = MessageResp.builder().build();
         Mockito.when(activityDefnService.updateActivityDefinitionByKey(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(resp);
         ResponseEntity<Object> output = activityController.updateActivityDefinitionByKey(sponsorContext, name,description, activityDefnKey);
@@ -92,7 +92,7 @@ class ActivityControllerTest {
     @Test
     void deleteActivityDefinitionById() throws Exception {
         Mockito.when(activityDefnService.deleteActivityDefinitionById(ArgumentMatchers.anyString(),ArgumentMatchers.anyString()))
-                .thenReturn(DeleteActivityDefinition.builder().build());
+                .thenReturn(MessageResp.builder().build());
 
         ResponseEntity<Object> resp = activityController.deleteActivityDefinitionByKey("hsbc","fd2dfe53-b38c-40cf-acb7-9850d1930858");
         assertNotNull(resp);

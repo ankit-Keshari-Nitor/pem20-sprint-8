@@ -118,7 +118,7 @@ class ActivityDefnServiceImplTest {
 
         Mockito.when(activityDefnVersionRepo.findByActivityDefnKey(ArgumentMatchers.anyString())).thenReturn(getAllDraftVersionList());
 
-        DeleteActivityDefinition response = activityDefinitionService.deleteActivityDefinitionById("test_sponsor","test_key");
+        MessageResp response = activityDefinitionService.deleteActivityDefinitionById("test_sponsor","test_key");
         assertNotNull(response);
     }
 
@@ -129,7 +129,7 @@ class ActivityDefnServiceImplTest {
 
         Mockito.when(activityDefnVersionRepo.findByActivityDefnKey(ArgumentMatchers.anyString())).thenReturn(getPartialDraftVersionList());
 
-        DeleteActivityDefinition response = activityDefinitionService.deleteActivityDefinitionById("test_sponsor","test_key");
+        MessageResp response = activityDefinitionService.deleteActivityDefinitionById("test_sponsor","test_key");
         assertNotNull(response);
     }
 

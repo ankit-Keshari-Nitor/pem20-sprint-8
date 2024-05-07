@@ -17,6 +17,6 @@ public interface ActivityVersionService {
 
     MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersion(String activityDefnVersionKey) throws Exception;
 
-    UpdateActivityDefnVersionResp updateActivityDefnVersion(String sponsorContext, String activityDefnKey,String activityDefnVersionKey
-                                                            ,UpdateActivityVersionReq updateActivityVersionReq) throws Exception ;
+    MessageResp updateActivityDefnVersion(String sponsorContext, String activityDefnKey, String activityDefnVersionKey
+                                                            , UpdateActivityVersionReq updateActivityVersionReq) throws Exception ;
 }

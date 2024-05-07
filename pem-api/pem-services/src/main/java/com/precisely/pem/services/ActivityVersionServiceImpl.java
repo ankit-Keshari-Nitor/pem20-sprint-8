@@ -19,8 +19,6 @@ import com.precisely.pem.repositories.ActivityDefnVersionRepo;
 import com.precisely.pem.repositories.SponsorRepo;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -174,7 +172,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     }
 
     @Override
-    public UpdateActivityDefnVersionResp updateActivityDefnVersion(String sponsorContext, String activityDefnKey, String activityDefnVersionKey, UpdateActivityVersionReq updateActivityVersionReq) throws Exception {
+    public MessageResp updateActivityDefnVersion(String sponsorContext, String activityDefnKey, String activityDefnVersionKey, UpdateActivityVersionReq updateActivityVersionReq) throws Exception {
 
         Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
         if(activityDefnVersion.isEmpty()){
@@ -201,11 +199,6 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         activityDefnVersionRepo.save(activityDefnVersion.get());
 
 
-        return UpdateActivityDefnVersionResp.builder()
-                .activityDefnKey(activityDefnKey)
-                .activityDefnVersionKey(activityDefnVersion.get().getActivityDefnKeyVersion())
-                .isEncrypted(activityDefnVersion.get().getIsEncrypted())
-                .description(activityDefnVersion.get().getDescription())
-                .build();
+        return MessageResp.builder().response("Activity Definition Version Updated.").build();
     }
 }

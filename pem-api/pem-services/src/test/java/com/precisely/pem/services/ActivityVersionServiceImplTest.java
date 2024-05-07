@@ -185,12 +185,12 @@ class ActivityVersionServiceImplTest {
 
         Mockito.when(activityDefnDataRepo.save(activityDefnData)).thenReturn(activityDefnData);
 
-        UpdateActivityDefnVersionResp resp = activityVersionService.
+        MessageResp resp = activityVersionService.
                 updateActivityDefnVersion("hsbc","9ec7e29e-9cbe-4298-bb67-a53f86868592","9ec7e29e-9cbe-4298-bb67-a53f86868592",
                         UpdateActivityVersionReq.builder().description("updated").file(multipartFile).isEncrypted(Boolean.TRUE).build());
 
         assertNotNull(resp);
-        assertEquals("updated",resp.getDescription());
+        assertEquals("Activity Definition Version Updated.",resp.getResponse());
 
     }
 

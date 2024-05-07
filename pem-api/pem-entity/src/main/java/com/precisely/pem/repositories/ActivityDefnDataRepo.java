@@ -13,8 +13,4 @@ import java.util.List;
 @Repository
 public interface ActivityDefnDataRepo extends JpaRepository<ActivityDefnData,String> {
 
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM ActivityDefnData a WHERE a.activityDefnDataKey IN :keys")
-    void deleteByKeys(@Param("keys") List<String> keys);
 }

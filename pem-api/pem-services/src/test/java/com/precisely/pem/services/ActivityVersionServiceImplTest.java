@@ -2,6 +2,7 @@ package com.precisely.pem.services;
 
 
 import com.precisely.pem.commonUtil.Application;
+import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
@@ -10,17 +11,12 @@ import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
-import com.precisely.pem.repositories.ActivityDefnDataRepo;
-import com.precisely.pem.repositories.ActivityDefnRepo;
-import com.precisely.pem.repositories.ActivityDefnVersionRepo;
-import com.precisely.pem.repositories.SponsorRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.modelmapper.ModelMapper;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -36,19 +32,10 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 
-class ActivityVersionServiceImplTest {
+class ActivityVersionServiceImplTest extends BaseServiceTest{
     @InjectMocks
     ActivityVersionServiceImpl activityVersionService;
-    @Mock
-    private ActivityDefnRepo activityDefnRepo;
-    @Mock
-    private ActivityDefnVersionRepo activityDefnVersionRepo;
-    @Mock
-    private ActivityDefnDataRepo activityDefnDataRepo;
-    @Mock
-    private ModelMapper mapper;
-    @Mock
-    private SponsorRepo sponsorRepo;
+
     @BeforeEach
     public void setup(){
         MockitoAnnotations.openMocks(this);
@@ -140,72 +127,74 @@ class ActivityVersionServiceImplTest {
 
     @Test
     void updateMarkAsFinal() throws Exception {
-        Optional<ActivityDefnVersion> activityDefnVersion = Optional.of(new ActivityDefnVersion());
-        Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString())).thenReturn(activityDefnVersion);
+        ActivityDefnVersion activityDefnVersion = getVCHActivityDefnVersionObj();
 
-        Mockito.when(activityDefnVersionRepo.save(activityDefnVersion.get())).thenReturn(activityDefnVersion.get());
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+
+        mockActivityDefnVersionSave(activityDefnVersion).thenReturn(activityDefnVersion);
 
         MarkAsFinalActivityDefinitionVersionResp dto = new MarkAsFinalActivityDefinitionVersionResp();
         Mockito.when(mapper.map(Mockito.any(ActivityDefnVersion.class),eq(MarkAsFinalActivityDefinitionVersionResp.class)))
                 .thenReturn(dto);
         MarkAsFinalActivityDefinitionVersionResp resp = activityVersionService.
-                markAsFinalActivityDefinitionVersion("9ec7e29e-9cbe-4298-bb67-a53f86868592");
+                markAsFinalActivityDefinitionVersion(TEST_ACTIVITY_DEFN_VERSION_KEY);
 
-        assertEquals("FINAL",resp.getStatus());
+        assertEquals(Status.FINAL.getStatus(),resp.getStatus());
         assertNotNull(resp.getModifyTs());
+    }
+
+    private OngoingStubbing<ActivityDefnVersion> mockActivityDefnVersionSave(ActivityDefnVersion activityDefnVersion) {
+        return Mockito.when(activityDefnVersionRepo.save(activityDefnVersion));
+    }
+
+    private OngoingStubbing<Optional<ActivityDefnVersion>> mockActivityDefnVersionFindById() {
+        return Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString()));
     }
 
     @Test
     void testUpdateMarkAsFinalIfActivityVersionNotFound(){
         Optional<ActivityDefnVersion> activityDefnVersion = Optional.empty();
-        Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString())).thenReturn(activityDefnVersion);
-        Exception exception = assertThrows(Exception.class, () ->{
-            activityVersionService.
-                    markAsFinalActivityDefinitionVersion("9ec7e29e-9cbe-4298-bb67-a53f86868592");
-        });
+        mockActivityDefnVersionFindById().thenReturn(activityDefnVersion);
+        Exception exception = assertThrows(Exception.class, () -> activityVersionService.
+                markAsFinalActivityDefinitionVersion(TEST_ACTIVITY_DEFN_VERSION_KEY));
         assertEquals(exception.getMessage(),"Activity Definition Version not found");
     }
 
     @Test
     void updateActivityDefinitionVersion() throws Exception {
+        ActivityDefnVersion activityDefnVersion = getVCHActivityDefnVersionObj();
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+        mockActivityDefnVersionSave(activityDefnVersion).thenReturn(activityDefnVersion);
 
-        MultipartFile multipartFile = new MockMultipartFile("emptyFile", new byte[0]);
+        ActivityDefnData activityDefnData = getVchActivityDefnDataObj();
+        mockActivityDefnDataFindById().thenReturn(Optional.of(activityDefnData));
 
-        Optional<ActivityDefnVersion> activityDefnVersion = Optional.of(new ActivityDefnVersion());
-        Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString())).thenReturn(activityDefnVersion);
+        mockActivityDefnDataSave(activityDefnData).thenReturn(activityDefnData);
 
-        Mockito.when(activityDefnVersionRepo.save(activityDefnVersion.get())).thenReturn(activityDefnVersion.get());
-
-        ActivityDefnData activityDefnData = new ActivityDefnData();
-        activityDefnData.setActivityDefnDataKey("9ec7e29e-9cbe-4298-bb67-a53f86868592");
-
-        Optional<ActivityDefnData> optionalActivityDefnData = Optional.of(activityDefnData);
-
-        Mockito.when(activityDefnDataRepo.findById(Mockito.any())).thenReturn(optionalActivityDefnData);
-
-        Mockito.when(activityDefnDataRepo.save(activityDefnData)).thenReturn(activityDefnData);
-
+        MultipartFile file = getMultipartFile();
         MessageResp resp = activityVersionService.
-                updateActivityDefnVersion("hsbc","9ec7e29e-9cbe-4298-bb67-a53f86868592","9ec7e29e-9cbe-4298-bb67-a53f86868592",
-                        UpdateActivityVersionReq.builder().description("updated").file(multipartFile).isEncrypted(Boolean.TRUE).build());
+                updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
+                        UpdateActivityVersionReq.builder().description(TEST_DESCRIPTION).file(file).isEncrypted(Boolean.TRUE).build());
 
         assertNotNull(resp);
         assertEquals("Activity Definition Version Updated.",resp.getResponse());
 
     }
 
+
+
     @Test
     void updateActivityDefinitionVersion_ActivityDefnVersionNotFound() throws Exception {
 
-        MultipartFile multipartFile = new MockMultipartFile("emptyFile", new byte[0]);
+        MultipartFile multipartFile = getMultipartFile();
 
         Optional<ActivityDefnVersion> activityDefnVersion = Optional.empty();
-        Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString())).thenReturn(activityDefnVersion);
+        mockActivityDefnVersionFindById().thenReturn(activityDefnVersion);
 
         Exception exception = assertThrows(Exception.class, () ->{
             activityVersionService.
-                    updateActivityDefnVersion("hsbc","9ec7e29e-9cbe-4298-bb67-a53f86868592","9ec7e29e-9cbe-4298-bb67-a53f86868592",
-                            UpdateActivityVersionReq.builder().description("updated").file(multipartFile).isEncrypted(Boolean.TRUE).build());
+                    updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
+                            UpdateActivityVersionReq.builder().description(TEST_DESCRIPTION).file(multipartFile).isEncrypted(Boolean.TRUE).build());
         });
         assertEquals(exception.getMessage(),"Activity Definition Version not found");
 
@@ -215,16 +204,16 @@ class ActivityVersionServiceImplTest {
     @Test
     void updateActivityDefinitionVersion_ActivityDefnDataNotFound() throws Exception {
 
-        MultipartFile multipartFile = new MockMultipartFile("emptyFile", new byte[0]);
+        MultipartFile multipartFile = getMultipartFile();
 
-        Optional<ActivityDefnVersion> activityDefnVersion = Optional.of(new ActivityDefnVersion());
-        Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString())).thenReturn(activityDefnVersion);
+        ActivityDefnVersion activityDefnVersion = getVCHActivityDefnVersionObj();
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
 
 
         Exception exception = assertThrows(Exception.class, () ->{
             activityVersionService.
-                    updateActivityDefnVersion("hsbc","9ec7e29e-9cbe-4298-bb67-a53f86868592","9ec7e29e-9cbe-4298-bb67-a53f86868592",
-                            UpdateActivityVersionReq.builder().description("updated").file(multipartFile).isEncrypted(Boolean.TRUE).build());
+                    updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
+                            UpdateActivityVersionReq.builder().description(TEST_DESCRIPTION).file(multipartFile).isEncrypted(Boolean.TRUE).build());
         });
         assertEquals(exception.getMessage(),"Activity Definition Version Data not found");
 

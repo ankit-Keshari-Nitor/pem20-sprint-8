@@ -13,11 +13,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
 import org.modelmapper.ModelMapper;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -33,6 +36,7 @@ public class BaseServiceTest {
     public static final String TEST_SPONSOR = "test_sponsor";
     public static final String TEST_KEY = "test_key";
     public static final String TEST_ACTIVITY_DEFN_KEY = "test_activity_defn_key";
+    public static final String TEST_ACTIVITY_DEFN_VERSION_KEY = "test_activity_defn_key";
     public static final String TEST_FILE_KEY = "file";
     public static final String TEST_FILE_VALUE = "test.txt";
     public static final String CONTENT_TYPE_TEXT = "text/plain";
@@ -49,8 +53,6 @@ public class BaseServiceTest {
 
     @Mock
     protected ActivityDefnRepo activityDefnRepo;
-    @InjectMocks
-    protected ActivityDefnServiceImpl activityDefinitionService;
     @Mock
     protected SponsorRepo sponsorRepo;
     @Mock
@@ -75,7 +77,19 @@ public class BaseServiceTest {
         return Mockito.when(sponsorRepo.getSponsorKey(anyString()));
     }
 
+    protected OngoingStubbing<ActivityDefnData> mockActivityDefnDataSave(ActivityDefnData activityDefnData) {
+        return Mockito.when(activityDefnDataRepo.save(activityDefnData));
+    }
+
+    protected OngoingStubbing<Optional<ActivityDefnData>> mockActivityDefnDataFindById() {
+        return Mockito.when(activityDefnDataRepo.findById(Mockito.any()));
+    }
+
     //Static Request Object Creation
+    protected static MultipartFile getMultipartFile() {
+        return new MockMultipartFile(TEST_FILE_KEY, TEST_FILE_VALUE, CONTENT_TYPE_TEXT, TEST_FILE_DATA.getBytes());
+    }
+
     protected List<ActivityDefnVersion> getPartialDraftVersionList() {
         ActivityDefnVersion v1 = new ActivityDefnVersion();
         v1.setVersion(1.0);

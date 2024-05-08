@@ -19,12 +19,16 @@
     "remember_password": "Remember Password",
     "togglePasswordOn": "Show password",
     "togglePasswordOff": "Hide password",
-    "invalid_user_credentials":" Invalid Userid/Password. Please try again",
+    "invalid_user_credentials": " Invalid Userid/Password. Please try again",
     "server_not_reachable": "Server not reachable"
   },
-
+  "breadcrumb": {
+    "overflowmenu": "More breadcrumb items"
+  },
   "common": {
+    "value": "{{value}}",
     "actions": {
+      "assign": "Assign",
       "save": "Save",
       "cancel": "Cancel",
       "add": "Add",
@@ -32,33 +36,56 @@
       "edit": "Edit",
       "close": "Close",
       "delete": "Delete",
-      "apply":"Apply",
-      "deactivate":"Deactivate",
-      "activate":"Activate",
-      "confirm":"Confirm",
-      "back":"Back",
+      "apply": "Apply",
+      "deactivate": "Deactivate",
+      "activate": "Activate",
+      "confirm": "Confirm",
+      "back": "Back",
       "ok": "OK",
-      "clearAll": "Clear All"
+      "clearAll": "Clear All",
+      "done": "Done",
+      "select": "Select",
+      "manage": "Manage",
+      "remove": "Remove"
     },
     "form": {
-      "field_required": "This field is required"
+      "field_required": "This field is required",
+      "field_label": {
+        "required": "{{value}} (required)",
+        "optional": "{{value}} (optional)"
+      }
     },
-    "emptyState":{
-      "no_result_found":"No results found",
-      "message":"Try adjusting your search or filter options to find what you're looking for.",
-      "reset_filters":"Reset Filters"
-
+    "emptyState": {
+      "no_result_found": "No results found",
+      "message": "Try adjusting your search or filter options to find what you're looking for.",
+      "reset_filters": "Reset Filters"
     },
-    "filter-section":{
+    "filter-section": {
       "filter": "Filter",
       "clear-filter": "Clear Filters"
     }
   },
-  "form" : {
+  "pages": {
+    "addEdit": {
+      "pageDescription": "All fields are required unless marked optional."
+    }
+  },
+  "form": {
+    "labels": {
+      "selectValue": "Select a value",
+      "required": "{{value}} (required)",
+      "optional": "{{value}} (optional)"
+    },
     "validations": {
-      "required": "{{fieldName}} is required",
-      "minLength": "{{fieldName}} should have minimum {{count}} characters",
-      "maxLength": "{{fieldName}} should have maximum {{count}} characters"
+      "required": "This field is required",
+      "minLength": "This field should have minimum {{length}} characters",
+      "maxLength": "This field should have maximum {{length}} characters",
+      "min": "This field should have min {{value}} value",
+      "max": "This field should have max {{value}} value",
+      "patterns": "This field doesnot match the required pattern",
+      "patterns_EMAIL": "This field should have valid Email",
+      "patterns_PHONE": "This field should have valid Phone Number",
+      "patterns_ZIPCODE": "This field should have valid Postal code"
     }
   },
   "modal": {
@@ -75,13 +102,23 @@
       "ok": "OK"
     }
   },
+  "notification": {
+    "close_arialabel": "Closes notification",
+    "statusIconDescription": "Notification",
+    "timestamp": "Timestamp [{{timestamp}}]"
+  },
   "wizard": {
     "actions": {
       "previous": "Previous",
       "next": "Next",
       "submit": "Submit",
-      "close":"Close",
-      "save":"Save"
+      "close": "Close",
+      "save": "Save"
     }
+  },
+  "test": {
+    "menu": "Shell Test",
+    "feature": "Feature Test",
+    "form": "Form Test"
   }
 }

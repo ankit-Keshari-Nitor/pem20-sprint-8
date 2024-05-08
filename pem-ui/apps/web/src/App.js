@@ -4,6 +4,8 @@ import * as Shell from '@b2bi/shell';
 import { sideNavConfig, headerMenuList } from './modules/configurations';
 import { routes as PemRoutes } from './modules/routes';
 import axios from 'axios';
+import AppAuthHandler from './AppAuthHandler';
+import AppConfiguration from './AppConfiguration';
 
 const flattenRoutes = (flattenedRoutes, nestedRoutes, parentPath) => {
   nestedRoutes.forEach((nestedRoute) => {
@@ -22,6 +24,7 @@ const flattenRoutes = (flattenedRoutes, nestedRoutes, parentPath) => {
 };
 const flattenedRoutes = [];
 flattenRoutes(flattenedRoutes, PemRoutes, '/');
+//flattenRoutes(flattenedRoutes, ...Shell.routes, '/');
 
 const routes = [
   {
@@ -32,12 +35,9 @@ const routes = [
     path: '/',
     breadcrumb: null,
     element: <Shell.Container />,
-    children: [...Shell.routes, ...flattenedRoutes]
-    //children: [...Shell.routes]
+    children: [...flattenedRoutes]
   }
 ];
-
-
 
 // Set global headers
 axios.defaults.headers.common['Authorization'] = 'Basic ZGVib3JhaF9sZWVfYWNkQGhzYmMuY29tOlBAJCR3MHJk';
@@ -47,17 +47,29 @@ axios.defaults.headers.common['Accept'] = 'application/json';
 function App() {
   return (
     <Shell.EnvironmentProvider config={{}}>
-      <Shell.ConfigurationProvider locales={Shell.SupportedLocales} locale={'en_US'} sideNavConfig={sideNavConfig} headerMenuList={headerMenuList}>
-        <Shell.AuthProvider>
-          <Shell.ResourceProvider resourceMappings={{}}>
-            <Shell.ModalProvider modals={[]}>
-              <Shell.RouterProvider routes={routes} />
-            </Shell.ModalProvider>
-          </Shell.ResourceProvider>
+      <Shell.ApplicationInfoProvider>
+        <Shell.AuthProvider handler={AppAuthHandler()}>
+          <Shell.ConfigurationProvider
+            locales={Shell.SupportedLocales}
+            locale={'en_US'}
+            sideNavConfig={[/*...sideNavConfig, ...Shell.sideNavConfig*/]}
+            headerMenuList={[/*...headerMenuList *//*, ...Shell.headerMenuList*/]}
+          >
+            <Shell.ResourceProvider resourceMappings={{}}>
+              <Shell.ModalProvider modals={{}}>
+                <Shell.NotificationProvider>
+                  <AppConfiguration>
+                    <Shell.RouterProvider routes={routes} />
+                  </AppConfiguration>
+                </Shell.NotificationProvider>
+              </Shell.ModalProvider>
+            </Shell.ResourceProvider>
+          </Shell.ConfigurationProvider>
         </Shell.AuthProvider>
-      </Shell.ConfigurationProvider>
+      </Shell.ApplicationInfoProvider>
     </Shell.EnvironmentProvider>
   );
 }
+
 
 export default App;

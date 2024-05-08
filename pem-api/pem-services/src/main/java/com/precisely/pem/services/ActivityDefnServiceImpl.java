@@ -202,7 +202,7 @@
             Optional<ActivityDefn> activityDefn = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, SponsorKey));
             if(activityDefn.isEmpty()){
                 ErrorResponseDto errorDto = new ErrorResponseDto();
-                errorDto.setErrorDescription("No data Found");
+                errorDto.setMessage("No data Found");
                 errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
                 throw new Exception("No entries found for the combination");
             }

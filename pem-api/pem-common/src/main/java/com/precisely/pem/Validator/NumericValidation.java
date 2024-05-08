@@ -11,9 +11,6 @@ public class NumericValidation implements ConstraintValidator<NumericValidator, 
     public boolean isValid(String str, ConstraintValidatorContext constraintValidatorContext) {
         Pattern pattern = Pattern.compile("[0-9]");
         Matcher matcher = pattern.matcher(str);
-        if (!matcher.find()) {
-            throw new IllegalArgumentException("Only numbers allowed.");
-        }
-        return true;
+        return matcher.find();
     }
 }

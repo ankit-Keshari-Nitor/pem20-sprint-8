@@ -10,11 +10,8 @@ public class SpecialCharacterValidation implements ConstraintValidator<SpecialCh
 
     @Override
     public boolean isValid(String str, ConstraintValidatorContext constraintValidatorContext) {
-        Pattern pattern = Pattern.compile("[A-Za-z0-9!@#$%()+=___:;?/,`~-]");
+        Pattern pattern = Pattern.compile("[A-Za-z0-9&@!#$%()/+=_.,:;-]+");
         Matcher matcher = pattern.matcher(str);
-        if (!matcher.find()) {
-            throw new IllegalArgumentException("Illegal Character in String");
-        }
-        return true;
+        return matcher.find();
     }
 }

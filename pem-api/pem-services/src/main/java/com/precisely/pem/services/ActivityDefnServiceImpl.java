@@ -6,11 +6,10 @@
     import com.precisely.pem.dtos.responses.ActivityDefnListResp;
     import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
     import com.precisely.pem.dtos.responses.ActivityDefnResp;
-    import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
-    import com.precisely.pem.dtos.shared.ActivityDefnDto;
-    import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
-    import com.precisely.pem.dtos.shared.PaginationDto;
+    import com.precisely.pem.dtos.responses.SponsorInfo;
+    import com.precisely.pem.dtos.shared.*;
     import com.precisely.pem.exceptionhandler.ErrorResponseDto;
+    import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
     import com.precisely.pem.models.ActivityDefn;
     import com.precisely.pem.models.ActivityDefnData;
     import com.precisely.pem.models.ActivityDefnVersion;
@@ -19,6 +18,7 @@
     import com.precisely.pem.repositories.ActivityDefnVersionRepo;
     import com.precisely.pem.repositories.SponsorRepo;
     import lombok.extern.log4j.Log4j2;
+    import org.apache.logging.log4j.ThreadContext;
     import org.modelmapper.ModelMapper;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.data.domain.Page;
@@ -92,8 +92,8 @@
             if(defnsPage == null || defnsPage.isEmpty()) {
                 ErrorResponseDto errorDto = new ErrorResponseDto();
                 errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-                errorDto.setErrorDescription("No Data Found");
-                throw new Exception("No entries found for the combination");
+                errorDto.setMessage("No Data Found");
+                throw new ResourceNotFoundException("No data found for the combination.");
             }
             List<ActivityDefn> listOfDefns = defnsPage.getContent();
             List<ActivityDefnListResp> defnContent = new ArrayList<>();
@@ -129,6 +129,15 @@
             ModelMapper mapper = new ModelMapper();
 
             log.info("sponsorkey : " + sponsorRepo.getSponsorKey(sponsorContext));
+            SponsorInfo sponsorInfo = TenantContext.getTenantContext();
+
+            Optional<ActivityDefn> duplicateEntry = Optional.ofNullable(activityDefnRepo.findByActivityName(activityDefnReq.getName()));
+            if(!duplicateEntry.isEmpty()){
+                ErrorResponseDto errorDto = new ErrorResponseDto();
+                errorDto.setMessage("Entry already available in database");
+                errorDto.setErrorCode(HttpStatus.CONFLICT.value());
+                throw new RuntimeException("Entry already exists in database for name '"+duplicateEntry.get().getActivityName()+"'");
+            }
 
             //Populating the Activity Definition Object
             ActivityDefnDto activityDefnDto = new ActivityDefnDto(
@@ -173,7 +182,7 @@
             Optional<ActivityDefn> result = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, SponsorKey));;
             if(result.isEmpty()){
                 ErrorResponseDto errorDto = new ErrorResponseDto();
-                errorDto.setErrorDescription("No data Found");
+                errorDto.setMessage("No data Found");
                 errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
                 throw new Exception("No entries found for the combination");
             }

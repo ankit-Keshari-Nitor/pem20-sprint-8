@@ -72,7 +72,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         if(defnsPage == null || defnsPage.isEmpty()) {
             ErrorResponseDto errorDto = new ErrorResponseDto();
             errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-            errorDto.setErrorDescription("No Data Found");
+            errorDto.setMessage("No Data Found");
             throw new Exception("No entries found for the combination");
         }
         List<ActivityDefnVersion> listOfDefns = defnsPage.getContent();
@@ -105,7 +105,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(activityDefnKey, activityDefnVersionKey,SponsorKey));
         if(result.isEmpty()){
             ErrorResponseDto errorDto = new ErrorResponseDto();
-            errorDto.setErrorDescription("No data Found");
+            errorDto.setMessage("No data Found");
             errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
             throw new Exception("No entries found for the combination");
         }

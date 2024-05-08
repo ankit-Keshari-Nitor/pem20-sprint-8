@@ -8,6 +8,11 @@
     import com.precisely.pem.dtos.responses.ActivityDefnResp;
     import com.precisely.pem.dtos.responses.SponsorInfo;
     import com.precisely.pem.dtos.shared.*;
+    import com.precisely.pem.dtos.responses.MessageResp;
+    import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
+    import com.precisely.pem.dtos.shared.ActivityDefnDto;
+    import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
+    import com.precisely.pem.dtos.shared.PaginationDto;
     import com.precisely.pem.exceptionhandler.ErrorResponseDto;
     import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
     import com.precisely.pem.models.ActivityDefn;
@@ -129,7 +134,7 @@
             ModelMapper mapper = new ModelMapper();
 
             log.info("sponsorkey : " + sponsorRepo.getSponsorKey(sponsorContext));
-            SponsorInfo sponsorInfo = TenantContext.getTenantContext();
+            //SponsorInfo sponsorInfo = TenantContext.getTenantContext();
 
             Optional<ActivityDefn> duplicateEntry = Optional.ofNullable(activityDefnRepo.findByActivityName(activityDefnReq.getName()));
             if(!duplicateEntry.isEmpty()){
@@ -188,5 +193,25 @@
             }
             ModelMapper mapper = new ModelMapper();
             return mapper.map(result.get(), ActivityDefnListResp.class);
+        }
+
+        @Override
+        @Transactional(rollbackFor = Exception.class)
+        public MessageResp updateActivityDefinitionByKey(String sponsorContext, String name, String description, String activityDefnKey) throws Exception{
+            String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
+            Optional<ActivityDefn> activityDefn = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, SponsorKey));
+            if(activityDefn.isEmpty()){
+                ErrorResponseDto errorDto = new ErrorResponseDto();
+                errorDto.setErrorDescription("No data Found");
+                errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
+                throw new Exception("No entries found for the combination");
+            }
+            activityDefn.get().setActivityName(name);
+            activityDefn.get().setActivityDescription(description);
+            ActivityDefn savedActivityDefn = activityDefnRepo.save(activityDefn.get());
+            MessageResp messsageResp = new MessageResp();
+            messsageResp.setResponse("Activity Name & Description Update successful");
+            return messsageResp;
+
         }
     }

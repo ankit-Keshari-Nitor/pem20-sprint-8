@@ -9,6 +9,7 @@ import com.precisely.pem.dtos.requests.ActivityDefnReq;
 import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.ActivityDefnResp;
+import com.precisely.pem.dtos.responses.MessageResp;
 import com.precisely.pem.exceptionhandler.ErrorResponseDto;
 import com.precisely.pem.services.ActivityDefnService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -122,5 +123,27 @@ public class ActivityController {
         Link link = linkTo(methodOn(ActivityController.class).getActivityDefinitionByKey(sponsorContext,activityDefnKey)).withSelfRel();
         activityDefnListResp.setActivityVersionLink(link.getHref());
         return new ResponseEntity<>(activityDefnListResp,HttpStatus.OK);
+    }
+
+    @Operation(summary = "Update Activity Definition by Key", tags = { "Activity Definition" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = MessageResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = MessageResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "400", description = "Exception in updating the Activity Definition", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "404", description = "Activity Definition not found", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "422", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)})
+    })
+    @PutMapping (value = "/{activityDefnKey}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<Object> updateActivityDefinitionByKey(@RequestPart(value = "name", required = true) @Size(min = 1, max = 80) String name,
+                                                                @RequestPart(value = "description", required = false) @Size(min = 1, max = 255) String description,@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey) throws Exception {
+        MessageResp messageResp = activityDefnService.updateActivityDefinitionByKey(sponsorContext,name, description, activityDefnKey);
+        return new ResponseEntity<>(messageResp,HttpStatus.OK);
     }
 }

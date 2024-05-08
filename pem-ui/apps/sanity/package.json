@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
-    "@b2bi/shell-bdd": "file:../../../../b2bi-ui-shared/packages/shell-bdd"
+    "@b2bi/shell-bdd": "^1.0.0"
   },
   "scripts": {
     "test": "cucumber-js test --tags \"(not (@Ignore or @ignore))\" ",

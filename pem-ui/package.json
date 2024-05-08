@@ -20,9 +20,8 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "start":"cd apps/web && yarn start"
+    "start": "cd apps/web && yarn start"
   },
-  "devDependencies": {},
   "dependencies": {
     "turbo": "^1.12.4"
   }

@@ -39,11 +39,11 @@ task npmBuild(type: NpmTask, dependsOn: npmInstall) {
 }
 
 task yarnBuild(type: YarnTask, dependsOn: yarn) {
-    args = ['run', 'build', '--stacktrace', '--info', '--scan']
+    args = ['run', 'build']
 }
 
 task yarnPublish(type: YarnTask, dependsOn: yarn) {
-    args = ['run', 'publish', '--stacktrace', '--info', '--scan']
+    args = ['run', 'publish']
 }
 
 task bundle(type: Zip, dependsOn: yarnBuild) {

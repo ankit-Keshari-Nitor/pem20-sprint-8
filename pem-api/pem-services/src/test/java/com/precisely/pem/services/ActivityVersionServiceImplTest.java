@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 
 class ActivityVersionServiceImplTest extends BaseServiceTest{
+
     @InjectMocks
     ActivityVersionServiceImpl activityVersionService;
 
@@ -157,7 +158,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         mockActivityDefnVersionFindById().thenReturn(activityDefnVersion);
         Exception exception = assertThrows(Exception.class, () -> activityVersionService.
                 markAsFinalActivityDefinitionVersion(TEST_ACTIVITY_DEFN_VERSION_KEY));
-        assertEquals(exception.getMessage(),"Activity Definition Version not found");
+        assertEquals(exception.getMessage(),ACTIVITY_DEFINITION_VERSION_NOT_FOUND);
     }
 
     @Test
@@ -177,7 +178,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
                         UpdateActivityVersionReq.builder().description(TEST_DESCRIPTION).file(file).isEncrypted(Boolean.TRUE).build());
 
         assertNotNull(resp);
-        assertEquals("Activity Definition Version Updated.",resp.getResponse());
+        assertEquals(ACTIVITY_DEFINITION_VERSION_UPDATED,resp.getResponse());
 
     }
 
@@ -196,7 +197,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
                     updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
                             UpdateActivityVersionReq.builder().description(TEST_DESCRIPTION).file(multipartFile).isEncrypted(Boolean.TRUE).build());
         });
-        assertEquals(exception.getMessage(),"Activity Definition Version not found");
+        assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_VERSION_NOT_FOUND);
 
     }
 
@@ -215,7 +216,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
                     updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
                             UpdateActivityVersionReq.builder().description(TEST_DESCRIPTION).file(multipartFile).isEncrypted(Boolean.TRUE).build());
         });
-        assertEquals(exception.getMessage(),"Activity Definition Version Data not found");
+        assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND);
 
     }
 

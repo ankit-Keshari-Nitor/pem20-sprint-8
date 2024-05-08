@@ -47,9 +47,12 @@ public class BaseServiceTest {
     public static final String TEST_APPLICATION_KEY = "application";
     public static final String TEST_NAME = "test";
 
-    //Error Messages
+    //Response Messages
     public static final String ACTIVITY_DEFINITION_NOT_FOUND = "Activity Definition not found";
     public static final String ACTIVITY_DEFINITION_ALREADY_DELETED = "Activity Definition Already Deleted";
+    public static final String ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND = "Activity Definition Version Data not found";
+    public static final String ACTIVITY_DEFINITION_VERSION_NOT_FOUND = "Activity Definition Version not found";
+    public static final String ACTIVITY_DEFINITION_VERSION_UPDATED = "Activity Definition Version Updated.";
 
     @Mock
     protected ActivityDefnRepo activityDefnRepo;

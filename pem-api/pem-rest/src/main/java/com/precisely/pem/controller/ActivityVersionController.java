@@ -137,7 +137,7 @@ public class ActivityVersionController {
             @ApiResponse(responseCode = "200", content = {
                     @Content(schema = @Schema(implementation = MessageResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = MessageResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
-            @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
+            @ApiResponse(responseCode = "400", content = {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
             @ApiResponse(responseCode = "500", content = {

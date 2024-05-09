@@ -179,6 +179,11 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             throw  new Exception("Activity Definition Version not found" );
         }
 
+        String activityStatus = activityDefnVersion.get().getStatus();
+        if(activityStatus.equalsIgnoreCase(Status.FINAL.toString()) || activityStatus.equalsIgnoreCase(Status.DELETE.getStatus())){
+            throw  new Exception("Activity Definition Version is in FINAL/DELETE status." );
+        }
+
         Optional<ActivityDefnData> activityDefnData = activityDefnDataRepo.findById(activityDefnVersion.get().getActivityDefnDataKey());
         if(activityDefnData.isEmpty()){
             throw  new Exception("Activity Definition Version Data not found" );

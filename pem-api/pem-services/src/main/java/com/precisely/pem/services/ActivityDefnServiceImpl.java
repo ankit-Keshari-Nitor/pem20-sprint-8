@@ -178,13 +178,12 @@
         @Override
         @Transactional(rollbackFor = Exception.class)
         public MessageResp updateActivityDefinitionByKey(String sponsorContext, String name, String description, String activityDefnKey) throws Exception{
-            String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
-            Optional<ActivityDefn> activityDefn = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, SponsorKey));
+            Optional<ActivityDefn> activityDefn = activityDefnRepo.findById(activityDefnKey);
             if(activityDefn.isEmpty()){
                 ErrorResponseDto errorDto = new ErrorResponseDto();
                 errorDto.setErrorDescription("No data Found");
                 errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-                throw new Exception("No entries found for the combination");
+                throw new Exception("No activity found for the specified activity definition key");
             }
             activityDefn.get().setActivityName(name);
             activityDefn.get().setActivityDescription(description);

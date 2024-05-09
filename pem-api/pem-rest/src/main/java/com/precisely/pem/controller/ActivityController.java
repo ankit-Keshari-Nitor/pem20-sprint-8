@@ -1,5 +1,7 @@
 package com.precisely.pem.controller;
 
+import com.precisely.pem.Validator.MultipartFileValidator;
+import com.precisely.pem.Validator.SpecialCharValidator;
 import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
@@ -21,6 +23,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -144,5 +147,17 @@ public class ActivityController {
                                                                 @RequestPart(value = "description", required = false) @Size(min = 1, max = 255) String description,@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey) throws Exception {
         MessageResp messageResp = activityDefnService.updateActivityDefinitionByKey(sponsorContext,name, description, activityDefnKey);
         return new ResponseEntity<>(messageResp,HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "Delete Activity Definition by Key", tags = { "Activity Definition" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "404", description = "Activity Definition not found", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
+            @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }) })
+    @DeleteMapping(value = "/{activityDefnKey}" , produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<Object> deleteActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey) throws Exception {
+        return  new ResponseEntity<>(activityDefnService.deleteActivityDefinitionById(sponsorContext, activityDefnKey), HttpStatus.OK);
     }
 }

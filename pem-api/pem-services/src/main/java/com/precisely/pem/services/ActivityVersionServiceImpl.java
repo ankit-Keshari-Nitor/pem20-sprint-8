@@ -73,10 +73,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(activityDefnKey,status,sponsorInfo.getSponsorKey(),pageable);
 
         if(defnsPage == null || defnsPage.isEmpty()) {
-            ErrorResponseDto errorDto = new ErrorResponseDto();
-            errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-            errorDto.setMessage("No Data Found");
-            throw new Exception("No entries found for the combination");
+            throw new ResourceNotFoundException("No data was found for the provided query parameter combination.");
         }
         List<ActivityDefnVersion> listOfDefns = defnsPage.getContent();
         List<ActivityDefnVersionListResp> defnContent = new ArrayList<>();

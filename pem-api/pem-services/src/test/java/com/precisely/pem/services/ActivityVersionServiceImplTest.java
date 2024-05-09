@@ -3,11 +3,9 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
-import com.precisely.pem.dtos.responses.ActivityDefnVersionListResp;
-import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
-import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
-import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
+import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
+import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.exceptionhandler.SponsorNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
@@ -55,6 +53,8 @@ class ActivityVersionServiceImplTest {
     @BeforeEach
     public void setup(){
         MockitoAnnotations.openMocks(this);
+        SponsorInfo sponsorInfo = new SponsorInfo("cashbank","test");
+        TenantContext.setTenantContext(sponsorInfo);
     }
     @Test
     void testGetAllVersionDefinitionList() throws Exception {
@@ -67,8 +67,6 @@ class ActivityVersionServiceImplTest {
         String sortBy = "sortBy";
         String sortDir = "sortDir";
         boolean isDefault = false;
-        Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString()))
-                .thenReturn("cashbank");
         Page<ActivityDefnVersion> defnsPage = new PageImpl<>(getVersionList());
         Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndDescriptionContaining(eq(activityDefnKey),eq(status),eq(sponsorContext),
                         eq(applicationDescription),Mockito.any(Pageable.class)))

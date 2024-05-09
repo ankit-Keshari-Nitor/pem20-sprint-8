@@ -9,6 +9,7 @@ import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.exceptionhandler.ErrorResponseDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
+import com.precisely.pem.exceptionhandler.SponsorNotFoundException;
 import com.precisely.pem.services.ActivityVersionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -103,7 +104,7 @@ public class ActivityVersionController {
     public ResponseEntity<Object> createActivityDefinition(@PathVariable(value = "sponsorContext")String sponsorContext,
                                                            @PathVariable(value = "activityDefnKey")String activityDefnKey,
                                                            @ModelAttribute @Valid ActivityVersionReq activityVersionReq
-    ) throws SQLException, IOException, OnlyOneDraftVersionException {
+    ) throws SQLException, IOException, OnlyOneDraftVersionException, SponsorNotFoundException {
         ActivityDefnVersionResp activityDefnVersionResp = activityVersionService.createActivityDefnVersion(sponsorContext, activityDefnKey, activityVersionReq);
         Link link = linkTo(methodOn(ActivityVersionController.class).createActivityDefinition(sponsorContext, activityDefnKey, activityVersionReq)).withSelfRel();
         activityDefnVersionResp.setLocation(link.getHref());

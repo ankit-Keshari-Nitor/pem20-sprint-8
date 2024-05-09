@@ -89,10 +89,7 @@
                         application, status, pageable);
             }
             if(defnsPage == null || defnsPage.isEmpty()) {
-                ErrorResponseDto errorDto = new ErrorResponseDto();
-                errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-                errorDto.setMessage("No Data Found");
-                throw new ResourceNotFoundException("No data found for the combination.");
+                throw new ResourceNotFoundException("No data was found for the provided query parameter combination.");
             }
             List<ActivityDefn> listOfDefns = defnsPage.getContent();
             List<ActivityDefnListResp> defnContent = new ArrayList<>();
@@ -184,10 +181,7 @@
             log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
             Optional<ActivityDefn> result = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, sponsorInfo.getSponsorKey()));;
             if(result.isEmpty()){
-                ErrorResponseDto errorDto = new ErrorResponseDto();
-                errorDto.setMessage("No data Found");
-                errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-                throw new Exception("No entries found for the combination");
+                throw new ResourceNotFoundException("No data was found for the provided query parameter combination.");
             }
             ModelMapper mapper = new ModelMapper();
             return mapper.map(result.get(), ActivityDefnListResp.class);

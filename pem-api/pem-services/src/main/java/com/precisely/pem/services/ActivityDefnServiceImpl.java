@@ -3,18 +3,12 @@
     import com.precisely.pem.commonUtil.ApplicationConstants;
     import com.precisely.pem.commonUtil.Status;
     import com.precisely.pem.dtos.requests.ActivityDefnReq;
-    import com.precisely.pem.dtos.responses.ActivityDefnListResp;
-    import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
-    import com.precisely.pem.dtos.responses.ActivityDefnResp;
-    import com.precisely.pem.dtos.responses.SponsorInfo;
+    import com.precisely.pem.dtos.responses.*;
     import com.precisely.pem.dtos.shared.*;
-    import com.precisely.pem.dtos.responses.MessageResp;
-    import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
-    import com.precisely.pem.dtos.shared.ActivityDefnDto;
-    import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
-    import com.precisely.pem.dtos.shared.PaginationDto;
+    import com.precisely.pem.exceptionhandler.DuplicateEntryException;
     import com.precisely.pem.exceptionhandler.ErrorResponseDto;
     import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
+    import com.precisely.pem.exceptionhandler.SponsorNotFoundException;
     import com.precisely.pem.models.ActivityDefn;
     import com.precisely.pem.models.ActivityDefnData;
     import com.precisely.pem.models.ActivityDefnVersion;
@@ -23,7 +17,6 @@
     import com.precisely.pem.repositories.ActivityDefnVersionRepo;
     import com.precisely.pem.repositories.SponsorRepo;
     import lombok.extern.log4j.Log4j2;
-    import org.apache.logging.log4j.ThreadContext;
     import org.modelmapper.ModelMapper;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.data.domain.Page;
@@ -39,10 +32,7 @@
     import java.sql.Blob;
     import java.sql.SQLException;
     import java.time.LocalDateTime;
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.Optional;
-    import java.util.UUID;
+    import java.util.*;
     import java.util.stream.Collectors;
 
     @Log4j2
@@ -61,8 +51,8 @@
 
         @Override
         public ActivityDefnPaginationRes getAllDefinitionList(String sponsorContext, String name,
-                                            String description, String application,String status,
-                                            int pageNo,int pageSize,String sortBy, String sortDir) throws Exception {
+                                                              String description, String application, String status,
+                                                              int pageNo, int pageSize, String sortBy, String sortDir) throws Exception {
             ActivityDefnPaginationRes vchActivityDefinitionPaginationRes = new ActivityDefnPaginationRes();
             PaginationDto paginationDto = new PaginationDto();
             Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
@@ -126,27 +116,27 @@
 
         @Override
         @Transactional(rollbackFor = Exception.class)
-        public ActivityDefnResp createActivityDefinition(String sponsorContext, ActivityDefnReq activityDefnReq) throws IOException, SQLException {
+        public ActivityDefnResp createActivityDefinition(String sponsorContext, ActivityDefnReq activityDefnReq) throws IOException, SQLException, DuplicateEntryException, SponsorNotFoundException {
             ActivityDefnResp activityDefnResp = new ActivityDefnResp();
             ActivityDefn activityDefnobj = null;
             ActivityDefnData activityDefnData = null;
             ActivityDefnVersion activityDefnVersion = null;
             ModelMapper mapper = new ModelMapper();
 
-            log.info("sponsorkey : " + sponsorRepo.getSponsorKey(sponsorContext));
-            //SponsorInfo sponsorInfo = TenantContext.getTenantContext();
+            SponsorInfo sponsorInfo = TenantContext.getTenantContext();
+            if(Objects.isNull(sponsorInfo)){
+                throw new SponsorNotFoundException("Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+            }
+            log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
 
             Optional<ActivityDefn> duplicateEntry = Optional.ofNullable(activityDefnRepo.findByActivityName(activityDefnReq.getName()));
             if(!duplicateEntry.isEmpty()){
-                ErrorResponseDto errorDto = new ErrorResponseDto();
-                errorDto.setMessage("Entry already available in database");
-                errorDto.setErrorCode(HttpStatus.CONFLICT.value());
-                throw new RuntimeException("Entry already exists in database for name '"+duplicateEntry.get().getActivityName()+"'");
+                throw new DuplicateEntryException("Entry already exists in database for name '"+duplicateEntry.get().getActivityName()+"'");
             }
 
             //Populating the Activity Definition Object
             ActivityDefnDto activityDefnDto = new ActivityDefnDto(
-                    UUID.randomUUID().toString(), sponsorRepo.getSponsorKey(sponsorContext), activityDefnReq.getName(),
+                    UUID.randomUUID().toString(), sponsorInfo.getSponsorKey(), activityDefnReq.getName(),
                     activityDefnReq.getDescription(), LocalDateTime.now(), "", LocalDateTime.now(), "",
                     activityDefnReq.getApplication().toString(), false, false,null);
             activityDefnobj = mapper.map(activityDefnDto, ActivityDefn.class);

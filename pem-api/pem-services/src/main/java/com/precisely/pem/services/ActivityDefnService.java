@@ -6,6 +6,8 @@ import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.ActivityDefnResp;
 import com.precisely.pem.dtos.responses.MessageResp;
+import com.precisely.pem.exceptionhandler.DuplicateEntryException;
+import com.precisely.pem.exceptionhandler.SponsorNotFoundException;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,7 +16,7 @@ public interface ActivityDefnService {
     public ActivityDefnPaginationRes getAllDefinitionList(String sponsorContext, String name, String description,
                                                           String application, String status, int pageNo, int pageSize,
                                                           String sortBy, String sortDir) throws Exception;
-    public ActivityDefnResp createActivityDefinition(String sponsorContext, ActivityDefnReq activityDefnReq) throws IOException, SQLException;
+    public ActivityDefnResp createActivityDefinition(String sponsorContext, ActivityDefnReq activityDefnReq) throws IOException, SQLException, DuplicateEntryException, SponsorNotFoundException;
     public ActivityDefnListResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception;
     public MessageResp updateActivityDefinitionByKey(String sponsorContext, String name, String description, String activityDefnKey) throws Exception;
 }

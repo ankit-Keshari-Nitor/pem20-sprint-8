@@ -126,7 +126,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         double version = activityDefn.get().getVersions().size();
         List<ActivityDefnVersion> defnVersions = activityDefn.get().getVersions();
         if(defnVersions.stream().anyMatch(s -> s.getStatus().equalsIgnoreCase(Status.DRAFT.toString()))){
-            throw new OnlyOneDraftVersionException("A version with Draft version already exists. Kindly verify the version");
+            throw new OnlyOneDraftVersionException("A version with the 'Draft' status already exists for the activity definition key '" + activityDefnKey +"'. Please verify the version.");
         }
 
         logger.info("count : " + activityDefn.get().getVersions().size());

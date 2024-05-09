@@ -22,7 +22,7 @@ public class ActivityDefn extends BaseEntity {
     @Size(min = 1, max = 50)
     private String sponsorKey;
 
-    @Column(name="ACTIVITY_NAME", unique = true)
+    @Column(name="ACTIVITY_NAME")
     @Size(min = 1, max = 80)
     private String activityName;
 

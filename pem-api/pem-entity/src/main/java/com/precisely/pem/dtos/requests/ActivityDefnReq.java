@@ -11,11 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class ActivityDefnReq {
     @NotNull
-    @SpecialCharValidator
+    @SpecialCharValidator(name = "name")
     @Size(max = 80)
     private String name;
 
-    @SpecialCharValidator
+    @SpecialCharValidator(name = "description")
     @Size(max = 255)
     private String description;
 

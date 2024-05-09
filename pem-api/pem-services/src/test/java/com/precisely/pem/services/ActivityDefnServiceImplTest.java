@@ -1,9 +1,13 @@
 package com.precisely.pem.services;
 
 import com.precisely.pem.commonUtil.Application;
+import com.precisely.pem.dtos.responses.SponsorInfo;
+import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.dtos.requests.ActivityDefnReq;
 import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.shared.ActivityDefnDto;
+import com.precisely.pem.exceptionhandler.DuplicateEntryException;
+import com.precisely.pem.exceptionhandler.SponsorNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
@@ -56,6 +60,8 @@ class ActivityDefnServiceImplTest {
     @BeforeEach
     public void setup(){
         MockitoAnnotations.openMocks(this);
+        SponsorInfo sponsorInfo = new SponsorInfo("cashbank","test");
+        TenantContext.setTenantContext(sponsorInfo);
     }
 
     @Test
@@ -83,8 +89,7 @@ class ActivityDefnServiceImplTest {
     }
 
     @Test
-    void testCreateActivityDefinition() throws SQLException, IOException {
-        Mockito.when(sponsorRepo.getSponsorKey(anyString())).thenReturn("test");
+    void testCreateActivityDefinition() throws SQLException, IOException, DuplicateEntryException, SponsorNotFoundException {
         Mockito.when(activityDefnRepo.save(Mockito.any())).thenReturn(getVchActivityDefnObj());
         Mockito.when(activityDefnDataRepo.save(Mockito.any())).thenReturn(getVchActivityDefnDataObj());
         Mockito.when(activityDefnVersionRepo.save(Mockito.any())).thenReturn(getVCHActivityDefnVersionObj());

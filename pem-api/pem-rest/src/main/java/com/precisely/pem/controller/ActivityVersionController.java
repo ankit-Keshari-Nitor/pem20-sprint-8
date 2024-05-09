@@ -7,7 +7,6 @@ import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
-import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.exceptionhandler.ErrorResponseDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.services.ActivityVersionService;

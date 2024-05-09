@@ -1,6 +1,5 @@
 package com.precisely.pem.dtos.responses;
 
-import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.PaginationDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

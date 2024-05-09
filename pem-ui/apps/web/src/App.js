@@ -24,7 +24,7 @@ const flattenRoutes = (flattenedRoutes, nestedRoutes, parentPath) => {
 };
 const flattenedRoutes = [];
 flattenRoutes(flattenedRoutes, PemRoutes, '/');
-//flattenRoutes(flattenedRoutes, ...Shell.routes, '/');
+flattenRoutes(flattenedRoutes, Shell.routes, '/');
 
 const routes = [
   {

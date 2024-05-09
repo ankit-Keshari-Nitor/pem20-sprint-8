@@ -59,29 +59,33 @@
                     Sort.by(sortBy).ascending()
                     : Sort.by(sortBy).descending();
             Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-            String context = sponsorRepo.getSponsorKey(sponsorContext);
+            SponsorInfo sponsorInfo = TenantContext.getTenantContext();
+            if(Objects.isNull(sponsorInfo)){
+                throw new SponsorNotFoundException("Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+            }
+            log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
             Page<ActivityDefn> defnsPage = null;
             if(name != null && !name.isEmpty() && name.contains("con:") && description != null && !description.isEmpty()) {
                 String conName = name.replace("con:","");
                 System.out.println("conName="+conName);
-                defnsPage = activityDefnRepo.findBySponsorKeyAndActivityNameContainingAndActivityDescriptionContainingAndApplicationAndVersionsStatus(context,
+                defnsPage = activityDefnRepo.findBySponsorKeyAndActivityNameContainingAndActivityDescriptionContainingAndApplicationAndVersionsStatus(sponsorInfo.getSponsorKey(),
                         conName, description, application, status, pageable);
             }else if(name != null && !name.isEmpty() && !name.contains("con:") && description != null && !description.isEmpty()) {
-                defnsPage = activityDefnRepo.findBySponsorKeyAndActivityNameAndActivityDescriptionContainingAndApplicationAndVersionsStatus(context,
+                defnsPage = activityDefnRepo.findBySponsorKeyAndActivityNameAndActivityDescriptionContainingAndApplicationAndVersionsStatus(sponsorInfo.getSponsorKey(),
                         name, description, application, status, pageable);
             }else if(name != null && !name.isEmpty() && name.contains("con:")) {
                 String conName = name.replace("con:","");
                 System.out.println("conName="+conName);
-                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusAndActivityNameContaining(context,
+                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusAndActivityNameContaining(sponsorInfo.getSponsorKey(),
                         application, status, conName, pageable);
             }else if(name != null && !name.isEmpty() && !name.contains("con:")) {
-                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusAndActivityName(context,
+                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusAndActivityName(sponsorInfo.getSponsorKey(),
                         application, status, name, pageable);
             }else if(description != null && !description.isEmpty()) {
-                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusAndActivityDescriptionContaining(context,
+                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusAndActivityDescriptionContaining(sponsorInfo.getSponsorKey(),
                         application, status, description, pageable);
             }else {
-                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatus(context,
+                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatus(sponsorInfo.getSponsorKey(),
                         application, status, pageable);
             }
             if(defnsPage == null || defnsPage.isEmpty()) {
@@ -173,8 +177,12 @@
         @Override
         public ActivityDefnListResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception {
 
-            String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
-            Optional<ActivityDefn> result = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, SponsorKey));;
+            SponsorInfo sponsorInfo = TenantContext.getTenantContext();
+            if(Objects.isNull(sponsorInfo)){
+                throw new SponsorNotFoundException("Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+            }
+            log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
+            Optional<ActivityDefn> result = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, sponsorInfo.getSponsorKey()));;
             if(result.isEmpty()){
                 ErrorResponseDto errorDto = new ErrorResponseDto();
                 errorDto.setMessage("No data Found");

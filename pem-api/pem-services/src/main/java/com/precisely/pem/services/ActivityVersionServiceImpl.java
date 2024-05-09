@@ -3,15 +3,15 @@ package com.precisely.pem.services;
 import com.precisely.pem.commonUtil.ApplicationConstants;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
-import com.precisely.pem.dtos.responses.ActivityDefnVersionListResp;
-import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
-import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
-import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
+import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.PaginationDto;
+import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.exceptionhandler.ErrorResponseDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
+import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
+import com.precisely.pem.exceptionhandler.SponsorNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
@@ -19,6 +19,7 @@ import com.precisely.pem.repositories.ActivityDefnDataRepo;
 import com.precisely.pem.repositories.ActivityDefnRepo;
 import com.precisely.pem.repositories.ActivityDefnVersionRepo;
 import com.precisely.pem.repositories.SponsorRepo;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +36,11 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
 public class ActivityVersionServiceImpl implements ActivityVersionService{
     Logger logger = LoggerFactory.getLogger(ActivityVersionServiceImpl.class);
     @Autowired
@@ -62,12 +61,16 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
                 Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        String context = sponsorRepo.getSponsorKey(sponsorContext);
+        SponsorInfo sponsorInfo = TenantContext.getTenantContext();
+        if(Objects.isNull(sponsorInfo)){
+            throw new SponsorNotFoundException("Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+        }
+        log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
         Page<ActivityDefnVersion> defnsPage = null;
         if(description != null && !description.isEmpty())
-            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndDescriptionContaining(activityDefnKey,status,context,description,pageable);
+            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndDescriptionContaining(activityDefnKey,status,sponsorInfo.getSponsorKey(),description,pageable);
         else
-            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(activityDefnKey,status,context,pageable);
+            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(activityDefnKey,status,sponsorInfo.getSponsorKey(),pageable);
 
         if(defnsPage == null || defnsPage.isEmpty()) {
             ErrorResponseDto errorDto = new ErrorResponseDto();
@@ -101,13 +104,14 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
     @Override
     public ActivityDefnVersionListResp getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnVersionKey) throws Exception {
-        String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
-        Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(activityDefnKey, activityDefnVersionKey,SponsorKey));
+        SponsorInfo sponsorInfo = TenantContext.getTenantContext();
+        if(Objects.isNull(sponsorInfo)){
+            throw new SponsorNotFoundException("Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+        }
+        log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
+        Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(activityDefnKey, activityDefnVersionKey,sponsorInfo.getSponsorKey()));
         if(result.isEmpty()){
-            ErrorResponseDto errorDto = new ErrorResponseDto();
-            errorDto.setMessage("No data Found");
-            errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-            throw new Exception("No entries found for the combination");
+            throw new ResourceNotFoundException("No data was found for the provided query parameter combination.");
         }
         ModelMapper mapper = new ModelMapper();
         return mapper.map(result.get(), ActivityDefnVersionListResp.class);
@@ -115,11 +119,17 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
     @Override
     public ActivityDefnVersionResp createActivityDefnVersion(String sponsorContext, String activityDefnKey,
-                                                             ActivityVersionReq activityVersionReq) throws OnlyOneDraftVersionException, IOException, SQLException {
+                                                             ActivityVersionReq activityVersionReq) throws OnlyOneDraftVersionException, IOException, SQLException, SponsorNotFoundException {
         Optional<ActivityDefn> activityDefn = null;
         ActivityDefnData activityDefnData = null;
         ActivityDefnVersion activityDefnVersion = null;
         ActivityDefnVersionResp activityDefnVersionResp = new ActivityDefnVersionResp();
+
+        SponsorInfo sponsorInfo = TenantContext.getTenantContext();
+        if(Objects.isNull(sponsorInfo)){
+            throw new SponsorNotFoundException("Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+        }
+        log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
 
         activityDefn = activityDefnRepo.findById(activityDefnKey);
 

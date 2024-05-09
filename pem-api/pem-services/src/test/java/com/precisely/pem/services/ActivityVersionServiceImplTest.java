@@ -9,6 +9,7 @@ import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
+import com.precisely.pem.exceptionhandler.SponsorNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
@@ -118,7 +119,7 @@ class ActivityVersionServiceImplTest {
         assertNotNull(dto);
     }
     @Test
-    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException {
+    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, SponsorNotFoundException {
         ActivityDefnServiceImplTest activityDefnServiceImplTest = new ActivityDefnServiceImplTest();
 
         Optional<ActivityDefn> activityDefn = Optional.ofNullable(activityDefnServiceImplTest.getVchActivityDefnObj());

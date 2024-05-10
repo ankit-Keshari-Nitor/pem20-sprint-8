@@ -3,6 +3,7 @@
 
     <!-- Enable features -->
     <featureManager>
+		<feature>webProfile-10.0</feature>
         <feature>transportSecurity-1.0</feature>
 		<feature>springBoot-3.0</feature>
         <feature>servlet-6.0</feature>

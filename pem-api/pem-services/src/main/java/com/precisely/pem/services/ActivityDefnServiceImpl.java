@@ -5,6 +5,8 @@
     import com.precisely.pem.dtos.requests.ActivityDefnReq;
     import com.precisely.pem.dtos.responses.*;
     import com.precisely.pem.dtos.shared.*;
+    import com.precisely.pem.dtos.responses.*;
+    import com.precisely.pem.dtos.shared.*;
     import com.precisely.pem.exceptionhandler.DuplicateEntryException;
     import com.precisely.pem.exceptionhandler.ErrorResponseDto;
     import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
@@ -12,10 +14,7 @@
     import com.precisely.pem.models.ActivityDefn;
     import com.precisely.pem.models.ActivityDefnData;
     import com.precisely.pem.models.ActivityDefnVersion;
-    import com.precisely.pem.repositories.ActivityDefnDataRepo;
-    import com.precisely.pem.repositories.ActivityDefnRepo;
-    import com.precisely.pem.repositories.ActivityDefnVersionRepo;
-    import com.precisely.pem.repositories.SponsorRepo;
+    import com.precisely.pem.repositories.*;
     import lombok.extern.log4j.Log4j2;
     import org.modelmapper.ModelMapper;
     import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +47,8 @@
         private ActivityDefnVersionRepo activityDefnVersionRepo;
         @Autowired
         private ModelMapper mapper;
+        @Autowired
+        private ActivityDefinitionVersionCustomRepo activityDefinitionVersionCustomRepo;
 
         @Override
         public ActivityDefnPaginationRes getAllDefinitionList(String sponsorContext, String name,
@@ -190,20 +191,58 @@
         @Override
         @Transactional(rollbackFor = Exception.class)
         public MessageResp updateActivityDefinitionByKey(String sponsorContext, String name, String description, String activityDefnKey) throws Exception{
-            String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
-            Optional<ActivityDefn> activityDefn = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, SponsorKey));
+            Optional<ActivityDefn> activityDefn = activityDefnRepo.findById(activityDefnKey);
             if(activityDefn.isEmpty()){
                 ErrorResponseDto errorDto = new ErrorResponseDto();
                 errorDto.setMessage("No data Found");
                 errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-                throw new Exception("No entries found for the combination");
+                throw new Exception("No activity found for the specified activity definition key");
             }
             activityDefn.get().setActivityName(name);
             activityDefn.get().setActivityDescription(description);
             ActivityDefn savedActivityDefn = activityDefnRepo.save(activityDefn.get());
-            MessageResp messsageResp = new MessageResp();
+            MessageResp messsageResp = MessageResp.builder().build();
             messsageResp.setResponse("Activity Name & Description Update successful");
             return messsageResp;
 
+        }
+
+        @Override
+        public MessageResp deleteActivityDefinitionById(String sponsorContext, String activityDefnKey) throws Exception {
+            String sponsorKey = TenantContext.getTenantContext().getSponsorKey();
+            Optional<ActivityDefn> activityDefnOptional = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, sponsorKey));
+
+            if (activityDefnOptional.isEmpty()) {
+                throw new Exception("Activity Definition not found");
+            }
+            if (activityDefnOptional.get().getIsDeleted()) {
+                throw new Exception("Activity Definition Already Deleted");
+            }
+
+        /*
+        Conditions
+            1.All Versions are in DRAFT, hard delete all Data from tables
+            2.If any one Version apart from DRAFT present, Mark that status as DELETE and IS_DELETED in Activity Defn as TRUE and hard Delete all DRAFT Versions
+         */
+            //check count of Versions with Status other than DRAFT
+            long count = activityDefnVersionRepo.countByActivityDefnKeyAndStatusNot(activityDefnOptional.get().getActivityDefnKey(),Status.DRAFT.getStatus());
+
+            MessageResp response = MessageResp.builder().build();
+            if (count == 0) {
+                activityDefnRepo.deleteById(activityDefnKey);
+                response.setResponse("Activity Definition Records Deleted Successfully");
+
+            } else {
+                //Update Non-Draft Version with Soft Delete
+                int updated = activityDefinitionVersionCustomRepo.updateActivityDefinitionVersion(Status.DELETE,Status.DRAFT,activityDefnOptional.get().getActivityDefnKey());
+                //Hard Delete Draft Version with Soft Delete
+                int deleted = activityDefinitionVersionCustomRepo.deleteByActivityDefnKeyAndStatus(activityDefnOptional.get().getActivityDefnKey(),Status.DRAFT.getStatus());
+
+                activityDefnOptional.get().setIsDeleted(Boolean.TRUE);
+                activityDefnRepo.save(activityDefnOptional.get());
+
+                response.setResponse("Activity Definition Records Deleted Successfully");
+            }
+            return response;
         }
     }

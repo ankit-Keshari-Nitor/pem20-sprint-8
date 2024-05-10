@@ -19,4 +19,5 @@ public interface ActivityDefnService {
     public ActivityDefnResp createActivityDefinition(String sponsorContext, ActivityDefnReq activityDefnReq) throws IOException, SQLException, DuplicateEntryException, SponsorNotFoundException;
     public ActivityDefnListResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception;
     public MessageResp updateActivityDefinitionByKey(String sponsorContext, String name, String description, String activityDefnKey) throws Exception;
+    MessageResp deleteActivityDefinitionById(String sponsorContext, String activityDefnKey) throws Exception;
 }

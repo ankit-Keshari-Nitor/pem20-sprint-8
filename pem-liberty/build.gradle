@@ -19,7 +19,7 @@ ext {
     pemapi_app_name='pem-api'
     liberty.server.var.'pemapi.app.id' = pemapi_app_name
     liberty.server.var.'pemapi.app.location' = pemapi_app_name + '.war'
-    liberty.server.var.'pemapi.app.context.root' = '/'
+    liberty.server.var.'pemapi.app.context.root' = ''
 
     pemui_app_name='pem-ui'
     liberty.server.var.'pemui.app.location' = pemui_app_name

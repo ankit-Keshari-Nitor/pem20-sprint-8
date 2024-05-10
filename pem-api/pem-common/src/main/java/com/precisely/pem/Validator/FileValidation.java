@@ -13,7 +13,6 @@ public class FileValidation implements ConstraintValidator<MultipartFileValidato
 
     private static final long FILE_SIZE = 1048576;
 
-    @SneakyThrows
     @Override
     public boolean isValid(MultipartFile multipartFile, ConstraintValidatorContext constraintValidatorContext) {
         if (multipartFile != null) {

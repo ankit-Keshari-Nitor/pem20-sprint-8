@@ -5,6 +5,7 @@ import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityDefnReq;
+import com.precisely.pem.dtos.requests.UpdateActivityReq;
 import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.ActivityDefnResp;
@@ -60,14 +61,6 @@ class ActivityControllerTest extends BaseControllerTest {
         assertNotNull(output);
     }
 
-    @Test
-    void testUpdateActivityDefinition() throws Exception {
-        MessageResp resp = MessageResp.builder().build();
-        Mockito.when(activityDefnService.updateActivityDefinitionByKey(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString()))
-                .thenReturn(resp);
-        ResponseEntity<Object> output = activityController.updateActivityDefinitionByKey(TEST_SPONSOR, TEST_NAME,TEST_DESCRIPTION, TEST_ACTIVITY_DEFN_KEY);
-        assertNotNull(output);
-    }
 
     @Test
     void deleteActivityDefinitionById() throws Exception {

@@ -18,7 +18,7 @@ dependencies {
     implementation project(":pem-entity")
     implementation project(":pem-services")
     implementation project(":pem-common")
-    implementation 'com.ibm.db2.jcc:db2jcc:db2jcc4' // if you want to connect with db2 database, enable it
+    //implementation 'com.ibm.db2.jcc:db2jcc:db2jcc4' // if you want to connect with db2 database, enable it
     implementation 'org.springframework.boot:spring-boot-starter-web:3.2.4'
     implementation 'org.springframework.boot:spring-boot-starter-hateoas:3.2.4'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.3.0'

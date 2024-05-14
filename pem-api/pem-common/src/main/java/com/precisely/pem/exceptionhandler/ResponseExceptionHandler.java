@@ -23,15 +23,7 @@ import java.util.prefs.InvalidPreferencesFormatException;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ResponseExceptionHandler{
 
-    @ExceptionHandler({MultipartException.class})
-    protected ResponseEntity<Object> handleMultipartException(Exception ex, WebRequest request) {
-        ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1002);
-        errResp.setErrorDescription("Request Body is Empty in Multipart request.");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
-    }
-
-    @ExceptionHandler({SizeLimitExceededException.class})
+    @ExceptionHandler({MultipartException.class, SizeLimitExceededException.class})
     protected ResponseEntity<Object> handleConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
         errResp.setErrorCode(1002);
@@ -111,8 +103,6 @@ public class ResponseExceptionHandler{
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleGeneralException(Exception ex, WebRequest request) {
-        ex.printStackTrace();
-        System.out.println(ex.getMessage());
         ErrorResponseDto errResp = new ErrorResponseDto();
         errResp.setErrorCode(5000);
         errResp.setErrorDescription(ex.getLocalizedMessage());

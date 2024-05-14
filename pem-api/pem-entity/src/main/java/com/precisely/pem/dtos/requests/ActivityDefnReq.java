@@ -16,7 +16,7 @@ public class ActivityDefnReq {
     private String name;
 
     @SpecialCharValidator(fieldName = "description")
-    @Size(min = 1 , max = 255)
+    @Size(max = 255)
     private String description;
 
     @NotNull

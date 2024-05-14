@@ -128,7 +128,7 @@
 
             Optional<ActivityDefn> duplicateEntry = Optional.ofNullable(activityDefnRepo.findByActivityName(activityDefnReq.getName()));
             if(!duplicateEntry.isEmpty()){
-                throw new DuplicateEntryException("NA;DuplicateEntry;Entry already exists in database for name '"+duplicateEntry.get().getActivityName()+"'");
+                throw new DuplicateEntryException("name;DuplicateEntry;Entry already exists in database for name '"+duplicateEntry.get().getActivityName()+"'");
             }
 
             //Populating the Activity Definition Object

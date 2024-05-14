@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface SpecialCharValidator {
-    String message() default "";
+    String message() default "{};IllegalCharacter;Illegal character introduced in a field. Kindly change the field value.";
 
     String fieldName() default "";
 

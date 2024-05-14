@@ -10,6 +10,7 @@ import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.models.ActivityDefn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,9 @@ import static org.mockito.ArgumentMatchers.eq;
 
 
 class ActivityDefnServiceImplTest extends BaseServiceTest{
+
+    @InjectMocks
+    protected ActivityDefnServiceImpl activityDefinitionService;
 
     @BeforeEach
     public void setup(){

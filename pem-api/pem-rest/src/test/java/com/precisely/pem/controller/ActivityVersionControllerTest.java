@@ -23,7 +23,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ActivityVersionControllerTest {
+class ActivityVersionControllerTest extends BaseControllerTest{
 
     @InjectMocks
     ActivityVersionController activityVersionController;
@@ -72,9 +72,9 @@ class ActivityVersionControllerTest {
     @Test
     void updateMarkAsFinal() throws Exception {
         Mockito.when(activityVersionService.markAsFinalActivityDefinitionVersion(ArgumentMatchers.anyString()))
-                .thenReturn(MarkAsFinalActivityDefinitionVersionResp.builder().status("FINAL").build());
+                .thenReturn(MarkAsFinalActivityDefinitionVersionResp.builder().status(Status.FINAL.getStatus()).build());
 
-        ResponseEntity<Object> resp = activityVersionController.markActivityDefinitionStatusAsFinal("hsbc","fd2dfe53-b38c-40cf-acb7-9850d1930858","9ec7e29e-9cbe-4298-bb67-a53f86868592");
+        ResponseEntity<Object> resp = activityVersionController.markActivityDefinitionStatusAsFinal(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY);
         assertNotNull(resp);
         assertEquals(resp.getStatusCode(), HttpStatus.OK);
     }
@@ -82,11 +82,9 @@ class ActivityVersionControllerTest {
     @Test
     void testUpdateMarkAsFinalIfActivityVersionNotFound() throws Exception {
         Mockito.when(activityVersionService.markAsFinalActivityDefinitionVersion(ArgumentMatchers.anyString()))
-                .thenThrow(new Exception("Activity Definition Version not found"));
+                .thenThrow(new Exception(ACTIVITY_DEFINITION_VERSION_NOT_FOUND));
 
-        Exception exception = assertThrows(Exception.class, () ->{
-            activityVersionController.markActivityDefinitionStatusAsFinal("hsbc","fd2dfe53-b38c-40cf-acb7-9850d1930858","9ec7e29e-9cbe-4298-bb67-a53f86868592");
-        });
-        assertEquals(exception.getMessage(),"Activity Definition Version not found");
+        Exception exception = assertThrows(Exception.class, () -> activityVersionController.markActivityDefinitionStatusAsFinal(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY));
+        assertEquals(exception.getMessage(),ACTIVITY_DEFINITION_VERSION_NOT_FOUND);
     }
 }

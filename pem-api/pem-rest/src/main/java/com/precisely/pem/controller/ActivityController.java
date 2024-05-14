@@ -82,8 +82,8 @@ public class ActivityController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
     })
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Object> getActivityDefinitionList(@RequestParam(value = "name", required = false) @Size(max = 80) @SpecialCharValidator String name,
-                                                            @RequestParam(value = "description", required = false) @Size(max = 255) @SpecialCharValidator String description,
+    public ResponseEntity<Object> getActivityDefinitionList(@RequestParam(value = "name", defaultValue = "", required = false) @Size(max = 80) @SpecialCharValidator(fieldName = "name") String name,
+                                                            @RequestParam(value = "description",defaultValue = "", required = false) @Size(max = 255) @SpecialCharValidator(fieldName = "description") String description,
                                                             @RequestParam(value = "status", defaultValue = "DRAFT", required = true) Status status,
                                                             @RequestParam(value = "application", defaultValue = "PEM", required = true) Application application,
                                                             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,

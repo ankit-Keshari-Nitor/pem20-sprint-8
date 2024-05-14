@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -15,9 +14,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponseDto implements Serializable {
-    private int errorCode;
+    private String errorCode;
     private String fieldName;
-    private String fieldValue;
-    private String localDateTime;
+    //private String fieldValue;//Keep Until otherwise.
+    private String timestamp;
     private String message;
 }

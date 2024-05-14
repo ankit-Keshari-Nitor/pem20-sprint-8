@@ -4,7 +4,7 @@ import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
-import com.precisely.pem.exceptionhandler.SponsorNotFoundException;
+import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,7 +14,7 @@ public interface ActivityVersionService {
 
     ActivityDefnVersionListResp getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnVersionKey) throws Exception;
 
-    ActivityDefnVersionResp createActivityDefnVersion(String sponsorContext, String activityDefnKey, ActivityVersionReq activityVersionReq) throws OnlyOneDraftVersionException, IOException, SQLException, SponsorNotFoundException;
+    ActivityDefnVersionResp createActivityDefnVersion(String sponsorContext, String activityDefnKey, ActivityVersionReq activityVersionReq) throws OnlyOneDraftVersionException, IOException, SQLException, ResourceNotFoundException;
 
     MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersion(String activityDefnVersionKey) throws Exception;
 

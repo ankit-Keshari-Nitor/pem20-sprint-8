@@ -20,6 +20,6 @@ public class ActivityVersionReq {
     private Application application;
 
     @NotNull
-    @SpecialCharValidator
+    @SpecialCharValidator(fieldName = "description")
     private String description;
 }

@@ -6,11 +6,10 @@ import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
-import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
-import com.precisely.pem.exceptionhandler.SponsorNotFoundException;
+import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
@@ -107,7 +106,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         assertNotNull(dto);
     }
     @Test
-    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, SponsorNotFoundException {
+    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, ResourceNotFoundException {
         ActivityDefnServiceImplTest activityDefnServiceImplTest = new ActivityDefnServiceImplTest();
 
         Optional<ActivityDefn> activityDefn = Optional.ofNullable(activityDefnServiceImplTest.getVchActivityDefnObj());

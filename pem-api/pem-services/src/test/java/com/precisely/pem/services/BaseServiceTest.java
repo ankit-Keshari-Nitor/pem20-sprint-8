@@ -8,7 +8,6 @@ import com.precisely.pem.repositories.ActivityDefnRepo;
 import com.precisely.pem.repositories.ActivityDefnVersionRepo;
 import com.precisely.pem.repositories.SponsorRepo;
 import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;

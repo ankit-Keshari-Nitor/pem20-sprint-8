@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 public @interface SpecialCharValidator {
     String message() default "";
 
-    String name() default "";
+    String fieldName() default "";
 
     Class<?>[] groups() default {};
 

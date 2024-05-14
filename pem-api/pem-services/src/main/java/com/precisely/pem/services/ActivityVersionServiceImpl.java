@@ -5,15 +5,12 @@ import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
-import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.PaginationDto;
 import com.precisely.pem.dtos.shared.TenantContext;
-import com.precisely.pem.exceptionhandler.ErrorResponseDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
-import com.precisely.pem.exceptionhandler.SponsorNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
@@ -28,7 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -62,7 +58,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         SponsorInfo sponsorInfo = TenantContext.getTenantContext();
         if(Objects.isNull(sponsorInfo)){
-            throw new SponsorNotFoundException("Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+            throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
         }
         log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
         Page<ActivityDefnVersion> defnsPage = null;
@@ -72,7 +68,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(activityDefnKey,status,sponsorInfo.getSponsorKey(),pageable);
 
         if(defnsPage == null || defnsPage.isEmpty()) {
-            throw new ResourceNotFoundException("No data was found for the provided query parameter combination.");
+            throw new ResourceNotFoundException("NA;NoDataFound;No data was found for the provided query parameter combination.");
         }
         List<ActivityDefnVersion> listOfDefns = defnsPage.getContent();
         List<ActivityDefnVersionListResp> defnContent = new ArrayList<>();
@@ -102,12 +98,12 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     public ActivityDefnVersionListResp getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnVersionKey) throws Exception {
         SponsorInfo sponsorInfo = TenantContext.getTenantContext();
         if(Objects.isNull(sponsorInfo)){
-            throw new SponsorNotFoundException("Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+            throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
         }
         log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
         Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(activityDefnKey, activityDefnVersionKey,sponsorInfo.getSponsorKey()));
         if(result.isEmpty()){
-            throw new ResourceNotFoundException("No data was found for the provided query parameter combination.");
+            throw new ResourceNotFoundException("NA;NoDataFound;No data was found for the provided query parameter combination.");
         }
         ModelMapper mapper = new ModelMapper();
         return mapper.map(result.get(), ActivityDefnVersionListResp.class);
@@ -115,7 +111,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
     @Override
     public ActivityDefnVersionResp createActivityDefnVersion(String sponsorContext, String activityDefnKey,
-                                                             ActivityVersionReq activityVersionReq) throws OnlyOneDraftVersionException, IOException, SQLException, SponsorNotFoundException {
+                                                             ActivityVersionReq activityVersionReq) throws OnlyOneDraftVersionException, IOException, SQLException, ResourceNotFoundException, ResourceNotFoundException {
         Optional<ActivityDefn> activityDefn = null;
         ActivityDefnData activityDefnData = null;
         ActivityDefnVersion activityDefnVersion = null;
@@ -123,7 +119,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         SponsorInfo sponsorInfo = TenantContext.getTenantContext();
         if(Objects.isNull(sponsorInfo)){
-            throw new SponsorNotFoundException("Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+            throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
         }
         log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
 
@@ -132,7 +128,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         double version = activityDefn.get().getVersions().size();
         List<ActivityDefnVersion> defnVersions = activityDefn.get().getVersions();
         if(defnVersions.stream().anyMatch(s -> s.getStatus().equalsIgnoreCase(Status.DRAFT.toString()))){
-            throw new OnlyOneDraftVersionException("A version with the 'Draft' status already exists for the activity definition key '" + activityDefnKey +"'. Please verify the version.");
+            throw new OnlyOneDraftVersionException("NA;OneDraftAllowed;A version with the 'Draft' status already exists for the activity definition key '" + activityDefnKey +"'. Please verify the version.");
         }
 
         log.info("count : " + activityDefn.get().getVersions().size());

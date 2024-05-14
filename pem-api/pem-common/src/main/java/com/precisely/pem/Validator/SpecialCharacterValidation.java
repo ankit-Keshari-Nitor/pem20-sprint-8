@@ -12,7 +12,7 @@ public class SpecialCharacterValidation implements ConstraintValidator<SpecialCh
 
     @Override
     public void initialize(SpecialCharValidator requiredIfChecked) {
-        this.name = requiredIfChecked.name();
+        this.name = requiredIfChecked.fieldName();
     }
 
     @Override

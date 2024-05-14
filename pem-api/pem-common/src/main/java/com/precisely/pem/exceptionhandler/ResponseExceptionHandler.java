@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartException;
 
 import javax.naming.SizeLimitExceededException;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.prefs.InvalidPreferencesFormatException;
 
 @ControllerAdvice
@@ -21,61 +20,71 @@ public class ResponseExceptionHandler{
     @ExceptionHandler({MultipartException.class, SizeLimitExceededException.class})
     protected ResponseEntity<Object> handleConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1002);
+        errResp.setErrorCode("FileSizeIssue");
+        errResp.setTimestamp(LocalDateTime.now().toString());
+        errResp.setMessage(ex.getMessage());
         errResp.setFieldName("file");
-        errResp.setLocalDateTime(LocalDateTime.now().toString());
-        errResp.setMessage(ex.getLocalizedMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 
     @ExceptionHandler(InvalidFileException.class)
     protected ResponseEntity<Object> handleFormatConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1003);
-        errResp.setFieldName("file");
-        errResp.setMessage(ex.getLocalizedMessage());
+        String[] messages = ex.getLocalizedMessage().split(";");
+        errResp.setErrorCode(messages[1]);
+        errResp.setTimestamp(LocalDateTime.now().toString());
+        errResp.setMessage(messages[2]);
+        errResp.setFieldName(messages[0]);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     protected ResponseEntity<Object> handleResourceConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1004);
-        errResp.setLocalDateTime(LocalDateTime.now().toString());
-        errResp.setMessage("No data was found for the provided query parameter combination.");
+        String[] messages = ex.getLocalizedMessage().split(";");
+        errResp.setErrorCode(messages[1]);
+        errResp.setTimestamp(LocalDateTime.now().toString());
+        errResp.setMessage(messages[2]);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<Object> handleCharacterConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1005);
-        errResp.setMessage("Illegal character introduced. Kindly check your string.");
+        String[] messages = ex.getLocalizedMessage().split(";");
+        errResp.setErrorCode(messages[1]);
+        errResp.setTimestamp(LocalDateTime.now().toString());
+        errResp.setMessage(messages[2]);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 
     @ExceptionHandler(OnlyOneDraftVersionException.class)
     protected ResponseEntity<Object> handleVersionConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1006);
-        errResp.setLocalDateTime(LocalDateTime.now().toString());
-        errResp.setMessage(ex.getLocalizedMessage());
+        String[] messages = ex.getLocalizedMessage().split(";");
+        errResp.setErrorCode(messages[1]);
+        errResp.setTimestamp(LocalDateTime.now().toString());
+        errResp.setMessage(messages[2]);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 
     @ExceptionHandler(InvalidPreferencesFormatException.class)
     protected ResponseEntity<Object> handleCaseConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1008);
-        errResp.setMessage("Invalid format for given string. Please check your input.");
+        String[] messages = ex.getLocalizedMessage().split(";");
+        errResp.setErrorCode(messages[1]);
+        errResp.setTimestamp(LocalDateTime.now().toString());
+        errResp.setMessage(messages[2]);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 
     @ExceptionHandler(HandlerMethodValidationException.class)
     protected ResponseEntity<Object> handleGeneralConflict(HandlerMethodValidationException ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1001);
-        errResp.setMessage("Validation Failure");
+        String[] messages = ex.getLocalizedMessage().split(";");
+        errResp.setErrorCode(messages[1]);
+        errResp.setTimestamp(LocalDateTime.now().toString());
+        errResp.setMessage(messages[2]);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 
@@ -84,13 +93,15 @@ public class ResponseExceptionHandler{
         ErrorResponseDto errResp = new ErrorResponseDto();
         if(ex instanceof MethodArgumentNotValidException exception) {
             exception.getBindingResult().getFieldErrors().forEach(objectError -> {
+                String[] messages = objectError.getDefaultMessage().split(";");
                 errResp.setFieldName(objectError.getField());
-                errResp.setFieldValue(Objects.requireNonNull(objectError.getRejectedValue()).toString());
-                errResp.setLocalDateTime(LocalDateTime.now().toString());
-                errResp.setErrorCode(1011);
+                //errResp.setFieldValue(Objects.requireNonNull(objectError.getRejectedValue()).toString());
+                errResp.setTimestamp(LocalDateTime.now().toString());
+                errResp.setErrorCode(messages[1]);
             });
             exception.getBindingResult().getAllErrors().forEach(objectError -> {
-                errResp.setMessage(objectError.getDefaultMessage());
+                String[] messages = objectError.getDefaultMessage().split(";");
+                errResp.setMessage(messages[2]);
             });
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
@@ -99,29 +110,18 @@ public class ResponseExceptionHandler{
     @ExceptionHandler(DuplicateEntryException.class)
     protected ResponseEntity<Object> handleDuplicateException(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1007);
-        errResp.setFieldName("name");
-        errResp.setFieldValue(StringUtils.substringBetween(ex.getLocalizedMessage(), "'", "'"));
-        errResp.setLocalDateTime(LocalDateTime.now().toString());
-        errResp.setMessage(ex.getLocalizedMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
-    }
-
-    @ExceptionHandler(SponsorNotFoundException.class)
-    protected ResponseEntity<Object> handleSponsorException(Exception ex, WebRequest request) {
-        ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1010);
-        errResp.setFieldName("sponsorContext");
-        errResp.setFieldValue(StringUtils.substringBetween(ex.getLocalizedMessage(), "'", "'"));
-        errResp.setLocalDateTime(LocalDateTime.now().toString());
-        errResp.setMessage(ex.getLocalizedMessage());
+        String[] messages = ex.getLocalizedMessage().split(";");
+        errResp.setErrorCode(messages[1]);
+        errResp.setTimestamp(LocalDateTime.now().toString());
+        errResp.setMessage(messages[2]);
+        errResp.setFieldName(messages[0]);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleGeneralException(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(5000);
+        errResp.setErrorCode("GenericIssue");
         errResp.setMessage(ex.getLocalizedMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }

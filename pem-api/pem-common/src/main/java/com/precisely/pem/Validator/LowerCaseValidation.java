@@ -13,7 +13,7 @@ public class LowerCaseValidation  implements ConstraintValidator<LowerCaseValida
     public boolean isValid(String str, ConstraintValidatorContext constraintValidatorContext) {
         boolean isAllUpperCase = StringUtils.isAllUpperCase(str);
         if(!isAllUpperCase){
-            throw new InvalidPreferencesFormatException("Invalid format for application");
+            throw new InvalidPreferencesFormatException("CaseSensitiveIssue:Invalid format for application");
         }
         return true;
     }

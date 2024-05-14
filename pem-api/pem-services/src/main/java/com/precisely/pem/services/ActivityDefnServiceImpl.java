@@ -5,12 +5,8 @@
     import com.precisely.pem.dtos.requests.ActivityDefnReq;
     import com.precisely.pem.dtos.responses.*;
     import com.precisely.pem.dtos.shared.*;
-    import com.precisely.pem.dtos.responses.*;
-    import com.precisely.pem.dtos.shared.*;
     import com.precisely.pem.exceptionhandler.DuplicateEntryException;
-    import com.precisely.pem.exceptionhandler.ErrorResponseDto;
     import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
-    import com.precisely.pem.exceptionhandler.SponsorNotFoundException;
     import com.precisely.pem.models.ActivityDefn;
     import com.precisely.pem.models.ActivityDefnData;
     import com.precisely.pem.models.ActivityDefnVersion;
@@ -22,7 +18,6 @@
     import org.springframework.data.domain.PageRequest;
     import org.springframework.data.domain.Pageable;
     import org.springframework.data.domain.Sort;
-    import org.springframework.http.HttpStatus;
     import org.springframework.stereotype.Service;
     import org.springframework.transaction.annotation.Transactional;
 
@@ -62,7 +57,7 @@
             Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
             SponsorInfo sponsorInfo = TenantContext.getTenantContext();
             if(Objects.isNull(sponsorInfo)){
-                throw new SponsorNotFoundException("Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+                throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
             }
             log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
             Page<ActivityDefn> defnsPage = null;
@@ -90,7 +85,7 @@
                         application, status, pageable);
             }
             if(defnsPage == null || defnsPage.isEmpty()) {
-                throw new ResourceNotFoundException("No data was found for the provided query parameter combination.");
+                throw new ResourceNotFoundException("NA;NoDataFound;No data was found for the provided query parameter combination.");
             }
             List<ActivityDefn> listOfDefns = defnsPage.getContent();
             List<ActivityDefnListResp> defnContent = new ArrayList<>();
@@ -118,7 +113,7 @@
 
         @Override
         @Transactional(rollbackFor = Exception.class)
-        public ActivityDefnResp createActivityDefinition(String sponsorContext, ActivityDefnReq activityDefnReq) throws IOException, SQLException, DuplicateEntryException, SponsorNotFoundException {
+        public ActivityDefnResp createActivityDefinition(String sponsorContext, ActivityDefnReq activityDefnReq) throws IOException, SQLException, DuplicateEntryException, ResourceNotFoundException {
             ActivityDefnResp activityDefnResp = new ActivityDefnResp();
             ActivityDefn activityDefnobj = null;
             ActivityDefnData activityDefnData = null;
@@ -127,13 +122,13 @@
 
             SponsorInfo sponsorInfo = TenantContext.getTenantContext();
             if(Objects.isNull(sponsorInfo)){
-                throw new SponsorNotFoundException("Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+                throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
             }
             log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
 
             Optional<ActivityDefn> duplicateEntry = Optional.ofNullable(activityDefnRepo.findByActivityName(activityDefnReq.getName()));
             if(!duplicateEntry.isEmpty()){
-                throw new DuplicateEntryException("Entry already exists in database for name '"+duplicateEntry.get().getActivityName()+"'");
+                throw new DuplicateEntryException("NA;DuplicateEntry;Entry already exists in database for name '"+duplicateEntry.get().getActivityName()+"'");
             }
 
             //Populating the Activity Definition Object
@@ -177,12 +172,12 @@
 
             SponsorInfo sponsorInfo = TenantContext.getTenantContext();
             if(Objects.isNull(sponsorInfo)){
-                throw new SponsorNotFoundException("Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+                throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
             }
             log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
             Optional<ActivityDefn> result = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, sponsorInfo.getSponsorKey()));;
             if(result.isEmpty()){
-                throw new ResourceNotFoundException("No data was found for the provided query parameter combination.");
+                throw new ResourceNotFoundException("NA;NoDataFound;No data was found for the provided query parameter combination.");
             }
             ModelMapper mapper = new ModelMapper();
             return mapper.map(result.get(), ActivityDefnListResp.class);
@@ -193,9 +188,6 @@
         public MessageResp updateActivityDefinitionByKey(String sponsorContext, String name, String description, String activityDefnKey) throws Exception{
             Optional<ActivityDefn> activityDefn = activityDefnRepo.findById(activityDefnKey);
             if(activityDefn.isEmpty()){
-                ErrorResponseDto errorDto = new ErrorResponseDto();
-                errorDto.setMessage("No data Found");
-                errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
                 throw new Exception("No activity found for the specified activity definition key");
             }
             activityDefn.get().setActivityName(name);

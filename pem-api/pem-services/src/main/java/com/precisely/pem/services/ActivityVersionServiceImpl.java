@@ -32,10 +32,7 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -174,6 +171,8 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     @Override
     public MessageResp updateActivityDefnVersion(String sponsorContext, String activityDefnKey, String activityDefnVersionKey, UpdateActivityVersionReq updateActivityVersionReq) throws Exception {
 
+        validateUpdateActivityDefnReq(updateActivityVersionReq);
+
         Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
         if(activityDefnVersion.isEmpty()){
             throw  new Exception("Activity Definition Version not found" );
@@ -190,20 +189,32 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         }
 
         //Populating the Activity Definition Data Object
-        byte[] bytes = updateActivityVersionReq.getFile().getBytes();
-        Blob blob = new SerialBlob(bytes);
+        if(Objects.nonNull(updateActivityVersionReq.getFile())){
+            byte[] bytes = updateActivityVersionReq.getFile().getBytes();
+            Blob blob = new SerialBlob(bytes);
 
-        activityDefnData.get().setDefData(blob);
-        activityDefnData.get().setModifyTs(LocalDateTime.now());
+            activityDefnData.get().setDefData(blob);
+            activityDefnData.get().setModifyTs(LocalDateTime.now());
 
-        activityDefnDataRepo.save(activityDefnData.get());
+            activityDefnDataRepo.save(activityDefnData.get());
+        }
 
-        activityDefnVersion.get().setIsEncrypted(updateActivityVersionReq.getIsEncrypted());
-        activityDefnVersion.get().setDescription(updateActivityVersionReq.getDescription());
+
+        if( Objects.nonNull(updateActivityVersionReq.getIsEncrypted()) )
+            activityDefnVersion.get().setIsEncrypted(updateActivityVersionReq.getIsEncrypted());
+        if(Objects.nonNull(updateActivityVersionReq.getDescription()))
+            activityDefnVersion.get().setDescription(updateActivityVersionReq.getDescription());
+
         activityDefnVersion.get().setModifyTs(LocalDateTime.now());
         activityDefnVersionRepo.save(activityDefnVersion.get());
 
 
         return MessageResp.builder().response("Activity Definition Version Updated.").build();
+    }
+
+    private static void validateUpdateActivityDefnReq(UpdateActivityVersionReq updateActivityVersionReq) throws Exception {
+        if(Objects.isNull(updateActivityVersionReq.getFile()) && Objects.isNull(updateActivityVersionReq.getDescription()) && Objects.isNull(updateActivityVersionReq.getIsEncrypted())){
+            throw  new Exception("Activity Definition Version required single field to Update" );
+        }
     }
 }

@@ -111,6 +111,8 @@ public class ResponseExceptionHandler{
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleGeneralException(Exception ex, WebRequest request) {
+        ex.printStackTrace();
+        System.out.println(ex.getMessage());
         ErrorResponseDto errResp = new ErrorResponseDto();
         errResp.setErrorCode(5000);
         errResp.setErrorDescription(ex.getLocalizedMessage());

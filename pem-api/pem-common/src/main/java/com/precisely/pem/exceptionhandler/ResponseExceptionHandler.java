@@ -26,8 +26,8 @@ public class ResponseExceptionHandler{
     @ExceptionHandler({MultipartException.class})
     protected ResponseEntity<Object> handleMultipartException(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        errResp.setErrorCode(1000);
-        errResp.setErrorDescription("Request Body is Empty/Incorrect in Multipart request.");
+        errResp.setErrorCode(1002);
+        errResp.setErrorDescription("Request Body is Empty in Multipart request.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 

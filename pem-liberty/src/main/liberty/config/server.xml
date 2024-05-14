@@ -34,6 +34,11 @@
 	
 	<springBootApplication id="pem-api" location="${pemapi.app.location}">
         <applicationArgument>--server.servlet.context-path=/${pemapi.app.context.root}</applicationArgument>
+		<classloader commonLibraryRef="DBLib" />
     </springBootApplication>
+	
+	<library id="DBLib">
+		<fileset dir="resources/dbdrivers/" includes="*.jar"/>
+	</library>
 
 </server>

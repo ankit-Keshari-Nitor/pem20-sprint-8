@@ -33,7 +33,7 @@ dependencies {
 liberty {
     server {
         name = 'pem'
-        // configDirectory = file('src/main/liberty/config')
+        configDirectory = file('src/main/liberty/config')
         features {
             acceptLicense = true
         }

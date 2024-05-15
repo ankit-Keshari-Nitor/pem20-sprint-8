@@ -2,6 +2,12 @@ plugins {
     id 'base'
     // Ref: https://github.com/OpenLiberty/ci.gradle
     id "io.openliberty.tools.gradle.Liberty" version "3.8.2"
+    id 'java'
+}
+
+configurations.implementation.setCanBeResolved(true)
+configurations {
+    dbjars //Custom Configuration for DB Jars
 }
 
 repositories {
@@ -28,6 +34,7 @@ ext {
 
 dependencies {
     libertyRuntime "com.ibm.websphere.appserver.runtime:wlp-webProfile10:${liberty_version}"
+    dbjars 'com.ibm.db2.jcc:db2jcc:db2jcc4'
 }
 
 liberty {
@@ -66,6 +73,14 @@ task installUI (dependsOn: [libertyCreate, ':pem-ui:bundle']) {
         }
     }
 }
+
+task copyDBJars(type: Copy){ //Copying DB Jars into the dbdrivers directory for Dev Env
+    from configurations.dbjars
+    into "build/wlp/usr/servers/pem/resources/dbdrivers"
+    include '*.jar'
+}
+
+copyDBJars.dependsOn configurations.dbjars
 
 libertyPackage.dependsOn installPemApi
 build.dependsOn installPemApi, libertyPackage

@@ -1,4 +1,10 @@
 import './index.css';
+import ActivityDefinition from './components/activity-definition';
 import WorkFlowDesigner from './components/workflow-designer';
 
-export default WorkFlowDesigner;
+const Designer = {
+  WorkFlowDesigner,
+  ActivityDefinition
+};
+
+export default Designer;

@@ -1,23 +1,26 @@
 {
-    "appName": "Partner Engagement Manager",
-    "appPrefix": "IBM",
-    "productName": "Partner Engagement Manager",
-    "sideNav": {
-      "home": "Home",
-      "dashboard": "Dashboard",
-      "partners": "Partners",
-      "partnerUsers": "Partner Users",
-      "users": "Users",
-      "roles": "Roles",
-      "divisions":"Divisions",
-      "workflow":"Activity Definitions",
-      "designer":"Page Designer"
-    },
-    "headerLink": {
-      "directories": "Directories",
-      "activities": "Activities",
-      "library": "Library",
-      "settings": "Settings"
-    }
-  }
-  
+  "appName": "Partner Engagement Manager",
+  "appPrefix": "IBM",
+  "productName": "Partner Engagement Manager",
+  "sideNav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "partners": "Partners",
+    "partnerUsers": "Partner Users",
+    "users": "Users",
+    "roles": "Roles",
+    "divisions": "Divisions",
+    "definitions": "Definitions",
+    "workflow": "Workflow"
+  },
+  "headerLink": {
+    "directories": "Directories",
+    "activities": "Activities",
+    "library": "Library",
+    "settings": "Settings"
+  },
+  "Directories": "Directories",
+  "Activities": "Activities",
+  "Library": "Library",
+  "Settings": "Settings"
+}

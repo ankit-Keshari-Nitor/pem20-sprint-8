@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.scss';
 import * as Shell from '@b2bi/shell';
-import { sideNavConfig, headerMenuList } from './modules/configurations';
 import { routes as PemRoutes } from './modules/routes';
 import axios from 'axios';
 import AppAuthHandler from './AppAuthHandler';

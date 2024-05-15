@@ -1,11 +1,17 @@
-import React from 'react';
-import { Form, Link, Select, SelectItem, TextArea, FileUploader, TextInput, Checkbox, Button, Tabs, TabList, Tab, TabPanels, TabPanel, Column, Grid } from '@carbon/react';
-import './api-task-definition.scss';
+import React, { useState } from 'react';
+import { Form, Link, Select, SelectItem, TextArea, FileUploader, TextInput, Checkbox, Button, Tabs, TabList, Tab, TabPanels, TabPanel, Column, Grid, Modal } from '@carbon/react';
+import '../style.scss';
 import ExitValidationFrom from '../../exit-validation-form';
 import { ElippsisIcon } from '../../../icons';
 import ApiDefineForm from './api-define-form';
 
 export default function ApiTaskDefinitionForm({ selectedNode }) {
+  const [openCancelDialog, setOpenCancelDialog] = useState(false);
+
+  const onSubmitDefinitionForm = (data) => {
+    console.log('onSubmitDefinitionForm', data);
+  };
+
   return (
     <div className="activity-form">
       <Tabs>
@@ -17,7 +23,7 @@ export default function ApiTaskDefinitionForm({ selectedNode }) {
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <ApiDefineForm id={'api-define-from'} />
+            <ApiDefineForm id={'api-define-from'} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
           </TabPanel>
           {/* Properties Form */}
           <TabPanel>
@@ -109,6 +115,22 @@ export default function ApiTaskDefinitionForm({ selectedNode }) {
           </TabPanel>
         </TabPanels>
       </Tabs>
+      <Modal
+        open={openCancelDialog}
+        onRequestClose={() => setOpenCancelDialog(false)}
+        isFullWidth
+        modalHeading="Confirmation"
+        primaryButtonText="Exit"
+        secondaryButtonText="Cancel"
+      >
+        <p
+          style={{
+            padding: '0px 0px 1rem 1rem'
+          }}
+        >
+          Your changes are not saved. Do you want to exit without saving changes?{' '}
+        </p>
+      </Modal>
     </div>
   );
 }

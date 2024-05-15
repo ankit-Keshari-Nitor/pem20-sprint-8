@@ -1,3 +1,3 @@
-import { BlockTray } from './block-tray';
+import { BlocksTray } from './blocks-tray';
 
-export default BlockTray;
+export default BlocksTray;

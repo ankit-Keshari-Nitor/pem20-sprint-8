@@ -1,0 +1,51 @@
+html,
+body {
+  overflow: visible !important;
+}
+
+.activities-list-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.cds--search {
+  width: 30% !important;
+}
+
+.cds--dropdown,
+.cds--list-box {
+  top: 15% !important;
+}
+
+.cds--data-table-content {
+  overflow: visible !important;
+}
+
+.cds--search,
+.cds--search--expandable,
+.cds--search-magnifier {
+  justify-content: flex-end;
+  display: flex;
+  width: 100%;
+  /* Ensure the container stretches full width */
+}
+
+.cds--search-close {
+  margin-right: 30px !important;
+}
+
+.cds--search-close:focus,
+.cds--search-close:hover,
+.cds--search-close:active,
+.cds--search-input:focus {
+  outline: none !important;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #f4f4f4 !important; // Light grey for odd rows
+}
+
+tbody tr:nth-child(even) {
+  background-color: #ffffff !important; // White for even rows
+}

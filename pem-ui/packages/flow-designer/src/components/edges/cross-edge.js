@@ -1,6 +1,6 @@
 import React from 'react';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, useReactFlow } from 'reactflow';
-import './cross-edge.css';
+import './style.scss';
 
 function CrossEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = { stroke: '#000' }, markerEnd }) {
   const { setEdges } = useReactFlow();

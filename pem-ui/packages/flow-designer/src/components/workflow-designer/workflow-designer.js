@@ -1,162 +1,134 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { DndProvider } from 'react-dnd';
-import { v4 as uuidv4 } from 'uuid';
-import _ from 'lodash';
-import { isNode } from 'reactflow';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { addEdge, MarkerType, useNodesState, useEdgesState } from 'reactflow';
+import { addEdge, useNodesState, useEdgesState } from 'reactflow';
 
 import './workflow-designer.scss';
 
 import Designer from '../../../../page-designer/src';
 import componentMapper from '../../../../carbon-mappers/src';
-import { CrossEdge, PlusEdge } from '../edges';
-import TaskFlowDesigner from '../task-flow-designer';
-import { StartNode, EndNode, GatewayNode, TaskNode } from '../nodes';
-import { getUpdatedElementsAfterNodeAddition, testElements } from '../../utils/workflow-element-utils';
 
-const connectionLineStyle = { stroke: '#000' };
-const defaultViewport = { x: 0, y: 0, zoom: 1 };
-const snapGrid = [10, 10];
-const endMarks = {
-  type: MarkerType.ArrowClosed,
-  width: 20,
-  height: 20,
-  color: '#FF0072'
-};
+import { DialogFlowDesigner, TaskFlowDesigner } from '../flow-designers';
+import {
+  connectionLineStyle,
+  defaultViewport,
+  snapGrid,
+  endMarks,
+  TASK_INITIAL_NODES,
+  TASK_NODE_TYPES,
+  TASK_EDGE_TYPES,
+  DIALOG_INITIAL_NODES,
+  DIALOG_NODE_TYPES,
+  DIALOG_EDGE_TYPES,
+  NODE_TYPE
+} from '../../constants';
 
-const TASK_INITIAL_NODES = [
-  {
-    id: '1',
-    type: 'start',
-    data: { label: 'Start' },
-    position: { x: 350, y: 200 },
-    sourcePosition: 'right'
-  },
-  {
-    id: '2',
-    type: 'end',
-    data: { label: 'End' },
-    position: { x: 550, y: 200 },
-    targetPosition: 'left'
-  }
-];
+let dialogId = 0;
+const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
 
-const TASK_NODE_TYPES = {
-  start: StartNode,
-  end: EndNode,
-  partner: TaskNode,
-  approval: TaskNode,
-  attribute: TaskNode,
-  sponsor: TaskNode,
-  custom: TaskNode,
-  system: TaskNode,
-  gateway: GatewayNode
-};
-
-const TASK_EDGE_TYPES = {
-  crossEdge: CrossEdge,
-  plusEdge: PlusEdge
-};
-
-const getNewTaskId = () => `Task_Name_${uuidv4()}`;
+let taskId = 0;
+const getNewTaskId = () => `Task_Name_${taskId++}`;
 
 export default function WorkFlowDesigner() {
   const [isDialogFlowActive, setIsDialogFlowActive] = useState(false);
   const [isPageDesignerActive, setIsPageDesignerActive] = useState(false);
-  const [elements, setElements] = React.useState([]);
 
   // --------------------------------- Task Flow States -----------------------------------
   const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState(false);
   const taskFlowWrapper = useRef(null);
   const [taskNodes, setTaskNodes, onTaskNodesChange] = useNodesState(TASK_INITIAL_NODES);
   const [taskEdges, setTaskEdges, onTaskEdgesChange] = useEdgesState([]);
-  const [taskEdgesClone, setTaskEdgesClone] = useState([]);
   const [taskFlowInstance, setTaskFlowInstance] = useState(null);
   const [selectedTaskNode, setSelectedTaskNode] = useState(null);
 
-  React.useEffect(() => {
-    const nodes = taskNodes
-      .filter((x) => !x.target)
-      .map((x) => ({
-        ...x,
-        data: { ...x.data, onDeleteNodeCallback, onNodeClickCallback }
-      }));
-    const edges = taskEdges.filter((x) => x.target).map((x) => ({ ...x, data: { ...x.data, onAddNodeCallback } }));
-    setElements([...nodes, ...edges]);
+  // --------------------------------- Dialog Flow States -----------------------------------
+  const [openDialogPropertiesBlock, setOpenDialogPropertiesBlock] = useState(false);
+  const dialogFlowWrapper = useRef(null);
+  const [dialogNodes, setDialogNodes, onDialogNodesChange] = useNodesState(DIALOG_INITIAL_NODES);
+  const [dialogEdges, setDialogEdges, onDialogEdgesChange] = useEdgesState([]);
+  const [dialogFlowInstance, setDialogFlowInstance] = useState(null);
+  const [selectedDialogNode, setSelectedDialogNode] = useState(null);
+
+  // --------------------------------- Dialog Flow Methods -----------------------------------
+  const onDialogNodeDoubleClick = (type) => {
+    if (type === NODE_TYPE.DIALOG) {
+      setIsPageDesignerActive(true);
+    }
+  };
+
+  const onDialogNodeConnect = useCallback(
+    (params) => {
+      let newParam = params;
+      newParam.type = 'crossEdge';
+      newParam.markerEnd = endMarks;
+      setDialogEdges((eds) => addEdge({ ...newParam, style: { stroke: '#000' } }, eds));
+    },
+    [setDialogEdges]
+  );
+
+  const onDialogNodeDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
   }, []);
 
-  React.useEffect(() => {
-    let tempNodes = [];
-    let tempEdges = [];
-    elements.forEach((el) => {
-      if (isNode(el)) {
-        tempNodes.push(el);
-      } else {
-        tempEdges.push(el);
+  const onDialogNodeDrop = useCallback(
+    (event) => {
+      event.preventDefault();
+
+      const nodeData = JSON.parse(event.dataTransfer.getData('application/nodeData'));
+
+      // check if the dropped element is valid
+      if (typeof nodeData === 'undefined' || !nodeData) {
+        return;
       }
-    });
-    setTaskNodes([...tempNodes]);
-    setTaskEdges([...tempEdges]);
-  }, [elements]);
 
-  React.useEffect(() => {
-    if (taskEdgesClone.length > 0) {
-      const clonedElements = testElements(taskEdgesClone, elements);
-      setElements([...clonedElements]);
-    }
-  }, [taskEdgesClone]);
+      // Get the position of the dialog
+      const position = dialogFlowInstance.screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY
+      });
 
-  const onAddNodeCallback = ({ id, type, position }) => {
-    setElements((elements) =>
-      getUpdatedElementsAfterNodeAddition({
-        elements,
-        targetEdgeId: id,
-        type,
+      const newDialog = {
+        id: getNewDialogId(),
         position,
-        onDoubleClick,
-        onDeleteNodeCallback,
-        onNodeClickCallback,
-        onAddNodeCallback
-      })
-    );
-  };
+        type: nodeData.type,
+        data: { ...nodeData, onDoubleClick: onDialogNodeDoubleClick }
+      };
 
-  const onDeleteNodeCallback = (id) => {
-    setElements((elements) => {
-      const clonedElements = _.cloneDeep(elements);
-      const incomingEdges = clonedElements.filter((x) => x.target === id);
-      const outgoingEdges = clonedElements.filter((x) => x.source === id);
-      const updatedIncomingEdges = incomingEdges.map((x) => ({
-        ...x,
-        target: outgoingEdges[0].target
-      }));
-      const filteredElements = clonedElements.filter((x) => x.id !== id && x.target !== incomingEdges[0].target && x.source !== outgoingEdges[0].source);
-      filteredElements.push(...updatedIncomingEdges);
-      return filteredElements;
-    });
-  };
+      setDialogNodes((nds) => nds.concat(newDialog));
+    },
+    [dialogFlowInstance]
+  );
 
-  const onNodeClickCallback = (id) => {
-    setElements((elements) => {
-      const currentNode = elements.find((x) => x.id === id);
-      const nodes = elements.filter((x) => x.position);
-      const edges = elements.filter((x) => !x.position);
-      return elements;
-    });
+  const onDialogNodeClick = (event, node) => {
+    if (node.type === NODE_TYPE.DIALOG || node.type === NODE_TYPE.XSLT || node.type === NODE_TYPE.API) {
+      let copyNodes = dialogNodes;
+      copyNodes.map((copyNode) => {
+        if (node.id === copyNode.id) {
+          copyNode.data.borderColor = '#023FB2';
+        } else {
+          copyNode.data.borderColor = '#0585FC';
+        }
+        return copyNode;
+      });
+      setDialogNodes([...copyNodes]);
+      setSelectedDialogNode(node);
+      setOpenDialogPropertiesBlock(true);
+    }
   };
 
   // --------------------------------- Task Flow Methods -----------------------------------
-  const onDoubleClick = (event) => {
-    setIsDialogFlowActive(true);
+  const onTaskNodeDoubleClick = (type) => {
+    if (type === NODE_TYPE.PARTNER || type === NODE_TYPE.SPONSOR || type === NODE_TYPE.CUSTOM || type === NODE_TYPE.SYSTEM) {
+      setIsDialogFlowActive(true);
+    }
   };
 
   const onTaskNodeConnect = useCallback((params) => {
     let newParam = params;
-    newParam.type = 'plusEdge';
+    newParam.type = 'crossEdge';
     newParam.markerEnd = endMarks;
-    setTaskEdges((eds) => addEdge({ ...newParam, animated: true, style: { stroke: '#000' }, data: { ...eds.data, onAddNodeCallback } }, eds));
-    setTaskEdgesClone((eds) => addEdge({ ...newParam, animated: true, style: { stroke: '#000' }, data: { ...eds.data, onAddNodeCallback } }, eds));
+    setTaskEdges((eds) => addEdge({ ...newParam, style: { stroke: '#000' } }, eds));
   }, []);
 
   const onTaskNodeDragOver = useCallback((event) => {
@@ -185,58 +157,94 @@ export default function WorkFlowDesigner() {
         id: getNewTaskId(),
         position,
         type: nodeData.type,
-        data: { ...nodeData, onDoubleClick, onDeleteNodeCallback, onNodeClickCallback }
+        data: { ...nodeData, onDoubleClick: onTaskNodeDoubleClick }
       };
 
-      setElements((nds) => nds.concat(newTask));
+      setTaskNodes((nds) => nds.concat(newTask));
     },
     [taskFlowInstance]
   );
 
   const onTaskNodeClick = (event, node) => {
-    let copyNodes = taskNodes;
-    copyNodes.map((copyNode) => {
-      if (node.id === copyNode.id) {
-        copyNode.data.borderColor = '#023FB2';
-      } else {
-        copyNode.data.borderColor = '#0585FC';
-      }
-      return copyNode;
-    });
-    setTaskNodes([...copyNodes]);
-    setSelectedTaskNode(node);
-    setOpenTaskPropertiesBlock(true);
+    if (
+      node.type === NODE_TYPE.PARTNER ||
+      node.type === NODE_TYPE.APPROVAL ||
+      node.type === NODE_TYPE.ATTRIBUTE ||
+      node.type === NODE_TYPE.SPONSOR ||
+      node.type === NODE_TYPE.CUSTOM ||
+      node.type === NODE_TYPE.SYSTEM
+    ) {
+      let copyNodes = taskNodes;
+      copyNodes.map((copyNode) => {
+        if (node.id === copyNode.id) {
+          copyNode.data.borderColor = '#023FB2';
+        } else {
+          copyNode.data.borderColor = '#0585FC';
+        }
+        return copyNode;
+      });
+      setTaskNodes([...copyNodes]);
+      setSelectedTaskNode(node);
+      setOpenTaskPropertiesBlock(true);
+    }
   };
 
   return (
     <>
       {isPageDesignerActive ? (
-        <DndProvider debugMode={true} backend={HTML5Backend}>
+        <DndProvider backend={HTML5Backend}>
           <Designer componentMapper={componentMapper} />
         </DndProvider>
       ) : (
-        <TaskFlowDesigner
-          connectionLineStyle={connectionLineStyle}
-          defaultViewport={defaultViewport}
-          snapGrid={snapGrid}
-          taskFlowWrapper={taskFlowWrapper}
-          taskNodes={taskNodes}
-          taskEdges={taskEdges}
-          elements={elements}
-          onTaskNodesChange={onTaskNodesChange}
-          onTaskEdgesChange={onTaskEdgesChange}
-          taskFlowInstance={taskFlowInstance}
-          setTaskFlowInstance={setTaskFlowInstance}
-          onTaskNodeConnect={onTaskNodeConnect}
-          onTaskNodeDrop={onTaskNodeDrop}
-          onTaskNodeDragOver={onTaskNodeDragOver}
-          onTaskNodeClick={onTaskNodeClick}
-          TASK_NODE_TYPES={TASK_NODE_TYPES}
-          TASK_EDGE_TYPES={TASK_EDGE_TYPES}
-          selectedTaskNode={selectedTaskNode}
-          openTaskPropertiesBlock={openTaskPropertiesBlock}
-          setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
-        />
+        <>
+          <div className="work-flow-designer">
+            {isDialogFlowActive ? (
+              <DialogFlowDesigner
+                connectionLineStyle={connectionLineStyle}
+                defaultViewport={defaultViewport}
+                snapGrid={snapGrid}
+                dialogFlowWrapper={dialogFlowWrapper}
+                dialogNodes={dialogNodes}
+                dialogEdges={dialogEdges}
+                onDialogNodesChange={onDialogNodesChange}
+                onDialogEdgesChange={onDialogEdgesChange}
+                dialogFlowInstance={dialogFlowInstance}
+                setDialogFlowInstance={setDialogFlowInstance}
+                onDialogNodeConnect={onDialogNodeConnect}
+                onDialogNodeDrop={onDialogNodeDrop}
+                onDialogNodeDragOver={onDialogNodeDragOver}
+                onDialogNodeClick={onDialogNodeClick}
+                DIALOG_NODE_TYPES={DIALOG_NODE_TYPES}
+                DIALOG_EDGE_TYPES={DIALOG_EDGE_TYPES}
+                selectedDialogNode={selectedDialogNode}
+                openDialogPropertiesBlock={openDialogPropertiesBlock}
+                setOpenDialogPropertiesBlock={setOpenDialogPropertiesBlock}
+              />
+            ) : (
+              <TaskFlowDesigner
+                connectionLineStyle={connectionLineStyle}
+                defaultViewport={defaultViewport}
+                snapGrid={snapGrid}
+                taskFlowWrapper={taskFlowWrapper}
+                taskNodes={taskNodes}
+                taskEdges={taskEdges}
+                onTaskNodesChange={onTaskNodesChange}
+                onTaskEdgesChange={onTaskEdgesChange}
+                taskFlowInstance={taskFlowInstance}
+                setTaskFlowInstance={setTaskFlowInstance}
+                onTaskNodeConnect={onTaskNodeConnect}
+                onTaskNodeDrop={onTaskNodeDrop}
+                onTaskNodeDragOver={onTaskNodeDragOver}
+                onTaskNodeClick={onTaskNodeClick}
+                TASK_NODE_TYPES={TASK_NODE_TYPES}
+                TASK_EDGE_TYPES={TASK_EDGE_TYPES}
+                selectedTaskNode={selectedTaskNode}
+                openTaskPropertiesBlock={openTaskPropertiesBlock}
+                setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
+              />
+            )}
+          </div>
+        </>
       )}
     </>
   );

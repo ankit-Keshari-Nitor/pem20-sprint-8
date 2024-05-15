@@ -1,0 +1,47 @@
+.edge-button {
+  width: 20px;
+  height: 20px;
+  background: #ffffff;
+  border: 1px solid #ed3e32;
+  cursor: pointer;
+  border-radius: 2px;
+  font-size: 12px;
+  line-height: 1;
+  color: #ed3e32;
+}
+
+.edge-button:hover {
+  box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.08);
+}
+
+.edge-add-Button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  border: 1px solid #999999;
+  opacity: 0px;
+}
+
+.node-type-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.node-type-list-label {
+  font-family: IBM Plex Sans;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 19.5px;
+  letter-spacing: -0.002em;
+  text-align: center;
+  color: #3e3e3e;
+}
+
+.node-type-list-label::first-letter {
+  text-transform: capitalize;
+}

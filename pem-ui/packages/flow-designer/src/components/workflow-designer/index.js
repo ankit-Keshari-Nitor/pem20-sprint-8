@@ -1,3 +1,3 @@
-import WorkFlowDesigner from './work-flow-designer';
+import WorkFlowDesigner from "./workflow-designer";
 
 export default WorkFlowDesigner;

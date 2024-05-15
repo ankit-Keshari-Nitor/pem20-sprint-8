@@ -8,6 +8,7 @@ const ComponentItem = ({ data }) => {
   const { type, label, icon } = data.component;
 
   const [{ opacity }, drag] = useDrag({
+    type: data.type,
     item: { id: uuid(), type: data.type, component: data.component },
     collect: (monitor) => ({
       opacity: monitor.isDragging() ? 0.4 : 1

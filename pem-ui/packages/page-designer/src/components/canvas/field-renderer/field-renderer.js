@@ -28,6 +28,7 @@ const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onF
   const ref = useRef(null);
 
   const [{ isDragging }, drag] = useDrag({
+    type: dragItem.type,
     item: dragItem,
     collect: (monitor) => ({
       isDragging: monitor.isDragging()

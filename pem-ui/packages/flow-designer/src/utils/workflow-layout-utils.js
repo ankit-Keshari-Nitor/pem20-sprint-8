@@ -1,5 +1,5 @@
-import dagre from "dagre";
-import _ from "lodash";
+import dagre from 'dagre';
+import _ from 'lodash';
 import { isNode } from 'reactflow';
 
 const nodeWidth = 250;
@@ -10,13 +10,13 @@ const getLayoutedElements = (_elements) => {
   const dagreGraph = new dagre.graphlib.Graph();
 
   dagreGraph.setDefaultEdgeLabel(() => ({}));
-  dagreGraph.setGraph({ rankdir: "TB" });
+  dagreGraph.setGraph({ rankdir: 'TB' });
 
   elements.forEach((el) => {
     if (isNode(el)) {
       dagreGraph.setNode(el.id, {
         width: el.width || nodeWidth,
-        height: el.height || nodeHeight,
+        height: el.height || nodeHeight
       });
     } else {
       dagreGraph.setEdge(el.source, el.target);
@@ -28,14 +28,11 @@ const getLayoutedElements = (_elements) => {
   return elements.map((el) => {
     if (isNode(el)) {
       const nodeWithPosition = dagreGraph.node(el.id);
-      el.targetPosition = "top";
-      el.sourcePosition = "bottom";
+      el.targetPosition = 'top';
+      el.sourcePosition = 'bottom';
       el.position = {
-        x:
-          nodeWithPosition.x -
-          (el.width || nodeWidth) / 2 +
-          Math.random() / 1000,
-        y: nodeWithPosition.y - (el.height || nodeHeight) / 2,
+        x: nodeWithPosition.x - (el.width || nodeWidth) / 2 + Math.random() / 1000,
+        y: nodeWithPosition.y - (el.height || nodeHeight) / 2
       };
     }
     return el;

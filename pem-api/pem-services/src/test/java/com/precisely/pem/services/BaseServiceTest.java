@@ -69,6 +69,10 @@ public class BaseServiceTest {
     protected UriComponentsBuilder uriBuilder;
 
     //Common Mock method initialization
+    public OngoingStubbing<Optional<ActivityDefn>> mockActivityDefnKey() {
+        return Mockito.when(activityDefnRepo.findById(ArgumentMatchers.anyString()));
+    }
+
     public OngoingStubbing<ActivityDefn> mockActivityDefnKeyAndSoponsorKey() {
         return Mockito.when(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()));
     }

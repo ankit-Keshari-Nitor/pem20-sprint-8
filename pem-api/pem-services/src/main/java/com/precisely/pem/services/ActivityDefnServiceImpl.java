@@ -3,6 +3,7 @@
     import com.precisely.pem.commonUtil.ApplicationConstants;
     import com.precisely.pem.commonUtil.Status;
     import com.precisely.pem.dtos.requests.ActivityDefnReq;
+    import com.precisely.pem.dtos.requests.UpdateActivityReq;
     import com.precisely.pem.dtos.responses.*;
     import com.precisely.pem.dtos.shared.*;
     import com.precisely.pem.exceptionhandler.ErrorResponseDto;
@@ -176,18 +177,27 @@
         }
 
         @Override
-        @Transactional(rollbackFor = Exception.class)
-        public MessageResp updateActivityDefinitionByKey(String sponsorContext, String name, String description, String activityDefnKey) throws Exception{
+        public MessageResp updateActivityDefinitionByKey(String sponsorContext, String activityDefnKey, UpdateActivityReq updateActivityReq) throws Exception{
             Optional<ActivityDefn> activityDefn = activityDefnRepo.findById(activityDefnKey);
             if(activityDefn.isEmpty()){
                 ErrorResponseDto errorDto = new ErrorResponseDto();
                 errorDto.setErrorDescription("No data Found");
                 errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-                throw new Exception("No activity found for the specified activity definition key");
+                throw new Exception("Activity Definition not found");
             }
-            activityDefn.get().setActivityName(name);
-            activityDefn.get().setActivityDescription(description);
-            ActivityDefn savedActivityDefn = activityDefnRepo.save(activityDefn.get());
+            if (activityDefn.get().getIsDeleted()) {
+                throw new Exception("Activity Definition Already Deleted");
+            }
+            if(updateActivityReq.getName().isEmpty() && updateActivityReq.getDescription().isEmpty()){
+                throw new Exception("Both Activity name & description cannot be empty, please provide atleast one input for update");
+            }
+            if(!updateActivityReq.getDescription().isEmpty()){
+                activityDefn.get().setActivityDescription(updateActivityReq.getDescription());
+            }
+            if(!updateActivityReq.getName().isEmpty()){
+                activityDefn.get().setActivityName(updateActivityReq.getName());
+            }
+            activityDefnRepo.save(activityDefn.get());
             MessageResp messsageResp = MessageResp.builder().build();
             messsageResp.setResponse("Activity Name & Description Update successful");
             return messsageResp;

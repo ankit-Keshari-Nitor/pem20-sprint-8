@@ -2,7 +2,6 @@ plugins {
     id 'base'
     // Ref: https://github.com/OpenLiberty/ci.gradle
     id "io.openliberty.tools.gradle.Liberty" version "3.8.2"
-    id 'java'
 }
 
 configurations.implementation.setCanBeResolved(true)

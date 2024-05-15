@@ -13,11 +13,10 @@ public class ActivityInstReq {
     private String activityDefnVersionKey;
 
     @NotNull
-    @SpecialCharValidator
+    @SpecialCharValidator(fieldName = "name")
     private String name;
 
-    @NotNull
-    @SpecialCharValidator
+    @SpecialCharValidator(fieldName = "description")
     private String description;
 
     @NumericValidator

@@ -189,9 +189,6 @@
         public MessageResp updateActivityDefinitionByKey(String sponsorContext, String activityDefnKey, UpdateActivityReq updateActivityReq) throws Exception{
             Optional<ActivityDefn> activityDefn = activityDefnRepo.findById(activityDefnKey);
             if(activityDefn.isEmpty()){
-                ErrorResponseDto errorDto = new ErrorResponseDto();
-                errorDto.setErrorDescription("No data Found");
-                errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
                 throw new Exception("Activity Definition not found");
             }
             if (activityDefn.get().getIsDeleted()) {
@@ -250,5 +247,12 @@
                 response.setResponse("Activity Definition Records Deleted Successfully");
             }
             return response;
+        }
+
+        private void validateSponsorContext(String sponsorContext) throws ResourceNotFoundException {
+            SponsorInfo sponsorInfo = TenantContext.getTenantContext();
+            if(Objects.isNull(sponsorInfo)){
+                throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+            }
         }
     }

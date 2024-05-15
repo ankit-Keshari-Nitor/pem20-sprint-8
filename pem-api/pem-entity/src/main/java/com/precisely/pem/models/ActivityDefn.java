@@ -27,7 +27,7 @@ public class ActivityDefn extends BaseEntity {
     private String activityName;
 
     @Column(name="ACTIVITY_DESCRIPTION")
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     private String activityDescription;
 
     @Column(name="APPLICATION")

@@ -4,7 +4,6 @@ plugins {
     id "io.openliberty.tools.gradle.Liberty" version "3.8.2"
 }
 
-configurations.implementation.setCanBeResolved(true)
 configurations {
     dbjars //Custom Configuration for DB Jars
 }
@@ -39,7 +38,7 @@ dependencies {
 liberty {
     server {
         name = 'pem'
-        configDirectory = file('src/main/liberty/config')
+        //configDirectory = file('src/main/liberty/config')
         features {
             acceptLicense = true
         }
@@ -79,7 +78,11 @@ task copyDBJars(type: Copy){ //Copying DB Jars into the dbdrivers directory for 
     include '*.jar'
 }
 
-copyDBJars.dependsOn configurations.dbjars
+task setDev() {
+    println "Setting Dev Environment"//Task to Setup Dev Env
+}
+
+setDev.dependsOn copyDBJars
 
 libertyPackage.dependsOn installPemApi
 build.dependsOn installPemApi, libertyPackage

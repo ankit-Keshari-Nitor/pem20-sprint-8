@@ -8,6 +8,7 @@ import classNames from 'classnames';
 const Row = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete, previewMode, onChangeHandle }) => {
   const ref = useRef(null);
   const [{ isDragging }, drag] = useDrag({
+    type: ROW,
     item: {
       type: ROW,
       id: data.id,

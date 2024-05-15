@@ -1,54 +1,136 @@
-import { Form, Grid, Column, TextInput, TextArea, Select, SelectItem, Checkbox, Button } from '@carbon/react';
+/* eslint-disable react/prop-types */
 import React from 'react';
+import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
+import { FORM_TEMPLATE, COMPONENT_MAPPER } from '../../../constants';
+import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 
-export default function ApprovalDefineForm({ id, setOpen }) {
-  return (
-    <>
-      <Form aria-label="approval form" data-testid={id}>
-        <Grid className="define-grid">
-          <Column className="col-margin" lg={16}>
-            <TextInput id="one" labelText="Name*" />
-          </Column>
-          <Column className="col-margin" lg={16}>
-            <TextArea id="one" labelText="Description" />
-          </Column>
-          <Column className="col-margin" lg={16}>
-            <TextInput id="one" labelText="Estimate (Days)*" />
-          </Column>
-          <Column className="col-margin" lg={16}>
-            <Select id={`select-1`} labelText="Select Task to reopen up to when rejecting">
-              <SelectItem value="" text="" />
-              <SelectItem value="option-1" text="Option 1" />
-              <SelectItem value="option-2" text="Option 2" />
-            </Select>
-          </Column>
-          <Column className="col-margin" lg={16}>
-            <Select id={`select-1`} labelText="Role">
-              <SelectItem value="" text="" />
-              <SelectItem value="option-1" text="Option 1" />
-              <SelectItem value="option-2" text="Option 2" />
-            </Select>
-          </Column>
-          <Column className="col-margin" lg={16}>
-            <Checkbox labelText="Show to partner" id="checkbox-label-1" />
-          </Column>
-          <Column className="col-margin" lg={16}>
-            <Checkbox labelText="Enable auto approval warning" id="checkbox-label-1" />
-          </Column>
-        </Grid>
-        <Grid>
-          <Column lg={8}>
-            <Button type="button" kind="secondary" className="cancel-button" onClick={() => setOpen(true)}>
-              Cancel
-            </Button>
-          </Column>
-          <Column lg={8}>
-            <Button type="submit" kind="secondary" className="save-button">
-              Save
-            </Button>
-          </Column>
-        </Grid>
-      </Form>
-    </>
-  );
-}
+export const SCHEMA = {
+  fields: [
+    {
+      component: componentTypes.TEXT_FIELD,
+      name: 'name',
+      labelText: 'Name*',
+      helperText: 'Name should not contain &,<,>,",\',.,{,}, characters.',
+      isRequired: true,
+      validate: [
+        {
+          type: validatorTypes.REQUIRED,
+          message: 'Name is required'
+        },
+        {
+          type: validatorTypes.PATTERN,
+          pattern: /^[^&<>"'.{}]+$/i,
+          message: 'Name should not contain &,<,>,",\',.,{,}, characters.'
+        },
+        {
+          type: validatorTypes.MAX_LENGTH,
+          threshold: 100,
+          message: 'Name must be no longer then 100 characters'
+        }
+      ]
+    },
+    {
+      component: componentTypes.TEXTAREA,
+      name: 'description',
+      labelText: 'Description*',
+      isRequired: true,
+      validate: [
+        {
+          type: validatorTypes.REQUIRED,
+          message: 'Description is required'
+        },
+        {
+          type: validatorTypes.MAX_LENGTH,
+          threshold: 100,
+          message: 'Name must be no longer then 100 characters'
+        }
+      ]
+    },
+    {
+      component: componentTypes.TEXT_FIELD,
+      name: 'estimate_days',
+      labelText: 'Estimate (Days)*',
+      isRequired: true,
+      validate: [
+        {
+          type: validatorTypes.REQUIRED,
+          message: 'Estimate is required'
+        }
+      ]
+    },
+    {
+      component: componentTypes.SELECT,
+      name: 'role',
+      labelText: 'Role',
+      options: [
+        {
+          label: 'AssignRole_Auto_Sponsor',
+          value: 'AssignRole_Auto_Sponsor'
+        },
+        {
+          label: 'AssignRole_Auto_Sponsor2',
+          value: 'AssignRole_Auto_Sponsor2'
+        },
+        {
+          label: 'Both',
+          value: 'Both'
+        },
+        {
+          label: 'Both1',
+          value: 'Both1'
+        },
+        {
+          label: 'Both441344',
+          value: 'Both441344'
+        },
+        {
+          label: 'BothRole1',
+          value: 'BothRole1'
+        },
+        {
+          label: 'BothRole2',
+          value: 'BothRole2'
+        }
+      ]
+    },
+    {
+      component: componentTypes.SELECT,
+      name: 'reopenTask',
+      labelText: 'Select Task to reopen up to when rejecting',
+      options: [
+        {
+          label: 'Task 1',
+          value: 'task-1'
+        },
+        {
+          label: 'Task 2',
+          value: 'task-2'
+        }
+      ]
+    },
+    {
+      component: componentTypes.CHECKBOX,
+      name: 'show_to_partner',
+      labelText: 'Show to partner'
+    },
+    {
+      component: componentTypes.CHECKBOX,
+      name: 'enable_approval',
+      labelText: 'Enable auto approval warning'
+    }
+  ]
+};
+
+const ApprovalDefineForm = ({ id, setOpenCancelDialog, onSubmitDefinitionForm }) => (
+  <FormRenderer
+    id={id}
+    FormTemplate={FORM_TEMPLATE}
+    componentMapper={COMPONENT_MAPPER}
+    schema={SCHEMA}
+    onSubmit={onSubmitDefinitionForm}
+    onCancel={() => console.log('Cancelling')}
+    onReset={() => console.log('Resetting')}
+  />
+);
+
+export default ApprovalDefineForm;

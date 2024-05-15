@@ -1,55 +1,102 @@
-import { Form, Grid, Column, TextInput, TextArea, Select, SelectItem, Button } from '@carbon/react';
+/* eslint-disable react/prop-types */
 import React from 'react';
+import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
+import { FORM_TEMPLATE, COMPONENT_MAPPER } from '../../../constants';
+import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 
-export default function AttributeDefineForm({ id, setOpen }) {
-  return (
-    <>
-      <Form aria-label="approval form" data-testid={id}>
-        <Grid className="define-grid">
-          <Column className="col-margin" lg={16}>
-            <TextInput id="one" labelText="Name*" />
-          </Column>
-          <Column className="col-margin" lg={16}>
-            <TextArea id="one" labelText="Description" />
-          </Column>
-          <Column className="col-margin" lg={16}>
-            <Select id={`select-1`} labelText="Attribut Type*">
-              <SelectItem value="" text="" />
-              <SelectItem value="Attribute2 with values" text="Attribute2 with values" />
-              <SelectItem value="USA_states_ACD" text="USA_states_ACD" />
-              <SelectItem value="AttributeTask_Scenarious" text="AttributeTask_Scenarious" />
-              <SelectItem value="All_Map_Del" text="All_Map_Del" />
-              <SelectItem value="Regions_ACD" text="Regions_ACD" />
-              <SelectItem value="Attribute_Admin_Edit" text="Attribute_Admin_Edit" />
-              <SelectItem value="Sposnortask" text="Sposnortask" />
-            </Select>
-          </Column>
-          <Column className="col-margin" lg={16}>
-            <Select id={`select-1`} labelText="Attribut Value*">
-              <SelectItem value="" text="" />
-              <SelectItem value="East" text="East" />
-              <SelectItem value="North" text="North" />
-              <SelectItem value="South" text="South" />
-              <SelectItem value="ValueDelete" text="ValueDelete" />
-              <SelectItem value="West" text="West" />
-              <SelectItem value="PartnerCount-1" text="PartnerCount-1" />
-              <SelectItem value="PartnerCount-2" text="PartnerCount-2" />
-            </Select>
-          </Column>
-        </Grid>
-        <Grid className="buttons-wrapper-grid">
-          <Column lg={8}>
-            <Button type="button" kind="secondary" className="cancel-button" onClick={() => setOpen(true)}>
-              Cancel
-            </Button>
-          </Column>
-          <Column lg={8}>
-            <Button type="submit" kind="secondary" className="save-button">
-              Save
-            </Button>
-          </Column>
-        </Grid>
-      </Form>
-    </>
-  );
-}
+export const SCHEMA = {
+  fields: [
+    {
+      component: componentTypes.TEXT_FIELD,
+      name: 'name',
+      labelText: 'Name*',
+      helperText: 'Name should not contain &,<,>,",\',.,{,}, characters.',
+      isRequired: true,
+      validate: [
+        {
+          type: validatorTypes.REQUIRED,
+          message: 'Name is required'
+        },
+        {
+          type: validatorTypes.PATTERN,
+          pattern: /^[^&<>"'.{}]+$/i,
+          message: 'Name should not contain &,<,>,",\',.,{,}, characters.'
+        },
+        {
+          type: validatorTypes.MAX_LENGTH,
+          threshold: 100,
+          message: 'Name must be no longer then 100 characters'
+        }
+      ]
+    },
+    {
+      component: componentTypes.TEXTAREA,
+      name: 'description',
+      labelText: 'Description*',
+      isRequired: true,
+      validate: [
+        {
+          type: validatorTypes.REQUIRED,
+          message: 'Description is required'
+        },
+        {
+          type: validatorTypes.MAX_LENGTH,
+          threshold: 100,
+          message: 'Name must be no longer then 100 characters'
+        }
+      ]
+    },
+    {
+      component: componentTypes.SELECT,
+      name: 'attributeType',
+      labelText: 'Attribut Type*',
+      options: [
+        {
+          label: 'My Partners',
+          value: 'my_partners'
+        },
+        {
+          label: 'Request Type',
+          value: 'request_type'
+        },
+        {
+          label: 'SubResource Type',
+          value: 'Sub_Resource_Type'
+        }
+      ]
+    },
+    {
+      component: componentTypes.SELECT,
+      name: 'attributeValue',
+      labelText: 'Attribute Value*',
+      options: [
+        {
+          label: 'My Partners',
+          value: 'my_partners'
+        },
+        {
+          label: 'Request Type',
+          value: 'request_type'
+        },
+        {
+          label: 'SubResource Type',
+          value: 'Sub_Resource_Type'
+        }
+      ]
+    }
+  ]
+};
+
+const AttributeDefineForm = ({ id, setOpenCancelDialog, onSubmitDefinitionForm }) => (
+  <FormRenderer
+    id={id}
+    FormTemplate={FORM_TEMPLATE}
+    componentMapper={COMPONENT_MAPPER}
+    schema={SCHEMA}
+    onSubmit={onSubmitDefinitionForm}
+    onCancel={() => console.log('Cancelling')}
+    onReset={() => console.log('Resetting')}
+  />
+);
+
+export default AttributeDefineForm;

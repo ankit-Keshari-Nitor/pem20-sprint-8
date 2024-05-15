@@ -1,31 +1,64 @@
-import { Form, Grid, Column, TextArea, TextInput, Button } from '@carbon/react';
+/* eslint-disable react/prop-types */
 import React from 'react';
+import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
+import { FORM_TEMPLATE, COMPONENT_MAPPER } from '../../../constants';
+import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
 
-export default function ApiDefineForm({ id }) {
-  return (
-    <>
-      <Form aria-label="approval form" data-testid={id}>
-        <Grid>
-          <Column className="col-margin" lg={16}>
-            <TextInput id="one" labelText="Name" />
-          </Column>
-          <Column className="col-margin" lg={16}>
-            <TextArea id="one" labelText="Description" />
-          </Column>
-        </Grid>
-        <Grid className="buttons-wrapper-grid">
-          <Column lg={8}>
-            <Button type="button" kind="secondary" className="cancel-button">
-              Cancel
-            </Button>
-          </Column>
-          <Column lg={8}>
-            <Button type="submit" kind="secondary" className="save-button">
-              Save
-            </Button>
-          </Column>
-        </Grid>
-      </Form>
-    </>
-  );
-}
+export const SCHEMA = {
+  fields: [
+    {
+      component: componentTypes.TEXT_FIELD,
+      name: 'name',
+      labelText: 'Name*',
+      helperText: 'Name should not contain &,<,>,",\',.,{,}, characters.',
+      isRequired: true,
+      validate: [
+        {
+          type: validatorTypes.REQUIRED,
+          message: 'Name is required'
+        },
+        {
+          type: validatorTypes.PATTERN,
+          pattern: /^[^&<>"'.{}]+$/i,
+          message: 'Name should not contain &,<,>,",\',.,{,}, characters.'
+        },
+        {
+          type: validatorTypes.MAX_LENGTH,
+          threshold: 100,
+          message: 'Name must be no longer then 100 characters'
+        }
+      ]
+    },
+    {
+      component: componentTypes.TEXTAREA,
+      name: 'description',
+      labelText: 'Description*',
+      isRequired: true,
+      validate: [
+        {
+          type: validatorTypes.REQUIRED,
+          message: 'Description is required'
+        },
+        {
+          type: validatorTypes.MAX_LENGTH,
+          threshold: 100,
+          message: 'Name must be no longer then 100 characters'
+        }
+      ]
+    }
+  ]
+};
+
+const ApiDefineForm = ({ id, setOpenCancelDialog, onSubmitDefinitionForm }) => (
+  <FormRenderer
+    id={id}
+    FormTemplate={FORM_TEMPLATE}
+    componentMapper={COMPONENT_MAPPER}
+    schema={SCHEMA}
+    onSubmit={onSubmitDefinitionForm}
+    onCancel={() => console.log('Cancelling')}
+    onReset={() => console.log('Resetting')}
+  />
+);
+
+export default ApiDefineForm;

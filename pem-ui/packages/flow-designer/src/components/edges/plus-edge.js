@@ -1,6 +1,6 @@
 import React from 'react';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, getMarkerEnd } from 'reactflow';
-import EdgeAddButton from './buttons/edge-add-button';
+import PlusEdgeButton from './plus-edge-button';
 
 function PlusEdge(props) {
   const { sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = { stroke: '#000' }, arrowHeadType, markerEndId } = props;
@@ -28,7 +28,7 @@ function PlusEdge(props) {
           }}
           className="nodrag nopan"
         >
-          <EdgeAddButton {...props} />
+          <PlusEdgeButton {...props} />
         </div>
       </EdgeLabelRenderer>
     </>

@@ -7,6 +7,7 @@ import FieldRenderer from '../components/canvas/field-renderer/field-renderer';
 const Column = ({ data, handleDrop, path, componentMapper, onFieldSelect, renderRow, onFieldDelete, previewMode, onChangeHandle, colSize }) => {
   const ref = useRef(null);
   const [{ isDragging }, drag] = useDrag({
+    type: COLUMN,
     item: {
       type: COLUMN,
       id: data.id,

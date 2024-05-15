@@ -8,3 +8,8 @@ body,
   box-sizing: border-box;
   font-family: IBM Plex Sans;
 }
+
+.form-field {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}

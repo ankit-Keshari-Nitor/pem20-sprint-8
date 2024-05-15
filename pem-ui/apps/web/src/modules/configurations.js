@@ -34,12 +34,6 @@ const sideNavConfig = [
     to: '/activities/definitions',
     title: 'pem:sideNav.definitions',
     resourceKey: 'DEFINITIONS.VIEW'
-  },
-  {
-    label: 'pem:sideNav.workflow',
-    to: '/activities/definitions/new',
-    title: 'pem:sideNav.workflow',
-    resourceKey: 'DESIGNER.VIEW'
   }
 ];
 

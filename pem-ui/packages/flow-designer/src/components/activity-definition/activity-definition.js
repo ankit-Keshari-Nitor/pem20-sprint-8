@@ -17,6 +17,7 @@ import {
 } from '@carbon/react';
 import { CheckmarkFilled, NewTab, Add } from '@carbon/icons-react';
 import './activity-definition.scss';
+import { NEW_ACTIVITY_URL } from '../../constants';
 
 export default function ActivityDefinition() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -140,7 +141,7 @@ export default function ActivityDefinition() {
     <div className="activities-list-container">
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: '1rem' }}>
         <ExpandableSearch labelText="Search" placeholder="Search by name" onChange={(event) => setSearchQuery(event.target.value)} value={searchQuery} />
-        <Button style={{ marginLeft: '8px' }} renderIcon={NewTab}>
+        <Button style={{ marginLeft: '8px' }} renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
           New
         </Button>
         <Button kind="tertiary" style={{ marginLeft: '8px' }} renderIcon={Add}>

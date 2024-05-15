@@ -291,7 +291,7 @@ export const COMPONENT_MAPPER = {
 
 export const FORM_TEMPLATE = ({ formFields, schema }) => {
   const { handleSubmit, onCancel, getState } = useFormApi();
-  const { submitting, valid, } = getState();
+  const { submitting, valid } = getState();
   return (
     <form onSubmit={handleSubmit}>
       {formFields.map((formField) => (
@@ -318,3 +318,5 @@ export const FORM_TEMPLATE = ({ formFields, schema }) => {
     </form>
   );
 };
+
+export const NEW_ACTIVITY_URL = '#/activities/definitions/new';

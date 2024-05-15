@@ -56,11 +56,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
                 Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        SponsorInfo sponsorInfo = TenantContext.getTenantContext();
-        if(Objects.isNull(sponsorInfo)){
-            throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
-        }
-        log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
         Page<ActivityDefnVersion> defnsPage = null;
         if(description != null && !description.isEmpty())
             defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndDescriptionContaining(activityDefnKey,status,sponsorInfo.getSponsorKey(),description,pageable);
@@ -96,11 +92,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
     @Override
     public ActivityDefnVersionListResp getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnVersionKey) throws Exception {
-        SponsorInfo sponsorInfo = TenantContext.getTenantContext();
-        if(Objects.isNull(sponsorInfo)){
-            throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
-        }
-        log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
         Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(activityDefnKey, activityDefnVersionKey,sponsorInfo.getSponsorKey()));
         if(result.isEmpty()){
             throw new ResourceNotFoundException("NA;NoDataFound;No data was found for the provided query parameter combination.");
@@ -117,11 +109,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         ActivityDefnVersion activityDefnVersion = null;
         ActivityDefnVersionResp activityDefnVersionResp = new ActivityDefnVersionResp();
 
-        SponsorInfo sponsorInfo = TenantContext.getTenantContext();
-        if(Objects.isNull(sponsorInfo)){
-            throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
-        }
-        log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
 
         activityDefn = activityDefnRepo.findById(activityDefnKey);
 
@@ -224,5 +212,14 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         if(Objects.isNull(updateActivityVersionReq.getFile()) && Objects.isNull(updateActivityVersionReq.getDescription()) && Objects.isNull(updateActivityVersionReq.getIsEncrypted())){
             throw  new Exception("Activity Definition Version required single field to Update" );
         }
+    }
+
+    private SponsorInfo validateSponsorContext(String sponsorContext) throws ResourceNotFoundException {
+        SponsorInfo sponsorInfo = TenantContext.getTenantContext();
+        if(Objects.isNull(sponsorInfo)){
+            throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+        }
+        log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
+        return sponsorInfo;
     }
 }

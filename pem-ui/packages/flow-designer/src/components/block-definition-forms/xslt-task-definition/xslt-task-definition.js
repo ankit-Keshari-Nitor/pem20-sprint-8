@@ -3,12 +3,17 @@ import { Form, Select, SelectItem, TextArea, Checkbox, Button, Tabs, TabList, Ta
 import '../style.scss';
 import ExitValidationFrom from '../../exit-validation-form';
 import XsltDefineForm from './xslt-define-form';
+import XsltPropertyForm from './xslt-properties-form';
 
 export default function XsltTaskDefinitionForm({ selectedNode }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
 
   const onSubmitDefinitionForm = (data) => {
     console.log('onSubmitDefinitionForm', data);
+  };
+
+  const onSubmitPropertyForm = (data) => {
+    console.log('onSubmitPropertyForm', data);
   };
 
   return (
@@ -26,39 +31,7 @@ export default function XsltTaskDefinitionForm({ selectedNode }) {
           </TabPanel>
           {/* Properties Form */}
           <TabPanel>
-            <Form aria-label="Api form">
-              <Grid>
-                <Column className="col-margin" lg={16}>
-                  <TextArea labelText="Input*" rows={4} id="text-area-1" />
-                </Column>
-                <Column className="col-margin" lg={16}>
-                  <Checkbox labelText="Escape Request" id="checkbox-label-1" />
-                </Column>
-                <Column className="col-margin" lg={16}>
-                  <TextArea labelText="XSLT*" rows={4} id="text-area-1" />
-                </Column>
-                <Column className="col-margin" lg={16}>
-                  <Select id={`select-1`} labelText="Output Format*">
-                    <SelectItem value="" text="" />
-                    <SelectItem value="option-1" text="Option 1" />
-                    <SelectItem value="option-2" text="Option 2" />
-                  </Select>
-                </Column>
-                <Column className="col-margin" lg={16}>
-                  <TextArea labelText="Sample Output" rows={4} id="text-area-1" />
-                </Column>
-                <Column lg={8}>
-                  <Button type="button" kind="secondary" className="cancel-button">
-                    Cancel
-                  </Button>
-                </Column>
-                <Column lg={8}>
-                  <Button type="submit" kind="secondary" className="save-button">
-                    Save
-                  </Button>
-                </Column>
-              </Grid>
-            </Form>
+            <XsltPropertyForm id={'xslt-property-Form'} setOpenCancelDialog={setOpenCancelDialog} onSubmitPropertyForm={onSubmitPropertyForm} />
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>

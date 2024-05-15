@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <server description="PEM 2.0">
 	
-	<applicationManager startTimeout="90s"/>
+	<applicationManager startTimeout="300s"/>
 	
     <!-- Enable features -->
     <featureManager>

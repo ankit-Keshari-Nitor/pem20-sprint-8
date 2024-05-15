@@ -57,11 +57,7 @@
                     Sort.by(sortBy).ascending()
                     : Sort.by(sortBy).descending();
             Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-            SponsorInfo sponsorInfo = TenantContext.getTenantContext();
-            if(Objects.isNull(sponsorInfo)){
-                throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
-            }
-            log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
+            SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
             Page<ActivityDefn> defnsPage = null;
             if(name != null && !name.isEmpty() && name.contains("con:") && description != null && !description.isEmpty()) {
                 String conName = name.replace("con:","");
@@ -122,11 +118,7 @@
             ActivityDefnVersion activityDefnVersion = null;
             ModelMapper mapper = new ModelMapper();
 
-            SponsorInfo sponsorInfo = TenantContext.getTenantContext();
-            if(Objects.isNull(sponsorInfo)){
-                throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
-            }
-            log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
+            SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
 
             Optional<ActivityDefn> duplicateEntry = Optional.ofNullable(activityDefnRepo.findByActivityName(activityDefnReq.getName()));
             if(!duplicateEntry.isEmpty()){
@@ -171,12 +163,7 @@
 
         @Override
         public ActivityDefnListResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception {
-
-            SponsorInfo sponsorInfo = TenantContext.getTenantContext();
-            if(Objects.isNull(sponsorInfo)){
-                throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
-            }
-            log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
+            SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
             Optional<ActivityDefn> result = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, sponsorInfo.getSponsorKey()));;
             if(result.isEmpty()){
                 throw new ResourceNotFoundException("NA;NoDataFound;No data was found for the provided query parameter combination.");
@@ -249,10 +236,13 @@
             return response;
         }
 
-        private void validateSponsorContext(String sponsorContext) throws ResourceNotFoundException {
+        private SponsorInfo validateSponsorContext(String sponsorContext) throws ResourceNotFoundException {
             SponsorInfo sponsorInfo = TenantContext.getTenantContext();
             if(Objects.isNull(sponsorInfo)){
                 throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
             }
+            log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
+            return sponsorInfo;
         }
+
     }

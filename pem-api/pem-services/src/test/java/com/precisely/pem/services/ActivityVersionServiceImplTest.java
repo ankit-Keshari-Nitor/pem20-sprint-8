@@ -165,7 +165,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     @Test
     void updateActivityDefinitionVersion() throws Exception {
-        ActivityDefnVersion activityDefnVersion = getVCHActivityDefnVersionObj();
+        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
         mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
         mockActivityDefnVersionSave(activityDefnVersion).thenReturn(activityDefnVersion);
 
@@ -184,7 +184,26 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     }
 
+    @Test
+    void updateActivityDefinitionVersion_PartialRequest() throws Exception {
+        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+        mockActivityDefnVersionSave(activityDefnVersion).thenReturn(activityDefnVersion);
 
+        ActivityDefnData activityDefnData = getVchActivityDefnDataObj();
+        mockActivityDefnDataFindById().thenReturn(Optional.of(activityDefnData));
+
+        mockActivityDefnDataSave(activityDefnData).thenReturn(activityDefnData);
+
+        MultipartFile file = getMultipartFile();
+        MessageResp resp = activityVersionService.
+                updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
+                        UpdateActivityVersionReq.builder().file(file).build());
+
+        assertNotNull(resp);
+        assertEquals(ACTIVITY_DEFINITION_VERSION_UPDATED,resp.getResponse());
+
+    }
 
     @Test
     void updateActivityDefinitionVersion_ActivityDefnVersionNotFound() throws Exception {
@@ -209,7 +228,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
         MultipartFile multipartFile = getMultipartFile();
 
-        ActivityDefnVersion activityDefnVersion = getVCHActivityDefnVersionObj();
+        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
         mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
 
 
@@ -219,6 +238,19 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
                             UpdateActivityVersionReq.builder().description(TEST_DESCRIPTION).file(multipartFile).isEncrypted(Boolean.TRUE).build());
         });
         assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND);
+
+    }
+
+    @Test
+    void updateActivityDefinitionVersion_EmtpyRequest() throws Exception {
+
+        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+
+        Exception exception = assertThrows(Exception.class, () -> activityVersionService.
+                updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
+                        UpdateActivityVersionReq.builder().build()));
+        assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_VERSION_REQUIRED_SINGLE_FIELD_TO_UPDATE);
 
     }
 

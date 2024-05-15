@@ -2,6 +2,7 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.dtos.requests.ActivityDefnReq;
+import com.precisely.pem.dtos.requests.UpdateActivityReq;
 import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.responses.MessageResp;
 import com.precisely.pem.dtos.responses.SponsorInfo;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
@@ -78,6 +80,30 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
         mockActivityDefnKeyAndSoponsorKey().thenReturn(getVchActivityDefnObj());
         ActivityDefnListResp resp;
         resp = activityDefinitionService.getActivityDefinitionByKey(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY);
+        assertNotNull(resp);
+    }
+
+    @Test
+    void updateActivityDefinition_NotFoundActivityDefinition() throws Exception {
+        mockActivityDefnKey().thenReturn(null );
+
+        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR,TEST_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build()));
+        assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_NOT_FOUND);
+    }
+
+    @Test
+    void updateActivityDefinition_AlreadyDeletedActivityDefinition() throws Exception {
+        mockActivityDefnKey().thenReturn(Optional.ofNullable(getDeletedVchActivityDefnObj()));
+
+        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR,TEST_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build()));
+        assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_ALREADY_DELETED);
+    }
+
+    @Test
+    void updateActivityDefinition_Positive() throws Exception {
+        mockActivityDefnKey().thenReturn(Optional.ofNullable(getVchActivityDefnObj()));
+
+        MessageResp resp =  activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR,TEST_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build());
         assertNotNull(resp);
     }
 

@@ -8,6 +8,7 @@ import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityDefnReq;
+import com.precisely.pem.dtos.requests.UpdateActivityReq;
 import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
 import com.precisely.pem.dtos.responses.ActivityDefnResp;
@@ -143,11 +144,10 @@ public class ActivityController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)})
     })
-    @PutMapping (value = "/{activityDefnKey}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Object> updateActivityDefinitionByKey(@RequestPart(value = "name", required = true) @Size(min = 1, max = 80) String name,
-                                                                @RequestPart(value = "description", required = false) @Size(min = 1, max = 255) String description,@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey) throws Exception {
-        MessageResp messageResp = activityDefnService.updateActivityDefinitionByKey(sponsorContext,name, description, activityDefnKey);
-        return new ResponseEntity<>(messageResp,HttpStatus.OK);
+    @PostMapping (value = "/{activityDefnKey}",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<Object> updateActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey,
+                                                                @RequestBody @Valid UpdateActivityReq updateActivityReq) throws Exception {
+        return new ResponseEntity<>(activityDefnService.updateActivityDefinitionByKey(sponsorContext,activityDefnKey,updateActivityReq),HttpStatus.OK);
     }
 
 

@@ -147,7 +147,7 @@ public class ActivityVersionController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
     })
-    @PutMapping( value = "/{activityDefnVersionKey}" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
+    @PostMapping( value = "/{activityDefnVersionKey}" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
     public ResponseEntity<Object> updateActivityDefinitionVersion(@PathVariable(value = "sponsorContext")String sponsorContext,
                                                                       @PathVariable(value = "activityDefnKey")String activityDefnKey,
                                                                       @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey,

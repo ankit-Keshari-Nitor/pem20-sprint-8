@@ -15,8 +15,8 @@ import {
   OverflowMenuItem
 } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
-import './activity-definition.scss';
-import { NEW_ACTIVITY_URL } from '../../constants';
+import './activity-definition-list.scss';
+import { NEW_ACTIVITY_URL, API_URL } from '../../constants';
 
 export default function ActivityDefinition() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -26,9 +26,10 @@ export default function ActivityDefinition() {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [rows, setRows] = useState([]);
 
+  // Fetch data from API
   const fetchData = async () => {
     try {
-      const url = `/sponsors/cashbank/v2/activityDefinitions`;
+      const url = API_URL.ACTIVITY_DEFINITION;
 
       const response = await fetch(url);
       if (!response.ok) {
@@ -51,21 +52,21 @@ export default function ActivityDefinition() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, []);// Fetch data on component mount
 
-
+  // Function to generate overflow menu for each row
   const getEllipsis = (i) => {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
         <OverflowMenuItem itemText="Edit" />
         <OverflowMenuItem itemText="Export" />
         <OverflowMenuItem itemText="Save as" />
-        <OverflowMenuItem itemText="Deactivate" />
         <OverflowMenuItem itemText="Delete" />
       </OverflowMenu>
     );
   };
 
+  //Header of list
   const headers = [
     { key: 'name', header: 'Name' },
     { key: 'description', header: 'Description' },
@@ -73,6 +74,7 @@ export default function ActivityDefinition() {
     { key: 'ellipsis', header: '' }
   ];
 
+  // Filter rows based on search query and filter key
   const filteredRows = rows.filter(row => {
     if (!searchQuery) return true;
     if (filterKey) {
@@ -82,6 +84,7 @@ export default function ActivityDefinition() {
     }
   });
 
+  // Sort rows based on sort configuration
   const sortedRows = [...filteredRows].sort((a, b) => {
     if (!sortConfig.key) return 0;
     let valA = a[sortConfig.key];
@@ -98,8 +101,10 @@ export default function ActivityDefinition() {
     return 0;
   });
 
+  // Paginate the sorted rows
   const currentPageData = sortedRows.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize);
 
+  // Function to handle sorting
   const handleSort = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {

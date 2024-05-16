@@ -50,3 +50,7 @@ tbody tr:nth-child(odd) {
 tbody tr:nth-child(even) {
   background-color: #ffffff !important; // White for even rows
 }
+
+.cds--overflow-menu-options__btn {
+  text-decoration: none !important;
+}

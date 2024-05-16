@@ -24,7 +24,7 @@ module.exports = function (app) {
   app.use(
     '/sponsors/cashbank/v2/activityDefinitions',
     createProxyMiddleware({
-      target: 'http://10.2.117.227:9080/',
+      target: 'http://10.15.106.209:9080/',
       pathRewrite: { '^/sponsors/cashbank/v2/activityDefinitions': '/sponsors/cashbank/v2/activityDefinitions' },
       changeOrigin: true,
       logLevel: 'debug',

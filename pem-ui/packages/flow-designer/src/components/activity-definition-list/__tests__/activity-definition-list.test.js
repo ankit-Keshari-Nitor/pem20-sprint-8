@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom'; // Import Testing Library's Jest DOM matchers
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import ActivityDefinition from '../activity-definition';
+import ActivityDefinition from '../activity-definition-list';
 import userEvent from '@testing-library/user-event';
+import { within } from '@testing-library/react';
 
 // Mock the NEW_ACTIVITY_URL
 jest.mock('../../../constants', () => ({
@@ -15,17 +16,11 @@ const mockApiResponse = [
         "activityDefnKey": "4f5dbef2-38b3-4b76-9be6-ccef52eb8588",
         "name": "test12311",
         "description": "abc1",
-        "application": "PEM",
-        "activityVersionLink": "http://10.2.117.227:9080/sponsors/cashbank/v2/activityDefinitions/4f5dbef2-38b3-4b76-9be6-ccef52eb8588",
-        "isDeleted": false
     },
     {
         "activityDefnKey": "3b17511e-8463-456d-b32c-26c961c4c8c0",
         "name": "test123",
         "description": "abc",
-        "application": "PEM",
-        "activityVersionLink": "http://10.2.117.227:9080/sponsors/cashbank/v2/activityDefinitions/3b17511e-8463-456d-b32c-26c961c4c8c0",
-        "isDeleted": false
     },
 ];
 
@@ -42,7 +37,6 @@ describe('ActivityDefinition component', () => {
         global.fetch = jest.fn();
 
     });
-
 
     it('fetches data from the API and renders correctly', async () => {
         jest.spyOn(global, 'fetch').mockResolvedValueOnce({
@@ -89,15 +83,5 @@ describe('ActivityDefinition component', () => {
         const nameHeader = screen.getByText('Name');
         fireEvent.click(nameHeader); // Simulate clicking on the Name header
     });
-
-   /*  it('redirects to the correct URL when clicking on the New button', () => {
-        render(<ActivityDefinition />);
-
-        const newButton = screen.getByText('New');
-        const assignMock = jest.spyOn(window.location, 'assign').mockImplementation(() => { });
-        fireEvent.click(newButton);
-        expect(assignMock).toHaveBeenCalledWith('#/activities/definitions/new');
-        assignMock.mockRestore();
-    }); */
 
 });

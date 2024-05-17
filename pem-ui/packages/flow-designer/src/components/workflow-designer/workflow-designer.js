@@ -177,7 +177,7 @@ export default function WorkFlowDesigner() {
       };
       addTaskNode(newTask);
     },
-    [addTaskNode,taskFlowInstance]
+    [addTaskNode, taskFlowInstance]
   );
 
   const onTaskNodeClick = (event, node) => {

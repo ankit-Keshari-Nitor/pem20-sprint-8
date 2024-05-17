@@ -71,14 +71,6 @@ const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onF
       </div>
     </div>
   ) : (
-    // <div ref={ref} style={{ opacity }}>
-    //   <div className="element">
-    //     <span className="delete-icon">
-    //       <TrashCan onClick={(e) => onFieldDelete(e, path)} />
-    //     </span>
-    //     {formFieldData}
-    //   </div>
-    // </div>
     formFieldData
   );
 };

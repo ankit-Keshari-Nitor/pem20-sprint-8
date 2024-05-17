@@ -7,7 +7,6 @@ import './workflow-designer.scss';
 
 import Designer from '../../../../page-designer/src';
 import componentMapper from '../../../../carbon-mappers/src';
-
 import { DialogFlowDesigner, TaskFlowDesigner } from '../flow-designers';
 import {
   connectionLineStyle,
@@ -97,7 +96,7 @@ export default function WorkFlowDesigner() {
 
       setDialogNodes((nds) => nds.concat(newDialog));
     },
-    [dialogFlowInstance]
+    [dialogFlowInstance, dialogFlowInstance]
   );
 
   const onDialogNodeClick = (event, node) => {
@@ -124,12 +123,15 @@ export default function WorkFlowDesigner() {
     }
   };
 
-  const onTaskNodeConnect = useCallback((params) => {
-    let newParam = params;
-    newParam.type = 'crossEdge';
-    newParam.markerEnd = endMarks;
-    setTaskEdges((eds) => addEdge({ ...newParam, style: { stroke: '#000' } }, eds));
-  }, []);
+  const onTaskNodeConnect = useCallback(
+    (params) => {
+      let newParam = params;
+      newParam.type = 'crossEdge';
+      newParam.markerEnd = endMarks;
+      setTaskEdges((eds) => addEdge({ ...newParam, style: { stroke: '#000' } }, eds));
+    },
+    [setTaskEdges]
+  );
 
   const onTaskNodeDragOver = useCallback((event) => {
     event.preventDefault();
@@ -162,7 +164,7 @@ export default function WorkFlowDesigner() {
 
       setTaskNodes((nds) => nds.concat(newTask));
     },
-    [taskFlowInstance]
+    [setTaskNodes, taskFlowInstance]
   );
 
   const onTaskNodeClick = (event, node) => {

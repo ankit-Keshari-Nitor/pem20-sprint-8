@@ -13,7 +13,7 @@ const Checkbox = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
     if (previewMode) {
       setIsChecked(value ? value : false);
     }
-  }, [field]);
+  }, [field, previewMode, value]);
 
   return (
     <CarbonCheckbox

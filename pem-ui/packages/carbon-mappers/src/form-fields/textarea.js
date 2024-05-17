@@ -13,7 +13,7 @@ const TextArea = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
     if (previewMode) {
       setFieldValue(value ? value : '');
     }
-  }, [field]);
+  }, [field, previewMode, value]);
 
   return (
     <CarbonTextArea

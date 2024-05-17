@@ -4,18 +4,19 @@ import '../style.scss';
 import ExitValidationFrom from '../../exit-validation-form';
 import XsltDefineForm from './xslt-define-form';
 import XsltPropertyForm from './xslt-properties-form';
+import useActivityStore from '../../../store';
 
-export default function XsltTaskDefinitionForm({ selectedNode }) {
+export default function XsltTaskDefinitionForm({ selectedNode, selectedTaskNode }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
-
-  const onSubmitDefinitionForm = (data) => {
-    console.log('onSubmitDefinitionForm', data);
+  const edit = useActivityStore((state) => state.editDialogNodePros);
+  const onSubmitDefinitionForm = (values) => {
+    edit(selectedNode, selectedTaskNode, 'editableProps', values);
   };
 
   const onSubmitPropertyForm = (data) => {
     console.log('onSubmitPropertyForm', data);
   };
-
+  
   return (
     <div className="activity-form">
       <Tabs>
@@ -27,7 +28,7 @@ export default function XsltTaskDefinitionForm({ selectedNode }) {
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <XsltDefineForm id={'xslt-define-Form'} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
+            <XsltDefineForm id={'xslt-define-Form'} selectedNode={selectedNode} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
           </TabPanel>
           {/* Properties Form */}
           <TabPanel>

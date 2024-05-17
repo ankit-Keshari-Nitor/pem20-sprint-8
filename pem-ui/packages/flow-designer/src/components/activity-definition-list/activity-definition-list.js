@@ -1,58 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import {
-  ExpandableSearch,
-  Dropdown,
-  Button,
-  Pagination,
-  DataTable,
-  Table,
-  TableHead,
-  TableRow,
-  TableHeader,
-  TableBody,
-  TableCell,
-  OverflowMenu,
-  OverflowMenuItem
-} from '@carbon/react';
-import { NewTab, Add } from '@carbon/icons-react';
 import './activity-definition-list.scss';
-import { NEW_ACTIVITY_URL, API_URL } from '../../constants';
+import { fetchData } from './service/activity-definition';
+import { NEW_ACTIVITY_URL } from '../../constants';
+import { TableExpandHeader, TableExpandRow, TableExpandedRow, OverflowMenu, OverflowMenuItem, ExpandableSearch, Dropdown, Button, DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, Pagination } from '@carbon/react';
+import { NewTab, Add } from '@carbon/icons-react';
 
 export default function ActivityDefinition() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterKey, setFilterKey] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const [totalRows, setTotalRows] = useState(0);
+  const [filterKey, setFilterKey] = useState("");
+  const [searchKey, setSearchKey] = useState("");
+  const [sortDir, setSortDir] = useState("ASC"); // Add state for sorting
+  const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [rows, setRows] = useState([]);
+  // Header List
+  const [headers, setHeaders] = useState([
+    { key: 'name', header: 'Activity Name' },
+    { key: 'encrypted', header: 'Encrypted' },
+    { key: 'status', header: 'Current Status' },
+    { key: 'version', header: 'Default Version' },
+    { key: 'action', header: 'Actions' },
+    { key: 'ellipsis', header: '' }
+  ]);
 
-  // Fetch data from API
-  const fetchData = async () => {
-    try {
-      const url = API_URL.ACTIVITY_DEFINITION;
-
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const jsonData = await response.json();
-
-      const customizedData = jsonData.content.map((e) => {
-        return {
-          id: e.activityDefnKey,
-          ...e
-        };
-      });
-      setRows(customizedData || []);
-    } catch (error) {
-      console.error('Failed to fetch data:', error);
-      setRows([]);
-    }
+  const fetchAndSetData = () => {
+    fetchData(pageNo - 1, pageSize, sortDir, filterKey, searchKey).then(data => {
+      setRows(data.content);
+      setTotalRows(data.pageContent.totalElements);
+    });
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);// Fetch data on component mount
+    fetchAndSetData(); // Fetch data on component mount and when sortDir changes
+  }, [pageNo, pageSize, sortDir, filterKey, searchKey]);
+
+  const handleHeaderClick = () => {
+    setSortDir(prevSortDir => (prevSortDir === "ASC" ? "DESC" : "ASC"));
+  };
+
+  const handleFilterChange = (e) => {
+
+    const selectedFilter = e.selectedItem ? e.selectedItem.id : "";
+    setFilterKey(selectedFilter);
+    // setSearchKey("");
+  };
+
+  const handlePaginationChange = (pageNo, pageSize) => {
+    setPageNo(pageNo);
+    setPageSize(pageSize);
+  };
+
+  // Function to handle dropdown change
+  const handleDropdownChange = (selectedItem, id) => {
+    const itemId = selectedItem ? selectedItem.key : '';
+    const newUrl = `/#/activities/definitions/${itemId}?id=${id}`;
+    console.log("URL - ", newUrl);
+  };
 
   // Function to generate overflow menu for each row
   const getEllipsis = (i) => {
@@ -66,124 +70,92 @@ export default function ActivityDefinition() {
     );
   };
 
-  //Header of list
-  const headers = [
-    { key: 'name', header: 'Name' },
-    { key: 'description', header: 'Description' },
-    { key: 'activityDefnKey', header: 'ActivityDefnKey' },
-    { key: 'ellipsis', header: '' }
-  ];
-
-  // Filter rows based on search query and filter key
-  const filteredRows = rows.filter(row => {
-    if (!searchQuery) return true;
-    if (filterKey) {
-      return row[filterKey.toLowerCase()].toString().toLowerCase().includes(searchQuery.toLowerCase());
-    } else {
-      return Object.keys(row).some(key => row[key].toString().toLowerCase().includes(searchQuery.toLowerCase()));
-    }
-  });
-
-  // Sort rows based on sort configuration
-  const sortedRows = [...filteredRows].sort((a, b) => {
-    if (!sortConfig.key) return 0;
-    let valA = a[sortConfig.key];
-    let valB = b[sortConfig.key];
-    if (typeof valA === 'string') {
-      valA = valA.toUpperCase();
-    }
-    if (typeof valB === 'string') {
-      valB = valB.toUpperCase();
-    }
-
-    if (valA < valB) return sortConfig.direction === 'ascending' ? -1 : 1;
-    if (valA > valB) return sortConfig.direction === 'ascending' ? 1 : -1;
-    return 0;
-  });
-
-  // Paginate the sorted rows
-  const currentPageData = sortedRows.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize);
-
-  // Function to handle sorting
-  const handleSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
 
   return (
     <div className="activities-list-container">
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: '1rem' }}>
-        <ExpandableSearch
-          labelText="Search"
-          placeholder="Search by Name/ Description/ ActivityDefnKey"
-          onChange={event => setSearchQuery(event.target.value)}
-          value={searchQuery} />
-        <Button style={{ marginLeft: '8px' }} renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
-          New
-        </Button>
-        <Button kind="tertiary" style={{ marginLeft: '8px' }} renderIcon={Add}>
-          Import
-        </Button>
-        <Dropdown
-          style={{ marginLeft: '8px' }}
-          id={`action-dropdown-search`}
-          items={[
-            { id: 'name', label: 'Name' },
-            { id: 'description', label: 'Description' },
-            { id: 'activityDefnKey', label: 'ActivityDefnKey' },
-            { id: '', label: 'All' }
-          ]}
-          label="Filter Option"
-          selectedItem={filterKey}
-          onChange={({ selectedItem }) => setFilterKey(selectedItem.label)}
-        />
-      </div>
-      <DataTable rows={currentPageData} headers={headers}>
-        {({ rows, headers, getTableProps, getHeaderProps, getRowProps }) => (
-          <Table {...getTableProps()}>
-            <TableHead>
-              <TableRow>
-                {headers.map((header) => (
-                  <TableHeader
-                    {...getHeaderProps({
-                      header,
-                      isSortable: header.key !== 'ellipsis'
-                    })}
-                    onClick={header.key !== 'ellipsis' ? () => handleSort(header.key) : undefined}
-                  >
-                    {header.header}
-                  </TableHeader>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow {...getRowProps({ row })}>
-                  {row.cells.map((cell) => (
-                    <TableCell key={cell.id}>
-                      {cell.info.header === 'ellipsis' ? getEllipsis(cell.id) : cell.value}
-                    </TableCell>
+      <TableContainer title="Activity Definitions">
+        <div style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+          <ExpandableSearch
+            labelText="Search"
+            placeholder=''
+            onChange={event => setSearchKey(event.target.value)}
+            value={searchKey} />
+          <Button style={{ marginLeft: '8px' }} renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
+            New
+          </Button>
+          <Button kind="tertiary" style={{ marginLeft: '8px' }} renderIcon={Add}>
+            Import
+          </Button>
+          <Dropdown
+            style={{ marginLeft: '8px' }}
+            id="filter-dropdown"
+            titleText=""
+            label="Select Filter"
+            items={[
+              { id: 'name', text: 'Activity Name' }
+            ]}
+            itemToString={(item) => (item ? item.text : '')}
+            onChange={handleFilterChange}
+          />
+        </div>
+        <DataTable rows={rows} headers={headers} isSortable>
+          {({ rows, headers, getHeaderProps, getRowProps, getTableProps, getTableContainerProps }) => (
+            <Table {...getTableProps()}>
+              <TableHead>
+                <TableRow>
+                  {headers.map((header, i) => (
+
+                    <TableHeader key={header.key}
+                      {...getHeaderProps({ header, isSortable: header.key !== 'ellipsis' && header.key !== 'action' })}
+                      sortDirection={sortDir === "ASC" ? 'ASC' : 'DESC'}
+                      onClick={header.key !== 'ellipsis' && header.key !== 'action' ? handleHeaderClick : null}>
+                      {header.header}
+                    </TableHeader>
+
                   ))}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
-      </DataTable>
-      <Pagination
-        itemsPerPageText=""
-        totalItems={filteredRows.length}
-        pageSize={pageSize}
-        page={currentPage}
-        pageSizes={[5, 10, 15, 25]}
-        onChange={({ page, pageSize }) => {
-          setCurrentPage(page);
-          setPageSize(pageSize);
-        }}
-      />
+              </TableHead>
+              <TableBody>
+                {rows.map(row => (
+
+                  <TableRow {...getRowProps({ row })}>
+                    {row.cells.map((cell, index) => (
+                      <TableCell key={cell.id}>
+                        {cell.info.header === 'ellipsis' ? getEllipsis(row.id) :
+                          cell.info.header === 'action' ?
+                            <Dropdown
+                              id={`action-dropdown-${cell.id}`}
+                              items={[
+                                { key: 'rollout', label: "RollOut" },
+                                { key: 'final', label: "Final" },
+                                { key: 'draft', label: "Draft" }
+                              ]}
+                              label="Choose an action"
+                              itemToString={(item) => (item ? item.label : '')}
+                              onChange={({ selectedItem }) =>
+                                handleDropdownChange(selectedItem, row.id)
+                              }
+                            />
+                            : cell.value}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </DataTable>
+        <Pagination
+          backwardText="Previous page"
+          forwardText="Next page"
+          itemsPerPageText="Items per page:"
+          totalItems={totalRows}
+          pageSize={pageSize}
+          pageSizes={[5, 10, 20, 50]}
+          page={pageNo}
+          onChange={({ page, pageSize }) => handlePaginationChange(page, pageSize)}
+        />
+      </TableContainer>
     </div>
   );
 }

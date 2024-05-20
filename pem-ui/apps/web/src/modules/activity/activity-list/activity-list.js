@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './activity-list.scss';
 import * as ActivityService from '../activity-service';
-import { NEW_ACTIVITY_URL, ACTIVITY_LIST_COLUMNS } from '../constants';
+import { NEW_ACTIVITY_URL, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL } from '../constants';
 import {
   OverflowMenu,
   OverflowMenuItem,
@@ -76,17 +76,11 @@ export default function ActivityList() {
   };
 
   const getActionItem = (status, id) => {
+    debugger
     if (status === "DRAFT") {
       return (<Dropdown
         id={`action-dropdown-${id}`}
-        items={[
-          { key: 'markasfinal', label: 'Mark as final' },
-          { key: 'saveas', label: 'Save As' },
-          { key: 'edit', label: 'Edit' },
-          { key: 'test', label: 'Test' },
-          { key: 'delete', label: 'Delete' },
-          { key: 'export', label: 'Export' }
-        ]}
+        items={ACTION_COLUMN_DRAFT}
         label="Choose an action"
         itemToString={(item) => (item ? item.label : '')}
         onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)}
@@ -94,15 +88,7 @@ export default function ActivityList() {
     } else if (status === "FINAL") {
       return (<Dropdown
         id={`action-dropdown-${id}`}
-        items={[
-          { key: 'rollout', label: 'Rollout' },
-          { key: 'saveas', label: 'Save As' },
-          { key: 'view', label: 'View' },
-          { key: 'test', label: 'Test' },
-          { key: 'delete', label: 'Delete' },
-          { key: 'shareunshare', label: 'Share/Unshare' },
-          { key: 'export', label: 'Export' }
-        ]}
+        items={ACTION_COLUMN_FINAL}
         label="Choose an action"
         itemToString={(item) => (item ? item.label : '')}
         onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)}

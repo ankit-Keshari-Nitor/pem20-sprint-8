@@ -14,21 +14,3 @@ export default function ComponentsTray({ componentMapper }) {
     </div>
   );
 }
-
-// Returns a list of palette entries.
-// export function collectPaletteEntries(formFields) {
-//   return Object.entries(formFields)
-//     .map(([type, formField]) => {
-//       const { config: fieldConfig } = formField;
-//       return {
-//         type: SIDEBAR_ITEM,
-//         component: {
-//           type: type,
-//           label: fieldConfig.label,
-//           group: fieldConfig.group,
-//           icon: fieldConfig.icon
-//         }
-//       };
-//     })
-//     .filter(({ type }) => type !== 'default');
-// }

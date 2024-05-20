@@ -4,18 +4,14 @@ import { Modal, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 import '../style.scss';
 import ExitValidationFrom from '../../exit-validation-form/exit-validation-form';
 import PartnerDefineForm from './partner-define-form';
+import useActivityStore from '../../../store/useActivityStore';
 
 export default function PartnerTaskDefinitionForm({ selectedNode }) {
-  const [defineFormValue, setDefineFormValue] = useState(null);
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
-
-  const onSubmitDefinitionForm = (values, api) =>
-    new Promise((resolve) =>
-      setTimeout(() => {
-        setDefineFormValue({ ...values });
-        resolve('Yay');
-      }, 1500)
-    );
+  const edit = useActivityStore((state) => state.editTaskNodePros);
+  const onSubmitDefinitionForm = (values) => {
+    edit(selectedNode, 'editableProps', values);
+  };
 
   const onCancelDefinitionForm = () => {
     setOpenCancelDialog(true);
@@ -31,7 +27,12 @@ export default function PartnerTaskDefinitionForm({ selectedNode }) {
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <PartnerDefineForm id={'partner-define-form'} onCancelDefinitionForm={onCancelDefinitionForm} onSubmitDefinitionForm={onSubmitDefinitionForm} />
+            <PartnerDefineForm
+              id={'partner-define-form'}
+              selectedNode={selectedNode}
+              onCancelDefinitionForm={onCancelDefinitionForm}
+              onSubmitDefinitionForm={onSubmitDefinitionForm}
+            />
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>

@@ -200,10 +200,10 @@ public class ActivityInstServiceImpl implements ActivityInstService{
                 }
             }
             if(!noPartnerKey.isEmpty()) {
-                throw new ResourceNotFoundException("", "Partner", "The Partner with keys [" + noPartnerKey + "] not found. Please check partner details.");
+                throw new ResourceNotFoundException("", "Partner", "The Partner with keys " + noPartnerKey + " not found. Please check partner details.");
             }
             if(!invalidPartnerKey.isEmpty()) {
-                throw new ResourceNotFoundException("", "Partner", "The Partner with keys [" + invalidPartnerKey + "] are not 'APPROVED'. Please check partner details.");
+                throw new ResourceNotFoundException("", "Partner", "The Partner with keys " + invalidPartnerKey + " are not 'APPROVED'. Please check partner details.");
             }
         }
     }

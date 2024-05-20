@@ -1,11 +1,14 @@
 import { API_URL } from './constants';
 
-export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', filterKey = '', searchKey = '') => {
+export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', filterKey = '', searchKey = '', status = '') => {
   try {
     let url = `${API_URL.ACTIVITY_DEFINITION}?application=PEM&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}`;
 
     if (filterKey && searchKey) {
       url += `&${filterKey}=${searchKey}`;
+    }
+    if (status != '') {
+      url += `&status=${status}`
     }
 
     const response = await fetch(url);

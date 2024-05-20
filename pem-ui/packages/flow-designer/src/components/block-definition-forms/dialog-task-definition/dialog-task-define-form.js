@@ -49,16 +49,28 @@ export const SCHEMA = {
   ]
 };
 
-const DialogDefineForm = ({ id, setOpenCancelDialog, onSubmitDefinitionForm }) => (
-  <FormRenderer
-    id={id}
-    FormTemplate={FORM_TEMPLATE}
-    componentMapper={COMPONENT_MAPPER}
-    schema={SCHEMA}
-    onSubmit={onSubmitDefinitionForm}
-    onCancel={() => console.log('Cancelling')}
-    onReset={() => console.log('Resetting')}
-  />
-);
+const DialogDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefinitionForm }) =>
+  Object.keys(selectedNode?.data?.editableProps).length > 0 ? (
+    <FormRenderer
+      id={id}
+      FormTemplate={FORM_TEMPLATE}
+      initialValues={selectedNode?.data?.editableProps}
+      componentMapper={COMPONENT_MAPPER}
+      schema={SCHEMA}
+      onSubmit={onSubmitDefinitionForm}
+      onCancel={() => setOpenCancelDialog()}
+      onReset={() => console.log('Resetting')}
+    />
+  ) : (
+    <FormRenderer
+      id={id}
+      FormTemplate={FORM_TEMPLATE}
+      componentMapper={COMPONENT_MAPPER}
+      schema={SCHEMA}
+      onSubmit={onSubmitDefinitionForm}
+      onCancel={() => setOpenCancelDialog()}
+      onReset={() => console.log('Resetting')}
+    />
+  );
 
 export default DialogDefineForm;

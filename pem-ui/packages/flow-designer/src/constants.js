@@ -46,9 +46,7 @@ export const NODE_TYPES = [
     type: NODE_TYPE.PARTNER,
     borderColor: '#0585FC',
     taskName: 'Partner Task',
-    editableProps: {
-      name: 'Partner'
-    },
+    editableProps: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -61,9 +59,7 @@ export const NODE_TYPES = [
     type: NODE_TYPE.APPROVAL,
     borderColor: '#0585FC',
     taskName: 'Approval Task',
-    editableProps: {
-      name: 'Approval'
-    },
+    editableProps: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -76,9 +72,7 @@ export const NODE_TYPES = [
     type: NODE_TYPE.ATTRIBUTE,
     borderColor: '#0585FC',
     taskName: 'Attribute Task',
-    editableProps: {
-      name: 'Attribute'
-    },
+    editableProps: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -91,9 +85,7 @@ export const NODE_TYPES = [
     type: NODE_TYPE.SPONSOR,
     borderColor: '#0585FC',
     taskName: 'Sponsor Task',
-    editableProps: {
-      name: 'Sponsor'
-    },
+    editableProps: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -106,9 +98,7 @@ export const NODE_TYPES = [
     type: NODE_TYPE.CUSTOM,
     borderColor: '#0585FC',
     taskName: 'Custom Task',
-    editableProps: {
-      name: 'Custom'
-    },
+    editableProps: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -121,9 +111,7 @@ export const NODE_TYPES = [
     type: NODE_TYPE.SYSTEM,
     borderColor: '#0585FC',
     taskName: 'System Task',
-    editableProps: {
-      name: 'System'
-    },
+    editableProps: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -151,9 +139,7 @@ export const NODE_TYPES = [
     type: NODE_TYPE.DIALOG,
     borderColor: '#0585FC',
     taskName: 'Dialog Task',
-    editableProps: {
-      name: 'Form'
-    },
+    editableProps: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -166,9 +152,7 @@ export const NODE_TYPES = [
     type: NODE_TYPE.API,
     borderColor: '#0585FC',
     taskName: 'API Task',
-    editableProps: {
-      name: 'API'
-    },
+    editableProps: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -181,9 +165,7 @@ export const NODE_TYPES = [
     type: NODE_TYPE.XSLT,
     borderColor: '#0585FC',
     taskName: 'XSLT Task',
-    editableProps: {
-      name: 'XSLT'
-    },
+    editableProps: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -290,8 +272,7 @@ export const COMPONENT_MAPPER = {
 };
 
 export const FORM_TEMPLATE = ({ formFields, schema }) => {
-  const { handleSubmit, onCancel, getState } = useFormApi();
-  const { submitting, valid } = getState();
+  const { handleSubmit, onCancel } = useFormApi();
   return (
     <form onSubmit={handleSubmit}>
       {formFields.map((formField) => (
@@ -307,7 +288,7 @@ export const FORM_TEMPLATE = ({ formFields, schema }) => {
                 </Button>
               </Column>
               <Column lg={8}>
-                <Button disabled={submitting || !valid} data-testid="save" color="primary" variant="contained" type="submit" style={{ width: '100%' }}>
+                <Button data-testid="save" color="primary" variant="contained" type="submit" style={{ width: '100%' }}>
                   Save
                 </Button>
               </Column>
@@ -319,4 +300,28 @@ export const FORM_TEMPLATE = ({ formFields, schema }) => {
   );
 };
 
+// Query Builder Constants
+export const QUERY_FIELDS = [
+  { name: 'string', label: 'String' },
+  { name: 'numeric', label: 'Numeric' },
+  { name: 'boolean', label: 'Boolean' },
+  { name: 'date', label: 'Date' }
+];
+export const INITIAL_QUERY = {
+  combinator: 'and',
+  rules: [
+    { field: 'string', operator: ['', 'beginsWith'], value: '' },
+    { field: 'numeric', operator: ['', 'in'], value: '' }
+  ]
+};
+
+export const QUERY_COMBINATOR = [
+  { name: 'and', value: 'and', label: 'AND' },
+  { name: 'or', value: 'or', label: 'OR' }
+];
+
 export const NEW_ACTIVITY_URL = '#/activities/definitions/new';
+
+export const API_URL = {
+  ACTIVITY_DEFINITION: '/sponsors/cashbank/v2/activityDefinitions'
+};

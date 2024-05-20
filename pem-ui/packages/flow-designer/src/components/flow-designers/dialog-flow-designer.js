@@ -27,6 +27,7 @@ const DialogFlowDesigner = ({
   DIALOG_NODE_TYPES,
   DIALOG_EDGE_TYPES,
   openDialogPropertiesBlock,
+  selectedTaskNode,
   selectedDialogNode,
   setOpenDialogPropertiesBlock
 }) => {
@@ -71,7 +72,7 @@ const DialogFlowDesigner = ({
             <Panel defaultSize={40} minSize={20} maxSize={70}>
               <div className="dnd-flow">
                 <div className="task-activity-container">
-                  <BlockPropertiesTray selectedNode={selectedDialogNode} setOpenPropertiesBlock={setOpenDialogPropertiesBlock} />
+                  <BlockPropertiesTray selectedNode={selectedDialogNode} setOpenPropertiesBlock={setOpenDialogPropertiesBlock} selectedTaskNode={selectedTaskNode} />
                 </div>
               </div>
             </Panel>

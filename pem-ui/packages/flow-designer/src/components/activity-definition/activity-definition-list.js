@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ExpandableSearch,
   Dropdown,
   Button,
   Pagination,
-  Tag,
   DataTable,
   Table,
   TableHead,
@@ -15,9 +14,10 @@ import {
   OverflowMenu,
   OverflowMenuItem
 } from '@carbon/react';
-import { CheckmarkFilled, NewTab, Add } from '@carbon/icons-react';
-import './activity-definition.scss';
-import { NEW_ACTIVITY_URL } from '../../constants';
+import { NewTab, Add } from '@carbon/icons-react';
+import './activity-definition-list.scss';
+import { NEW_ACTIVITY_URL, API_URL } from '../../constants';
+import useActivityStore from '../../store/useActivityStore';
 
 export default function ActivityDefinition() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -25,82 +25,68 @@ export default function ActivityDefinition() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
+  const [rows, setRows] = useState([]);
 
-  const getStatusIcon = (encrypted) => {
-    return (
-      <span>
-        <CheckmarkFilled style={{ fill: 'blue' }} /> {encrypted}
-      </span>
-    );
+  // Fetch data from API
+  const fetchData = async () => {
+    try {
+      const url = API_URL.ACTIVITY_DEFINITION;
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const jsonData = await response.json();
+
+      const customizedData = jsonData.content.map((e) => {
+        return {
+          id: e.activityDefnKey,
+          ...e
+        };
+      });
+      setRows(customizedData || []);
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
+      setRows([]);
+    }
   };
 
-  const getTag = (status) => {
-    return (
-      <Tag className="some-class" type={status === 'Completed' ? 'green' : 'gray'}>
-        {status}
-      </Tag>
-    );
-  };
+  useEffect(() => {
+    fetchData();
+  }, []); // Fetch data on component mount
 
+  // Function to generate overflow menu for each row
   const getEllipsis = (i) => {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
         <OverflowMenuItem itemText="Edit" />
         <OverflowMenuItem itemText="Export" />
         <OverflowMenuItem itemText="Save as" />
-        <OverflowMenuItem itemText="Shared/Unshared" />
-        <OverflowMenuItem itemText="Deavtivate" />
         <OverflowMenuItem itemText="Delete" />
       </OverflowMenu>
     );
   };
 
-  const generateData = (count) => {
-    let data = [];
-    for (let i = 1; i <= count; i++) {
-      const name = `Load balancer ${i}`;
-      data.push({
-        id: `id_${i}`,
-        name: name,
-        encrypted: getStatusIcon('Yes'),
-        status: i % 2 === 0 ? 'Completed' : 'Pending',
-        migrationstatus: i % 2 === 0 ? 'Completed' : 'Pending',
-        version: 'Ver.3',
-        actions: i % 2 === 0 ? 'View' : 'Rollout',
-        ellipsis: getEllipsis(i)
-      });
-    }
-    return data;
-  };
-
-  const [rows, setRows] = useState(generateData(100));
-
+  //Header of list
   const headers = [
     { key: 'name', header: 'Name' },
-    { key: 'encrypted', header: 'Encrypted' },
-    { key: 'status', header: 'Status' },
-    { key: 'migrationstatus', header: 'Migration Status' },
-    { key: 'version', header: 'Version' },
-    { key: 'actions', header: 'Actions' },
+    { key: 'description', header: 'Description' },
+    { key: 'activityDefnKey', header: 'ActivityDefnKey' },
+    { key: 'action', header: 'Action' },
     { key: 'ellipsis', header: '' }
   ];
 
-  const actionOptions = [
-    { id: 'view', label: 'View' },
-    { id: 'test', label: 'Test ' },
-    { id: 'rollout', label: 'Rollout' },
-    { id: 'mark as final', label: 'Mark as Final' }
-  ];
-
+  // Filter rows based on search query and filter key
   const filteredRows = rows.filter((row) => {
     if (!searchQuery) return true;
     if (filterKey) {
-      return row[filterKey].toString().toLowerCase().includes(searchQuery.toLowerCase());
+      return row[filterKey.toLowerCase()].toString().toLowerCase().includes(searchQuery.toLowerCase());
     } else {
       return Object.keys(row).some((key) => row[key].toString().toLowerCase().includes(searchQuery.toLowerCase()));
     }
   });
 
+  // Sort rows based on sort configuration
   const sortedRows = [...filteredRows].sort((a, b) => {
     if (!sortConfig.key) return 0;
     let valA = a[sortConfig.key];
@@ -117,8 +103,10 @@ export default function ActivityDefinition() {
     return 0;
   });
 
+  // Paginate the sorted rows
   const currentPageData = sortedRows.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize);
 
+  // Function to handle sorting
   const handleSort = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -127,21 +115,29 @@ export default function ActivityDefinition() {
     setSortConfig({ key, direction });
   };
 
-  const handleDropdownChange = (rowId, selectedItem) => {
-    const newRows = rows.map((row) => {
-      if (row.id === rowId) {
-        return { ...row, actions: selectedItem.label };
-      }
-      return row;
-    });
-    setRows(newRows);
+  // Function to handle dropdown change
+  const handleDropdownChange = (selectedItem, id) => {
+    const itemId = selectedItem ? selectedItem.key : '';
+    const newUrl = `/#/activities/definitions/${itemId}?id=${id}`;
+    console.log('URL - ', newUrl);
+  };
+
+  const resetStore = useActivityStore((state) => state.reset);
+
+  const handleNewButtonClick = () => {
+    resetStore();
   };
 
   return (
     <div className="activities-list-container">
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: '1rem' }}>
-        <ExpandableSearch labelText="Search" placeholder="Search by name" onChange={(event) => setSearchQuery(event.target.value)} value={searchQuery} />
-        <Button style={{ marginLeft: '8px' }} renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
+        <ExpandableSearch
+          labelText="Search"
+          placeholder="Search by Name/ Description/ ActivityDefnKey"
+          onChange={(event) => setSearchQuery(event.target.value)}
+          value={searchQuery}
+        />
+        <Button style={{ marginLeft: '8px' }} renderIcon={NewTab} href={NEW_ACTIVITY_URL} onClick={handleNewButtonClick}>
           New
         </Button>
         <Button kind="tertiary" style={{ marginLeft: '8px' }} renderIcon={Add}>
@@ -152,8 +148,8 @@ export default function ActivityDefinition() {
           id={`action-dropdown-search`}
           items={[
             { id: 'name', label: 'Name' },
-            { id: 'status', label: 'Status' },
-            { id: 'migrationstatus', label: 'Migration Status' },
+            { id: 'description', label: 'Description' },
+            { id: 'activityDefnKey', label: 'ActivityDefnKey' },
             { id: '', label: 'All' }
           ]}
           label="Filter Option"
@@ -170,9 +166,9 @@ export default function ActivityDefinition() {
                   <TableHeader
                     {...getHeaderProps({
                       header,
-                      isSortable: header.key !== 'ellipsis' // Make header not sortable if it's the ellipsis column
+                      isSortable: header.key !== 'ellipsis' && header.key !== 'action' // Exclude sorting for 'ellipsis' and 'action' columns
                     })}
-                    onClick={header.key !== 'ellipsis' ? () => handleSort(header.key) : undefined} // Prevent sorting function call for ellipsis column
+                    onClick={header.key !== 'ellipsis' ? () => handleSort(header.key) : undefined}
                   >
                     {header.header}
                   </TableHeader>
@@ -181,19 +177,22 @@ export default function ActivityDefinition() {
             </TableHead>
             <TableBody>
               {rows.map((row) => (
-                <TableRow {...getRowProps({ row })}>
+                <TableRow {...getRowProps({ row })} key={row.id}>
                   {row.cells.map((cell) => (
                     <TableCell key={cell.id}>
-                      {cell.info.header === 'status' || cell.info.header === 'migrationstatus' ? (
-                        getTag(cell.value)
-                      ) : cell.info.header === 'actions' ? (
+                      {cell.info.header === 'ellipsis' ? (
+                        getEllipsis(row.id)
+                      ) : cell.info.header === 'action' ? (
                         <Dropdown
                           id={`action-dropdown-${cell.id}`}
-                          items={actionOptions}
+                          items={[
+                            { key: 'rollout', label: 'RollOut' },
+                            { key: 'final', label: 'Final' },
+                            { key: 'draft', label: 'Draft' }
+                          ]}
                           label="Choose an action"
-                          selectedItem={actionOptions.find((option) => option.label === cell.value)}
                           itemToString={(item) => (item ? item.label : '')}
-                          onChange={({ selectedItem }) => handleDropdownChange(row.id, selectedItem)}
+                          onChange={({ selectedItem }) => handleDropdownChange(selectedItem, row.id)} // Call handleDropdownChange with selectedItem
                         />
                       ) : (
                         cell.value

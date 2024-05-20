@@ -82,6 +82,45 @@ task setDev() {
     println "Setting Dev Environment"//Task to Setup Dev Env
 }
 
+task uploadZipToArtifactory() {
+    def group_id = "com/precisely/pem"
+    def artifact_id = "pem"
+    def default_version = "1.0.0"
+    description = 'Uploads the zip file to Artifactory'
+    group = 'upload'
+    dependsOn tasks.assemble // Depends on the assemble task to ensure the zip file is generated
+
+    // Path to the zip file to upload
+    def zipFile = file("${buildDir}/libs/pem-2.0.zip")
+
+    if(project.hasProperty('version')){
+        def propertyValue = project.version
+        default_version = propertyValue
+    }
+    
+    def artifactoryUrl = "http://artifactory.syncdi1.us.syncsort.com/artifactory/pem-unapproved/{$group_id}/{$artifact_id}-{$default_version}.zip"
+    def username = 'pem-publisher'
+    def password = 'publisher-for-pem'
+
+    // Execute cURL command to upload the ZIP file to Artifactory
+    doLast {
+        // Construct the cURL command
+        def curlCommand = [
+            'curl',
+            '-u', "$username:$password",
+            '-T', "$zipFile",
+            '-X', 'PUT',
+            artifactoryUrl
+        ]
+
+        // Execute the cURL command
+        exec {
+            commandLine curlCommand
+        }
+    }
+}
+
+
 setDev.dependsOn copyDBJars
 
 libertyPackage.dependsOn installPemApi

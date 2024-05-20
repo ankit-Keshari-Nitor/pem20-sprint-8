@@ -1,7 +1,7 @@
 
-import { API_URL } from "../../constants";
+import { API_URL } from "./constants";
 
-export const fetchData = async (pageNo, pageSize, sortDir = "ASC", filterKey = "", searchKey = "") => {
+export const getActivityList = async (pageNo, pageSize, sortDir = "ASC", filterKey = "", searchKey = "") => {
     try {
         let url = `${API_URL.ACTIVITY_DEFINITION}?application=PEM&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}`;
 

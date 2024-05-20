@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './activity-list.scss';
-import { fetchData } from './service/activity-list';
+import * as ActivityService from '../activity-service';
 import { NEW_ACTIVITY_URL } from '../constants';
 import { OverflowMenu, OverflowMenuItem, ExpandableSearch, Dropdown, Button, DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, Pagination } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
@@ -25,7 +25,7 @@ export default function ActivityList() {
   ]);
 
   const fetchAndSetData = () => {
-    fetchData(pageNo - 1, pageSize, sortDir, filterKey, searchKey).then(data => {
+    ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, filterKey, searchKey).then(data => {
       setRows(data.content);
       setTotalRows(data.pageContent.totalElements);
     });

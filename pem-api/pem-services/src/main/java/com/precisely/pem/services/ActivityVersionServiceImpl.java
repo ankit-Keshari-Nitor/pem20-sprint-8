@@ -208,6 +208,42 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         return MessageResp.builder().response("Activity Definition Version Updated.").build();
     }
 
+    @Override
+    public MarkAsFinalActivityDefinitionVersionResp markAsDefaultActivityDefinitionVersion(String sponsorContext, String activityDefnKey,String activityDefnVersionKey) throws Exception {
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
+        Optional<ActivityDefnVersion> versionObj = activityDefnVersionRepo.findById(activityDefnVersionKey);
+
+        if(!versionObj.isPresent())
+            throw new ResourceNotFoundException("NA", "NoDataFound","No data was found for the provided query parameter combination.");
+
+        if(!versionObj.get().getStatus().equalsIgnoreCase(Status.FINAL.getStatus()))
+            throw new ResourceNotFoundException("NA","InvalidVersionStatus","Version Status is DRAFT/DELETE.Hence can not mark it to Default.");
+
+        if(versionObj.get().getIsDefault())
+            throw new ResourceNotFoundException("NA","AlreadyMarkedAsDefault","Version is already marked as Default.");
+
+        ActivityDefnVersion version =versionObj.get();
+        version.setIsDefault(Boolean.parseBoolean("true"));
+
+        List<ActivityDefnVersion> finalVersionList = activityDefnVersionRepo
+                .findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(activityDefnKey,Status.FINAL.getStatus(),
+                        sponsorInfo.getSponsorKey());
+        if(finalVersionList.size() > 1) {
+            Optional<ActivityDefnVersion> currentFinalVersionObj = Optional.ofNullable(finalVersionList
+                    .stream()
+                    .filter(p -> p.getIsDefault())
+                    .findAny().orElse(null));
+            ActivityDefnVersion currentFinalVersion = null;
+            if (currentFinalVersionObj.isPresent()) {
+                currentFinalVersion = currentFinalVersionObj.get();
+                currentFinalVersion.setIsDefault(false);
+            }
+            activityDefnVersionRepo.save(currentFinalVersion);
+        }
+        activityDefnVersionRepo.save(version);
+        return new MarkAsFinalActivityDefinitionVersionResp("Success",LocalDateTime.now().toString());
+    }
+
     private static void validateUpdateActivityDefnReq(UpdateActivityVersionReq updateActivityVersionReq) throws Exception {
         if(Objects.isNull(updateActivityVersionReq.getFile()) && Objects.isNull(updateActivityVersionReq.getDescription()) && Objects.isNull(updateActivityVersionReq.getIsEncrypted())){
             throw  new Exception("Activity Definition Version required single field to Update" );

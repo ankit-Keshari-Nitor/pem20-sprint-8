@@ -23,4 +23,6 @@ public interface ActivityDefnVersionRepo extends JpaRepository<ActivityDefnVersi
     List<ActivityDefnVersion> findByActivityDefnKey(String activityDefinitionKey);
 
     long countByActivityDefnKeyAndStatusNot(String activityDefnKey, String status);
+
+    List<ActivityDefnVersion> findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(String activityDefnKey, String status, String sponsorContext);
 }

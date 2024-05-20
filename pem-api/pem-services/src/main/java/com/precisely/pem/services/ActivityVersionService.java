@@ -20,4 +20,6 @@ public interface ActivityVersionService {
 
     MessageResp updateActivityDefnVersion(String sponsorContext, String activityDefnKey, String activityDefnVersionKey
                                                             , UpdateActivityVersionReq updateActivityVersionReq) throws Exception ;
+
+    MarkAsFinalActivityDefinitionVersionResp markAsDefaultActivityDefinitionVersion(String sponsorContext, String activityDefnKey,String activityDefnVersionKey) throws Exception;
 }

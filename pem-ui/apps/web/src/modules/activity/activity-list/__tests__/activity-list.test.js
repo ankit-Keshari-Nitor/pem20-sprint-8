@@ -1,29 +1,29 @@
 import '@testing-library/jest-dom';
 import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
-import ActivityDefinition from '../activity-definition-list';
-import { fetchData } from '../service/activity-definition';
+import ActivityList from '../activity-list';
+import { getActivityList } from '../../activity-service';
 
-jest.mock('../service/activity-definition');
+jest.mock('../../activity-service');
 
-describe('ActivityDefinition', () => {
+describe('ActivityList', () => {
     it('renders correctly', async () => {
         const data = {
             content: [],
             pageContent: { totalElements: 0 },
         };
-        fetchData.mockResolvedValue(Promise.resolve(data));
-        const { container } = render(<ActivityDefinition />);
+        getActivityList.mockResolvedValue(Promise.resolve(data));
+        const { container } = render(<ActivityList />);
         expect(container).toMatchSnapshot();
     });
 
-    it('calls fetchData on mount', () => {
-        fetchData.mockResolvedValue({
+    it('calls getActivityList on mount', () => {
+        getActivityList.mockResolvedValue({
             content: [],
             pageContent: { totalElements: 0 },
         });
-        render(<ActivityDefinition />);
-        expect(fetchData).toHaveBeenCalledTimes(1);
+        render(<ActivityList />);
+        expect(getActivityList).toHaveBeenCalledTimes(1);
     });
 
     it('updates searchKey state when search input changes', async () => {
@@ -31,16 +31,16 @@ describe('ActivityDefinition', () => {
             content: [],
             pageContent: { totalElements: 0 },
         };
-        fetchData.mockResolvedValue(Promise.resolve(data));
+        getActivityList.mockResolvedValue(Promise.resolve(data));
 
-        const { getByPlaceholderText } = render(<ActivityDefinition />);
+        const { getByPlaceholderText } = render(<ActivityList />);
         const searchInput = getByPlaceholderText('');
 
         fireEvent.change(searchInput, { target: { value: 'test' } });
 
-        await waitFor(() => expect(fetchData).toHaveBeenCalledWith(
+        await waitFor(() => expect(getActivityList).toHaveBeenCalledWith(
             0,
-            2,
+            10,
             'ASC',
             '',
             'test'
@@ -52,16 +52,16 @@ describe('ActivityDefinition', () => {
             content: [],
             pageContent: { totalElements: 0 },
         };
-        fetchData.mockResolvedValue(data);
+        getActivityList.mockResolvedValue(data);
 
-        const { getByRole, getByText } = render(<ActivityDefinition />);
+        const { getByRole, getByText } = render(<ActivityList />);
 
         const filterDropdown = getByRole('combobox', { name: 'Select Filter' });
         fireEvent.mouseDown(filterDropdown);
         const activityNameOption = getByText('Activity Name');
         fireEvent.click(activityNameOption);
 
-        await waitFor(() => expect(fetchData).toHaveBeenCalledTimes(2));
+        await waitFor(() => expect(getActivityList).toHaveBeenCalledTimes(2));
     });
 
     it('calls handlePaginationChange when pagination changes', async () => {
@@ -69,11 +69,11 @@ describe('ActivityDefinition', () => {
             content: [],
             pageContent: { totalElements: 0 },
         };
-        fetchData.mockResolvedValue(data);
-        const { getByText } = render(<ActivityDefinition />);
+        getActivityList.mockResolvedValue(data);
+        const { getByText } = render(<ActivityList />);
         const paginationNextButton = getByText('Next page');
         fireEvent.click(paginationNextButton);
-        await waitFor(() => expect(fetchData).toHaveBeenCalledTimes(1));
+        await waitFor(() => expect(getActivityList).toHaveBeenCalledTimes(1));
     });
 
     it('renders table with correct headers', async () => {
@@ -81,8 +81,8 @@ describe('ActivityDefinition', () => {
             content: [],
             pageContent: { totalElements: 0 },
         };
-        fetchData.mockResolvedValue(data);
-        const { getByText } = render(<ActivityDefinition />);
+        getActivityList.mockResolvedValue(data);
+        const { getByText } = render(<ActivityList />);
         await waitFor(() => {
             expect(getByText('Activity Name')).toBeInTheDocument();
             expect(getByText('Encrypted')).toBeInTheDocument();
@@ -109,11 +109,11 @@ describe('ActivityDefinition', () => {
                 version: '2.0',
             },
         ];
-        fetchData.mockResolvedValue({
+        getActivityList.mockResolvedValue({
             content: data,
             pageContent: { totalElements: 2 },
         });
-        const { getByText } = render(<ActivityDefinition />);
+        const { getByText } = render(<ActivityList />);
         await waitFor(() => getByText('Activity 1'));
         expect(getByText('Activity 1')).toBeInTheDocument();
         expect(getByText('Activity 2')).toBeInTheDocument();

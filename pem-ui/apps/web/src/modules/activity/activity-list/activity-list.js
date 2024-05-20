@@ -6,7 +6,6 @@ import { OverflowMenu, OverflowMenuItem, ExpandableSearch, Dropdown, Button, Dat
 import { NewTab, Add } from '@carbon/icons-react';
 
 export default function ActivityList() {
-
   const [totalRows, setTotalRows] = useState(0);
   const [filterKey, setFilterKey] = useState("");
   const [searchKey, setSearchKey] = useState("");
@@ -14,15 +13,7 @@ export default function ActivityList() {
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [rows, setRows] = useState([]);
-  // Header List
-  const [headers, setHeaders] = useState([
-    { key: 'name', header: 'Activity Name' },
-    { key: 'encrypted', header: 'Encrypted' },
-    { key: 'status', header: 'Current Status' },
-    { key: 'version', header: 'Default Version' },
-    { key: 'action', header: 'Actions' },
-    { key: 'ellipsis', header: '' }
-  ]);
+  
 
   const fetchAndSetData = () => {
     ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, filterKey, searchKey).then(data => {
@@ -40,7 +31,6 @@ export default function ActivityList() {
   };
 
   const handleFilterChange = (e) => {
-
     const selectedFilter = e.selectedItem ? e.selectedItem.id : "";
     setFilterKey(selectedFilter);
     // setSearchKey("");
@@ -98,7 +88,7 @@ export default function ActivityList() {
             onChange={handleFilterChange}
           />
         </div>
-        <DataTable rows={rows} headers={headers} isSortable>
+        <DataTable rows={rows} headers={ACTIVITY_LIST_COLUMNS} isSortable>
           {({ rows, headers, getHeaderProps, getRowProps, getTableProps, getTableContainerProps }) => (
             <Table {...getTableProps()}>
               <TableHead>

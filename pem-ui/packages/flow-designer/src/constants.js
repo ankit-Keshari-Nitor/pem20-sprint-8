@@ -319,9 +319,3 @@ export const QUERY_COMBINATOR = [
   { name: 'and', value: 'and', label: 'AND' },
   { name: 'or', value: 'or', label: 'OR' }
 ];
-
-export const NEW_ACTIVITY_URL = '#/activities/definitions/new';
-
-export const API_URL = {
-  ACTIVITY_DEFINITION: '/sponsors/cashbank/v2/activityDefinitions'
-};

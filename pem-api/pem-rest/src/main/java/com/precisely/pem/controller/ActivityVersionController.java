@@ -60,7 +60,7 @@ public class ActivityVersionController {
     })
     @GetMapping()
     public ResponseEntity<Object> getActivityVersionDefinitionList(@PathVariable(value = "activityDefnKey") String activityDefnKey,
-                                                                   @RequestParam(value = "isDefault",required = false, defaultValue = "false") boolean isDefault,
+                                                                   @RequestParam(value = "isDefault",required = false, defaultValue = "false") Boolean isDefault,
                                                                    @RequestParam(value = "description", required = false) @Size(min = 1, max = 255) String description,
                                                                    @RequestParam(value = "status", defaultValue = "DRAFT", required = true) Status status,
                                                                    @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,

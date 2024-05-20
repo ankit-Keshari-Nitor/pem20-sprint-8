@@ -3,50 +3,49 @@ import Shell from '@b2bi/shell';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-const ActivityDefition = {
-    List: React.lazy(() => import('./activity-list')),
-    New: React.lazy(() => import('./activity-definition')),
-    Edit: React.lazy(() => import('./activity-definition'))
-
+const ActivityDefinition = {
+  List: React.lazy(() => import('./activity-list')),
+  New: React.lazy(() => import('./activity-definition')),
+  Edit: React.lazy(() => import('./activity-definition'))
 };
 
 const routes = [
-    {
-        path: '/activities',
-        breadcrumb: 'mod-activity-designer:breadcrumb.definitions',
-        resourceKey: 'DEFINITIONS.VIEW',
-        element: (
-            <Shell.RoutePage resourceKey="DEFINITIONS.VIEW" dataLoaderConfig={{}}>
-                <DndProvider backend={HTML5Backend}>
-                    <ActivityDefition.List />
-                </DndProvider>
-            </Shell.RoutePage>
-        )
-    },
-    {
-        path: '/activities/new',
-        breadcrumb: 'mod-activity-designer:breadcrumb.workflow',
-        resourceKey: 'DESIGNER.VIEW',
-        element: (
-            <Shell.RoutePage resourceKey="DESIGNER.VIEW" dataLoaderConfig={{}}>
-                <DndProvider backend={HTML5Backend}>
-                    <ActivityDefition.New />
-                </DndProvider>
-            </Shell.RoutePage>
-        )
-    },
-    {
-        path: '/activities/:id',
-        breadcrumb: 'mod-activity-designer:breadcrumb.workflow',
-        resourceKey: 'DESIGNER.VIEW',
-        element: (
-            <Shell.RoutePage resourceKey="DESIGNER.VIEW" dataLoaderConfig={{}}>
-                <DndProvider backend={HTML5Backend}>
-                    <ActivityDefition.Edit />
-                </DndProvider>
-            </Shell.RoutePage>
-        )
-    }
+  {
+    path: '/activities',
+    breadcrumb: 'mod-activity-designer:breadcrumb.definitions',
+    resourceKey: 'DEFINITIONS.VIEW',
+    element: (
+      <Shell.RoutePage resourceKey="DEFINITIONS.VIEW" dataLoaderConfig={{}}>
+        <DndProvider backend={HTML5Backend}>
+          <ActivityDefinition.List />
+        </DndProvider>
+      </Shell.RoutePage>
+    )
+  },
+  {
+    path: '/activities/new',
+    breadcrumb: 'mod-activity-designer:breadcrumb.workflow',
+    resourceKey: 'DESIGNER.VIEW',
+    element: (
+      <Shell.RoutePage resourceKey="DESIGNER.VIEW" dataLoaderConfig={{}}>
+        <DndProvider backend={HTML5Backend}>
+          <ActivityDefinition.New />
+        </DndProvider>
+      </Shell.RoutePage>
+    )
+  },
+  {
+    path: '/activities/:id',
+    breadcrumb: 'mod-activity-designer:breadcrumb.workflow',
+    resourceKey: 'DESIGNER.VIEW',
+    element: (
+      <Shell.RoutePage resourceKey="DESIGNER.VIEW" dataLoaderConfig={{}}>
+        <DndProvider backend={HTML5Backend}>
+          <ActivityDefinition.Edit />
+        </DndProvider>
+      </Shell.RoutePage>
+    )
+  }
 ];
 
 export { routes };

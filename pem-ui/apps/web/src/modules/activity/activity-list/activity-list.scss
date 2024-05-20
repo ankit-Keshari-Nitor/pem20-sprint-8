@@ -51,11 +51,11 @@ tbody tr:nth-child {
   text-decoration: none !important;
 }
 
-.cds--data-table .cds--list-box input[role=combobox],
-.cds--data-table .cds--list-box input[type=text],
+.cds--data-table .cds--list-box input[role='combobox'],
+.cds--data-table .cds--list-box input[type='text'],
 .cds--data-table .cds--dropdown,
 .cds--data-table .cds--list-box,
-.cds--data-table .cds--number input[type=number],
+.cds--data-table .cds--number input[type='number'],
 .cds--data-table .cds--number__control-btn::before,
 .cds--data-table .cds--number__control-btn::after,
 .cds--data-table .cds--text-input,

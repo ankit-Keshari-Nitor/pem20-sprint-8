@@ -1,4 +1,5 @@
-import { API_URL } from "../../../constants";
+
+import { API_URL } from "../../constants";
 
 export const fetchData = async (pageNo, pageSize, sortDir = "ASC", filterKey = "", searchKey = "") => {
     try {

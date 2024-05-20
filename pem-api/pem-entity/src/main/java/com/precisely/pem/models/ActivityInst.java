@@ -40,13 +40,13 @@ public class ActivityInst extends BaseEntity{
     private LocalDate startDate;
 
     @Column(name="DUE_DATE")
-    private LocalDate dueDate;
+    private String dueDate;
 
     @Column(name="END_DATE")
-    private LocalDate endDate;
+    private String endDate;
 
     @Column(name="ALERT_DATE")
-    private LocalDate alertDate;
+    private String alertDate;
 
     @Column(name="ALERT_FREQUENCY")
     private int alertFrequency;
@@ -62,6 +62,9 @@ public class ActivityInst extends BaseEntity{
 
     @Column(name="IS_CREATED_BY_PARTNER")
     private Boolean isCreatedByPartner;
+
+    @Column(name="TASK_SKIPPED")
+    private String taskSkipped;
 
     @Column(name="APPLICATION")
     private String application;

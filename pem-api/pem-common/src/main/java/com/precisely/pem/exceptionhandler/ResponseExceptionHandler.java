@@ -1,6 +1,5 @@
 package com.precisely.pem.exceptionhandler;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -39,12 +38,11 @@ public class ResponseExceptionHandler{
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    protected ResponseEntity<Object> handleResourceConflict(Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handleResourceConflict(ResourceNotFoundException ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();
-        String[] messages = ex.getLocalizedMessage().split(";");
-        errResp.setErrorCode(messages[1]);
+        errResp.setErrorCode(ex.getErrorCode());
         errResp.setTimestamp(LocalDateTime.now().toString());
-        errResp.setMessage(messages[2]);
+        errResp.setMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 

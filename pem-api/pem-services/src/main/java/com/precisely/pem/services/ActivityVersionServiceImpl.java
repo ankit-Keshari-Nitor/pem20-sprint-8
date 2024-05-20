@@ -64,7 +64,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(activityDefnKey,status,sponsorInfo.getSponsorKey(),pageable);
 
         if(defnsPage == null || defnsPage.isEmpty()) {
-            throw new ResourceNotFoundException("NA;NoDataFound;No data was found for the provided query parameter combination.");
+            throw new ResourceNotFoundException("NA", "NoDataFound", "No data was found for the provided query parameter combination.");
         }
         List<ActivityDefnVersion> listOfDefns = defnsPage.getContent();
         List<ActivityDefnVersionListResp> defnContent = new ArrayList<>();
@@ -95,7 +95,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
         Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(activityDefnKey, activityDefnVersionKey,sponsorInfo.getSponsorKey()));
         if(result.isEmpty()){
-            throw new ResourceNotFoundException("NA;NoDataFound;No data was found for the provided query parameter combination.");
+            throw new ResourceNotFoundException("NA", "NoDataFound", "No data was found for the provided query parameter combination.");
         }
         ModelMapper mapper = new ModelMapper();
         return mapper.map(result.get(), ActivityDefnVersionListResp.class);
@@ -217,7 +217,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     private SponsorInfo validateSponsorContext(String sponsorContext) throws ResourceNotFoundException {
         SponsorInfo sponsorInfo = TenantContext.getTenantContext();
         if(Objects.isNull(sponsorInfo)){
-            throw new ResourceNotFoundException("sponsorContext;SponsorIssue;Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+            throw new ResourceNotFoundException("sponsorContext", "SponsorIssue", "Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
         }
         log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
         return sponsorInfo;

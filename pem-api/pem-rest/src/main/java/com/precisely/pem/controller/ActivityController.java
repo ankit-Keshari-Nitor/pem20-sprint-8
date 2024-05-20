@@ -83,8 +83,8 @@ public class ActivityController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
     })
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Object> getActivityDefinitionList(@RequestParam(value = "name", defaultValue = "", required = false) @Size(min =1 , max = 80) @SpecialCharValidator(fieldName = "name") String name,
-                                                            @RequestParam(value = "description",defaultValue = "", required = false) @Size(max = 255) @SpecialCharValidator(fieldName = "description") String description,
+    public ResponseEntity<Object> getActivityDefinitionList(@RequestParam(value = "name", defaultValue = "", required = false) String name,
+                                                            @RequestParam(value = "description",defaultValue = "", required = false) String description,
                                                             @RequestParam(value = "status", defaultValue = "DRAFT", required = true) Status status,
                                                             @RequestParam(value = "application", defaultValue = "PEM", required = true) Application application,
                                                             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
@@ -145,7 +145,8 @@ public class ActivityController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)})
     })
     @PostMapping (value = "/{activityDefnKey}",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Object> updateActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey,
+    public ResponseEntity<Object> updateActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext,
+                                                                @PathVariable(value = "activityDefnKey")String activityDefnKey,
                                                                 @RequestBody @Valid UpdateActivityReq updateActivityReq) throws Exception {
         return new ResponseEntity<>(activityDefnService.updateActivityDefinitionByKey(sponsorContext,activityDefnKey,updateActivityReq),HttpStatus.OK);
     }

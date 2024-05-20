@@ -18,10 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -48,8 +45,8 @@ public class ActivityInstanceController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)})
     })
     @PostMapping
-    public ResponseEntity<Object> createActivityInstance(@Valid ActivityInstReq activityInstReq,
-                                                           @PathVariable(value = "sponsorContext", required = true) String sponsorContext) throws Exception {
+    public ResponseEntity<Object> createActivityInstance(@Valid @RequestBody ActivityInstReq activityInstReq,
+                                                         @PathVariable(value = "sponsorContext", required = true) String sponsorContext) throws Exception {
         ActivityInstResp activityInstResp = activityInstService.createActivityInstance(sponsorContext,activityInstReq);
         Link link = linkTo(methodOn(ActivityController.class).getActivityDefinitionByKey(sponsorContext,activityInstResp.getActivityInstKey())).withSelfRel();
         activityInstResp.setLocation(link.getHref());

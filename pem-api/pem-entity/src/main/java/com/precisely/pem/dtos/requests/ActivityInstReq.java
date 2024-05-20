@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class ActivityInstReq {
@@ -19,12 +20,14 @@ public class ActivityInstReq {
     @SpecialCharValidator(fieldName = "description")
     private String description;
 
+    private LocalDateTime alertStartDate;
+
     @NumericValidator
     private int alertInterval;
 
-    private LocalDateTime alertStartDate;
+    private LocalDateTime dueDate;
 
-    private Participants[] participants;
+    private List<Partners> partners;
 
     private String contextData;
 

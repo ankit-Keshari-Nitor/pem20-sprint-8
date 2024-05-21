@@ -10,6 +10,7 @@ import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.PaginationDto;
 import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
+import com.precisely.pem.exceptionhandler.ParamMissingException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
@@ -154,7 +155,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     public MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersion(String activityDefnVersionKey) throws Exception {
         Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
         if(activityDefnVersion.isEmpty())
-            throw new ResourceNotFoundException("NA", "NoDataFound","Activity Definition Version not found");
+            throw new ResourceNotFoundException("activityDefnKeyVersion", "NoDataFound", "Activity Definition Version with key '" + activityDefnVersionKey + "' not found. Kindly check the activityDefnVersionKey.");
 
         activityDefnVersion.get().setStatus(String.valueOf(Status.FINAL));
         activityDefnVersion.get().setModifyTs(LocalDateTime.now());
@@ -170,7 +171,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
         if(activityDefnVersion.isEmpty())
-            throw new ResourceNotFoundException("NA", "NoDataFound","Activity Definition Version not found");
+            throw new ResourceNotFoundException("activityDefnKeyVersion", "NoDataFound", "Activity Definition Version with key '" + activityDefnVersionKey + "' not found. Kindly check the activityDefnVersionKey.");
 
         String activityStatus = activityDefnVersion.get().getStatus();
         if(activityStatus.equalsIgnoreCase(Status.FINAL.toString()) || activityStatus.equalsIgnoreCase(Status.DELETE.getStatus()))
@@ -179,7 +180,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         Optional<ActivityDefnData> activityDefnData = activityDefnDataRepo.findById(activityDefnVersion.get().getActivityDefnDataKey());
         if(activityDefnData.isEmpty())
-            throw new ResourceNotFoundException("NA", "NoDataFound","Activity Definition Version Data not found");
+            throw new ResourceNotFoundException("activityDefnData", "NoDataFound","Activity Definition Version Data with key '" + activityDefnVersion.get().getActivityDefnDataKey() + "' not found. Kindly check the activityDefnDataKey.");
 
         //Populating the Activity Definition Data Object
         if(Objects.nonNull(updateActivityVersionReq.getFile())){
@@ -243,7 +244,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
     private static void validateUpdateActivityDefnReq(UpdateActivityVersionReq updateActivityVersionReq) throws Exception {
         if(Objects.isNull(updateActivityVersionReq.getFile()) && Objects.isNull(updateActivityVersionReq.getDescription()) && Objects.isNull(updateActivityVersionReq.getIsEncrypted())){
-            throw  new Exception("Activity Definition Version required single field to Update" );
+            throw new ParamMissingException("","InputParamNeeded","Complete Request Body cannot be empty, please provide atleast one input parameter for update");
         }
     }
 

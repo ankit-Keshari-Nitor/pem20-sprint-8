@@ -202,14 +202,15 @@
 
         @Override
         public MessageResp deleteActivityDefinitionById(String sponsorContext, String activityDefnKey) throws Exception {
+            validateSponsorContext(sponsorContext);
             String sponsorKey = TenantContext.getTenantContext().getSponsorKey();
             Optional<ActivityDefn> activityDefnOptional = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, sponsorKey));
 
             if (activityDefnOptional.isEmpty())
-                throw new ResourceNotFoundException("NA", "NoDataFound","Activity Definition not found");
+                throw new ResourceNotFoundException("activityDefnKey", "NoDataFound", "Activity Definition with key '" + activityDefnKey + "' not found. Kindly check the activityDefnKey.");
 
             if (activityDefnOptional.get().getIsDeleted()) {
-                throw new ResourceNotFoundException("NA","InvalidVersionStatus","Activity Definition Already in Deleted state.");
+                throw new AlreadyDeletedException("activityDefnKey","AlreadyDeleted","Activity Definition with key '" + activityDefnKey + "' is already in Deleted state.");
             }
 
         /*

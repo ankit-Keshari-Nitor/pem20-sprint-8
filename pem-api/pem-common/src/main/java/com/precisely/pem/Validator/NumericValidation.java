@@ -6,14 +6,11 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NumericValidation implements ConstraintValidator<NumericValidator, String> {
+public class NumericValidation implements ConstraintValidator<NumericValidator, Integer> {
     @Override
-    public boolean isValid(String str, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Integer integer, ConstraintValidatorContext constraintValidatorContext) {
         Pattern pattern = Pattern.compile("[0-9]");
-        Matcher matcher = pattern.matcher(str);
-        if (!matcher.find()) {
-            throw new IllegalArgumentException("Only numbers allowed.");
-        }
-        return true;
+        Matcher matcher = pattern.matcher(integer.toString());
+        return matcher.find();
     }
 }

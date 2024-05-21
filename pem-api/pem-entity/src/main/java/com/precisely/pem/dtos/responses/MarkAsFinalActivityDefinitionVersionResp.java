@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 @Data
 public class MarkAsFinalActivityDefinitionVersionResp {
     private String status;
-    private LocalDateTime modifyTs;
+    private String modifyTs;
 
     public MarkAsFinalActivityDefinitionVersionResp() {
     }
 
-    public MarkAsFinalActivityDefinitionVersionResp(String status, LocalDateTime modifyTs) {
+    public MarkAsFinalActivityDefinitionVersionResp(String status, String modifyTs) {
         this.status = status;
         this.modifyTs = modifyTs;
     }

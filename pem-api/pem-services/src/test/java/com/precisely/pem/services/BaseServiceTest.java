@@ -8,7 +8,6 @@ import com.precisely.pem.repositories.ActivityDefnRepo;
 import com.precisely.pem.repositories.ActivityDefnVersionRepo;
 import com.precisely.pem.repositories.SponsorRepo;
 import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
@@ -53,6 +52,7 @@ public class BaseServiceTest {
     public static final String ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND = "Activity Definition Version Data not found";
     public static final String ACTIVITY_DEFINITION_VERSION_NOT_FOUND = "Activity Definition Version not found";
     public static final String ACTIVITY_DEFINITION_VERSION_UPDATED = "Activity Definition Version Updated.";
+    public static final String ACTIVITY_DEFINITION_VERSION_REQUIRED_SINGLE_FIELD_TO_UPDATE = "Activity Definition Version required single field to Update";
 
     @Mock
     protected ActivityDefnRepo activityDefnRepo;
@@ -216,6 +216,23 @@ public class BaseServiceTest {
         activityDefnVersion.setModifiedBy("test");
         activityDefnVersion.setModifyTs(LocalDateTime.now());
         activityDefnVersion.setStatus("FINAL");
+        return activityDefnVersion;
+    }
+
+    protected ActivityDefnVersion getDraftVCHActivityDefnVersionObj(){
+        ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
+        activityDefnVersion.setActivityDefnKeyVersion("test");
+        activityDefnVersion.setActivityDefnKey("test");
+        activityDefnVersion.setVersion(0.0);
+        activityDefnVersion.setActivityDefnDataKey("test");
+        activityDefnVersion.setCreatedBy("test");
+        activityDefnVersion.setCreateTs(LocalDateTime.now());
+        activityDefnVersion.setIsDefault(true);
+        activityDefnVersion.setIsEncrypted(false);
+        activityDefnVersion.setEncryptionKey("test");
+        activityDefnVersion.setModifiedBy("test");
+        activityDefnVersion.setModifyTs(LocalDateTime.now());
+        activityDefnVersion.setStatus("DRAFT");
         return activityDefnVersion;
     }
 

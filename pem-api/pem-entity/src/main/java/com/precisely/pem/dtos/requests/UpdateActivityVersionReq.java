@@ -18,11 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class UpdateActivityVersionReq {
     private Boolean isEncrypted;
 
-    @NotNull
     @MultipartFileValidator
     private MultipartFile file;
 
-    @NotEmpty
     @SpecialCharValidator
     @Size(max = 255)
     private String description;

@@ -2,14 +2,16 @@ package com.precisely.pem.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "ACTIVITY_DEFN")
 public class ActivityDefn extends BaseEntity {
     @Id
@@ -20,12 +22,12 @@ public class ActivityDefn extends BaseEntity {
     @Size(min = 1, max = 50)
     private String sponsorKey;
 
-    @Column(name="ACTIVITY_NAME", unique = true)
+    @Column(name="ACTIVITY_NAME")
     @Size(min = 1, max = 80)
     private String activityName;
 
     @Column(name="ACTIVITY_DESCRIPTION")
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     private String activityDescription;
 
     @Column(name="APPLICATION")

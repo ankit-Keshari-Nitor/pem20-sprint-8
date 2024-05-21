@@ -8,8 +8,9 @@ import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.PaginationDto;
-import com.precisely.pem.exceptionhandler.ErrorResponseDto;
+import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
+import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
@@ -24,7 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -32,10 +32,7 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,25 +49,22 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     @Autowired
     private ModelMapper mapper;
     @Override
-    public ActivityVersionDefnPaginationResp getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status) throws Exception {
+    public ActivityVersionDefnPaginationResp getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, Boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status) throws Exception {
         ActivityVersionDefnPaginationResp activityVersionDefnPaginationResp = new ActivityVersionDefnPaginationResp();
         PaginationDto paginationDto = new PaginationDto();
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        String context = sponsorRepo.getSponsorKey(sponsorContext);
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
         Page<ActivityDefnVersion> defnsPage = null;
         if(description != null && !description.isEmpty())
-            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndDescriptionContaining(activityDefnKey,status,context,description,pageable);
+            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndIsDefaultAndDescriptionContaining(activityDefnKey,status,sponsorInfo.getSponsorKey(),isDefault,description,pageable);
         else
-            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(activityDefnKey,status,context,pageable);
+            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndIsDefault(activityDefnKey,status,sponsorInfo.getSponsorKey(),isDefault,pageable);
 
         if(defnsPage == null || defnsPage.isEmpty()) {
-            ErrorResponseDto errorDto = new ErrorResponseDto();
-            errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-            errorDto.setErrorDescription("No Data Found");
-            throw new Exception("No entries found for the combination");
+            throw new ResourceNotFoundException("NA", "NoDataFound", "No data was found for the provided query parameter combination.");
         }
         List<ActivityDefnVersion> listOfDefns = defnsPage.getContent();
         List<ActivityDefnVersionListResp> defnContent = new ArrayList<>();
@@ -98,13 +92,10 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
     @Override
     public ActivityDefnVersionListResp getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnVersionKey) throws Exception {
-        String SponsorKey = sponsorRepo.getSponsorKey(sponsorContext);
-        Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(activityDefnKey, activityDefnVersionKey,SponsorKey));
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
+        Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(activityDefnKey, activityDefnVersionKey,sponsorInfo.getSponsorKey()));
         if(result.isEmpty()){
-            ErrorResponseDto errorDto = new ErrorResponseDto();
-            errorDto.setErrorDescription("No data Found");
-            errorDto.setErrorCode(HttpStatus.NOT_FOUND.value());
-            throw new Exception("No entries found for the combination");
+            throw new ResourceNotFoundException("NA", "NoDataFound", "No data was found for the provided query parameter combination.");
         }
         ModelMapper mapper = new ModelMapper();
         return mapper.map(result.get(), ActivityDefnVersionListResp.class);
@@ -112,18 +103,20 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
     @Override
     public ActivityDefnVersionResp createActivityDefnVersion(String sponsorContext, String activityDefnKey,
-                                                             ActivityVersionReq activityVersionReq) throws OnlyOneDraftVersionException, IOException, SQLException {
+                                                             ActivityVersionReq activityVersionReq) throws OnlyOneDraftVersionException, IOException, SQLException, ResourceNotFoundException, ResourceNotFoundException {
         Optional<ActivityDefn> activityDefn = null;
         ActivityDefnData activityDefnData = null;
         ActivityDefnVersion activityDefnVersion = null;
         ActivityDefnVersionResp activityDefnVersionResp = new ActivityDefnVersionResp();
+
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
 
         activityDefn = activityDefnRepo.findById(activityDefnKey);
 
         double version = activityDefn.get().getVersions().size();
         List<ActivityDefnVersion> defnVersions = activityDefn.get().getVersions();
         if(defnVersions.stream().anyMatch(s -> s.getStatus().equalsIgnoreCase(Status.DRAFT.toString()))){
-            throw new OnlyOneDraftVersionException("A version with Draft version already exists. Kindly verify the version");
+            throw new OnlyOneDraftVersionException("NA;OneDraftAllowed;A version with the 'Draft' status already exists for the activity definition key '" + activityDefnKey +"'. Please verify the version.");
         }
 
         log.info("count : " + activityDefn.get().getVersions().size());
@@ -174,6 +167,8 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     @Override
     public MessageResp updateActivityDefnVersion(String sponsorContext, String activityDefnKey, String activityDefnVersionKey, UpdateActivityVersionReq updateActivityVersionReq) throws Exception {
 
+        validateUpdateActivityDefnReq(updateActivityVersionReq);
+
         Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
         if(activityDefnVersion.isEmpty()){
             throw  new Exception("Activity Definition Version not found" );
@@ -190,20 +185,77 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         }
 
         //Populating the Activity Definition Data Object
-        byte[] bytes = updateActivityVersionReq.getFile().getBytes();
-        Blob blob = new SerialBlob(bytes);
+        if(Objects.nonNull(updateActivityVersionReq.getFile())){
+            byte[] bytes = updateActivityVersionReq.getFile().getBytes();
+            Blob blob = new SerialBlob(bytes);
 
-        activityDefnData.get().setDefData(blob);
-        activityDefnData.get().setModifyTs(LocalDateTime.now());
+            activityDefnData.get().setDefData(blob);
+            activityDefnData.get().setModifyTs(LocalDateTime.now());
 
-        activityDefnDataRepo.save(activityDefnData.get());
+            activityDefnDataRepo.save(activityDefnData.get());
+        }
 
-        activityDefnVersion.get().setIsEncrypted(updateActivityVersionReq.getIsEncrypted());
-        activityDefnVersion.get().setDescription(updateActivityVersionReq.getDescription());
+
+        if( Objects.nonNull(updateActivityVersionReq.getIsEncrypted()) )
+            activityDefnVersion.get().setIsEncrypted(updateActivityVersionReq.getIsEncrypted());
+        if(Objects.nonNull(updateActivityVersionReq.getDescription()))
+            activityDefnVersion.get().setDescription(updateActivityVersionReq.getDescription());
+
         activityDefnVersion.get().setModifyTs(LocalDateTime.now());
         activityDefnVersionRepo.save(activityDefnVersion.get());
 
 
         return MessageResp.builder().response("Activity Definition Version Updated.").build();
+    }
+
+    @Override
+    public MarkAsFinalActivityDefinitionVersionResp markAsDefaultActivityDefinitionVersion(String sponsorContext, String activityDefnKey,String activityDefnVersionKey) throws Exception {
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
+        Optional<ActivityDefnVersion> versionObj = activityDefnVersionRepo.findById(activityDefnVersionKey);
+
+        if(!versionObj.isPresent())
+            throw new ResourceNotFoundException("NA", "NoDataFound","No data was found for the provided query parameter combination.");
+
+        if(!versionObj.get().getStatus().equalsIgnoreCase(Status.FINAL.getStatus()))
+            throw new ResourceNotFoundException("NA","InvalidVersionStatus","Version Status is DRAFT/DELETE.Hence can not mark it to Default.");
+
+        if(versionObj.get().getIsDefault())
+            throw new ResourceNotFoundException("NA","AlreadyMarkedAsDefault","Version is already marked as Default.");
+
+        ActivityDefnVersion version =versionObj.get();
+        version.setIsDefault(Boolean.parseBoolean("true"));
+
+        List<ActivityDefnVersion> finalVersionList = activityDefnVersionRepo
+                .findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(activityDefnKey,Status.FINAL.getStatus(),
+                        sponsorInfo.getSponsorKey());
+        if(finalVersionList.size() > 1) {
+            Optional<ActivityDefnVersion> currentFinalVersionObj = Optional.ofNullable(finalVersionList
+                    .stream()
+                    .filter(p -> p.getIsDefault())
+                    .findAny().orElse(null));
+            ActivityDefnVersion currentFinalVersion = null;
+            if (currentFinalVersionObj.isPresent()) {
+                currentFinalVersion = currentFinalVersionObj.get();
+                currentFinalVersion.setIsDefault(false);
+            }
+            activityDefnVersionRepo.save(currentFinalVersion);
+        }
+        activityDefnVersionRepo.save(version);
+        return new MarkAsFinalActivityDefinitionVersionResp("Success",LocalDateTime.now().toString());
+    }
+
+    private static void validateUpdateActivityDefnReq(UpdateActivityVersionReq updateActivityVersionReq) throws Exception {
+        if(Objects.isNull(updateActivityVersionReq.getFile()) && Objects.isNull(updateActivityVersionReq.getDescription()) && Objects.isNull(updateActivityVersionReq.getIsEncrypted())){
+            throw  new Exception("Activity Definition Version required single field to Update" );
+        }
+    }
+
+    private SponsorInfo validateSponsorContext(String sponsorContext) throws ResourceNotFoundException {
+        SponsorInfo sponsorInfo = TenantContext.getTenantContext();
+        if(Objects.isNull(sponsorInfo)){
+            throw new ResourceNotFoundException("sponsorContext", "SponsorIssue", "Sponsor '" + sponsorContext + "' not found. Kindly check the sponsorContext.");
+        }
+        log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
+        return sponsorInfo;
     }
 }

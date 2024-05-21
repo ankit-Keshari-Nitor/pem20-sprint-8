@@ -23,4 +23,6 @@ public interface ActivityDefnRepo extends JpaRepository<ActivityDefn,String> {
                                     String application, String status, String description, Pageable pageable);
     Page<ActivityDefn> findBySponsorKeyAndApplicationAndVersionsStatusAndActivityName(String context, String application,
                                     String status, String name, Pageable pageable);
+
+    ActivityDefn findByActivityName(String name);
 }

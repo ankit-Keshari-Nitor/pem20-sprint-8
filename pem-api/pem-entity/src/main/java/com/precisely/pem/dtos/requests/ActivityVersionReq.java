@@ -3,7 +3,6 @@ package com.precisely.pem.dtos.requests;
 import com.precisely.pem.Validator.MultipartFileValidator;
 import com.precisely.pem.Validator.SpecialCharValidator;
 import com.precisely.pem.commonUtil.Application;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +19,7 @@ public class ActivityVersionReq {
     @NotNull
     private Application application;
 
-    @NotEmpty
-    @SpecialCharValidator
+    @NotNull
+    @SpecialCharValidator(fieldName = "description")
     private String description;
 }

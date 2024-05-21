@@ -1,24 +1,24 @@
 spring:
   jpa:
-    #database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform:
     hibernate:
-      ddl-auto: update
+      ddl-auto:
     properties:
       hibernate:
-        show-sql: true
+        show-sql:
     naming:
-      physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+      physical-strategy: 
+      implicit-strategy: 
 
   datasource:
-    url: jdbc:db2://10.15.106.148:50000/pemdev
-    username: pemactiviti
-    password: pemactiviti
-    driver-class-name: com.ibm.db2.jcc.DB2Driver
-    initialization-mode: always
+    url: 
+    username: 
+    password: 
+    driver-class-name: 
+    initialization-mode: 
 
 server:
-  port: 9080
+  port:
 
 springdoc:
   swagger-ui:
@@ -29,4 +29,4 @@ springdoc:
     path: /pem-api-docs
 pem:
   openapi:
-    dev-url: http://10.2.117.227:9080
+    dev-url:

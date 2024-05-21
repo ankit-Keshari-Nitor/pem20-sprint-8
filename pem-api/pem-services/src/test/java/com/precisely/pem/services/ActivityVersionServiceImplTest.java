@@ -7,7 +7,9 @@ import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
+import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
+import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
@@ -40,6 +42,8 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
     @BeforeEach
     public void setup(){
         MockitoAnnotations.openMocks(this);
+        SponsorInfo sponsorInfo = new SponsorInfo("cashbank","test");
+        TenantContext.setTenantContext(sponsorInfo);
     }
     @Test
     void testGetAllVersionDefinitionList() throws Exception {
@@ -52,8 +56,6 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         String sortBy = "sortBy";
         String sortDir = "sortDir";
         boolean isDefault = false;
-        Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString()))
-                .thenReturn("cashbank");
         Page<ActivityDefnVersion> defnsPage = new PageImpl<>(getVersionList());
         Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndDescriptionContaining(eq(activityDefnKey),eq(status),eq(sponsorContext),
                         eq(applicationDescription),Mockito.any(Pageable.class)))
@@ -104,7 +106,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         assertNotNull(dto);
     }
     @Test
-    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException {
+    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, ResourceNotFoundException {
         ActivityDefnServiceImplTest activityDefnServiceImplTest = new ActivityDefnServiceImplTest();
 
         Optional<ActivityDefn> activityDefn = Optional.ofNullable(activityDefnServiceImplTest.getVchActivityDefnObj());

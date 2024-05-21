@@ -1,5 +1,6 @@
 package com.precisely.pem.controller;
 
+import com.precisely.pem.Validator.SpecialCharValidator;
 import com.precisely.pem.Validator.MultipartFileValidator;
 import com.precisely.pem.Validator.SpecialCharValidator;
 import com.precisely.pem.commonUtil.Application;
@@ -59,7 +60,7 @@ public class ActivityController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)})
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Object> createActivityDefinition(@ModelAttribute @Valid ActivityDefnReq activityDefnReq,
+    public ResponseEntity<Object> createActivityDefinition(@Valid ActivityDefnReq activityDefnReq,
                                                            @PathVariable(value = "sponsorContext", required = true) String sponsorContext) throws Exception {
         ActivityDefnResp activityDefnResp = activityDefnService.createActivityDefinition(sponsorContext, activityDefnReq);
         Link link = linkTo(methodOn(ActivityController.class).getActivityDefinitionByKey(sponsorContext,activityDefnResp.getActivityDefnKey())).withSelfRel();
@@ -82,8 +83,8 @@ public class ActivityController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
     })
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Object> getActivityDefinitionList(@RequestParam(value = "name", required = false) @Size(min = 1, max = 80) String name,
-                                                            @RequestParam(value = "description", required = false) @Size(min = 1, max = 255) String description,
+    public ResponseEntity<Object> getActivityDefinitionList(@RequestParam(value = "name", defaultValue = "", required = false) String name,
+                                                            @RequestParam(value = "description",defaultValue = "", required = false) String description,
                                                             @RequestParam(value = "status", defaultValue = "DRAFT", required = true) Status status,
                                                             @RequestParam(value = "application", defaultValue = "PEM", required = true) Application application,
                                                             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
@@ -144,7 +145,8 @@ public class ActivityController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)})
     })
     @PostMapping (value = "/{activityDefnKey}",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Object> updateActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey,
+    public ResponseEntity<Object> updateActivityDefinitionByKey(@PathVariable(value = "sponsorContext")String sponsorContext,
+                                                                @PathVariable(value = "activityDefnKey")String activityDefnKey,
                                                                 @RequestBody @Valid UpdateActivityReq updateActivityReq) throws Exception {
         return new ResponseEntity<>(activityDefnService.updateActivityDefinitionByKey(sponsorContext,activityDefnKey,updateActivityReq),HttpStatus.OK);
     }

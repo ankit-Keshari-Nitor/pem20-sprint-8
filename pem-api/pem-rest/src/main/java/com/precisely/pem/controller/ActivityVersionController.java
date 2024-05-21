@@ -6,9 +6,12 @@ import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
-import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
+import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
+import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
+import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.exceptionhandler.ErrorResponseDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
+import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.services.ActivityVersionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -57,7 +60,7 @@ public class ActivityVersionController {
     })
     @GetMapping()
     public ResponseEntity<Object> getActivityVersionDefinitionList(@PathVariable(value = "activityDefnKey") String activityDefnKey,
-                                                                   @RequestParam(value = "isDefault",required = false, defaultValue = "false") boolean isDefault,
+                                                                   @RequestParam(value = "isDefault",required = false, defaultValue = "false") Boolean isDefault,
                                                                    @RequestParam(value = "description", required = false) @Size(min = 1, max = 255) String description,
                                                                    @RequestParam(value = "status", defaultValue = "DRAFT", required = true) Status status,
                                                                    @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
@@ -102,8 +105,8 @@ public class ActivityVersionController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Object> createActivityDefinition(@PathVariable(value = "sponsorContext")String sponsorContext,
                                                            @PathVariable(value = "activityDefnKey")String activityDefnKey,
-                                                           @ModelAttribute @Valid ActivityVersionReq activityVersionReq
-    ) throws SQLException, IOException, OnlyOneDraftVersionException {
+                                                           @Valid ActivityVersionReq activityVersionReq
+    ) throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException {
         ActivityDefnVersionResp activityDefnVersionResp = activityVersionService.createActivityDefnVersion(sponsorContext, activityDefnKey, activityVersionReq);
         Link link = linkTo(methodOn(ActivityVersionController.class).createActivityDefinition(sponsorContext, activityDefnKey, activityVersionReq)).withSelfRel();
         activityDefnVersionResp.setLocation(link.getHref());
@@ -152,5 +155,24 @@ public class ActivityVersionController {
         if(log.isEnabled(Level.INFO))
             log.info("Update Activity Definition Version: Starts");
         return  new ResponseEntity<>(activityVersionService.updateActivityDefnVersion(sponsorContext,activityDefnKey,activityDefnVersionKey,updateActivityVersionReq), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Mark Activity Definition Version Status as Default", tags = { "Activity Definition Version" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = MarkAsFinalActivityDefinitionVersionResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = MarkAsFinalActivityDefinitionVersionResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+    })
+    @PostMapping("/{activityDefnVersionKey}/actions/markAsDefault")
+    public ResponseEntity<Object> markActivityDefinitionStatusAsDefault(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
+        if(log.isEnabled(Level.INFO))
+            log.info("Retrieve all Activity Definitions: Starts");
+        return  new ResponseEntity<>(activityVersionService.markAsDefaultActivityDefinitionVersion(sponsorContext,activityDefnKey,activityDefnVersionKey), HttpStatus.OK);
     }
 }

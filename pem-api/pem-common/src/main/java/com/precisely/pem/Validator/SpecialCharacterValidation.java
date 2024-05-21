@@ -8,13 +8,20 @@ import java.util.regex.Pattern;
 
 public class SpecialCharacterValidation implements ConstraintValidator<SpecialCharValidator, String> {
 
+    String name = "";
+
+    @Override
+    public void initialize(SpecialCharValidator requiredIfChecked) {
+        this.name = requiredIfChecked.fieldName();
+    }
+
     @Override
     public boolean isValid(String str, ConstraintValidatorContext constraintValidatorContext) {
-        Pattern pattern = Pattern.compile("[A-Za-z0-9!@#$%()+=___:;?/,`~-]");
-        Matcher matcher = pattern.matcher(str);
-        if (!matcher.find()) {
-            throw new IllegalArgumentException("Illegal Character in String");
+        if(name.equalsIgnoreCase("description") && str.isEmpty()){
+            return true;
         }
-        return true;
+        Pattern pattern = Pattern.compile("[A-Za-z0-9&@!#$%()/+=_.,:;-]+");
+        Matcher matcher = pattern.matcher(str);
+        return matcher.find();
     }
 }

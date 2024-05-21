@@ -5,7 +5,7 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-@Constraint(validatedBy = LowerCaseValidation.class)
+@Constraint(validatedBy = NumericValidation.class)
 @Target({ElementType.PARAMETER,ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

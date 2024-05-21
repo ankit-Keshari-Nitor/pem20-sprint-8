@@ -16,11 +16,12 @@ import java.util.List;
 @Repository
 public interface ActivityDefnVersionRepo extends JpaRepository<ActivityDefnVersion,String> {
 
-    Page<ActivityDefnVersion> findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndDescriptionContaining(String activityDefnKey, String status, String context, String description, Pageable pageable);
-    Page<ActivityDefnVersion> findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(String activityDefnKey, String status, String context, Pageable pageable);
-    ActivityDefnVersion findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(String activityDefnKey, String activityDefnVersionKey, String context);
+    Page<ActivityDefnVersion> findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndIsDefaultAndDescriptionContaining(String activityDefnKey, String status, String context, Boolean isDefault, String description, Pageable pageable);
+    Page<ActivityDefnVersion> findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndIsDefault(String activityDefnKey, String status, String context, Boolean isDefault, Pageable pageable);ActivityDefnVersion findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(String activityDefnKey, String activityDefnVersionKey, String context);
 
     List<ActivityDefnVersion> findByActivityDefnKey(String activityDefinitionKey);
 
     long countByActivityDefnKeyAndStatusNot(String activityDefnKey, String status);
+
+    List<ActivityDefnVersion> findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(String activityDefnKey, String status, String sponsorContext);
 }

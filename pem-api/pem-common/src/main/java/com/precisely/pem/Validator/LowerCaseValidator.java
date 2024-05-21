@@ -12,6 +12,8 @@ import java.lang.annotation.*;
 public @interface LowerCaseValidator {
     String message() default "";
 
+    String name() default "";
+
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

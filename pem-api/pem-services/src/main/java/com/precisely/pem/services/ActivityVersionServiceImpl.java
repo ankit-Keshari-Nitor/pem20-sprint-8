@@ -153,9 +153,8 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     @Override
     public MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersion(String activityDefnVersionKey) throws Exception {
         Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
-        if(activityDefnVersion.isEmpty()){
-            throw  new Exception("Activity Definition Version not found" );
-        }
+        if(activityDefnVersion.isEmpty())
+            throw new ResourceNotFoundException("NA", "NoDataFound","Activity Definition Version not found");
 
         activityDefnVersion.get().setStatus(String.valueOf(Status.FINAL));
         activityDefnVersion.get().setModifyTs(LocalDateTime.now());
@@ -170,19 +169,17 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         validateUpdateActivityDefnReq(updateActivityVersionReq);
 
         Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
-        if(activityDefnVersion.isEmpty()){
-            throw  new Exception("Activity Definition Version not found" );
-        }
+        if(activityDefnVersion.isEmpty())
+            throw new ResourceNotFoundException("NA", "NoDataFound","Activity Definition Version not found");
 
         String activityStatus = activityDefnVersion.get().getStatus();
-        if(activityStatus.equalsIgnoreCase(Status.FINAL.toString()) || activityStatus.equalsIgnoreCase(Status.DELETE.getStatus())){
-            throw  new Exception("Activity Definition Version is in FINAL/DELETE status." );
-        }
+        if(activityStatus.equalsIgnoreCase(Status.FINAL.toString()) || activityStatus.equalsIgnoreCase(Status.DELETE.getStatus()))
+            throw new ResourceNotFoundException("NA", "InvalidVersionStatus","Activity Definition Version is in FINAL/DELETE status.");
+
 
         Optional<ActivityDefnData> activityDefnData = activityDefnDataRepo.findById(activityDefnVersion.get().getActivityDefnDataKey());
-        if(activityDefnData.isEmpty()){
-            throw  new Exception("Activity Definition Version Data not found" );
-        }
+        if(activityDefnData.isEmpty())
+            throw new ResourceNotFoundException("NA", "NoDataFound","Activity Definition Version Data not found");
 
         //Populating the Activity Definition Data Object
         if(Objects.nonNull(updateActivityVersionReq.getFile())){

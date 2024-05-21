@@ -202,11 +202,11 @@
             String sponsorKey = TenantContext.getTenantContext().getSponsorKey();
             Optional<ActivityDefn> activityDefnOptional = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, sponsorKey));
 
-            if (activityDefnOptional.isEmpty()) {
-                throw new Exception("Activity Definition not found");
-            }
+            if (activityDefnOptional.isEmpty())
+                throw new ResourceNotFoundException("NA", "NoDataFound","Activity Definition not found");
+
             if (activityDefnOptional.get().getIsDeleted()) {
-                throw new Exception("Activity Definition Already Deleted");
+                throw new ResourceNotFoundException("NA","InvalidVersionStatus","Activity Definition Already in Deleted state.");
             }
 
         /*

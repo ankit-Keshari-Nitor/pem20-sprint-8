@@ -16,6 +16,24 @@ import java.util.prefs.InvalidPreferencesFormatException;
 @ControllerAdvice
 public class ResponseExceptionHandler{
 
+    @ExceptionHandler(AlreadyDeletedException.class)
+    protected ResponseEntity<Object> handleAlreadyDeletedException(AlreadyDeletedException ex, WebRequest request){
+        ErrorResponseDto errResp = new ErrorResponseDto();
+        errResp.setErrorCode(ex.getErrorCode());
+        errResp.setTimestamp(LocalDateTime.now().toString());
+        errResp.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
+    }
+
+    @ExceptionHandler(ParamMissingException.class)
+    protected ResponseEntity<Object> handleParamMissing(ParamMissingException ex, WebRequest request){
+        ErrorResponseDto errResp = new ErrorResponseDto();
+        errResp.setErrorCode(ex.getErrorCode());
+        errResp.setTimestamp(LocalDateTime.now().toString());
+        errResp.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
+    }
+
     @ExceptionHandler({MultipartException.class, SizeLimitExceededException.class})
     protected ResponseEntity<Object> handleConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();

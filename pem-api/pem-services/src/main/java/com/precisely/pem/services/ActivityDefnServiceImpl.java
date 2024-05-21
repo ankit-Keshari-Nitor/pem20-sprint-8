@@ -6,7 +6,9 @@
     import com.precisely.pem.dtos.requests.UpdateActivityReq;
     import com.precisely.pem.dtos.responses.*;
     import com.precisely.pem.dtos.shared.*;
+    import com.precisely.pem.exceptionhandler.AlreadyDeletedException;
     import com.precisely.pem.exceptionhandler.DuplicateEntryException;
+    import com.precisely.pem.exceptionhandler.ParamMissingException;
     import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
     import com.precisely.pem.models.ActivityDefn;
     import com.precisely.pem.models.ActivityDefnData;
@@ -173,16 +175,17 @@
         }
 
         @Override
-        public MessageResp updateActivityDefinitionByKey(String sponsorContext, String activityDefnKey, UpdateActivityReq updateActivityReq) throws Exception{
+        public MessageResp updateActivityDefinitionByKey(String sponsorContext, String activityDefnKey, UpdateActivityReq updateActivityReq) throws Exception {
+            SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
             Optional<ActivityDefn> activityDefn = activityDefnRepo.findById(activityDefnKey);
             if(activityDefn.isEmpty()){
-                throw new Exception("Activity Definition not found");
+                throw new ResourceNotFoundException("activityDefnKey", "NoDataFound", "Activity Definition with key '" + activityDefnKey + "' not found. Kindly check the activityDefnKey.");
             }
             if (activityDefn.get().getIsDeleted()) {
-                throw new Exception("Activity Definition Already Deleted");
+                throw new AlreadyDeletedException("activityDefnKey","AlreadyDeleted","Cannot Update Activity Definition with key '" + activityDefnKey + "' which is already in Deleted state.");
             }
             if(updateActivityReq.getName().isEmpty() && updateActivityReq.getDescription().isEmpty()){
-                throw new Exception("Both Activity name & description cannot be empty, please provide atleast one input for update");
+                throw new ParamMissingException("","InputParamNeeded","Both Activity name & description cannot be empty, please provide atleast one input parameter for update");
             }
             if(!updateActivityReq.getDescription().isEmpty()){
                 activityDefn.get().setActivityDescription(updateActivityReq.getDescription());

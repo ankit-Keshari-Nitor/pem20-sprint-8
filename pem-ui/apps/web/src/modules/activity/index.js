@@ -4,9 +4,10 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const ActivityDefinition = {
-  List: React.lazy(() => import('./activity-list')),
-  New: React.lazy(() => import('./activity-definition')),
-  Edit: React.lazy(() => import('./activity-definition'))
+
+  List: React.lazy(() => import('./pages/activity-list')),
+  New: React.lazy(() => import('./pages/activity-definition')),
+  Edit: React.lazy(() => import('./pages/activity-definition'))
 };
 
 const routes = [

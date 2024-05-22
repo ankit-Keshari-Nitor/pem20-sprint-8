@@ -1,9 +1,8 @@
 
 import React, { useState } from 'react';
 import { Modal } from '@carbon/react';
-import CustomInlineNotification from './wapper-notification-toast';
 
-export default function CustomModal({ isOpen = false, setIsOpen, message = "", btnText = "", onPrimaryButtonClick }) {
+export default function WapperModal({ isOpen = false, setIsOpen, message = "", btnText = "", onPrimaryButtonClick }) {
     const handlePrimaryButtonClick = () => {
         onPrimaryButtonClick(); // Call the passed function
         setIsOpen(false); // Close the modal

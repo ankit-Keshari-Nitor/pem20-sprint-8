@@ -1,7 +1,7 @@
 import React from 'react';
 import { InlineNotification } from '@carbon/react';
 
-export default function CustomInlineNotification({ open, title, subtitle, kind, onCloseButtonClick }) {
+export default function WapperNotification({ open, title, subtitle, kind, onCloseButtonClick }) {
     return (
         <div className="custom-inline-notification-container">
             <InlineNotification

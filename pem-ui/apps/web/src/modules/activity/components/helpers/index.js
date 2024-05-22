@@ -1,4 +1,4 @@
-import CustomModal from "./wapper-modal";
-import CustomInlineNotification from "./wapper-notification-toast";
+import WapperModal from "./wapper-modal";
+import WapperNotification from "./wapper-notification-toast";
 
-export { CustomModal, CustomInlineNotification }
+export { WapperModal, WapperNotification }

@@ -20,8 +20,8 @@ import {
 } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
 import ActivityDropdown from '../../components/actions-dropdown';
-import CustomModal from '../../components/helpers/wapper-modal';
-import CustomInlineNotification from '../../components/helpers/wapper-notification-toast';
+import WapperModal from '../../components/helpers/wapper-modal';
+import WapperNotification from '../../components/helpers/wapper-notification-toast';
 
 export default function ActivityList() {
   const [totalRows, setTotalRows] = useState(0);
@@ -202,8 +202,8 @@ export default function ActivityList() {
           page={pageNo}
           onChange={({ page, pageSize }) => handlePaginationChange(page, pageSize)}
         />
-        <CustomModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} btnText={actionText} message={message} onPrimaryButtonClick={selectedAction} />
-        {notificationProps && <CustomInlineNotification {...notificationProps} />}
+        <WapperModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} btnText={actionText} message={message} onPrimaryButtonClick={selectedAction} />
+        {notificationProps && <WapperNotification {...notificationProps} />}
 
       </TableContainer>
     </div>

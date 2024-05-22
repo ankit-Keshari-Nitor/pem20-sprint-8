@@ -130,7 +130,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     @Test
     void updateMarkAsFinal() throws Exception {
-        ActivityDefnVersion activityDefnVersion = getVCHActivityDefnVersionObj();
+        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
 
         mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
 
@@ -158,9 +158,29 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
     void testUpdateMarkAsFinalIfActivityVersionNotFound(){
         Optional<ActivityDefnVersion> activityDefnVersion = Optional.empty();
         mockActivityDefnVersionFindById().thenReturn(activityDefnVersion);
-        Exception exception = assertThrows(Exception.class, () -> activityVersionService.
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> activityVersionService.
                 markAsFinalActivityDefinitionVersion(TEST_ACTIVITY_DEFN_VERSION_KEY));
         assertEquals(exception.getMessage(),ACTIVITY_DEFINITION_VERSION_NOT_FOUND);
+    }
+
+    @Test
+    void testUpdateMarkAsFinalIfActivityVersion_AlreadyFinal(){
+        ActivityDefnVersion activityDefnVersion = getVCHActivityDefnVersionObj();
+
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> activityVersionService.
+                markAsFinalActivityDefinitionVersion(TEST_ACTIVITY_DEFN_VERSION_KEY));
+        assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_VERSION_IS_IN_FINAL_DELETE_STATUS);
+    }
+
+    @Test
+    void testUpdateMarkAsFinalIfActivityVersion_Deleted(){
+        ActivityDefnVersion activityDefnVersion = getDeletedVCHActivityDefnVersionObj();
+
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> activityVersionService.
+                markAsFinalActivityDefinitionVersion(TEST_ACTIVITY_DEFN_VERSION_KEY));
+        assertEquals(exception.getMessage(),ACTIVITY_DEFINITION_VERSION_IS_IN_FINAL_DELETE_STATUS);
     }
 
     @Test
@@ -218,7 +238,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
                     updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
                             UpdateActivityVersionReq.builder().description(TEST_DESCRIPTION).file(multipartFile).isEncrypted(Boolean.TRUE).build());
         });
-        assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_VERSION_NOT_FOUND);
+        assertEquals(ACTIVITY_DEFINITION_VERSION_NOT_FOUND,exception.getMessage());
 
     }
 
@@ -237,7 +257,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
                     updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
                             UpdateActivityVersionReq.builder().description(TEST_DESCRIPTION).file(multipartFile).isEncrypted(Boolean.TRUE).build());
         });
-        assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND);
+        assertEquals(ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND,exception.getMessage());
 
     }
 

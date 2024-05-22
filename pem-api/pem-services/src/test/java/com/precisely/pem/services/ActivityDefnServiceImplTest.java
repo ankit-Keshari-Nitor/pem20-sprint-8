@@ -87,7 +87,7 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
     void updateActivityDefinition_NotFoundActivityDefinition() throws Exception {
         mockActivityDefnKey().thenReturn(null );
 
-        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR,TEST_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build()));
+        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build()));
         assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_NOT_FOUND);
     }
 
@@ -95,8 +95,8 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
     void updateActivityDefinition_AlreadyDeletedActivityDefinition() throws Exception {
         mockActivityDefnKey().thenReturn(Optional.ofNullable(getDeletedVchActivityDefnObj()));
 
-        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR,TEST_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build()));
-        assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_ALREADY_DELETED);
+        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build()));
+        assertEquals(exception.getMessage(), ACTIVITY_DEFN_KEY_WHICH_IS_ALREADY_IN_DELETED_STATE);
     }
 
     @Test
@@ -134,7 +134,7 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
     void deleteActivityDefinition_NotFoundActivityDefinition() throws Exception {
         mockActivityDefnKeyAndSoponsorKey().thenReturn(null );
 
-        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.deleteActivityDefinitionById(TEST_SPONSOR,TEST_KEY));
+        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.deleteActivityDefinitionById(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY));
         assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_NOT_FOUND);
     }
 
@@ -142,7 +142,7 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
     void deleteActivityDefinition_AlreadyDeletedActivityDefinition(){
         mockActivityDefnKeyAndSoponsorKey().thenReturn(getDeletedVchActivityDefnObj() );
 
-        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.deleteActivityDefinitionById(TEST_SPONSOR,TEST_KEY));
+        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.deleteActivityDefinitionById(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY));
         assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_ALREADY_DELETED);
     }
 

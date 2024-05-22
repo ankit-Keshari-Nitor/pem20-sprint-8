@@ -1,5 +1,6 @@
 package com.precisely.pem.services;
 
+import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
@@ -35,7 +36,8 @@ public class BaseServiceTest {
     public static final String TEST_SPONSOR = "test_sponsor";
     public static final String TEST_KEY = "test_key";
     public static final String TEST_ACTIVITY_DEFN_KEY = "test_activity_defn_key";
-    public static final String TEST_ACTIVITY_DEFN_VERSION_KEY = "test_activity_defn_key";
+    public static final String TEST_ACTIVITY_DEFN_VERSION_KEY = "test_activity_defn_version_key";
+    public static final String TEST_ACTIVITY_DEFN_VERSION_DATA_KEY = "test_activity_defn_version_data_key";
     public static final String TEST_FILE_KEY = "file";
     public static final String TEST_FILE_VALUE = "test.txt";
     public static final String CONTENT_TYPE_TEXT = "text/plain";
@@ -47,12 +49,14 @@ public class BaseServiceTest {
     public static final String TEST_NAME = "test";
 
     //Response Messages
-    public static final String ACTIVITY_DEFINITION_NOT_FOUND = "Activity Definition not found";
-    public static final String ACTIVITY_DEFINITION_ALREADY_DELETED = "Activity Definition Already Deleted";
-    public static final String ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND = "Activity Definition Version Data not found";
-    public static final String ACTIVITY_DEFINITION_VERSION_NOT_FOUND = "Activity Definition Version not found";
+    public static final String ACTIVITY_DEFINITION_NOT_FOUND = "Activity Definition with key '"+TEST_ACTIVITY_DEFN_KEY+"' not found. Kindly check the activityDefnKey.";;
+    public static final String ACTIVITY_DEFINITION_ALREADY_DELETED = "Activity Definition with key '" + TEST_ACTIVITY_DEFN_KEY + "' is already in Deleted state.";
+    public static final String ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND = "Activity Definition Version Data with key '"+TEST_ACTIVITY_DEFN_VERSION_DATA_KEY+"' not found. Kindly check the activityDefnDataKey.";
+    public static final String ACTIVITY_DEFINITION_VERSION_NOT_FOUND = "Activity Definition Version with key '"+TEST_ACTIVITY_DEFN_VERSION_KEY+"' not found. Kindly check the activityDefnVersionKey.";
     public static final String ACTIVITY_DEFINITION_VERSION_UPDATED = "Activity Definition Version Updated.";
-    public static final String ACTIVITY_DEFINITION_VERSION_REQUIRED_SINGLE_FIELD_TO_UPDATE = "Activity Definition Version required single field to Update";
+    public static final String ACTIVITY_DEFINITION_VERSION_REQUIRED_SINGLE_FIELD_TO_UPDATE = "Complete Request Body cannot be empty, please provide atleast one input parameter for update";
+    public static final String ACTIVITY_DEFINITION_VERSION_IS_IN_FINAL_DELETE_STATUS = "Activity Definition Version is in FINAL/DELETE status.";
+    public static final String ACTIVITY_DEFN_KEY_WHICH_IS_ALREADY_IN_DELETED_STATE = "Cannot Update Activity Definition with key '"+TEST_ACTIVITY_DEFN_KEY+"' which is already in Deleted state.";
 
     @Mock
     protected ActivityDefnRepo activityDefnRepo;
@@ -90,6 +94,14 @@ public class BaseServiceTest {
 
     protected OngoingStubbing<Optional<ActivityDefnData>> mockActivityDefnDataFindById() {
         return Mockito.when(activityDefnDataRepo.findById(Mockito.any()));
+    }
+
+    protected OngoingStubbing<ActivityDefnVersion> mockActivityDefnVersionSave(ActivityDefnVersion activityDefnVersion) {
+        return Mockito.when(activityDefnVersionRepo.save(activityDefnVersion));
+    }
+
+    protected OngoingStubbing<Optional<ActivityDefnVersion>> mockActivityDefnVersionFindById() {
+        return Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString()));
     }
 
     //Static Request Object Creation
@@ -204,8 +216,8 @@ public class BaseServiceTest {
 
     protected ActivityDefnVersion getVCHActivityDefnVersionObj(){
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
-        activityDefnVersion.setActivityDefnKeyVersion("test");
-        activityDefnVersion.setActivityDefnKey("test");
+        activityDefnVersion.setActivityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY);
+        activityDefnVersion.setActivityDefnKey(TEST_ACTIVITY_DEFN_KEY);
         activityDefnVersion.setVersion(0.0);
         activityDefnVersion.setActivityDefnDataKey("test");
         activityDefnVersion.setCreatedBy("test");
@@ -221,8 +233,25 @@ public class BaseServiceTest {
 
     protected ActivityDefnVersion getDraftVCHActivityDefnVersionObj(){
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
-        activityDefnVersion.setActivityDefnKeyVersion("test");
-        activityDefnVersion.setActivityDefnKey("test");
+        activityDefnVersion.setActivityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY);
+        activityDefnVersion.setActivityDefnKey(TEST_ACTIVITY_DEFN_KEY);
+        activityDefnVersion.setVersion(0.0);
+        activityDefnVersion.setActivityDefnDataKey(TEST_ACTIVITY_DEFN_VERSION_DATA_KEY);
+        activityDefnVersion.setCreatedBy("test");
+        activityDefnVersion.setCreateTs(LocalDateTime.now());
+        activityDefnVersion.setIsDefault(true);
+        activityDefnVersion.setIsEncrypted(false);
+        activityDefnVersion.setEncryptionKey("test");
+        activityDefnVersion.setModifiedBy("test");
+        activityDefnVersion.setModifyTs(LocalDateTime.now());
+        activityDefnVersion.setStatus("DRAFT");
+        return activityDefnVersion;
+    }
+
+    protected ActivityDefnVersion getDeletedVCHActivityDefnVersionObj(){
+        ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
+        activityDefnVersion.setActivityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY);
+        activityDefnVersion.setActivityDefnKey(TEST_ACTIVITY_DEFN_KEY);
         activityDefnVersion.setVersion(0.0);
         activityDefnVersion.setActivityDefnDataKey("test");
         activityDefnVersion.setCreatedBy("test");
@@ -232,7 +261,7 @@ public class BaseServiceTest {
         activityDefnVersion.setEncryptionKey("test");
         activityDefnVersion.setModifiedBy("test");
         activityDefnVersion.setModifyTs(LocalDateTime.now());
-        activityDefnVersion.setStatus("DRAFT");
+        activityDefnVersion.setStatus(Status.DELETE.getStatus());
         return activityDefnVersion;
     }
 

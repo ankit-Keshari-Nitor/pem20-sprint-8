@@ -7,7 +7,7 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', filterK
     if (filterKey && searchKey) {
       url += `&${filterKey}=${searchKey}`;
     }
-    if (status != '') {
+    if (status !== '') {
       url += `&status=${status}`
     }
 

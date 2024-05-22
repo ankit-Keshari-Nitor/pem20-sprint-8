@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './activity-list.scss';
-import * as ActivityService from '../activity-service';
-import { NEW_ACTIVITY_URL, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL } from '../constants';
+import * as ActivityService from '../../activity-service'
+import { NEW_ACTIVITY_URL, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL } from '../../constants';
 import {
   OverflowMenu,
   OverflowMenuItem,
@@ -19,6 +19,7 @@ import {
   Pagination
 } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
+import { ActivityDropdown } from '../../components';
 
 export default function ActivityList() {
   const [totalRows, setTotalRows] = useState(0);
@@ -76,23 +77,14 @@ export default function ActivityList() {
   };
 
   const getActionItem = (status, id) => {
-    debugger
     if (status === "DRAFT") {
-      return (<Dropdown
-        id={`action-dropdown-${id}`}
-        items={ACTION_COLUMN_DRAFT}
-        label="Choose an action"
-        itemToString={(item) => (item ? item.label : '')}
-        onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)}
-      />);
+      return (
+        <ActivityDropdown id={id} items={ACTION_COLUMN_DRAFT} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />
+      );
     } else if (status === "FINAL") {
-      return (<Dropdown
-        id={`action-dropdown-${id}`}
-        items={ACTION_COLUMN_FINAL}
-        label="Choose an action"
-        itemToString={(item) => (item ? item.label : '')}
-        onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)}
-      />);
+      return (
+        <ActivityDropdown id={id} items={ACTION_COLUMN_FINAL} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />
+      );
     }
   };
 

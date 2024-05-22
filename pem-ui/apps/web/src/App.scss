@@ -4,3 +4,9 @@
     right: 20px;
     z-index: 9999;
 }
+
+@media (min-width: 82rem) {
+    .cds--modal-container {
+        inline-size: 25%;
+    }
+}

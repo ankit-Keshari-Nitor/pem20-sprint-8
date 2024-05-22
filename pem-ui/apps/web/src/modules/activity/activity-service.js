@@ -44,7 +44,7 @@ export const deleteActivityList = async (activityDefnKey) => {
 
     if (!response.ok) {
       console.error(`HTTP error! status: ${response.status}`);
-      return;
+      return undefined;
     }
 
     let responseMsg = await response.json()

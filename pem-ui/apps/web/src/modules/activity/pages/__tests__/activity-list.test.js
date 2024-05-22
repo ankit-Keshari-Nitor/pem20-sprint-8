@@ -2,28 +2,38 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import ActivityList from '../activity-list';
-import { getActivityList } from '../../activity-service';
+import userEvent from '@testing-library/user-event';
+import * as ActivityService from '../../activity-service'; // Import the service
 
 jest.mock('../../activity-service');
 
 describe('ActivityList', () => {
+
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it('renders correctly', async () => {
         const data = {
             content: [],
             pageContent: { totalElements: 0 },
         };
-        getActivityList.mockResolvedValue(Promise.resolve(data));
+        ActivityService.getActivityList.mockResolvedValue(Promise.resolve(data));
         const { container } = render(<ActivityList />);
         expect(container).toMatchSnapshot();
     });
 
     it('calls getActivityList on mount', () => {
-        getActivityList.mockResolvedValue({
+        ActivityService.getActivityList.mockResolvedValue({
             content: [],
             pageContent: { totalElements: 0 },
         });
         render(<ActivityList />);
-        expect(getActivityList).toHaveBeenCalledTimes(1);
+        expect(ActivityService.getActivityList).toHaveBeenCalledTimes(1);
     });
 
     it('updates searchKey state when search input changes', async () => {
@@ -31,14 +41,14 @@ describe('ActivityList', () => {
             content: [],
             pageContent: { totalElements: 0 },
         };
-        getActivityList.mockResolvedValue(Promise.resolve(data));
+        ActivityService.getActivityList.mockResolvedValue(Promise.resolve(data));
 
         const { getByPlaceholderText } = render(<ActivityList />);
         const searchInput = getByPlaceholderText('');
 
         fireEvent.change(searchInput, { target: { value: 'test' } });
 
-        await waitFor(() => expect(getActivityList).toHaveBeenCalledWith(
+        await waitFor(() => expect(ActivityService.getActivityList).toHaveBeenCalledWith(
             0,
             10,
             'ASC',
@@ -52,7 +62,7 @@ describe('ActivityList', () => {
             content: [],
             pageContent: { totalElements: 0 },
         };
-        getActivityList.mockResolvedValue(data);
+        ActivityService.getActivityList.mockResolvedValue(data);
 
         const { getByRole, getByText } = render(<ActivityList />);
 
@@ -61,7 +71,7 @@ describe('ActivityList', () => {
         const activityNameOption = getByText('Activity Name');
         fireEvent.click(activityNameOption);
 
-        await waitFor(() => expect(getActivityList).toHaveBeenCalledTimes(2));
+        await waitFor(() => expect(ActivityService.getActivityList).toHaveBeenCalledTimes(2));
     });
 
     it('calls handlePaginationChange when pagination changes', async () => {
@@ -69,11 +79,11 @@ describe('ActivityList', () => {
             content: [],
             pageContent: { totalElements: 0 },
         };
-        getActivityList.mockResolvedValue(data);
+        ActivityService.getActivityList.mockResolvedValue(data);
         const { getByText } = render(<ActivityList />);
         const paginationNextButton = getByText('Next page');
         fireEvent.click(paginationNextButton);
-        await waitFor(() => expect(getActivityList).toHaveBeenCalledTimes(1));
+        await waitFor(() => expect(ActivityService.getActivityList).toHaveBeenCalledTimes(1));
     });
 
     it('renders table with correct headers', async () => {
@@ -81,7 +91,7 @@ describe('ActivityList', () => {
             content: [],
             pageContent: { totalElements: 0 },
         };
-        getActivityList.mockResolvedValue(data);
+        ActivityService.getActivityList.mockResolvedValue(data);
         const { getByText } = render(<ActivityList />);
         await waitFor(() => {
             expect(getByText('Activity Name')).toBeInTheDocument();
@@ -98,18 +108,18 @@ describe('ActivityList', () => {
                 id: 1,
                 name: 'Activity 1',
                 encrypted: true,
-                status: 'active',
+                status: 'draft',
                 version: '1.0',
             },
             {
                 id: 2,
                 name: 'Activity 2',
                 encrypted: false,
-                status: 'inactive',
+                status: 'final',
                 version: '2.0',
             },
         ];
-        getActivityList.mockResolvedValue({
+        ActivityService.getActivityList.mockResolvedValue({
             content: data,
             pageContent: { totalElements: 2 },
         });
@@ -118,5 +128,44 @@ describe('ActivityList', () => {
         expect(getByText('Activity 1')).toBeInTheDocument();
         expect(getByText('Activity 2')).toBeInTheDocument();
     });
+
+    it('calls handleDeleteActivity and updates data', async () => {
+        const mockData = {
+            content: [{ id: '1', name: 'Test Activity' }],
+            pageContent: { totalElements: 1 },
+        };
+
+        const mockDeleteResponse = { response: 'Success' };
+
+        ActivityService.getActivityList.mockResolvedValue(mockData);
+        ActivityService.deleteActivityList.mockResolvedValue(mockDeleteResponse);
+
+        const { getByText, findByRole } = render(<ActivityList />);
+
+        await waitFor(() => {
+            expect(ActivityService.getActivityList).toHaveBeenCalledTimes(1);
+            expect(screen.getByText('Test Activity')).toBeInTheDocument();
+        });
+
+        const ellipsisButton = await findByRole('button', { name: /options/i });
+        userEvent.click(ellipsisButton);
+
+        const deleteButton = getByText(/Delete/i);
+        userEvent.click(deleteButton);
+
+        const deleteBtn = await findByRole('button', { name: /Delete/i });
+        userEvent.click(deleteBtn);
+
+        await waitFor(() => {
+            expect(ActivityService.deleteActivityList).toHaveBeenCalledTimes(1);
+            expect(ActivityService.getActivityList).toHaveBeenCalledTimes(2);
+        });
+
+        await waitFor(() => {
+            const element = screen.getByText('Test Activity');
+            expect(element).not.toBeNull();
+        });
+    });
+
 });
 

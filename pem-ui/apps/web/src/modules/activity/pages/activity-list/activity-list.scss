@@ -62,3 +62,20 @@ tbody tr:nth-child {
 .cds--data-table .cds--select-input {
   background-color: transparent !important;
 }
+
+
+.header-buttons {
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-end !important;
+  margin-bottom: 1rem !important;
+}
+
+.filter-dropdown,
+.import-button,
+.new-button {
+  margin-left: 8px !important;
+}

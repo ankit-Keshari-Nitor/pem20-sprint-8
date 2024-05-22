@@ -34,3 +34,24 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', filterK
     return [];
   }
 };
+
+export const deleteActivityList = async (activityDefnKey) => {
+  try {
+    let url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}`
+    const response = await fetch(url, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`);
+      return;
+    }
+
+    let responseMsg = await response.json()
+    return responseMsg.response;
+
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+    return [];
+  }
+};

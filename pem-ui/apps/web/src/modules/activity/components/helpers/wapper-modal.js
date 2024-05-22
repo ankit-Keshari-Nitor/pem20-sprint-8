@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal } from '@carbon/react';
 
 export default function WapperModal({ isOpen = false, setIsOpen, message = "", btnText = "", onPrimaryButtonClick }) {

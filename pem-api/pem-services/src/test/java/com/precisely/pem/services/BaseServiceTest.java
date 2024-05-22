@@ -49,7 +49,7 @@ public class BaseServiceTest {
     public static final String TEST_NAME = "test";
 
     //Response Messages
-    public static final String ACTIVITY_DEFINITION_NOT_FOUND = "Activity Definition with key '"+TEST_ACTIVITY_DEFN_KEY+"' not found. Kindly check the activityDefnKey.";;
+    public static final String ACTIVITY_DEFINITION_NOT_FOUND = "Activity Definition with key '"+TEST_ACTIVITY_DEFN_KEY+"' not found. Kindly check the activityDefnKey.";
     public static final String ACTIVITY_DEFINITION_ALREADY_DELETED = "Activity Definition with key '" + TEST_ACTIVITY_DEFN_KEY + "' is already in Deleted state.";
     public static final String ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND = "Activity Definition Version Data with key '"+TEST_ACTIVITY_DEFN_VERSION_DATA_KEY+"' not found. Kindly check the activityDefnDataKey.";
     public static final String ACTIVITY_DEFINITION_VERSION_NOT_FOUND = "Activity Definition Version with key '"+TEST_ACTIVITY_DEFN_VERSION_KEY+"' not found. Kindly check the activityDefnVersionKey.";

@@ -85,7 +85,7 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
 
     @Test
     void updateActivityDefinition_NotFoundActivityDefinition() throws Exception {
-        mockActivityDefnKey().thenReturn(null );
+        mockActivityDefnKey().thenReturn(Optional.empty() );
 
         Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build()));
         assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_NOT_FOUND);
@@ -116,9 +116,6 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
         MessageResp response = activityDefinitionService.deleteActivityDefinitionById(TEST_SPONSOR, TEST_KEY);
         assertNotNull(response);
     }
-
-
-
 
     @Test
     void deleteActivityDefinition_WithPartialDraftVersions() throws Exception {

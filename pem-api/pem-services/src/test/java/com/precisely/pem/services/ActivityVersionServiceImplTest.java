@@ -146,14 +146,6 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         assertNotNull(resp.getModifyTs());
     }
 
-    private OngoingStubbing<ActivityDefnVersion> mockActivityDefnVersionSave(ActivityDefnVersion activityDefnVersion) {
-        return Mockito.when(activityDefnVersionRepo.save(activityDefnVersion));
-    }
-
-    private OngoingStubbing<Optional<ActivityDefnVersion>> mockActivityDefnVersionFindById() {
-        return Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString()));
-    }
-
     @Test
     void testUpdateMarkAsFinalIfActivityVersionNotFound(){
         Optional<ActivityDefnVersion> activityDefnVersion = Optional.empty();

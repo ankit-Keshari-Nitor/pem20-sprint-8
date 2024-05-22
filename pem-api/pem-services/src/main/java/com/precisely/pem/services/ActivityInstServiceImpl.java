@@ -99,7 +99,7 @@ public class ActivityInstServiceImpl implements ActivityInstService{
                 .isDeleted(false)
                 .isCreatedByPartner(false)
                 .application(Application.PEM.getApp())
-                .sponsorKey(sponsorContext)
+                .sponsorKey(sponsorInfo.getSponsorKey())
                 .emailPref(null)
         .build();
 

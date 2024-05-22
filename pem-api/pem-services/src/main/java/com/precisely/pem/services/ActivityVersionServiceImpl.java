@@ -65,7 +65,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndIsDefault(activityDefnKey,status,sponsorInfo.getSponsorKey(),isDefault,pageable);
 
         if(defnsPage == null || defnsPage.isEmpty()) {
-            throw new ResourceNotFoundException("NA", "NoDataFound", "No data was found for the provided query parameter combination.");
+            throw new ResourceNotFoundException("", "NoDataFound", "No data was found for the provided query parameter combination.");
         }
         List<ActivityDefnVersion> listOfDefns = defnsPage.getContent();
         List<ActivityDefnVersionListResp> defnContent = new ArrayList<>();
@@ -96,7 +96,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
         Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(activityDefnKey, activityDefnVersionKey,sponsorInfo.getSponsorKey()));
         if(result.isEmpty()){
-            throw new ResourceNotFoundException("NA", "NoDataFound", "No data was found for the provided query parameter combination.");
+            throw new ResourceNotFoundException("", "NoDataFound", "No data was found for the provided query parameter combination.");
         }
         ModelMapper mapper = new ModelMapper();
         return mapper.map(result.get(), ActivityDefnVersionListResp.class);
@@ -212,13 +212,13 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         Optional<ActivityDefnVersion> versionObj = activityDefnVersionRepo.findById(activityDefnVersionKey);
 
         if(!versionObj.isPresent())
-            throw new ResourceNotFoundException("NA", "NoDataFound","No data was found for the provided query parameter combination.");
+            throw new ResourceNotFoundException("", "NoDataFound","No data was found for the provided query parameter combination.");
 
         if(!versionObj.get().getStatus().equalsIgnoreCase(Status.FINAL.getStatus()))
-            throw new ResourceNotFoundException("NA","InvalidVersionStatus","Version Status is DRAFT/DELETE.Hence can not mark it to Default.");
+            throw new ResourceNotFoundException("","InvalidVersionStatus","Version Status is DRAFT/DELETE.Hence can not mark it to Default.");
 
         if(versionObj.get().getIsDefault())
-            throw new ResourceNotFoundException("NA","AlreadyMarkedAsDefault","Version is already marked as Default.");
+            throw new ResourceNotFoundException("","AlreadyMarkedAsDefault","Version is already marked as Default.");
 
         ActivityDefnVersion version =versionObj.get();
         version.setIsDefault(Boolean.parseBoolean("true"));

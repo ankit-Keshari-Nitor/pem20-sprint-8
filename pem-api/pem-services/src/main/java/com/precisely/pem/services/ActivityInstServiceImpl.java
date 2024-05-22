@@ -72,8 +72,8 @@ public class ActivityInstServiceImpl implements ActivityInstService{
 
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
 
-        Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityInstReq.getActivityDefnVersionKey());
-        if(activityDefnVersion.get().getActivityDefnKey().isEmpty()){
+        ActivityDefnVersion activityDefnVersion = activityDefnVersionRepo.findByActivityDefnKeyVersion(activityInstReq.getActivityDefnVersionKey());
+        if(Objects.isNull(activityDefnVersion) || activityDefnVersion.getActivityDefnKey().isEmpty()){
             throw new ResourceNotFoundException("", "NoDataFound", "No data was found for activity version key '" + activityInstReq.getActivityDefnVersionKey() + "'.");
         }
 
@@ -85,7 +85,7 @@ public class ActivityInstServiceImpl implements ActivityInstService{
         activityInstDto = ActivityInstDto.builder()
                 .activityInstKey(UUID.randomUUID().toString())
                 .activityDefnKeyVersion(activityInstReq.getActivityDefnVersionKey())
-                .activityDefnKey(activityDefnVersion.get().getActivityDefnKey())
+                .activityDefnKey(activityDefnVersion.getActivityDefnKey())
                 .name(activityInstReq.getName())
                 .description(activityInstReq.getDescription())
                 .status(InstStatus.NEW.getInstStatus())

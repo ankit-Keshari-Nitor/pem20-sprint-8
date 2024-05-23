@@ -2,12 +2,12 @@
 import '@testing-library/jest-dom';
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import WapperModal from '../helpers/wapper-modal';
+import WrapperModal from '../helpers/wrapper-modal';
 
-describe('WapperModal component', () => {
+describe('WrapperModal component', () => {
 
     it('renders the modal with default props', () => {
-        const { getByText } = render(<WapperModal isOpen={true} />);
+        const { getByText } = render(<WrapperModal isOpen={true} />);
         expect(getByText('Confirmation')).toBeInTheDocument();
         expect(getByText('Cancel')).toBeInTheDocument();
     });
@@ -15,7 +15,7 @@ describe('WapperModal component', () => {
     it('calls onRequestClose when the modal is closed', () => {
         const onRequestClose = jest.fn();
         const setIsOpen = jest.fn();
-        const { getByText } = render(<WapperModal isOpen={true} setIsOpen={setIsOpen} onRequestClose={onRequestClose} />);
+        const { getByText } = render(<WrapperModal isOpen={true} setIsOpen={setIsOpen} onRequestClose={onRequestClose} />);
         fireEvent.click(getByText('Cancel'));
         expect(setIsOpen).toHaveBeenCalledTimes(1);
     });
@@ -23,7 +23,7 @@ describe('WapperModal component', () => {
     it('calls handlePrimaryButtonClick when the primary button is clicked', () => {
         const handlePrimaryButtonClick = jest.fn();
         const { getByText } = render(
-            <WapperModal
+            <WrapperModal
                 isOpen={true}
                 onRequestSubmit={handlePrimaryButtonClick}
                 primaryButtonText="Mark as final"
@@ -35,7 +35,7 @@ describe('WapperModal component', () => {
 
     it('renders the provided message', () => {
         const message = 'This is a test message';
-        const { getByText } = render(<WapperModal isOpen={true} message={message} />);
+        const { getByText } = render(<WrapperModal isOpen={true} message={message} />);
         expect(getByText(message)).toBeInTheDocument();
     });
 });

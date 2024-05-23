@@ -20,8 +20,8 @@ import {
 } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
 import ActivityDropdown from '../../components/actions-dropdown';
-import WapperModal from '../../components/helpers/wapper-modal';
-import WapperNotification from '../../components/helpers/wapper-notification-toast';
+import WrapperModal from '../../components/helpers/wrapper-modal';
+import WrapperNotification from '../../components/helpers/wrapper-notification-toast';
 
 export default function ActivityList() {
   // State hooks for managing various states
@@ -36,7 +36,7 @@ export default function ActivityList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionText, setActionText] = useState('');
   const [message, setMessage] = useState('');
-  const [selectedAction, setSelectedAction] = useState(null);
+  const [onPrimaryButtonClick, setOnPrimaryButtonClick] = useState(null); // Renamed state
   const [notificationProps, setNotificationProps] = useState(null);
 
   // Function to fetch and set data from the API
@@ -87,7 +87,7 @@ export default function ActivityList() {
       case 'markasfinal':
         setActionText("Mark as final");
         setMessage("The Activity can not be modified once you Mark as final. Do you want to Mark as final?");
-        setSelectedAction(() => () => handleMarkAsFinal(id));
+        setOnPrimaryButtonClick(() => () => handleMarkAsFinal(id)); // Updated
         break;
       default:
         return;
@@ -105,13 +105,14 @@ export default function ActivityList() {
       kind: 'success',
       onCloseButtonClick: () => setNotificationProps(null),
     });
+    setIsModalOpen(false);
   };
 
   // Handler for delete action initiation
   const handleDelete = (id) => {
     setActionText("Delete");
     setMessage("Are you sure you want to delete? The Activity status will be changed to Deleted.");
-    setSelectedAction(() => () => handleDeleteActivity(id));
+    setOnPrimaryButtonClick(() => () => handleDeleteActivity(id)); // Updated
     setIsModalOpen(true);
   };
 
@@ -147,6 +148,7 @@ export default function ActivityList() {
         onCloseButtonClick: () => setNotificationProps(null),
       });
     }
+    setIsModalOpen(false);
   };
 
   // Generate the ellipsis menu for each row
@@ -245,9 +247,11 @@ export default function ActivityList() {
           onChange={({ page, pageSize }) => handlePaginationChange(page, pageSize)}
         />
         {/* Modal for action confirmation */}
-        <WapperModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} btnText={actionText} message={message} onPrimaryButtonClick={selectedAction} />
+        <WrapperModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} modalHeading="Confirmation" secondaryButtonText="Cancel" primaryButtonText={actionText} onPrimaryButtonClick={onPrimaryButtonClick} onSecondaryButtonClick={() => setIsModalOpen(false)} >
+          {message}
+        </WrapperModal>
         {/* Notification toast */}
-        {notificationProps && <WapperNotification {...notificationProps} />}
+        {notificationProps && <WrapperNotification {...notificationProps} />}
       </TableContainer>
     </div>
   );

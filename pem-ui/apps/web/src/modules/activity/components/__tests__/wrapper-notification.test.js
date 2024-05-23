@@ -1,13 +1,13 @@
 import '@testing-library/jest-dom';
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import WapperNotification from '../helpers/wapper-notification-toast';
+import WrapperNotification from '../helpers/wrapper-notification-toast';
 
-describe('WapperNotification', () => {
+describe('WrapperNotification', () => {
     it('renders notification with correct props', () => {
         const mockOnClose = jest.fn();
         render(
-            <WapperNotification
+            <WrapperNotification
                 open={true}
                 title="Test Title"
                 subtitle="Test Subtitle"
@@ -32,7 +32,7 @@ describe('WapperNotification', () => {
 
     it('does not render notification when open is false', () => {
         render(
-            <WapperNotification
+            <WrapperNotification
                 open={false}
                 title="Test Title"
                 subtitle="Test Subtitle"

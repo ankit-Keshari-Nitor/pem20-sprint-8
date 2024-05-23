@@ -1,4 +1,4 @@
 import WapperModal from "./wapper-modal";
-import WapperNotification from "./wapper-notification-toast";
+import WrapperNotification from "./wapper-notification-toast";
 
-export { WapperModal, WapperNotification }
+export { WapperModal, WrapperNotification }

@@ -96,15 +96,54 @@ export default function ActivityList() {
   };
 
   // Handler for marking activity as final
-  const handleMarkAsFinal = (id) => {
-    // Implement the Mark as Final API call here
-    setNotificationProps({
-      open: true,
-      title: 'Success - ',
-      subtitle: 'Action completed successfully!',
-      kind: 'success',
-      onCloseButtonClick: () => setNotificationProps(null),
-    });
+  const handleMarkAsFinal = async (id) => {
+
+    try {
+      let activityVersionKey;
+      const response = await ActivityService.getActivityVersionkey(pageNo - 1, pageSize, sortDir, status, true, id);
+
+      if (response !== undefined) {
+        activityVersionKey = response[0].activityDefnKeyVersion;
+
+        const responseStatus = await ActivityService.markactivitydefinitionasfinal(id, activityVersionKey);
+
+        if (responseStatus !== undefined) {
+          fetchAndSetData();
+          setNotificationProps({
+            open: true,
+            title: 'Success - ',
+            subtitle: 'Action completed successfully!',
+            kind: 'success',
+            onCloseButtonClick: () => setNotificationProps(null),
+          });
+        } else {
+          setNotificationProps({
+            open: true,
+            title: 'Error - ',
+            subtitle: 'Action not completed successfully!',
+            kind: 'error',
+            onCloseButtonClick: () => setNotificationProps(null),
+          });
+        }
+      } else {
+        setNotificationProps({
+          open: true,
+          title: 'Error - ',
+          subtitle: 'Action not completed successfully!',
+          kind: 'error',
+          onCloseButtonClick: () => setNotificationProps(null),
+        });
+      }
+    } catch (error) {
+      console.error('Failed to mark as final activity:', error);
+      setNotificationProps({
+        open: true,
+        title: 'Error - ',
+        subtitle: 'Failed to mark as final activity',
+        kind: 'error',
+        onCloseButtonClick: () => setNotificationProps(null),
+      });
+    }
     setIsModalOpen(false);
   };
 

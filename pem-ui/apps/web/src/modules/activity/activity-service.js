@@ -55,3 +55,65 @@ export const deleteActivityList = async (activityDefnKey) => {
     return [];
   }
 };
+
+export const getActivityVersionkey = async (pageNo, pageSize, sortDir = "ASC", status = '', isDefault = '', activityDefnKey) => {
+  try {
+    let url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}/versions?isDefault=${isDefault}&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}&status=${status}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`);
+      return undefined;
+    }
+
+    const responseBody = await response.text();
+    try {
+      const jsonData = JSON.parse(responseBody);
+      return jsonData.content;
+    } catch (jsonError) {
+      console.error('Error parsing JSON:', jsonError);
+      return [];
+    }
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+    return [];
+  }
+
+}
+
+export const markactivitydefinitionasfinal = async (activityDefnKey, activityDefnKeyVersion) => {
+  try {
+    let url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}/versions/${activityDefnKeyVersion}/actions/markAsFinal`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json'
+      },
+      body: ''
+    });
+
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`);
+      return undefined;
+    }
+
+    const responseBody = await response.text();
+    try {
+      const responseStatus = JSON.parse(responseBody);
+      return responseStatus.status;
+    } catch (jsonError) {
+      console.error('Error parsing JSON:', jsonError);
+      return [];
+    }
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+    return [];
+  }
+}

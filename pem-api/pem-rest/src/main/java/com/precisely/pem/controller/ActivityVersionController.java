@@ -9,6 +9,7 @@ import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
+import com.precisely.pem.exceptionhandler.AlreadyDeletedException;
 import com.precisely.pem.exceptionhandler.ErrorResponseDto;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
@@ -103,12 +104,12 @@ public class ActivityVersionController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Object> createActivityDefinition(@PathVariable(value = "sponsorContext")String sponsorContext,
-                                                           @PathVariable(value = "activityDefnKey")String activityDefnKey,
-                                                           @Valid ActivityVersionReq activityVersionReq
-    ) throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException {
+    public ResponseEntity<Object> createActivityDefinitionVersion(@PathVariable(value = "sponsorContext")String sponsorContext,
+                                                                  @PathVariable(value = "activityDefnKey")String activityDefnKey,
+                                                                  @Valid ActivityVersionReq activityVersionReq
+    ) throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, AlreadyDeletedException {
         ActivityDefnVersionResp activityDefnVersionResp = activityVersionService.createActivityDefnVersion(sponsorContext, activityDefnKey, activityVersionReq);
-        Link link = linkTo(methodOn(ActivityVersionController.class).createActivityDefinition(sponsorContext, activityDefnKey, activityVersionReq)).withSelfRel();
+        Link link = linkTo(methodOn(ActivityVersionController.class).createActivityDefinitionVersion(sponsorContext, activityDefnKey, activityVersionReq)).withSelfRel();
         activityDefnVersionResp.setLocation(link.getHref());
         HttpHeaders headers = new HttpHeaders();
         headers.set("location", activityDefnVersionResp.getLocation());

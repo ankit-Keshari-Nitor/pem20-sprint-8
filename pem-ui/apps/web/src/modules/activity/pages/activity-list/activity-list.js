@@ -107,7 +107,7 @@ export default function ActivityList() {
 
         const responseStatus = await ActivityService.markactivitydefinitionasfinal(id, activityVersionKey);
 
-        if (responseStatus !== undefined) {
+        if (responseStatus !== undefined && responseStatus === "FINAL") {
           fetchAndSetData();
           setNotificationProps({
             open: true,

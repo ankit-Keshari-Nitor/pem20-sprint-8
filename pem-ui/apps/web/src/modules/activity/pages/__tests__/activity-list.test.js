@@ -129,7 +129,7 @@ describe('ActivityList', () => {
         expect(getByText('Activity 2')).toBeInTheDocument();
     });
 
-    it('calls handleDeleteActivity and updates data', async () => {
+    it('call handleDeleteActivity and updates data', async () => {
         const mockData = {
             content: [{ id: '1', name: 'Test Activity' }],
             pageContent: { totalElements: 1 },
@@ -167,5 +167,36 @@ describe('ActivityList', () => {
         });
     });
 
+    it('call handleMarkAsFinal when clicking on "Mark as final" from action column dropdown', async () => {
+        ActivityService.getActivityList.mockResolvedValue({
+            content: [{ activityDefnKey: '123', name: 'Test Activity', encrypted: false, status: 'DRAFT', versions: '1.0' }],
+            pageContent: { totalElements: 1 }
+        });
+        const activityDefnKey = '123';
+        const activityDefnKeyVersion = '1.0';
+
+        const getActivityVersionkeyMock = jest.fn().mockResolvedValue([{ activityDefnKeyVersion: '1.0' }]);
+        const markactivitydefinitionasfinalMock = jest.fn().mockResolvedValue({ status: 'FINAL' });
+
+        ActivityService.getActivityVersionkey.mockImplementation(getActivityVersionkeyMock);
+        ActivityService.markactivitydefinitionasfinal.mockImplementation(markactivitydefinitionasfinalMock);
+
+        const { findByText, findByRole } = render(<ActivityList />);
+
+        const filterDropdownButton = await findByText('Choose an action');
+        fireEvent.click(filterDropdownButton);
+
+        const filterDropdown = await findByRole('combobox', { name: 'Choose an action' });
+        expect(filterDropdown).toBeInTheDocument();
+
+        const markAsFinalOption = await findByText('Mark as final');
+        fireEvent.click(markAsFinalOption);
+
+        const markasfinalBtn = await findByRole('button', { name: /Mark as final/i });
+        userEvent.click(markasfinalBtn);
+
+        await waitFor(() => expect(getActivityVersionkeyMock).toHaveBeenCalledTimes(1));
+        await waitFor(() => expect(markactivitydefinitionasfinalMock).toHaveBeenCalledTimes(1));
+    });
 });
 

@@ -87,7 +87,7 @@ export const getActivityVersionkey = async (pageNo, pageSize, sortDir = "ASC", s
 
 }
 
-export const markactivitydefinitionasfinal = async (activityDefnKey, activityDefnKeyVersion) => {
+export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDefnKeyVersion) => {
   try {
     let url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}/versions/${activityDefnKeyVersion}/actions/markAsFinal`;
 

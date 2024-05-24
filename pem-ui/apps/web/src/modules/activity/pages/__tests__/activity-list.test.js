@@ -179,7 +179,7 @@ describe('ActivityList', () => {
         const markactivitydefinitionasfinalMock = jest.fn().mockResolvedValue({ status: 'FINAL' });
 
         ActivityService.getActivityVersionkey.mockImplementation(getActivityVersionkeyMock);
-        ActivityService.markactivitydefinitionasfinal.mockImplementation(markactivitydefinitionasfinalMock);
+        ActivityService.markActivityDefinitionAsFinal.mockImplementation(markactivitydefinitionasfinalMock);
 
         const { findByText, findByRole } = render(<ActivityList />);
 

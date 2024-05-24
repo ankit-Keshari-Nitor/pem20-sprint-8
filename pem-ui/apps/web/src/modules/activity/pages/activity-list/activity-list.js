@@ -105,7 +105,7 @@ export default function ActivityList() {
       if (response !== undefined) {
         activityVersionKey = response[0].activityDefnKeyVersion;
 
-        const responseStatus = await ActivityService.markactivitydefinitionasfinal(id, activityVersionKey);
+        const responseStatus = await ActivityService.markActivityDefinitionAsFinal(id, activityVersionKey);
 
         if (responseStatus !== undefined && responseStatus === "FINAL") {
           fetchAndSetData();

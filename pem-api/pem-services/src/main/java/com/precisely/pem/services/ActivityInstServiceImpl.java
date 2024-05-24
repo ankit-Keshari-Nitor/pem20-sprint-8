@@ -74,7 +74,7 @@ public class ActivityInstServiceImpl implements ActivityInstService{
 
         ActivityDefnVersion activityDefnVersion = activityDefnVersionRepo.findByActivityDefnKeyVersion(activityInstReq.getActivityDefnVersionKey());
         if(Objects.isNull(activityDefnVersion) || activityDefnVersion.getActivityDefnKey().isEmpty()){
-            throw new ResourceNotFoundException("", "NoDataFound", "No data was found for activity version key '" + activityInstReq.getActivityDefnVersionKey() + "'.");
+            throw new ResourceNotFoundException("NoDataFound", "No data was found for activity version key '" + activityInstReq.getActivityDefnVersionKey() + "'.");
         }
 
         validatePartners(activityInstReq.getPartners());
@@ -200,10 +200,10 @@ public class ActivityInstServiceImpl implements ActivityInstService{
                 }
             }
             if(!noPartnerKey.isEmpty()) {
-                throw new ResourceNotFoundException("", "Partner", "The Partner with keys " + noPartnerKey + " not found. Please check partner details.");
+                throw new ResourceNotFoundException("Partner", "The Partner with keys " + noPartnerKey + " not found. Please check partner details.");
             }
             if(!invalidPartnerKey.isEmpty()) {
-                throw new ResourceNotFoundException("", "Partner", "The Partner with keys " + invalidPartnerKey + " are not 'APPROVED'. Please check partner details.");
+                throw new ResourceNotFoundException("Partner", "The Partner with keys " + invalidPartnerKey + " are not 'APPROVED'. Please check partner details.");
             }
         }
     }

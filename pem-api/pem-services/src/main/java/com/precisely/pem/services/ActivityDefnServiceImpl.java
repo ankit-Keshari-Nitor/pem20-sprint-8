@@ -85,7 +85,7 @@
                         application, status, pageable);
             }
             if(defnsPage == null || defnsPage.isEmpty()) {
-                throw new ResourceNotFoundException("","NoDataFound", "No data was found for the provided query parameter combination.");
+                throw new ResourceNotFoundException("NoDataFound", "No data was found for the provided query parameter combination.");
             }
             List<ActivityDefn> listOfDefns = defnsPage.getContent();
             List<ActivityDefnListResp> defnContent = new ArrayList<>();
@@ -151,7 +151,7 @@
             ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
                     UUID.randomUUID().toString(), activityDefnobj.getActivityDefnKey(),
                     activityDefnData.getActivityDefnDataKey(), ApplicationConstants.DEFAULT_VERSION,
-                    String.valueOf(Status.DRAFT), false, false,
+                    String.valueOf(Status.DRAFT), true, false,
                     "", LocalDateTime.now(), "", LocalDateTime.now(),
                     "", ApplicationConstants.SCHEMA_VERSION,activityDefnReq.getDescription());
             activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
@@ -168,7 +168,7 @@
             SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
             Optional<ActivityDefn> result = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, sponsorInfo.getSponsorKey()));;
             if(result.isEmpty()){
-                throw new ResourceNotFoundException("", "NoDataFound", "No data was found for the provided query parameter combination.");
+                throw new ResourceNotFoundException("NoDataFound", "No data was found for the provided query parameter combination.");
             }
             ModelMapper mapper = new ModelMapper();
             return mapper.map(result.get(), ActivityDefnListResp.class);

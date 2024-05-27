@@ -6,6 +6,9 @@ group = 'com.precisely.pem'
 version = '1.0-SNAPSHOT'
 
 repositories {
+    maven {
+        url 'https://artifacts.alfresco.com/nexus/content/repositories/activiti-releases'
+    }
     mavenCentral()
 }
 
@@ -16,7 +19,8 @@ configurations {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-}
+    implementation 'org.activiti:activiti-spring-boot-starter:8.0.0'
+   }
 
 test {
     useJUnitPlatform()

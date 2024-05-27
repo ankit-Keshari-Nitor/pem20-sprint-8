@@ -197,9 +197,10 @@ export default function ActivityList() {
   const getEllipsis = (id) => {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
+        <OverflowMenuItem itemText="View" />
         <OverflowMenuItem itemText="Edit" />
         <OverflowMenuItem itemText="Export" />
-        <OverflowMenuItem itemText="Save as" />
+        <OverflowMenuItem itemText="Create Version" />
         <OverflowMenuItem itemText="Delete" onClick={() => handleDelete(id)} />
       </OverflowMenu>
     );

@@ -6,6 +6,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +38,11 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     @Override
     public ProcessInstance startProcessInstanceByKey(String processDefinitionKey) {
         return runtimeService.startProcessInstanceByKey(processDefinitionKey);
+    }
+
+    @Override
+    public ProcessInstance startProcessInstanceByKey(String processDefinitionKey, Map<String, Object> variables) {
+        return runtimeService.startProcessInstanceByKey(processDefinitionKey, variables);
     }
 
     @Override
@@ -84,9 +91,14 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     }
 
     @Override
-    public void deployProcessDefinition(String pathToBpmnFile) {
+    public Deployment deployProcessDefinition(String name, String bpmnData) {
+       return repositoryService.createDeployment().addBytes(name, bpmnData.getBytes(StandardCharsets.UTF_8)).deploy();
+    }
+
+    @Override
+    public Deployment deployProcessDefinition(String pathToBpmnFile) {
         try (InputStream inputStream = new FileInputStream(pathToBpmnFile)) {
-            repositoryService.createDeployment()
+            return repositoryService.createDeployment()
                     .addInputStream(pathToBpmnFile, inputStream)
                     .deploy();
         } catch (IOException e) {

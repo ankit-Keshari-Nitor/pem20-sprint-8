@@ -2,6 +2,7 @@ package com.precisely.pem.service;
 
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.security.core.userdetails.User;
@@ -21,7 +22,18 @@ public interface PEMActivitiService {
      */
     ProcessInstance startProcessInstanceByKey(String processDefinitionKey);
 
+
     /**
+     * Starts a new process instance using the given process definition key.
+     *
+     * @param processDefinitionKey the key of the process definition to start
+     * @param variables the initial variables for the process definition to start
+     * @return the started ProcessInstance
+     */
+    ProcessInstance startProcessInstanceByKey(String processDefinitionKey, Map<String, Object> variables);
+
+
+    /*
      * Starts a new process instance using the given process definition ID.
      *
      * @param processDefinitionId the ID of the process definition to start
@@ -96,9 +108,19 @@ public interface PEMActivitiService {
     /**
      * Deploys a process definition from a given BPMN file path.
      *
-     * @param pathToBpmnFile the path to the BPMN file to deploy
+     * @param name the name of the definition to deploy
+     * @param bpmnData the data of the definition to deploy
+     * @return the ProcessDefinition with the Deployment details
      */
-    void deployProcessDefinition(String pathToBpmnFile);
+    Deployment deployProcessDefinition(String name, String bpmnData);
+
+    /**
+     * Deploys a process definition from a given BPMN file path.
+     *
+     * @param pathToBpmnFile the path to the BPMN file to deploy
+     * @return the ProcessDefinition with the Deployment details
+     */
+    Deployment deployProcessDefinition(String pathToBpmnFile);
 
     /**
      * Suspends a process definition by its ID.

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Modal } from '@carbon/react';
 
-export default function WapperModal({ isOpen = false, setIsOpen, primaryButtonText = "", onSecondaryButtonClick, onPrimaryButtonClick, secondaryButtonText, modalHeading, children }) {
+export default function WrapperModal({ isOpen = false, setIsOpen, primaryButtonText = "", onSecondaryButtonClick, onPrimaryButtonClick, secondaryButtonText, modalHeading, children }) {
 
     return (
         <>

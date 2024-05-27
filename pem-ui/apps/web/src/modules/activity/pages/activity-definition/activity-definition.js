@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Designer from '@b2bi/flow-designer';
 import { Button, Column, Grid } from '@carbon/react';
 import './activity-definition.css';
-import { CLoneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
+import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
 import useActivitykStore from '../../store';
 
 export default function ActivityDefinition() {
@@ -27,7 +27,7 @@ export default function ActivityDefinition() {
     <>
       <Grid className="activity-actions">
         <Column>
-          <CLoneIcon />
+          <CloneIcon />
         </Column>
         <Column>
           <PlayIcon />

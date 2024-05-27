@@ -13,8 +13,7 @@ body {
   width: 30% !important;
 }
 
-.cds--dropdown,
-.cds--list-box {
+.cds--dropdown {
   top: 15% !important;
 }
 
@@ -61,4 +60,30 @@ tbody tr:nth-child {
 .cds--data-table .cds--text-input,
 .cds--data-table .cds--select-input {
   background-color: transparent !important;
+}
+
+
+.header-buttons {
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-end !important;
+  margin-bottom: 1rem !important;
+}
+
+.filter-dropdown,
+.import-button,
+.new-button {
+  margin-left: 8px !important;
+}
+
+.cds--search--expandable,
+.cds--search--expanded {
+  inline-size: 170% !important;
+}
+
+.no-records-message {
+  text-align: center !important;
 }

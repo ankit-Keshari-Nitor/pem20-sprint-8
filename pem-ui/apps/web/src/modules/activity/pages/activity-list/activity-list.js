@@ -6,7 +6,7 @@ import {
   OverflowMenu,
   OverflowMenuItem,
   ExpandableSearch,
-  MultiSelect,
+  Dropdown,
   Button,
   DataTable,
   TableContainer,
@@ -26,6 +26,7 @@ import WrapperNotification from '../../components/helpers/wrapper-notification-t
 export default function ActivityList() {
   // State hooks for managing various states
   const [totalRows, setTotalRows] = useState(0);
+  const [filterKey, setFilterKey] = useState('');
   const [searchKey, setSearchKey] = useState('');
   const [sortDir, setSortDir] = useState('ASC'); // Sorting direction state
   const [pageNo, setPageNo] = useState(1);
@@ -40,7 +41,7 @@ export default function ActivityList() {
 
   // Function to fetch and set data from the API
   const fetchAndSetData = useCallback(() => {
-    ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status).then((data) => {
+    ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, filterKey, searchKey, status).then((data) => {
       setRows(data.content);
       setTotalRows(data.pageContent.totalElements);
     }).catch(error => {
@@ -53,7 +54,7 @@ export default function ActivityList() {
         onCloseButtonClick: () => setNotificationProps(null),
       });
     });
-  }, [pageNo, pageSize, sortDir, searchKey, status]);
+  }, [pageNo, pageSize, sortDir, filterKey, searchKey, status]);
 
   // useEffect to trigger fetchAndSetData whenever dependencies change
   useEffect(() => {
@@ -68,13 +69,9 @@ export default function ActivityList() {
   };
 
   // Handler for changing filter selection
-  const handleFilterChange = (selectedItems) => {
-    if (Array.isArray(selectedItems.selectedItems)) {
-      const selectedIds = selectedItems.selectedItems.map(item => item.id);
-      setStatus(selectedIds.join(","));
-    } else {
-      setStatus([]);
-    }
+  const handleFilterChange = (e) => {
+    const selectedFilter = e.selectedItem ? e.selectedItem.id : '';
+    setFilterKey(selectedFilter);
   };
 
   // Handler for pagination changes
@@ -208,7 +205,7 @@ export default function ActivityList() {
 
   // Generate action items based on the activity status
   const getActionItem = (status, id) => {
-    if (status === "DRAFT" || status === "") {
+    if (status === "DRAFT") {
       return (
         <ActivityDropdown id={id} items={ACTION_COLUMN_DRAFT} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />
       );
@@ -224,7 +221,7 @@ export default function ActivityList() {
       <TableContainer title="Activity Definitions">
         <div className='header-buttons'>
           {/* Search, New, Import buttons */}
-          <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
+          <ExpandableSearch labelText="Search" placeholder="" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
           <Button className="new-button" renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
             New
           </Button>
@@ -232,22 +229,17 @@ export default function ActivityList() {
             Import
           </Button>
           {/* Filter dropdown */}
-          <MultiSelect
+          <Dropdown
             className="filter-dropdown"
             id="filter-dropdown"
             titleText=""
-            label="Filter Option"
-            items={[
-              { id: 'DRAFT', text: 'DRAFT' },
-              { id: 'FINAL', text: 'FINAL' },
-              { id: 'DELETE', text: 'DELETE' }
-            ]}
+            label="Select Filter"
+            items={[{ id: 'name', text: 'Activity Name' }]}
             itemToString={(item) => (item ? item.text : '')}
-            onChange={handleFilterChange} // Ensure this is correctly set to your onChange handler
+            onChange={handleFilterChange}
           />
         </div>
         {/* Data Table */}
-
         <DataTable rows={rows} headers={ACTIVITY_LIST_COLUMNS} isSortable>
           {({ rows, headers, getHeaderProps, getRowProps, getTableProps }) => (
             <Table {...getTableProps()}>
@@ -267,24 +259,18 @@ export default function ActivityList() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.length > 0 ? (
-                  rows.map((row) => (
-                    <TableRow {...getRowProps({ row })} key={row.id}>
-                      {row.cells.map((cell) => (
-                        <TableCell key={cell.id}>
-                          {cell.info.header === 'action' ? getActionItem(status, row.id)
-                            : cell.info.header === 'ellipsis' ? getEllipsis(row.id)
-                              : cell.value
-                          }
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={headers.length} className="no-records-message">No records found</TableCell>
+                {rows.map((row) => (
+                  <TableRow {...getRowProps({ row })} key={row.id}>
+                    {row.cells.map((cell) => (
+                      <TableCell key={cell.id}>
+                        {cell.info.header === 'action' ? getActionItem(status, row.id)
+                          : cell.info.header === 'ellipsis' ? getEllipsis(row.id)
+                            : cell.value
+                        }
+                      </TableCell>
+                    ))}
                   </TableRow>
-                )}
+                ))}
               </TableBody>
             </Table>
           )}
@@ -294,7 +280,7 @@ export default function ActivityList() {
           backwardText="Previous page"
           forwardText="Next page"
           itemsPerPageText="Items per page:"
-          totalItems={totalRows !== undefined ? totalRows : 0}
+          totalItems={totalRows}
           pageSize={pageSize}
           pageSizes={[5, 10, 20, 50]}
           page={pageNo}

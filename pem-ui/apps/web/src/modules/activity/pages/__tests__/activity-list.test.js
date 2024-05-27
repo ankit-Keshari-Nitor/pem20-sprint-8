@@ -66,7 +66,7 @@ describe('ActivityList', () => {
 
         const { getByRole, getByText } = render(<ActivityList />);
 
-        const filterDropdown = getByRole('combobox', { name: 'Filter Option' });
+        const filterDropdown = getByRole('combobox', { name: 'Select Filter' });
         fireEvent.mouseDown(filterDropdown);
         const activityNameOption = getByText('Activity Name');
         fireEvent.click(activityNameOption);

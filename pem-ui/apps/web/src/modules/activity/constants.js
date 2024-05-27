@@ -9,7 +9,7 @@ export const ACTIVITY_LIST_COLUMNS = [
   { key: 'encrypted', header: 'Encrypted' },
   { key: 'status', header: 'Current Status' },
   { key: 'version', header: 'Default Version' },
-  { key: 'action', header: 'Actions' },
+  { key: 'action', header: 'Action' },
   { key: 'ellipsis', header: '' }
 ];
 

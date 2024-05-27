@@ -1,7 +1,3 @@
-import React from 'react';
+import ActivityDefinition from './activity-definition';
 
-import Designer from '@b2bi/flow-designer';
-
-export default function ActivityDefinition() {
-  return <Designer.WorkFlowDesigner />;
-}
+export default ActivityDefinition;

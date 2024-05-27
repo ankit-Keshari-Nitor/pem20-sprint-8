@@ -3,12 +3,13 @@ import { Modal, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 import './system-task-definition.scss';
 import ExitValidationFrom from '../../exit-validation-form';
 import SystemDefineForm from './system-define-form';
+import useTaskStore from '../../../store';
 
 export default function SystemTaskDefinitionForm({ selectedNode }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
-  
-  const onSubmitDefinitionForm = (data) => {
-    console.log('onSubmitDefinitionForm', data);
+  const edit = useTaskStore((state) => state.editTaskNodePros);
+  const onSubmitDefinitionForm = (values) => {
+    edit(selectedNode, 'editableProps', values);
   };
 
   return (
@@ -21,7 +22,7 @@ export default function SystemTaskDefinitionForm({ selectedNode }) {
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <SystemDefineForm id={'system-define-form'} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
+            <SystemDefineForm id={'system-define-form'} selectedNode={selectedNode} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>

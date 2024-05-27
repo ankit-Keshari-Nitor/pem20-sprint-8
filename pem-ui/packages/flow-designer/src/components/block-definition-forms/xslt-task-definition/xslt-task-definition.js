@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Form, Select, SelectItem, TextArea, Checkbox, Button, Tabs, TabList, Tab, TabPanels, TabPanel, Column, Grid, Modal } from '@carbon/react';
+import { Tabs, TabList, Tab, TabPanels, TabPanel, Modal } from '@carbon/react';
 import '../style.scss';
 import ExitValidationFrom from '../../exit-validation-form';
 import XsltDefineForm from './xslt-define-form';
 import XsltPropertyForm from './xslt-properties-form';
-import useActivityStore from '../../../store';
+import useTaskStore from '../../../store';
 
 export default function XsltTaskDefinitionForm({ selectedNode, selectedTaskNode }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
-  const edit = useActivityStore((state) => state.editDialogNodePros);
+  const edit = useTaskStore((state) => state.editDialogNodePros);
   const onSubmitDefinitionForm = (values) => {
     edit(selectedNode, selectedTaskNode, 'editableProps', values);
   };
@@ -16,7 +16,7 @@ export default function XsltTaskDefinitionForm({ selectedNode, selectedTaskNode 
   const onSubmitPropertyForm = (data) => {
     console.log('onSubmitPropertyForm', data);
   };
-  
+
   return (
     <div className="activity-form">
       <Tabs>

@@ -1,34 +1,34 @@
 import { create } from 'zustand';
 import { TASK_INITIAL_NODES } from '../constants';
 
-const activityStore = (set, get) => ({
-  activities: {
+const taskStore = (set, get) => ({
+  tasks: {
     taskNodes: TASK_INITIAL_NODES,
     taskEdges: []
   },
   // Task Flow States
   addTaskNodes: (activity) => {
     set((state) => ({
-      activities: { taskNodes: state.activities.taskNodes.concat(activity), taskEdges: state.activities.taskEdges }
+      tasks: { taskNodes: state.tasks.taskNodes.concat(activity), taskEdges: state.tasks.taskEdges }
     }));
   },
   editTaskNodePros: (activity, props, value) => {
     set((state) => {
-      const copyNodes = state.activities.taskNodes;
+      const copyNodes = state.tasks.taskNodes;
       copyNodes.map((copyNode) => {
         if (activity.id === copyNode.id) {
           copyNode.data[props] = value;
         }
         return copyNode;
       });
-      return { activities: { taskNodes: copyNodes, taskEdges: state.activities.taskEdges } };
+      return { tasks: { taskNodes: copyNodes, taskEdges: state.tasks.taskEdges } };
     });
   },
 
   // Dialog Flow States
   addDialogNodes: (taskNode, dialogNode) => {
     set((state) => {
-      const taskNodeData = state.activities.taskNodes.map((node) => {
+      const taskNodeData = state.tasks.taskNodes.map((node) => {
         if (node.id === taskNode.id) {
           const {
             data: { dialogNodes, ...restdata },
@@ -40,12 +40,12 @@ const activityStore = (set, get) => ({
           return node;
         }
       });
-      return { activities: { taskNodes: taskNodeData, taskEdges: state.activities.taskEdges } };
+      return { tasks: { taskNodes: taskNodeData, taskEdges: state.tasks.taskEdges } };
     });
   },
   editDialogNodePros: (activity, taskNode, props, value) => {
     set((state) => {
-      const copyNodes = state.activities.taskNodes;
+      const copyNodes = state.tasks.taskNodes;
       copyNodes.map((copyNode) => {
         if (taskNode.id === copyNode.id) {
           const {
@@ -61,44 +61,12 @@ const activityStore = (set, get) => ({
         }
         return copyNode;
       });
-      return { activities: { taskNodes: copyNodes, taskEdges: state.activities.taskEdges } };
+      return { tasks: { taskNodes: copyNodes, taskEdges: state.tasks.taskEdges } };
     });
-  },
-  issueActivity: (id) => {
-    const activities = get().activities;
-    const updatedActivities = activities?.map((activity) => {
-      if (activity.id === id) {
-        return {
-          ...activity,
-          status: 'issued'
-        };
-      } else {
-        return activity;
-      }
-    });
-    set((state) => ({
-      activities: updatedActivities
-    }));
-  },
-  returnActivity: (id) => {
-    const activities = get().activities;
-    const updatedActivities = activities?.map((activity) => {
-      if (activity.id === id) {
-        return {
-          ...activity,
-          status: 'available'
-        };
-      } else {
-        return activity;
-      }
-    });
-    set((state) => ({
-      activities: updatedActivities
-    }));
   },
   reset: () => {
     set({
-      activities: {
+      tasks: {
         taskNodes: TASK_INITIAL_NODES,
         taskEdges: []
       }
@@ -106,6 +74,6 @@ const activityStore = (set, get) => ({
   }
 });
 
-const useActivityStore = create(activityStore);
+const useTaskStore = create(taskStore);
 
-export default useActivityStore;
+export default useTaskStore;

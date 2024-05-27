@@ -3,12 +3,13 @@ import { Modal, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 import '../style.scss';
 import ExitValidationFrom from '../../exit-validation-form/exit-validation-form';
 import SponsorDefineForm from './sponsor-define-form';
+import useTaskStore from '../../../store';
 
 export default function SponsorTaskDefinitionForm({ selectedNode }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
-
-  const onSubmitDefinitionForm = (data) => {
-    console.log('onSubmitDefinitionForm', data);
+  const edit = useTaskStore((state) => state.editTaskNodePros);
+  const onSubmitDefinitionForm = (values) => {
+    edit(selectedNode, 'editableProps', values);
   };
 
   return (
@@ -21,7 +22,7 @@ export default function SponsorTaskDefinitionForm({ selectedNode }) {
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <SponsorDefineForm id={'partner-define-form'} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
+            <SponsorDefineForm id={'partner-define-form'} selectedNode={selectedNode} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>

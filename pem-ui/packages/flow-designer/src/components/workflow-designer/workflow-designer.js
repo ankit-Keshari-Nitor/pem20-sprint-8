@@ -19,10 +19,11 @@ import {
   DIALOG_INITIAL_NODES,
   DIALOG_NODE_TYPES,
   DIALOG_EDGE_TYPES,
-  NODE_TYPE
+  NODE_TYPE,
+  TASK_INITIAL_NODES
 } from '../../constants';
-import useActivityStore from '../../store/useActivityStore';
 import { useEffect } from 'react';
+import useTaskStore from '../../store';
 
 let dialogId = 0;
 const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
@@ -30,16 +31,16 @@ const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
 let taskId = 0;
 const getNewTaskId = () => `Task_Name_${taskId++}`;
 
-export default function WorkFlowDesigner() {
+export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinitionProp, editSchemaProp }) {
   //-------------------------------- State Management -------------------------------------
-  const storeData = useActivityStore((state) => state.activities);
-  const addTaskNode = useActivityStore((state) => state.addTaskNodes);
-  const addDialogNodes = useActivityStore((state) => state.addDialogNodes);
+  const storeData = useTaskStore((state) => state.tasks);
+  const addTaskNode = useTaskStore((state) => state.addTaskNodes);
+  const addDialogNodes = useTaskStore((state) => state.addDialogNodes);
   const [isDialogFlowActive, setIsDialogFlowActive] = useState(false);
   const [isPageDesignerActive, setIsPageDesignerActive] = useState(false);
 
   // --------------------------------- Task Flow States -----------------------------------
-  const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState(false);
+  const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState(showActivityDefineDrawer);
   const taskFlowWrapper = useRef(null);
   const [taskNodes, setTaskNodes, onTaskNodesChange] = useNodesState(storeData.taskNodes);
   const [taskEdges, setTaskEdges, onTaskEdgesChange] = useEdgesState([]);
@@ -77,11 +78,16 @@ export default function WorkFlowDesigner() {
   }, []);
 
   useEffect(() => {
+    setOpenTaskPropertiesBlock(showActivityDefineDrawer);
+  }, [showActivityDefineDrawer]);
+
+  useEffect(() => {
     setTaskNodes(storeData.taskNodes);
     if (selectedTaskNode) {
       const dialogNodeData = storeData.taskNodes.filter((node) => node.id === selectedTaskNode.id)[0];
       setDialogNodes(dialogNodeData?.data?.dialogNodes);
     }
+    editSchemaProp(storeData);
   }, [setTaskNodes, storeData]);
 
   const onDialogNodeDrop = useCallback(
@@ -258,6 +264,8 @@ export default function WorkFlowDesigner() {
                 selectedTaskNode={selectedTaskNode}
                 openTaskPropertiesBlock={openTaskPropertiesBlock}
                 setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
+                showActivityDefineDrawer={showActivityDefineDrawer}
+                editDefinitionProp={editDefinitionProp}
               />
             )}
           </div>

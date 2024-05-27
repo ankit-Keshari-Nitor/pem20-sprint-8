@@ -36,8 +36,7 @@ export const SCHEMA = {
       isRequired: true,
       validate: [
         {
-          type: validatorTypes.REQUIRED,
-          message: 'Description is required'
+          type: validatorTypes.REQUIRED
         },
         {
           type: validatorTypes.MAX_LENGTH,

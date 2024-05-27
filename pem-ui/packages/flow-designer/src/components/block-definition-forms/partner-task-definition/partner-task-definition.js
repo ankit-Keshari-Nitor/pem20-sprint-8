@@ -4,11 +4,11 @@ import { Modal, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 import '../style.scss';
 import ExitValidationFrom from '../../exit-validation-form/exit-validation-form';
 import PartnerDefineForm from './partner-define-form';
-import useActivityStore from '../../../store/useActivityStore';
+import useTaskStore from '../../../store';
 
 export default function PartnerTaskDefinitionForm({ selectedNode }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
-  const edit = useActivityStore((state) => state.editTaskNodePros);
+  const edit = useTaskStore((state) => state.editTaskNodePros);
   const onSubmitDefinitionForm = (values) => {
     edit(selectedNode, 'editableProps', values);
   };

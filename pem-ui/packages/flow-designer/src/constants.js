@@ -275,8 +275,10 @@ export const FORM_TEMPLATE = ({ formFields, schema }) => {
   const { handleSubmit, onCancel } = useFormApi();
   return (
     <form onSubmit={handleSubmit}>
-      {formFields.map((formField) => (
-        <div className="form-field">{formField}</div>
+      {formFields.map((formField, idx) => (
+        <div key={idx} className="form-field">
+          {formField}
+        </div>
       ))}
       <FormSpy>
         {() => (

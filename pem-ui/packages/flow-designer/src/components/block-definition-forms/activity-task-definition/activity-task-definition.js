@@ -3,6 +3,7 @@ import React from 'react';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import { FORM_TEMPLATE, COMPONENT_MAPPER } from '../../../constants';
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
+// import useActivitykStore from '../../../../../../apps/web/src/modules/activity/store';
 
 export const SCHEMA = {
   fields: [
@@ -10,17 +11,11 @@ export const SCHEMA = {
       component: componentTypes.TEXT_FIELD,
       name: 'name',
       labelText: 'Name*',
-      helperText: 'Name should not contain &,<,>,",\',.,{,}, characters.',
       isRequired: true,
       validate: [
         {
           type: validatorTypes.REQUIRED,
           message: 'Name is required'
-        },
-        {
-          type: validatorTypes.PATTERN,
-          pattern: /^[^&<>"'.{}]+$/i,
-          message: 'Name should not contain &,<,>,",\',.,{,}, characters.'
         },
         {
           type: validatorTypes.MAX_LENGTH,
@@ -36,7 +31,8 @@ export const SCHEMA = {
       isRequired: true,
       validate: [
         {
-          type: validatorTypes.REQUIRED
+          type: validatorTypes.REQUIRED,
+          message: 'Description is required'
         },
         {
           type: validatorTypes.MAX_LENGTH,
@@ -44,33 +40,42 @@ export const SCHEMA = {
           message: 'Name must be no longer then 100 characters'
         }
       ]
+    },
+    {
+      component: componentTypes.TEXTAREA,
+      name: 'contextData',
+      labelText: 'Context Data (Optional)'
+    },
+    {
+      component: componentTypes.CHECKBOX,
+      name: 'encrypted',
+      labelText: 'Encrypt'
     }
   ]
 };
 
-const SystemDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefinitionForm }) => {
-  return Object.keys(selectedNode?.data?.editableProps).length > 0 ? (
+const ActivityTaskDefinition = ({ id, editDefinitionProp }) => {
+//   const editDefinitionProp = useActivitykStore((state) => state.editDefinitionProps);
+
+  const onSubmitDefinitionForm = (values) => {
+    editDefinitionProp(values);
+  };
+
+  const onCancelDefinitionForm = () => {
+    //setOpenCancelDialog(true);
+  };
+  return (
     <FormRenderer
       id={id}
-      initialValues={selectedNode?.data?.editableProps}
+      //   initialValues={selectedNode?.data?.editableProps}
       FormTemplate={FORM_TEMPLATE}
       componentMapper={COMPONENT_MAPPER}
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
-      onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
-    />
-  ) : (
-    <FormRenderer
-      id={id}
-      FormTemplate={FORM_TEMPLATE}
-      componentMapper={COMPONENT_MAPPER}
-      schema={SCHEMA}
-      onSubmit={onSubmitDefinitionForm}
-      onCancel={setOpenCancelDialog}
+      onCancel={() => onCancelDefinitionForm()}
       onReset={() => console.log('Resetting')}
     />
   );
 };
 
-export default SystemDefineForm;
+export default ActivityTaskDefinition;

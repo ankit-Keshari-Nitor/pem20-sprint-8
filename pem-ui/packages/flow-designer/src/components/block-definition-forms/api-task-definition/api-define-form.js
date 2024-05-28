@@ -36,8 +36,7 @@ export const SCHEMA = {
       isRequired: true,
       validate: [
         {
-          type: validatorTypes.REQUIRED,
-          message: 'Description is required'
+          type: validatorTypes.REQUIRED
         },
         {
           type: validatorTypes.MAX_LENGTH,
@@ -49,16 +48,27 @@ export const SCHEMA = {
   ]
 };
 
-const ApiDefineForm = ({ id, setOpenCancelDialog, onSubmitDefinitionForm }) => (
-  <FormRenderer
-    id={id}
-    FormTemplate={FORM_TEMPLATE}
-    componentMapper={COMPONENT_MAPPER}
-    schema={SCHEMA}
-    onSubmit={onSubmitDefinitionForm}
-    onCancel={() => console.log('Cancelling')}
-    onReset={() => console.log('Resetting')}
-  />
-);
-
+const ApiDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefinitionForm }) =>
+  Object.keys(selectedNode?.data?.editableProps).length > 0 ? (
+    <FormRenderer
+      id={id}
+      initialValues={selectedNode?.data?.editableProps}
+      FormTemplate={FORM_TEMPLATE}
+      componentMapper={COMPONENT_MAPPER}
+      schema={SCHEMA}
+      onSubmit={onSubmitDefinitionForm}
+      onCancel={setOpenCancelDialog}
+      onReset={() => console.log('Resetting')}
+    />
+  ) : (
+    <FormRenderer
+      id={id}
+      FormTemplate={FORM_TEMPLATE}
+      componentMapper={COMPONENT_MAPPER}
+      schema={SCHEMA}
+      onSubmit={onSubmitDefinitionForm}
+      onCancel={setOpenCancelDialog}
+      onReset={() => console.log('Resetting')}
+    />
+  );
 export default ApiDefineForm;

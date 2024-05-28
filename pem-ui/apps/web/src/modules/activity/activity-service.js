@@ -4,12 +4,12 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
   try {
     let url = `${API_URL.ACTIVITY_DEFINITION}?application=PEM&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}`;
 
-    if (searchKey !== "") {
+    if (searchKey !== '') {
       url += `&name=${searchKey}`;
     }
-  
+
     if (status !== '') {
-      url += `&status=${status}`
+      url += `&status=${status}`;
     }
 
     const response = await fetch(url);
@@ -38,9 +38,9 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
 
 export const deleteActivityList = async (activityDefnKey) => {
   try {
-    let url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}`
+    let url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}`;
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: 'DELETE'
     });
 
     if (!response.ok) {
@@ -48,23 +48,22 @@ export const deleteActivityList = async (activityDefnKey) => {
       return undefined;
     }
 
-    let responseMsg = await response.json()
+    let responseMsg = await response.json();
     return responseMsg.response;
-
   } catch (error) {
     console.error('Failed to fetch data:', error);
     return [];
   }
 };
 
-export const getActivityVersionkey = async (pageNo, pageSize, sortDir = "ASC", status = '', isDefault = '', activityDefnKey) => {
+export const getActivityVersionkey = async (pageNo, pageSize, sortDir = 'ASC', status = '', isDefault = '', activityDefnKey) => {
   try {
     let url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}/versions?isDefault=${isDefault}&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}&status=${status}`;
 
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'Accept': 'application/json'
+        Accept: 'application/json'
       }
     });
 
@@ -85,8 +84,7 @@ export const getActivityVersionkey = async (pageNo, pageSize, sortDir = "ASC", s
     console.error('Failed to fetch data:', error);
     return [];
   }
-
-}
+};
 
 export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDefnKeyVersion) => {
   try {
@@ -95,7 +93,7 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Accept': 'application/json'
+        Accept: 'application/json'
       },
       body: ''
     });
@@ -117,4 +115,4 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
     console.error('Failed to fetch data:', error);
     return [];
   }
-}
+};

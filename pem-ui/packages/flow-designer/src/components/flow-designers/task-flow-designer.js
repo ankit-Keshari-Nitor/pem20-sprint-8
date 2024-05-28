@@ -28,7 +28,8 @@ const TaskFlowDesigner = ({
   TASK_EDGE_TYPES,
   openTaskPropertiesBlock,
   selectedTaskNode,
-  setOpenTaskPropertiesBlock
+  setOpenTaskPropertiesBlock,
+  editDefinitionProp
 }) => {
   return (
     <div className="dnd-flow">
@@ -71,7 +72,7 @@ const TaskFlowDesigner = ({
             <Panel defaultSize={40} minSize={20} maxSize={70}>
               <div className="dnd-flow">
                 <div className="task-activity-container">
-                  <BlockPropertiesTray selectedNode={selectedTaskNode} setOpenPropertiesBlock={setOpenTaskPropertiesBlock} />
+                  <BlockPropertiesTray selectedNode={selectedTaskNode} setOpenPropertiesBlock={setOpenTaskPropertiesBlock} editDefinitionProp={editDefinitionProp} />
                 </div>
               </div>
             </Panel>

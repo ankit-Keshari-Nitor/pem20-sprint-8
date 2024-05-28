@@ -4,12 +4,13 @@ import '../style.scss';
 import ExitValidationFrom from '../../exit-validation-form';
 import { ElippsisIcon } from '../../../icons';
 import ApiDefineForm from './api-define-form';
+import useTaskStore from '../../../store';
 
-export default function ApiTaskDefinitionForm({ selectedNode }) {
+export default function ApiTaskDefinitionForm({ selectedNode, selectedTaskNode }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
-
-  const onSubmitDefinitionForm = (data) => {
-    console.log('onSubmitDefinitionForm', data);
+  const edit = useTaskStore((state) => state.editDialogNodePros);
+  const onSubmitDefinitionForm = (values) => {
+    edit(selectedNode, selectedTaskNode, 'editableProps', values);
   };
 
   return (
@@ -23,7 +24,7 @@ export default function ApiTaskDefinitionForm({ selectedNode }) {
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <ApiDefineForm id={'api-define-from'} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
+            <ApiDefineForm id={'api-define-from'} selectedNode={selectedNode} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
           </TabPanel>
           {/* Properties Form */}
           <TabPanel>

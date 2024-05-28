@@ -4,12 +4,13 @@ import { Modal, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 import '../style.scss';
 import ExitValidationFrom from '../../exit-validation-form';
 import AttributeDefineForm from './attribute-define-form';
+import useTaskStore from '../../../store';
 
 export default function AttributeTaskDefinitionForm({ selectedNode }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
-
-  const onSubmitDefinitionForm = (data) => {
-    console.log('onSubmitDefinitionForm', data);
+  const edit = useTaskStore((state) => state.editTaskNodePros);
+  const onSubmitDefinitionForm = (values) => {
+    edit(selectedNode, 'editableProps', values);
   };
 
   return (
@@ -22,7 +23,12 @@ export default function AttributeTaskDefinitionForm({ selectedNode }) {
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <AttributeDefineForm id={'attribute-define-form'} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
+            <AttributeDefineForm
+              id={'attribute-define-form'}
+              selectedNode={selectedNode}
+              setOpenCancelDialog={setOpenCancelDialog}
+              onSubmitDefinitionForm={onSubmitDefinitionForm}
+            />
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>

@@ -29,6 +29,14 @@ describe('ActivityDropdown component', () => {
         expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ selectedItem: { label: 'Item 2', value: 'value2' } }));
     });
 
+    it('does not call onChange when no item is selected', async () => {
+        const { getByText } = render(<ActivityDropdown {...defaultProps} />);
+        fireEvent.click(getByText('Choose an action'));
+        const cancelButton = await waitFor(() => getByText('Cancel'));
+        fireEvent.click(cancelButton);
+        expect(onChange).not.toHaveBeenCalled();
+    });
+
     it('handles empty items prop', () => {
         const { queryByLabelText } = render(<ActivityDropdown {...defaultProps} items={[]} />);
         expect(queryByLabelText('Choose an action')).toBeNull();

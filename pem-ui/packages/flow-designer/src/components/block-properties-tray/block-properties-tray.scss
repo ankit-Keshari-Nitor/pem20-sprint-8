@@ -42,3 +42,19 @@
   flex: 1;
   margin: 0.5rem 0.5rem 3rem 0.5rem;
 }
+
+.activity-active {
+  padding: 0.4rem;
+  margin-left: -0.4rem;
+  margin-right: 0.5rem;
+  background: #add8e6;
+  color: #0043ce;
+  border-radius: 1rem;
+  padding-right: 3rem;
+}
+
+#versions {
+  .cds--label {
+    display: none;
+  }
+}

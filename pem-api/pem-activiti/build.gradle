@@ -23,6 +23,8 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '3.2.4'
     implementation 'org.graalvm.js:js:23.0.0'
     implementation 'org.graalvm.js:js-scriptengine:23.0.0'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 test {

@@ -1,5 +1,6 @@
 package com.precisely.pem.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 @Service
 @DependsOn("processEngineConfiguration")
+@Log4j2
 public class PEMActivitiServiceImpl implements PEMActivitiService {
 
     @Autowired
@@ -51,7 +53,10 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
 
     @Override
     public String startProcessInstanceById(String processDefinitionId) {
-        return runtimeService.startProcessInstanceById(processDefinitionId).getProcessInstanceId();
+        log.debug("starting Process Instance By Definition Id : " + processDefinitionId);
+        String id =  runtimeService.startProcessInstanceById(processDefinitionId).getProcessInstanceId();
+        log.debug("started Process Instance Id : " + id);
+        return id;
     }
 
     @Override

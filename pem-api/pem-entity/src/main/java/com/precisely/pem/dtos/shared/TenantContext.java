@@ -12,4 +12,8 @@ public class TenantContext {
     public static void setTenantContext(SponsorInfo spContext) {
         tenantContextLocal.set(spContext);
     }
+
+    public static void clear() {
+        tenantContextLocal.remove();
+    }
 }

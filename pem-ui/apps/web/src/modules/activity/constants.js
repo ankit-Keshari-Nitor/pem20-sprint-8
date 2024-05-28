@@ -42,7 +42,6 @@ export const ACTION_COLUMN_FINAL = [
 ];
 
 export const ACTION_COLUMN_DRAFT = [
-  { key: ACTION_COLUMN_KEYS.ROLLOUT, label: 'Rollout' },
   { key: ACTION_COLUMN_KEYS.MARK_AS_FINAL, label: 'Mark as final' },
   { key: ACTION_COLUMN_KEYS.SAVE_AS, label: 'Save As' },
   { key: ACTION_COLUMN_KEYS.EDIT, label: 'Edit' },

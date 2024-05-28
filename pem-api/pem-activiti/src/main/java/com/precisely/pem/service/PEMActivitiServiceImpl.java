@@ -7,9 +7,11 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@DependsOn("processEngineConfiguration")
 public class PEMActivitiServiceImpl implements PEMActivitiService {
 
     @Autowired
@@ -40,14 +43,15 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
         return runtimeService.startProcessInstanceByKey(processDefinitionKey);
     }
 
+
     @Override
-    public ProcessInstance startProcessInstanceByKey(String processDefinitionKey, Map<String, Object> variables) {
-        return runtimeService.startProcessInstanceByKey(processDefinitionKey, variables);
+    public String startProcessInstanceByKey(String processDefinitionKey, Map<String, Object> variables) {
+        return runtimeService.startProcessInstanceByKey(processDefinitionKey, variables).getProcessInstanceId();
     }
 
     @Override
-    public ProcessInstance startProcessInstanceById(String processDefinitionId) {
-        return runtimeService.startProcessInstanceById(processDefinitionId);
+    public String startProcessInstanceById(String processDefinitionId) {
+        return runtimeService.startProcessInstanceById(processDefinitionId).getProcessInstanceId();
     }
 
     @Override
@@ -91,16 +95,17 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     }
 
     @Override
-    public Deployment deployProcessDefinition(String name, String bpmnData) {
-       return repositoryService.createDeployment().addBytes(name, bpmnData.getBytes(StandardCharsets.UTF_8)).deploy();
+    public String deployProcessDefinition(String name, byte[] bpmnData) {
+        String id = repositoryService.createDeployment().addBytes(name+".bpmn", bpmnData).deploy().getId();
+        return repositoryService.createProcessDefinitionQuery().deploymentId(id).singleResult().getKey();
     }
 
     @Override
-    public Deployment deployProcessDefinition(String pathToBpmnFile) {
+    public String deployProcessDefinition(String pathToBpmnFile) {
         try (InputStream inputStream = new FileInputStream(pathToBpmnFile)) {
             return repositoryService.createDeployment()
                     .addInputStream(pathToBpmnFile, inputStream)
-                    .deploy();
+                    .deploy().getId();
         } catch (IOException e) {
             throw new RuntimeException("Failed to deploy process definition", e);
         }

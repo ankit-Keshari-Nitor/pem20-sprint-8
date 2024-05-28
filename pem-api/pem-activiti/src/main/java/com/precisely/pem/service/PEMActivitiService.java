@@ -22,7 +22,6 @@ public interface PEMActivitiService {
      */
     ProcessInstance startProcessInstanceByKey(String processDefinitionKey);
 
-
     /**
      * Starts a new process instance using the given process definition key.
      *
@@ -30,16 +29,16 @@ public interface PEMActivitiService {
      * @param variables the initial variables for the process definition to start
      * @return the started ProcessInstance
      */
-    ProcessInstance startProcessInstanceByKey(String processDefinitionKey, Map<String, Object> variables);
+    String startProcessInstanceByKey(String processDefinitionKey, Map<String, Object> variables);
 
 
     /*
      * Starts a new process instance using the given process definition ID.
      *
      * @param processDefinitionId the ID of the process definition to start
-     * @return the started ProcessInstance
+     * @return the started ProcessInstance ID
      */
-    ProcessInstance startProcessInstanceById(String processDefinitionId);
+    String startProcessInstanceById(String processDefinitionId);
 
     /**
      * Completes a task identified by the given task ID.
@@ -110,17 +109,17 @@ public interface PEMActivitiService {
      *
      * @param name the name of the definition to deploy
      * @param bpmnData the data of the definition to deploy
-     * @return the ProcessDefinition with the Deployment details
+     * @return the ProcessDefinition with the Deployment key
      */
-    Deployment deployProcessDefinition(String name, String bpmnData);
+    String deployProcessDefinition(String name, byte[] bpmnData);
 
     /**
      * Deploys a process definition from a given BPMN file path.
      *
      * @param pathToBpmnFile the path to the BPMN file to deploy
-     * @return the ProcessDefinition with the Deployment details
+     * @return the ProcessDefinition with the Deployment ID
      */
-    Deployment deployProcessDefinition(String pathToBpmnFile);
+    String deployProcessDefinition(String pathToBpmnFile);
 
     /**
      * Suspends a process definition by its ID.

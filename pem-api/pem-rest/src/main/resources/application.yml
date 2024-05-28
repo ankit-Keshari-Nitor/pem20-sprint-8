@@ -11,7 +11,7 @@ spring:
       implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
 
   datasource:
-    url: jdbc:mysql://localhost:3306/pem?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/pem?&serverTimezone=UTC&nullCatalogMeansCurrent=true
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -33,6 +33,17 @@ pem:
   openapi:
     dev-url: http://localhost:9080
 
+  activiti:
+    database-schema-update: true
+    db-history-used: true
+    check-process-definitions: true
+    process-definition-location-prefix: classpath:/processes/
+    # process-definition-location-suffixes:
+    # - **.bpmn
+    # - **.bpmn20.xml
+    history-level: FULL
+
 server:
   port: 9080
+
 

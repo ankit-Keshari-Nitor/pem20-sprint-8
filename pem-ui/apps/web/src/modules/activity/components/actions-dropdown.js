@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dropdown } from '@carbon/react';
 
-export default function ActivityDropdown({ id = "", items = [], onChange }) { // Destructure props properly
+export default function ActivityDropdown({ id = "", items = [], onChange, selectedItem }) { // Destructure props properly
   return (
     <Dropdown
       id={`action-dropdown-${id}`}
@@ -9,6 +9,7 @@ export default function ActivityDropdown({ id = "", items = [], onChange }) { //
       label="Choose an action"
       itemToString={(item) => (item ? item.label : '')}
       onChange={onChange}
+      selectedItem={selectedItem}
     />
   );
 }

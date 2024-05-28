@@ -8,7 +8,7 @@ export default function WrapperModal({ isOpen = false, setIsOpen, primaryButtonT
         <>
             <Modal
                 open={isOpen}
-                onRequestClose={() => setIsOpen(false)}
+                onRequestClose={onSecondaryButtonClick}
                 modalHeading={modalHeading}
                 onRequestSubmit={onPrimaryButtonClick}
                 primaryButtonText={primaryButtonText}

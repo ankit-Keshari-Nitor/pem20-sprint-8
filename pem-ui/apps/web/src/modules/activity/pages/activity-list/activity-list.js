@@ -37,6 +37,8 @@ export default function ActivityList() {
   const [message, setMessage] = useState('');
   const [onPrimaryButtonClick, setOnPrimaryButtonClick] = useState(null); // Renamed state
   const [notificationProps, setNotificationProps] = useState(null);
+  const [tempSelectedItem, setTempSelectedItem] = useState({}); // Temporarily store selected item
+  const [activityDefnKey, setActivityDefnKey] = useState("");
 
   // Function to fetch and set data from the API
   const fetchAndSetData = useCallback(() => {
@@ -85,6 +87,11 @@ export default function ActivityList() {
 
   // Handler for dropdown action changes
   const handleDropdownChange = (selectedItem, id) => {
+    setTempSelectedItem(prevSelectedItems => ({
+      ...prevSelectedItems,
+      [id]: selectedItem
+    })); // Temporarily store the selected item
+    setActivityDefnKey(id);
     const itemId = selectedItem ? selectedItem.key : '';
     switch (itemId) {
       case 'markasfinal':
@@ -96,6 +103,14 @@ export default function ActivityList() {
         return;
     }
     setIsModalOpen(true);
+  };
+
+  // Handler to clear the selected item
+  const clearSelectedItem = (id) => {
+    setTempSelectedItem(prevSelectedItems => ({
+      ...prevSelectedItems,
+      [id]: null
+    }));
   };
 
   // Handler for marking activity as final
@@ -193,6 +208,12 @@ export default function ActivityList() {
     setIsModalOpen(false);
   };
 
+  // Handler for modal close/cancel
+  const handleModalClose = () => {
+    clearSelectedItem(activityDefnKey); // Clear the selected item
+    setIsModalOpen(false);
+  };
+
   // Generate the ellipsis menu for each row
   const getEllipsis = (id) => {
     return (
@@ -210,11 +231,11 @@ export default function ActivityList() {
   const getActionItem = (status, id) => {
     if (status === "DRAFT" || status === "") {
       return (
-        <ActivityDropdown id={id} items={ACTION_COLUMN_DRAFT} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />
+        <ActivityDropdown selectedItem={tempSelectedItem[id]} id={id} items={ACTION_COLUMN_DRAFT} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />
       );
     } else if (status === "FINAL") {
       return (
-        <ActivityDropdown id={id} items={ACTION_COLUMN_FINAL} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />
+        <ActivityDropdown selectedItem={tempSelectedItem[id]} id={id} items={ACTION_COLUMN_FINAL} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />
       );
     }
   };
@@ -301,7 +322,7 @@ export default function ActivityList() {
           onChange={({ page, pageSize }) => handlePaginationChange(page, pageSize)}
         />
         {/* Modal for action confirmation */}
-        <WrapperModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} modalHeading="Confirmation" secondaryButtonText="Cancel" primaryButtonText={actionText} onPrimaryButtonClick={onPrimaryButtonClick} onSecondaryButtonClick={() => setIsModalOpen(false)} >
+        <WrapperModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} modalHeading="Confirmation" secondaryButtonText="Cancel" primaryButtonText={actionText} onPrimaryButtonClick={onPrimaryButtonClick} onSecondaryButtonClick={handleModalClose} >
           {message}
         </WrapperModal>
         {/* Notification toast */}

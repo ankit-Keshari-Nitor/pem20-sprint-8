@@ -22,10 +22,10 @@ module.exports = function (app) {
     })
   );
   app.use(
-    '/sponsors/cashbank/v2/activityDefinitions',
+    '/sponsors',
     createProxyMiddleware({
       target: 'http://10.15.106.209:9080/',
-      pathRewrite: { '^/sponsors/cashbank/v2/activityDefinitions': '/sponsors/cashbank/v2/activityDefinitions' },
+      pathRewrite: { '^/sponsors': '/sponsors' },
       changeOrigin: true,
       logLevel: 'debug',
       secure: false

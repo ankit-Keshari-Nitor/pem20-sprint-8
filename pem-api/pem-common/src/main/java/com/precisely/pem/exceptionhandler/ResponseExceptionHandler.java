@@ -61,7 +61,7 @@ public class ResponseExceptionHandler{
         errResp.setErrorCode(ex.getErrorCode());
         errResp.setTimestamp(LocalDateTime.now().toString());
         errResp.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errResp);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

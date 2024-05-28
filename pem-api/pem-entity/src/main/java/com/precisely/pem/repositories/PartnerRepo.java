@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PartnerRepo extends JpaRepository<Partners,String>{
+    Partners findByPartnerKey(String partnerKey);
 }

@@ -3,30 +3,3 @@
     linear-gradient(to left, var(--cds-layer) 0, 2px, transparent 2px), linear-gradient(to right, var(--cds-layer) 0, 2px, transparent 2px),
     linear-gradient(to top, var(--cds-layer) 0, 2px, transparent 2px);
 }
-
-.define-grid {
-  --cds-grid-gutter-start: none;
-  padding-inline: unset;
-}
-
-.col-margin {
-  margin: 0.5rem;
-  display: flex;
-}
-
-.cds--tabs .cds--tab--list {
-  width: 100%;
-}
-
-.rollout-list-text {
-  font-family: IBM Plex Sans;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 18px;
-  letter-spacing: 0.1599999964237213px;
-  text-align: left;
-}
-
-.input-field-margin {
-  margin: 1rem 0rem;
-}

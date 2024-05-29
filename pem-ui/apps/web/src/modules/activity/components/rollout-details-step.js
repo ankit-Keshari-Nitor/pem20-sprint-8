@@ -1,7 +1,8 @@
 import React from 'react';
-import { Form, Grid, Column, TextArea, TextInput, DatePicker, DatePickerInput, Link } from '@carbon/react';
+import { Form, Grid, Column, TextArea, TextInput, DatePicker, DatePickerInput, Link, Tooltip, Button } from '@carbon/react';
 import { useForm } from 'react-hook-form';
 import './style.scss';
+import { Information } from '@carbon/icons-react';
 
 export default function RolloutDetails({ id, onSubmit }) {
   const {
@@ -51,19 +52,57 @@ export default function RolloutDetails({ id, onSubmit }) {
           </Column>
           <Column className="col-margin" lg={8}>
             <DatePicker datePickerType="single">
-              <DatePickerInput id="due_date" data-testid="due-date" labelText="Due Date" placeholder="mm/dd/yyyy" size="md" {...register('due_date')} />
+              <DatePickerInput
+                id="due_date"
+                data-testid="due-date"
+                labelText={
+                  <>
+                    Due Date&nbsp;
+                    <Tooltip align="top" label="Due date cannot be earlier than today.">
+                      <Information />
+                    </Tooltip>
+                  </>
+                }
+                placeholder="mm/dd/yyyy"
+                size="md"
+                {...register('due_date')}
+              />
             </DatePicker>
           </Column>
           <Column className="col-margin" lg={8}>
             <DatePicker datePickerType="single">
-              <DatePickerInput id="alert_date" data-testid="alert-date" labelText="Alert Date" placeholder="mm/dd/yyyy" size="md" {...register('alert_date')} />
+              <DatePickerInput
+                id="alert_date"
+                data-testid="alert-date"
+                labelText={
+                  <>
+                    Alert Date&nbsp;
+                    <Tooltip
+                      align="top"
+                      label="Alert date cannot be today or earlier than today. Cannot be same or later than due date. Email alert notifications are sent to partners."
+                    >
+                      <Information />
+                    </Tooltip>
+                  </>
+                }
+                placeholder="mm/dd/yyyy"
+                size="md"
+                {...register('alert_date')}
+              />
             </DatePicker>
           </Column>
           <Column className="col-margin" lg={16}>
             <TextInput
               id="alert_interval"
               data-testid="alert-interval"
-              labelText="Alert Interval"
+              labelText={
+                <>
+                  Alert Interval&nbsp;
+                  <Tooltip align="top" label="Specify the alert email frequency in days. Enter the alert interval value in the range 1 - 99 days.">
+                    <Information />
+                  </Tooltip>
+                </>
+              }
               invalidText={errors.alert_interval?.message}
               invalid={errors.alert_interval ? true : false}
               placeholder={'Enter days'}

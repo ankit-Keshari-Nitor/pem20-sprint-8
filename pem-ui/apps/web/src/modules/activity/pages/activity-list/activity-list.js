@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './activity-list.scss';
 import * as ActivityService from '../../services/activity-service.js';
-import { NEW_ACTIVITY_URL, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL, ACTION_COLUMN_KEYS } from '../../constants';
+import * as RolloutService from '../../services/rollout-service';
+import { NEW_ACTIVITY_URL, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
 import {
   OverflowMenu,
   OverflowMenuItem,
@@ -23,6 +24,7 @@ import ActivityDropdown from '../../components/actions-dropdown';
 import WrapperModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
 import RolloutWizard from '../../components/rollout-wizard';
+import TestWizard from '../../components/test-wizard/test-wizard.js';
 
 export default function ActivityList() {
   // State hooks for managing various states
@@ -43,6 +45,12 @@ export default function ActivityList() {
   const [openRolloutModal, setOpenRolloutModal] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [activityDetails, setActivityDetails] = useState(null);
+
+  // Test operation states
+  const [openTestModal, setOpenTestModal] = useState(false);
+  const [currentTestStep, setCurrentTestStep] = useState(0);
+  const [testDialogData, setTestDialogData] = useState(TEST_DIALOG_DATA);
+  const [currentTestData, setCurrentTestData] = useState(null);
 
   // Function to fetch and set data from the API
   const fetchAndSetData = useCallback(() => {
@@ -95,7 +103,7 @@ export default function ActivityList() {
   const handleDropdownChange = (selectedItem, id) => {
     const itemId = selectedItem ? selectedItem.key : '';
     switch (itemId) {
-      case 'markasfinal':
+      case ACTION_COLUMN_KEYS.MARK_AS_FINAL:
         setActionText('Mark as final');
         setMessage('The Activity can not be modified once you Mark as final. Do you want to Mark as final?');
         setOnPrimaryButtonClick(() => () => handleMarkAsFinal(id)); // Updated
@@ -103,6 +111,9 @@ export default function ActivityList() {
         break;
       case ACTION_COLUMN_KEYS.ROLLOUT:
         handleRolloutOperation(id);
+        break;
+      case ACTION_COLUMN_KEYS.TEST:
+        handleTestOperation(id);
         break;
       default:
         return;
@@ -225,6 +236,7 @@ export default function ActivityList() {
     }
   };
 
+  // Function to handle the Rollout operation
   const handleRolloutOperation = async (id) => {
     const activityDetailsResponse = await getActivityDetails(id);
     if (activityDetailsResponse) {
@@ -275,6 +287,47 @@ export default function ActivityList() {
       return null;
     }
   };
+
+  // -------------------------------------Test operation Start-------------------------------------------------
+  // Function to handle the Test operation
+  const handleTestOperation = async (id) => {
+    const activityDetailsResponse = await getActivityDetails(id);
+    if (activityDetailsResponse) {
+      setActivityDetails(activityDetailsResponse);
+      getTestData();
+    }
+  };
+
+  const getTestData = () => {
+    RolloutService.getTestList().then((data) => {
+      setTestDialogData(data);
+      setCurrentTestStep(0);
+      setCurrentTestData(data[currentTestStep]);
+      setOpenTestModal(true);
+    });
+  };
+
+  // Function to handle the Cancel/Previous Button Click
+  const handelTestCloseClick = () => {
+    if (currentTestStep === 0) {
+      setOpenTestModal(false);
+    } else if (currentTestStep > 0 && currentTestStep <= testDialogData.length - 1) {
+      setCurrentTestStep(currentTestStep - 1);
+      setCurrentTestData(testDialogData[currentTestStep - 1]);
+    }
+  };
+
+  // Function to handle the Next/rollout Button Click
+  const handelTestFinishClick = () => {
+    if (currentTestStep < testDialogData.length - 1) {
+      setCurrentTestStep(currentTestStep + 1);
+      setCurrentTestData(testDialogData[currentTestStep + 1]);
+    } else if (currentTestStep === testDialogData.length - 1) {
+      setOpenTestModal(false);
+      // TODO -> Test API will call here
+    }
+  };
+  // -------------------------------------Test operation End-------------------------------------------------
 
   return (
     <div className="activities-list-container">
@@ -381,6 +434,20 @@ export default function ActivityList() {
           onSecondaryButtonClick={handelCloseClick}
         >
           <RolloutWizard currentStep={currentStep} handelStepChange={handelStepChange} />
+        </WrapperModal>
+      )}
+
+      {openTestModal && (
+        <WrapperModal
+          isOpen={openTestModal}
+          setIsOpen={setOpenTestModal}
+          modalHeading={'Activity Test - ' + activityDetails?.name}
+          secondaryButtonText={currentTestStep === 0 ? 'Cancel' : 'Previous'}
+          primaryButtonText={currentTestStep < testDialogData.length - 1 ? 'Next' : 'Finish'}
+          onPrimaryButtonClick={handelTestFinishClick}
+          onSecondaryButtonClick={handelTestCloseClick}
+        >
+          <TestWizard currentTestData={currentTestData} />
         </WrapperModal>
       )}
       {/* Notification toast */}

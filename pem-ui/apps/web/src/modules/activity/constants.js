@@ -95,3 +95,42 @@ export const PARTNER_LIST_DATA = [
   { key: 'Partner-4_SecAdmin_Appli', value: 'Partner-4_SecAdmin_Appli' },
   { key: 'Partner-12_Mapping_View', value: 'Partner-12_Mapping_View' }
 ];
+
+export const TEST_DIALOG_DATA = [
+  {
+    key: 'dialog-1',
+    name: 'Dialog 1',
+    schema: {
+      fields: [
+        {
+          id: 'df5fae77-5807-4b4a-856f-77be75152d33',
+          type: 'textinput'
+        }
+      ]
+    }
+  },
+  {
+    key: 'dialog-2',
+    name: 'Dialog 2',
+    schema: {
+      fields: [
+        {
+          id: 'df5fae77-5807-4b4a-856f-77be75152d33',
+          type: 'textinput'
+        }
+      ]
+    }
+  },
+  {
+    key: 'dialog-3',
+    name: 'Dialog 3',
+    schema: {
+      fields: [
+        {
+          id: 'df5fae77-5807-4b4a-856f-77be75152d33',
+          type: 'textinput'
+        }
+      ]
+    }
+  }
+];

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Grid, Column, TextArea, TextInput, DatePicker, DatePickerInput, Link, Tooltip, Button } from '@carbon/react';
+import { Form, Grid, Column, TextArea, TextInput, DatePicker, DatePickerInput, Link, Tooltip } from '@carbon/react';
 import { useForm } from 'react-hook-form';
 import './style.scss';
 import { Information } from '@carbon/icons-react';

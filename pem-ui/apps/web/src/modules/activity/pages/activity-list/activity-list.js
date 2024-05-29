@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './activity-list.scss';
-import * as ActivityService from '../../activity-service';
+import * as ActivityService from '../../services/activity-service.js';
 import { NEW_ACTIVITY_URL, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL, ACTION_COLUMN_KEYS } from '../../constants';
 import {
   OverflowMenu,
@@ -20,9 +20,9 @@ import {
 } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
 import ActivityDropdown from '../../components/actions-dropdown';
-import WrapperModal from '../../components/helpers/wrapper-modal';
-import WrapperNotification from '../../components/helpers/wrapper-notification-toast';
-import { RolloutDetails, RolloutGapDetails, RolloutProgressSteps } from '../../components';
+import WrapperModal from '../../helpers/wrapper-modal';
+import WrapperNotification from '../../helpers/wrapper-notification-toast';
+import RolloutWizard from '../../components/rollout-wizard';
 
 export default function ActivityList() {
   // State hooks for managing various states
@@ -380,8 +380,7 @@ export default function ActivityList() {
           onPrimaryButtonClick={handelSubmitClick}
           onSecondaryButtonClick={handelCloseClick}
         >
-          <RolloutProgressSteps currentStep={currentStep} handelStepChange={handelStepChange} />
-          {currentStep === 0 ? <RolloutDetails /> : <RolloutGapDetails />}
+          <RolloutWizard currentStep={currentStep} handelStepChange={handelStepChange} />
         </WrapperModal>
       )}
       {/* Notification toast */}

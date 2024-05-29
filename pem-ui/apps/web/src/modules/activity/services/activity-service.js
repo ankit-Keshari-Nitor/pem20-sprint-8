@@ -1,4 +1,4 @@
-import { API_URL } from './constants';
+import { API_URL } from './../constants';
 
 export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchKey = '', status = '') => {
   try {

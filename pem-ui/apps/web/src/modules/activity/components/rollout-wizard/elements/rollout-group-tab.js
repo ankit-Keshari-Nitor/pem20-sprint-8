@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Column, TextInput, Checkbox } from '@carbon/react';
 import './style.scss';
-import { GROUP_LIST_DATA } from '../constants';
+import * as RolloutService from '../../../services/rollout-service';
 
 export default function RolloutGroupTab() {
+  const [groupList, setGroupList] = useState([]);
+
+  useEffect(() => {
+    RolloutService.getGroupList().then((data) => {
+      setGroupList(data);
+    });
+  });
+
   return (
     <Grid className="define-grid">
       <Column className="col-margin" lg={16}>
@@ -14,7 +22,7 @@ export default function RolloutGroupTab() {
           Group List
         </p>
       </Column>
-      {GROUP_LIST_DATA.map((item) => {
+      {groupList.map((item) => {
         return (
           <Column className="col-margin" lg={16}>
             <Checkbox id={item.key} labelText={item.value} s />

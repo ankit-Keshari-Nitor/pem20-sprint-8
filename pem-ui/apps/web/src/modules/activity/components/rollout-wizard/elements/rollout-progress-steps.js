@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProgressIndicator, ProgressStep } from '@carbon/react';
-import { ROLLOUT_STEPS } from '../constants';
+import { ROLLOUT_STEPS } from '../../../constants';
 
 export default function RolloutProgressSteps({ currentStep, handelStepChange }) {
   return (

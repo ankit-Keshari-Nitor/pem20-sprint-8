@@ -7,3 +7,9 @@ node_modules
 es
 lib
 dist
+
+# testing
+/coverage
+
+# production
+/build

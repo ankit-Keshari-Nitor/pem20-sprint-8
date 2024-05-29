@@ -110,6 +110,7 @@ public class ActivityInstanceController {
                                                           @PathVariable(value = "sponsorContext")String sponsorContext) throws Exception {
         ActivityInstPagnResp activityDefnPaginationRes = activityInstService.getAllInstanceList(sponsorContext,name,description,status.getInstStatus(),activityDefnVersionKey,partnerKey,activityStats,pageNo, pageSize, sortBy ==null? "modify_ts":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
         //        logic will change when API will get introduced to generate these values
+
         ActivityStatsDto activityStatsDto = new ActivityStatsDto();
         activityStatsDto.setCompleted(0);
         activityStatsDto.setPartners(0);
@@ -128,7 +129,9 @@ public class ActivityInstanceController {
 //                        throw new RuntimeException(e);
 //                    }
                     p.setActivityTasks(null); //We will populate this data when we have the API in place.
-                    p.setActivityStats(activityStatsDto);
+                    if(activityStats) {
+                        p.setActivityStats(activityStatsDto);
+                    }
                     return p;
                 }).collect(Collectors.toList());
 

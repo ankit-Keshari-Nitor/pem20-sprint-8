@@ -4,10 +4,8 @@ import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
-import com.precisely.pem.repositories.ActivityDefnDataRepo;
-import com.precisely.pem.repositories.ActivityDefnRepo;
-import com.precisely.pem.repositories.ActivityDefnVersionRepo;
-import com.precisely.pem.repositories.SponsorRepo;
+import com.precisely.pem.models.PcptActivityInst;
+import com.precisely.pem.repositories.*;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -47,6 +45,12 @@ public class BaseServiceTest {
     public static final String TEST_STATUS = "status";
     public static final String TEST_APPLICATION_KEY = "application";
     public static final String TEST_NAME = "test";
+    public static final String TEST_ACTIVITY_INSTANCE_KEY = "test_activity_instance_key";
+    public static final String TEST_PCPT_ACTIVITY_INSTANCE_KEY = "test_pcpt_activity_instance_key";
+    public static final String TEST_PARTNER_KEY = "test_partner_key";
+    public static final String TEST_PARTNER_NAME = "test_partner_name";
+    public static final String TEST_CURRENT_TASK_NAME = "test_current_task_name";
+
 
     //Response Messages
     public static final String ACTIVITY_DEFINITION_NOT_FOUND = "Activity Definition with key '"+TEST_ACTIVITY_DEFN_KEY+"' not found. Kindly check the activityDefnKey.";
@@ -61,11 +65,17 @@ public class BaseServiceTest {
     @Mock
     protected ActivityDefnRepo activityDefnRepo;
     @Mock
+    protected ActivityInstRepo activityInstRepo;
+    @Mock
     protected SponsorRepo sponsorRepo;
     @Mock
     protected ActivityDefnDataRepo activityDefnDataRepo;
     @Mock
     protected ActivityDefnVersionRepo activityDefnVersionRepo;
+    @Mock
+    protected PartnerRepo partnerRepo;
+    @Mock
+    protected PcptInstRepo pcptInstRepo;
     @Mock
     protected ModelMapper mapper;
     @Mock
@@ -102,6 +112,10 @@ public class BaseServiceTest {
 
     protected OngoingStubbing<Optional<ActivityDefnVersion>> mockActivityDefnVersionFindById() {
         return Mockito.when(activityDefnVersionRepo.findById(Mockito.anyString()));
+    }
+
+    protected OngoingStubbing<PcptActivityInst> mockPcptActivityInstanceKeyAndSponsorKey(){
+        return Mockito.when(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(Mockito.anyString(), Mockito.anyString()));
     }
 
     //Static Request Object Creation
@@ -263,6 +277,60 @@ public class BaseServiceTest {
         activityDefnVersion.setModifyTs(LocalDateTime.now());
         activityDefnVersion.setStatus(Status.DELETE.getStatus());
         return activityDefnVersion;
+    }
+
+    protected List<PcptActivityInst> getListOfPcptActivityInstanceDefnObj(){
+        PcptActivityInst pcptActivityInst = new PcptActivityInst();
+        pcptActivityInst.setPcptActivityInstKey(UUID.randomUUID().toString());
+        pcptActivityInst.setActivityInstKey(TEST_ACTIVITY_INSTANCE_KEY);
+        pcptActivityInst.setActivityWorkflowInstKey("test");
+        pcptActivityInst.setPartnerKey(TEST_PARTNER_KEY);
+        pcptActivityInst.setCompletionDate(LocalDateTime.now().toString());
+        pcptActivityInst.setDueDate(LocalDateTime.now().toString());
+        pcptActivityInst.setCurrentTask(TEST_CURRENT_TASK_NAME);
+        pcptActivityInst.setPcptInstStatus(TEST_STATUS);
+        pcptActivityInst.setIsDeleted(false);
+        pcptActivityInst.setSponsorKey("test");
+        pcptActivityInst.setTaskCompleted(false);
+        pcptActivityInst.setIsEncrypted(false);
+        pcptActivityInst.setMailGroupKey("test");
+        pcptActivityInst.setIsAlreadyRolledOut(false);
+
+        PcptActivityInst pcptActivityInst1 = new PcptActivityInst();
+        pcptActivityInst1.setPcptActivityInstKey(UUID.randomUUID().toString());
+        pcptActivityInst1.setActivityInstKey(TEST_ACTIVITY_INSTANCE_KEY);
+        pcptActivityInst1.setActivityWorkflowInstKey("test1");
+        pcptActivityInst1.setPartnerKey(TEST_PARTNER_KEY);
+        pcptActivityInst1.setCompletionDate(LocalDateTime.now().toString());
+        pcptActivityInst1.setDueDate(LocalDateTime.now().toString());
+        pcptActivityInst1.setCurrentTask(TEST_CURRENT_TASK_NAME);
+        pcptActivityInst1.setPcptInstStatus(TEST_STATUS);
+        pcptActivityInst1.setIsDeleted(false);
+        pcptActivityInst1.setSponsorKey("test1");
+        pcptActivityInst1.setTaskCompleted(false);
+        pcptActivityInst1.setIsEncrypted(false);
+        pcptActivityInst1.setMailGroupKey("test1");
+        pcptActivityInst1.setIsAlreadyRolledOut(false);
+        return Arrays.asList(pcptActivityInst, pcptActivityInst1);
+    }
+
+    protected PcptActivityInst getPcptActivityInstanceDefnObj(){
+        PcptActivityInst pcptActivityInst = new PcptActivityInst();
+        pcptActivityInst.setPcptActivityInstKey(TEST_PCPT_ACTIVITY_INSTANCE_KEY);
+        pcptActivityInst.setActivityInstKey(TEST_ACTIVITY_INSTANCE_KEY);
+        pcptActivityInst.setActivityWorkflowInstKey("test");
+        pcptActivityInst.setPartnerKey(TEST_PARTNER_KEY);
+        pcptActivityInst.setCompletionDate(LocalDateTime.now().toString());
+        pcptActivityInst.setDueDate(LocalDateTime.now().toString());
+        pcptActivityInst.setCurrentTask(TEST_CURRENT_TASK_NAME);
+        pcptActivityInst.setPcptInstStatus(TEST_STATUS);
+        pcptActivityInst.setIsDeleted(false);
+        pcptActivityInst.setSponsorKey("test");
+        pcptActivityInst.setTaskCompleted(false);
+        pcptActivityInst.setIsEncrypted(false);
+        pcptActivityInst.setMailGroupKey("test");
+        pcptActivityInst.setIsAlreadyRolledOut(false);
+        return pcptActivityInst;
     }
 
 }

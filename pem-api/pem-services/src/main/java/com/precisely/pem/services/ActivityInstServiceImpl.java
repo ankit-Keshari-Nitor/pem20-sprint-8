@@ -6,9 +6,12 @@ import com.precisely.pem.commonUtil.PcptInstStatus;
 import com.precisely.pem.dtos.requests.ActivityInstReq;
 import com.precisely.pem.dtos.requests.ContextDataNodes;
 import com.precisely.pem.dtos.requests.Partners;
+import com.precisely.pem.dtos.responses.ActivityInstListResp;
+import com.precisely.pem.dtos.responses.ActivityInstPagnResp;
 import com.precisely.pem.dtos.responses.ActivityInstResp;
 import com.precisely.pem.dtos.responses.SponsorInfo;
 import com.precisely.pem.dtos.shared.ActivityInstDto;
+import com.precisely.pem.dtos.shared.PaginationDto;
 import com.precisely.pem.dtos.shared.PcptActivityInstDto;
 import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
@@ -23,6 +26,10 @@ import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -45,6 +52,7 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -62,13 +70,15 @@ public class ActivityInstServiceImpl implements ActivityInstService{
     @Autowired
     PartnerRepo partnerRepo;
 
+    @Autowired
+    private ModelMapper mapper;
+
     @Override
     @Transactional
     public ActivityInstResp createActivityInstance(String sponsorContext, ActivityInstReq activityInstReq) throws ResourceNotFoundException, SQLException {
         ActivityInstResp activityInstResp = new ActivityInstResp();
         ActivityInst activityInst = null;
         ActivityInstDto activityInstDto = null;
-        ModelMapper mapper = new ModelMapper();
 
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
 
@@ -176,6 +186,77 @@ public class ActivityInstServiceImpl implements ActivityInstService{
         activityInstResp.setActivityInstKey(activityInst.getActivityInstKey());
 
         return activityInstResp;
+    }
+
+    @Override
+    public ActivityInstListResp getInstanceByKey(String sponsorContext, String activityInstKey) throws ResourceNotFoundException {
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
+        ActivityInstListResp activityInstListResp = new ActivityInstListResp();
+
+        ActivityInst activityInst = activityInstRepo.findByActivityInstKey(activityInstKey);
+        if (Objects.isNull(activityInst))
+            throw new ResourceNotFoundException("activityInstanceKey", "NoDataFound", "Activity Instance with key '" + activityInstKey + "' not found. Kindly check the activityInstKey.");
+
+        activityInstListResp = mapper.map(activityInst,ActivityInstListResp.class);
+        return activityInstListResp;
+    }
+
+    @Override
+    public ActivityInstPagnResp getAllInstanceList(String sponsorContext, String name, String description, String status, String activityDefnVersionKey, String partnerKey, Boolean activityStats, int pageNo, int pageSize, String sortBy, String sortDir) throws ResourceNotFoundException {
+        ActivityInstPagnResp resp = new ActivityInstPagnResp();
+        PaginationDto paginationDto = new PaginationDto();
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
+        Page<ActivityInst> defnsPage = null;
+        if(name != null && !name.isEmpty() && name.contains("con:") && description != null && !description.isEmpty()) {
+            String conName = name.replace("con:","");
+            System.out.println("conName="+conName);
+            defnsPage = activityInstRepo.findBySponsorKeyAndNameContainingAndDescriptionContainingAndActivityDefnKeyVersionAndStatus(sponsorInfo.getSponsorKey(),
+                    conName, description, activityDefnVersionKey, status, pageable);
+        }else if(name != null && !name.isEmpty() && !name.contains("con:") && description != null && !description.isEmpty()) {
+            defnsPage = activityInstRepo.findBySponsorKeyAndNameAndDescriptionContainingAndActivityDefnKeyVersionAndStatus(sponsorInfo.getSponsorKey(),
+                    name, description, activityDefnVersionKey, status, pageable);
+        }else if(name != null && !name.isEmpty() && name.contains("con:")) {
+            String conName = name.replace("con:","");
+            System.out.println("conName="+conName);
+            defnsPage = activityInstRepo.findBySponsorKeyAndNameContainingAndStatusAndAndActivityDefnKeyVersion(sponsorInfo.getSponsorKey(),
+                    conName, status, activityDefnVersionKey, pageable);
+        }else if(name != null && !name.isEmpty() && !name.contains("con:")) {
+            defnsPage = activityInstRepo.findBySponsorKeyAndNameAndStatusAndAndActivityDefnKeyVersion(sponsorInfo.getSponsorKey(),
+                    name, status, activityDefnVersionKey, pageable);
+        }else if(description != null && !description.isEmpty()) {
+            defnsPage = activityInstRepo.findBySponsorKeyAndDescriptionContainingAndActivityDefnKeyVersionAndStatus(sponsorInfo.getSponsorKey(),
+                    description, activityDefnVersionKey, status, pageable);
+        }else {
+            defnsPage = activityInstRepo.findBySponsorKeyAndActivityDefnKeyVersionAndStatus(sponsorInfo.getSponsorKey(),
+                    activityDefnVersionKey, status, pageable);
+        }
+        if(defnsPage == null || defnsPage.isEmpty()) {
+            throw new ResourceNotFoundException("","NoDataFound", "No data was found for the provided query parameter combination.");
+        }
+        List<ActivityInst> listOfDefns = defnsPage.getContent();
+        List<ActivityInstListResp> defnContent = new ArrayList<>();
+        defnContent = listOfDefns.stream()
+                .map(p ->
+                {
+                    return mapper.map(p, ActivityInstListResp.class);
+                }).collect(Collectors.toList());
+
+        int totalPage = defnsPage.getTotalPages();
+        long totalElements = defnsPage.getTotalElements();
+        int size = defnsPage.getSize();
+
+        paginationDto.setNumber(pageNo);
+        paginationDto.setSize(size);
+        paginationDto.setTotalPages(totalPage);
+        paginationDto.setTotalElements(totalElements);
+
+        resp.setContent(defnContent);
+        resp.setPage(paginationDto);
+        return resp;
     }
 
     private SponsorInfo validateSponsorContext(String sponsorContext) throws ResourceNotFoundException {

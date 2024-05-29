@@ -162,6 +162,7 @@ export default function ActivityList() {
         onCloseButtonClick: () => setNotificationProps(null),
       });
     }
+    handleModalClose()
     setIsModalOpen(false);
   };
 

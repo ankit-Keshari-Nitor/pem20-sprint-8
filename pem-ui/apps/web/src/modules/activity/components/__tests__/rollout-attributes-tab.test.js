@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import RolloutGapDetails from '../rollout-wizard/elements/rollout-details-step';
+import RolloutAttributeTab from '../rollout-wizard/elements/rollout-attributes-tab';
 
 function createContainer() {
   const container = document.createElement('div');
@@ -10,7 +10,7 @@ function createContainer() {
 }
 let container;
 
-describe('RolloutGapDetails Component', () => {
+describe('RolloutAttributeTab Component', () => {
   beforeEach(() => {
     container = createContainer();
   });
@@ -19,14 +19,14 @@ describe('RolloutGapDetails Component', () => {
     container.remove();
   });
 
-  it('should render Group Label', () => {
+  it('should render Attribute List Label', () => {
     // when;
     render(getComponent());
 
     // then
     expect(screen.getByTestId('rollout-gap-details')).toBeInTheDocument();
 
-    const checkAccordionLabel = screen.getByText('Group');
+    const checkAccordionLabel = screen.getByText('Attribute List');
     expect(checkAccordionLabel).toBeInTheDocument();
   });
 
@@ -54,5 +54,5 @@ describe('RolloutGapDetails Component', () => {
 });
 
 const getComponent = () => {
-  return <RolloutGapDetails id={'rollout-gap-details'} />;
+  return <RolloutAttributeTab />;
 };

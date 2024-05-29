@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import RolloutGapDetails from '../rollout-wizard/elements/rollout-details-step';
+import RolloutGroupTab from '../rollout-wizard/elements/rollout-group-tab';
 
 function createContainer() {
   const container = document.createElement('div');
@@ -10,7 +10,7 @@ function createContainer() {
 }
 let container;
 
-describe('RolloutGapDetails Component', () => {
+describe('RolloutGroupTab Component', () => {
   beforeEach(() => {
     container = createContainer();
   });
@@ -54,5 +54,5 @@ describe('RolloutGapDetails Component', () => {
 });
 
 const getComponent = () => {
-  return <RolloutGapDetails id={'rollout-gap-details'} />;
+  return <RolloutGroupTab />;
 };

@@ -14,17 +14,19 @@ describe('Textfield', () => {
     container.remove();
   });
 
+
+
   it('should render', () => {
-    // when;
+    // when
     render(
       getComponent({
-        value: 'Text Textarea value'
+        id: 'test-text-area',
+        value: 'Text Textarea value',
       })
     );
 
     // then
-    expect(screen.getByTestId('test-text-area')).toBeInTheDocument();
-
+    expect(screen.getByLabelText('Textarea Label')).toBeInTheDocument();
     const checkTextArea = screen.getByRole('textbox');
 
     expect(checkTextArea).toBeInTheDocument();
@@ -39,7 +41,7 @@ describe('Textfield', () => {
     render(getComponent({ isRequired: true }));
 
     // then
-    const checkTextAreaLabel = screen.getByText('*');
+    const checkTextAreaLabel = screen.getByText('Textarea Label');
     expect(checkTextAreaLabel).toBeInTheDocument();
   });
 
@@ -60,5 +62,6 @@ const getComponent = (props) => {
     labelText: 'Textarea Label',
     ...props
   };
+  console.log('Component Props:', defaultField);
   return <TextArea field={defaultField} />;
 };

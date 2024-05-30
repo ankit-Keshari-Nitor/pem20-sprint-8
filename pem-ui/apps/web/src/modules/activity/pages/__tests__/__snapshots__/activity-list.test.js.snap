@@ -1,0 +1,815 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ActivityList renders correctly 1`] = `
+<div>
+  <div
+    class="activities-list-container"
+  >
+    <div
+      class="cds--data-table-container"
+    >
+      <div
+        class="cds--data-table-header"
+      >
+        <h4
+          class="cds--data-table-header__title"
+          id="tc-:r0:-title"
+        >
+          Activity Definitions
+        </h4>
+        <p
+          class="cds--data-table-header__description"
+          id="tc-:r0:-description"
+        />
+      </div>
+      <div
+        class="header-buttons"
+      >
+        <div
+          aria-label="Search By Activity Name"
+          class="cds--search cds--search--md cds--search--expandable"
+          role="search"
+        >
+          <div
+            aria-controls="search-input-:r1:"
+            aria-expanded="false"
+            aria-label="button"
+            aria-labelledby="search-input-:r1:"
+            class="cds--search-magnifier"
+            role="button"
+            tabindex="0"
+          >
+            <svg
+              aria-hidden="true"
+              class="cds--search-magnifier-icon"
+              fill="currentColor"
+              focusable="false"
+              height="16"
+              preserveAspectRatio="xMidYMid meet"
+              viewBox="0 0 16 16"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15,14.3L10.7,10c1.9-2.3,1.6-5.8-0.7-7.7S4.2,0.7,2.3,3S0.7,8.8,3,10.7c2,1.7,5,1.7,7,0l4.3,4.3L15,14.3z M2,6.5 C2,4,4,2,6.5,2S11,4,11,6.5S9,11,6.5,11S2,9,2,6.5z"
+              />
+            </svg>
+          </div>
+          <label
+            class="cds--label"
+            for="search-input-:r1:"
+            id="search-input-:r1:-search"
+          >
+            Search
+          </label>
+          <input
+            autocomplete="off"
+            class="cds--search-input"
+            id="search-input-:r1:"
+            placeholder="Search By Activity Name"
+            role="searchbox"
+            tabindex="-1"
+            type="text"
+            value=""
+          />
+          <button
+            aria-label="Clear search input"
+            class="cds--search-close cds--search-close--hidden"
+            title="Clear search input"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              fill="currentColor"
+              focusable="false"
+              height="16"
+              preserveAspectRatio="xMidYMid meet"
+              viewBox="0 0 32 32"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"
+              />
+            </svg>
+          </button>
+        </div>
+        <a
+          class="new-button cds--btn cds--btn--primary"
+          href="#/activities/new"
+        >
+          New
+          <svg
+            aria-hidden="true"
+            class="cds--btn__icon"
+            fill="currentColor"
+            focusable="false"
+            height="16"
+            preserveAspectRatio="xMidYMid meet"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M13,13H3V3h5V2H3C2.4,2,2,2.4,2,3v10c0,0.6,0.4,1,1,1h10c0.6,0,1-0.4,1-1V8h-1V13z"
+            />
+            <path
+              d="M13 3L13 1 12 1 12 3 10 3 10 4 12 4 12 6 13 6 13 4 15 4 15 3z"
+            />
+          </svg>
+        </a>
+        <button
+          class="import-button cds--btn cds--btn--tertiary"
+          type="button"
+        >
+          Import
+          <svg
+            aria-hidden="true"
+            class="cds--btn__icon"
+            fill="currentColor"
+            focusable="false"
+            height="16"
+            preserveAspectRatio="xMidYMid meet"
+            viewBox="0 0 32 32"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M17 15L17 8 15 8 15 15 8 15 8 17 15 17 15 24 17 24 17 17 24 17 24 15z"
+            />
+          </svg>
+        </button>
+        <div
+          class="cds--multi-select__wrapper cds--list-box__wrapper filter-dropdown"
+        >
+          <label
+            class="cds--label"
+            for="downshift-:r4:-toggle-button"
+            id="downshift-:r4:-label"
+          />
+          <div
+            class="cds--multi-select cds--list-box"
+            id="filter-dropdown"
+          >
+            <div
+              class="cds--list-box__field--wrapper"
+            >
+              <button
+                aria-activedescendant=""
+                aria-controls="downshift-:r4:-menu"
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                aria-labelledby="downshift-:r4:-label"
+                class="cds--list-box__field"
+                id="downshift-:r4:-toggle-button"
+                role="combobox"
+                tabindex="0"
+                type="button"
+              >
+                <span
+                  class="cds--list-box__label"
+                  id="multiselect-field-label-1"
+                >
+                  Filter Option
+                </span>
+                <div
+                  class="cds--list-box__menu-icon"
+                >
+                  <svg
+                    aria-label="Open menu"
+                    fill="currentColor"
+                    focusable="false"
+                    height="16"
+                    name="chevron--down"
+                    preserveAspectRatio="xMidYMid meet"
+                    role="img"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8 11L3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z"
+                    />
+                    <title>
+                      Open menu
+                    </title>
+                  </svg>
+                </div>
+              </button>
+            </div>
+            <ul
+              aria-labelledby="downshift-:r4:-label"
+              class="cds--list-box__menu"
+              id="downshift-:r4:-menu"
+              role="listbox"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="cds--data-table-content"
+      >
+        <table
+          aria-labelledby="tc-:r0:-title"
+          class="cds--data-table cds--data-table--lg cds--data-table--sort"
+        >
+          <thead>
+            <tr>
+              <th
+                aria-sort="none"
+                class="cds--table-sort__header"
+                scope="col"
+              >
+                <div
+                  class="cds--table-sort__description"
+                  id="table-sort-:r5:"
+                >
+                  Click to sort rows by Activity Name header in ascending order
+                </div>
+                <button
+                  aria-describedby="table-sort-:r5:"
+                  class="cds--table-sort"
+                  type="button"
+                >
+                  <span
+                    class="cds--table-sort__flex"
+                  >
+                    <div
+                      class="cds--table-header-label"
+                    >
+                      Activity Name
+                    </div>
+                    <svg
+                      aria-hidden="true"
+                      class="cds--table-sort__icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M16 4L6 14 7.41 15.41 15 7.83 15 28 17 28 17 7.83 24.59 15.41 26 14 16 4z"
+                      />
+                    </svg>
+                    <svg
+                      aria-hidden="true"
+                      class="cds--table-sort__icon-unsorted"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M27.6 20.6L24 24.2 24 4 22 4 22 24.2 18.4 20.6 17 22 23 28 29 22zM9 4L3 10 4.4 11.4 8 7.8 8 28 10 28 10 7.8 13.6 11.4 15 10z"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                class="cds--table-sort__header"
+                scope="col"
+              >
+                <div
+                  class="cds--table-sort__description"
+                  id="table-sort-:r6:"
+                >
+                  Click to sort rows by Encrypted header in ascending order
+                </div>
+                <button
+                  aria-describedby="table-sort-:r6:"
+                  class="cds--table-sort"
+                  type="button"
+                >
+                  <span
+                    class="cds--table-sort__flex"
+                  >
+                    <div
+                      class="cds--table-header-label"
+                    >
+                      Encrypted
+                    </div>
+                    <svg
+                      aria-hidden="true"
+                      class="cds--table-sort__icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M16 4L6 14 7.41 15.41 15 7.83 15 28 17 28 17 7.83 24.59 15.41 26 14 16 4z"
+                      />
+                    </svg>
+                    <svg
+                      aria-hidden="true"
+                      class="cds--table-sort__icon-unsorted"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M27.6 20.6L24 24.2 24 4 22 4 22 24.2 18.4 20.6 17 22 23 28 29 22zM9 4L3 10 4.4 11.4 8 7.8 8 28 10 28 10 7.8 13.6 11.4 15 10z"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                class="cds--table-sort__header"
+                scope="col"
+              >
+                <div
+                  class="cds--table-sort__description"
+                  id="table-sort-:r7:"
+                >
+                  Click to sort rows by Current Status header in ascending order
+                </div>
+                <button
+                  aria-describedby="table-sort-:r7:"
+                  class="cds--table-sort"
+                  type="button"
+                >
+                  <span
+                    class="cds--table-sort__flex"
+                  >
+                    <div
+                      class="cds--table-header-label"
+                    >
+                      Current Status
+                    </div>
+                    <svg
+                      aria-hidden="true"
+                      class="cds--table-sort__icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M16 4L6 14 7.41 15.41 15 7.83 15 28 17 28 17 7.83 24.59 15.41 26 14 16 4z"
+                      />
+                    </svg>
+                    <svg
+                      aria-hidden="true"
+                      class="cds--table-sort__icon-unsorted"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M27.6 20.6L24 24.2 24 4 22 4 22 24.2 18.4 20.6 17 22 23 28 29 22zM9 4L3 10 4.4 11.4 8 7.8 8 28 10 28 10 7.8 13.6 11.4 15 10z"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                class="cds--table-sort__header"
+                scope="col"
+              >
+                <div
+                  class="cds--table-sort__description"
+                  id="table-sort-:r8:"
+                >
+                  Click to sort rows by Default Version header in ascending order
+                </div>
+                <button
+                  aria-describedby="table-sort-:r8:"
+                  class="cds--table-sort"
+                  type="button"
+                >
+                  <span
+                    class="cds--table-sort__flex"
+                  >
+                    <div
+                      class="cds--table-header-label"
+                    >
+                      Default Version
+                    </div>
+                    <svg
+                      aria-hidden="true"
+                      class="cds--table-sort__icon"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M16 4L6 14 7.41 15.41 15 7.83 15 28 17 28 17 7.83 24.59 15.41 26 14 16 4z"
+                      />
+                    </svg>
+                    <svg
+                      aria-hidden="true"
+                      class="cds--table-sort__icon-unsorted"
+                      fill="currentColor"
+                      focusable="false"
+                      height="20"
+                      preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M27.6 20.6L24 24.2 24 4 22 4 22 24.2 18.4 20.6 17 22 23 28 29 22zM9 4L3 10 4.4 11.4 8 7.8 8 28 10 28 10 7.8 13.6 11.4 15 10z"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </th>
+              <th
+                scope="col"
+              >
+                <div
+                  class="cds--table-header-label"
+                >
+                  Actions
+                </div>
+              </th>
+              <th
+                scope="col"
+              />
+            </tr>
+          </thead>
+          <tbody
+            aria-live="polite"
+          >
+            <tr>
+              <td
+                class="no-records-message"
+                colspan="6"
+              >
+                No records found
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        class="cds--pagination cds--pagination--md"
+      >
+        <div
+          class="cds--pagination__left"
+        >
+          <label
+            class="cds--pagination__text"
+            for="cds-pagination-select-id-:rb:"
+            id="cds-pagination-select-id-:rb:-count-label"
+          >
+            Items per page:
+          </label>
+          <div
+            class="cds--form-item cds--select__item-count"
+          >
+            <div
+              class="cds--select cds--select--inline"
+            >
+              <div
+                class="cds--select-input--inline__wrapper"
+              >
+                <div
+                  class="cds--select-input__wrapper"
+                >
+                  <select
+                    class="cds--select-input"
+                    id="cds-pagination-select-id-:rb:"
+                    title=""
+                  >
+                    <option
+                      class="cds--select-option"
+                      value="5"
+                    >
+                      5
+                    </option>
+                    <option
+                      class="cds--select-option"
+                      value="10"
+                    >
+                      10
+                    </option>
+                    <option
+                      class="cds--select-option"
+                      value="20"
+                    >
+                      20
+                    </option>
+                    <option
+                      class="cds--select-option"
+                      value="50"
+                    >
+                      50
+                    </option>
+                  </select>
+                  <svg
+                    aria-hidden="true"
+                    class="cds--select__arrow"
+                    fill="currentColor"
+                    focusable="false"
+                    height="16"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8 11L3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span
+            class="cds--pagination__text cds--pagination__items-count"
+          >
+            0–0 of 0 items
+          </span>
+        </div>
+        <div
+          class="cds--pagination__right"
+        >
+          <div
+            class="cds--form-item cds--select__page-number"
+          >
+            <div
+              class="cds--select cds--select--inline"
+            >
+              <label
+                class="cds--label cds--visually-hidden"
+                dir="auto"
+                for="cds-pagination-select-id-:rb:-right"
+              >
+                Page number, of 1 pages
+              </label>
+              <div
+                class="cds--select-input--inline__wrapper"
+              >
+                <div
+                  class="cds--select-input__wrapper"
+                >
+                  <select
+                    class="cds--select-input"
+                    id="cds-pagination-select-id-:rb:-right"
+                    title=""
+                  >
+                    <option
+                      class="cds--select-option"
+                      value="1"
+                    >
+                      1
+                    </option>
+                  </select>
+                  <svg
+                    aria-hidden="true"
+                    class="cds--select__arrow"
+                    fill="currentColor"
+                    focusable="false"
+                    height="16"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8 11L3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span
+            class="cds--pagination__text"
+          >
+            of 1 page
+          </span>
+          <div
+            class="cds--pagination__control-buttons"
+          >
+            <span
+              class="cds--popover-container cds--popover--caret cds--popover--high-contrast cds--popover--top cds--tooltip cds--icon-tooltip cds--icon-tooltip--disabled"
+            >
+              <div
+                class="cds--tooltip-trigger__wrapper"
+              >
+                <button
+                  aria-labelledby="tooltip-:rc:"
+                  class="cds--btn--icon-only cds--pagination__button cds--pagination__button--backward cds--pagination__button--no-index cds--btn cds--btn--ghost cds--btn--disabled"
+                  disabled=""
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    fill="currentColor"
+                    focusable="false"
+                    height="16"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 32 32"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M20 24L10 16 20 8z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <span
+                aria-hidden="true"
+                class="cds--popover"
+                id="tooltip-:rc:"
+                role="tooltip"
+              >
+                <span
+                  class="cds--popover-content cds--tooltip-content"
+                >
+                  Previous page
+                </span>
+                <span
+                  class="cds--popover-caret"
+                />
+              </span>
+            </span>
+            <span
+              class="cds--popover-container cds--popover--caret cds--popover--high-contrast cds--popover--top-right cds--tooltip cds--icon-tooltip cds--icon-tooltip--disabled"
+            >
+              <div
+                class="cds--tooltip-trigger__wrapper"
+              >
+                <button
+                  aria-labelledby="tooltip-:re:"
+                  class="cds--btn--icon-only cds--pagination__button cds--pagination__button--forward cds--pagination__button--no-index cds--btn cds--btn--ghost cds--btn--disabled"
+                  disabled=""
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    fill="currentColor"
+                    focusable="false"
+                    height="16"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 32 32"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 8L22 16 12 24z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <span
+                aria-hidden="true"
+                class="cds--popover"
+                id="tooltip-:re:"
+                role="tooltip"
+              >
+                <span
+                  class="cds--popover-content cds--tooltip-content"
+                >
+                  Next page
+                </span>
+                <span
+                  class="cds--popover-caret"
+                />
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="cds--modal cds--modal-tall"
+      role="presentation"
+    >
+      <span
+        class="cds--visually-hidden"
+        role="link"
+        tabindex="0"
+      >
+        Focus sentinel
+      </span>
+      <div
+        aria-label="Confirmation"
+        aria-modal="true"
+        class="cds--modal-container"
+        role="dialog"
+        tabindex="-1"
+      >
+        <div
+          class="cds--modal-header"
+        >
+          <h3
+            class="cds--modal-header__heading"
+            dir="auto"
+            id="cds--modal-header__heading--modal-1"
+          >
+            Confirmation
+          </h3>
+          <div
+            class="cds--modal-close-button"
+          >
+            <span
+              class="cds--popover-container cds--popover--caret cds--popover--high-contrast cds--popover--left cds--tooltip cds--icon-tooltip"
+            >
+              <div
+                class="cds--tooltip-trigger__wrapper"
+              >
+                <button
+                  aria-label="Close"
+                  aria-labelledby="tooltip-:rg:"
+                  class="cds--btn--icon-only cds--modal-close cds--btn cds--btn--primary"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="cds--modal-close__icon"
+                    fill="currentColor"
+                    focusable="false"
+                    height="20"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 32 32"
+                    width="20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <span
+                aria-hidden="true"
+                class="cds--popover"
+                id="tooltip-:rg:"
+                role="tooltip"
+              >
+                <span
+                  class="cds--popover-content cds--tooltip-content"
+                >
+                  Close
+                </span>
+                <span
+                  class="cds--popover-caret"
+                />
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
+          class="cds--modal-content"
+          id="cds--modal-body--modal-1"
+        />
+        <div
+          aria-busy="false"
+          class="cds--modal-footer cds--btn-set"
+        >
+          <button
+            class="cds--btn cds--btn--secondary"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button
+            class="cds--btn cds--btn--primary"
+            type="button"
+          />
+        </div>
+      </div>
+      <span
+        class="cds--visually-hidden"
+        role="link"
+        tabindex="0"
+      >
+        Focus sentinel
+      </span>
+    </div>
+  </div>
+</div>
+`;

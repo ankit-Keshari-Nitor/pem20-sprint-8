@@ -10,7 +10,8 @@
     "@b2bi/page-designer": "1.0.0",
     "@b2bi/shell": "^1.0.13",
     "@b2bi/styles": "^1.0.0",
-    "@b2bi/ui-lib": "^1.0.0"
+    "@b2bi/ui-lib": "^1.0.0",
+    "react-hook-form": "^7.48.2"
   },
   "devDependencies": {
     "@b2bi/build": "file:../../../../b2bi-ui-shared/packages/build-lib",

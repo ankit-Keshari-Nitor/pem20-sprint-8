@@ -191,7 +191,8 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
 
             ActivityInst activityInstance = activityInstRepo.findById(finalActivityInstKey).orElse(null);
             if (activityInstance != null) {
-                startDateMap.put(finalActivityInstKey, activityInstance.getStartDate().toString());
+                String startDate = String.valueOf(activityInstance.getStartDate());
+                startDateMap.put(finalActivityInstKey, startDate!=null ? startDate:null);
                 applicationMap.put(finalActivityInstKey, activityInstance.getApplication());
             }
 
@@ -279,8 +280,9 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
 
         ActivityInst activityInstance = activityInstRepo.findById(participantActivityInstResp.getActivityInstKey()).orElse(null);
         if (activityInstance != null) {
-            participantActivityInstResp.setApplication(activityInstance.getStartDate().toString());
-            participantActivityInstResp.setStartDate(activityInstance.getStartDate().toString());
+            String startDate = String.valueOf(activityInstance.getStartDate());
+            participantActivityInstResp.setApplication(activityInstance.getApplication());
+            participantActivityInstResp.setStartDate(startDate !=null ? startDate:null);
         }
         return participantActivityInstResp;
     }

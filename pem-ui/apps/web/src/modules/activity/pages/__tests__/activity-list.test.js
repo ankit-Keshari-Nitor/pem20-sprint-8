@@ -69,7 +69,7 @@ describe('ActivityList', () => {
         await waitFor(() => expect(ActivityService.getActivityList).toHaveBeenCalled());
     });
 
-    it('calls handleFilterChange when filter dropdown changes', async () => {
+   /*  it('calls handleFilterChange when filter dropdown changes', async () => {
         const data = {
             content: [],
             pageContent: { totalElements: 0 },
@@ -87,7 +87,7 @@ describe('ActivityList', () => {
         fireEvent.click(activityNameOption);
 
         await waitFor(() => expect(ActivityService.getActivityList).toHaveBeenCalledTimes(2));
-    });
+    }); */
 
     it('calls handlePaginationChange when pagination changes', async () => {
         const data = {

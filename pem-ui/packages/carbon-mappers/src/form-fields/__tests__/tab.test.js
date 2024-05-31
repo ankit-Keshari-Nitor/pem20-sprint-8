@@ -35,7 +35,7 @@ const mockProps = {
 };
 
 describe('CustomTab Component', () => {
-  test('renders the tab list and panels correctly', () => {
+  it('renders the tab list and panels correctly', () => {
     render(<CustomTab {...mockProps} />);
 
     // Check if the tab list is rendered
@@ -50,7 +50,7 @@ describe('CustomTab Component', () => {
     expect(TabCanvas).toHaveBeenCalledTimes(mockProps.row.children.length);
   });
 
-  test('handles tab click event correctly', () => {
+  it('handles tab click event correctly', () => {
     render(<CustomTab {...mockProps} />);
 
     // Simulate a click on the first tab
@@ -66,7 +66,7 @@ describe('CustomTab Component', () => {
     expect(mockProps.onFieldSelect).toHaveBeenCalledWith(expect.any(Object), mockProps.row.children[1], 'path-1');
   });
 
-  test('does not call onFieldSelect in preview mode', () => {
+  it('does not call onFieldSelect in preview mode', () => {
     render(<CustomTab {...{ ...mockProps, previewMode: true }} />);
 
     // Simulate a click on the first tab in preview mode
@@ -76,7 +76,7 @@ describe('CustomTab Component', () => {
     expect(mockProps.onFieldSelect).not.toHaveBeenCalled();
   });
 
-  test('renders the config correctly', () => {
+  it('renders the config correctly', () => {
     expect(CustomTab.config).toEqual({
       type: FORM_FIELD_TYPE.TAB,
       label: FORM_FIELD_LABEL.TAB,

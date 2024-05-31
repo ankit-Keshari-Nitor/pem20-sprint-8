@@ -1,41 +1,49 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 import Accordion from '../accordion';
-import { FORM_FIELD_TYPE } from '../../constant';
-import { createContainer } from '../../utils/test-helper';
 
-let container;
-
-describe('Accordion', () => {
-  beforeEach(() => {
-    container = createContainer();
-  });
-
-  afterEach(function () {
-    container.remove();
-  });
-
-  it('should render', () => {
-    // when;
-    render(getComponent());
-
-    // then
-    expect(screen.getByTestId('test-accordion')).toBeInTheDocument();
-
-    const checkAccordion = screen.getByRole('button');
-
-    expect(checkAccordion).toBeInTheDocument();
-
-    const checkAccordionLabel = screen.getByText('Accordion Label');
-    expect(checkAccordionLabel).toBeInTheDocument();
-  });
+jest.mock('../../../../page-designer/src/components/canvas/tab-canvas', () => {
+  return jest.fn(() => <div data-testid="tab-canvas">TabCanvas Mock</div>);
 });
 
-const getComponent = (props) => {
-  const defaultField = {
-    id: 'test-accordion',
-    type: FORM_FIELD_TYPE.ACCORDION,
-    labelText: 'Accordion Label',
-    ...props
+describe('Accordion Component', () => {
+  const renderRow = jest.fn();
+  const handleDrop = jest.fn();
+  const componentMapper = jest.fn();
+  const onFieldSelect = jest.fn();
+  const onFieldDelete = jest.fn();
+  const onChangeHandle = jest.fn();
+  const row = {
+    component: { labelText: 'Accordion Title' },
+    children: []
   };
-  return <Accordion field={defaultField} />;
-};
+  const currentPath = 'some/path';
+  const previewMode = false;
+
+  beforeEach(() => {
+    render(
+      <Accordion
+        renderRow={renderRow}
+        row={row}
+        currentPath={currentPath}
+        handleDrop={handleDrop}
+        componentMapper={componentMapper}
+        onFieldSelect={onFieldSelect}
+        onFieldDelete={onFieldDelete}
+        previewMode={previewMode}
+        onChangeHandle={onChangeHandle}
+      />
+    );
+  });
+
+  it('should render the accordion component', () => {
+    const accordion = screen.getByTestId('accordion-id');
+    expect(accordion).toBeInTheDocument();
+  });
+
+  it('should display the correct title', () => {
+    const accordionItem = screen.getByText('Accordion Title');
+    expect(accordionItem).toBeInTheDocument();
+  });
+});

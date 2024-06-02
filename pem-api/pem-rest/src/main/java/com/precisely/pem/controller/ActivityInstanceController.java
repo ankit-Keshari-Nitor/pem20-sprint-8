@@ -56,7 +56,7 @@ public class ActivityInstanceController {
     public ResponseEntity<Object> createActivityInstance(@Valid @RequestBody ActivityInstReq activityInstReq,
                                                          @PathVariable(value = "sponsorContext", required = true) String sponsorContext) throws Exception {
         ActivityInstResp activityInstResp = activityInstService.createActivityInstance(sponsorContext,activityInstReq);
-        Link link = linkTo(methodOn(ActivityController.class).getActivityDefinitionByKey(sponsorContext,activityInstResp.getActivityInstKey())).withSelfRel();
+        Link link = linkTo(methodOn(ActivityInstanceController.class).getActivityInstanceByKey(sponsorContext,activityInstResp.getActivityInstKey())).withSelfRel();
         activityInstResp.setLocation(link.getHref());
         HttpHeaders headers = new HttpHeaders();
         headers.set("location", activityInstResp.getLocation());

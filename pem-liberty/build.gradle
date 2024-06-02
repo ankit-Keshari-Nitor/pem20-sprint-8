@@ -123,5 +123,5 @@ task uploadZipToArtifactory() {
 
 setDev.dependsOn copyDBJars
 
-libertyPackage.dependsOn installPemApi
-build.dependsOn installPemApi, libertyPackage
+libertyPackage.dependsOn installPemApi,installUI
+build.dependsOn installPemApi,installUI, libertyPackage

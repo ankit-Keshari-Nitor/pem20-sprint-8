@@ -165,7 +165,7 @@ public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
             "AND pa.dueDate <= ':currentDate'")
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndPartnerNameAndOnScheduleProgress(@Param("sponsorKey") String sponsorKey, @Param("activityInstKey") String activityInstKey,
                                                                                                                                 @Param("partnerName") String partnerName, @Param("currentDate") String currentDate, Pageable pageable);
-
+    PcptActivityInst findByPcptActivityInstKey(String pcptActivityInstKey);
 }
 
 

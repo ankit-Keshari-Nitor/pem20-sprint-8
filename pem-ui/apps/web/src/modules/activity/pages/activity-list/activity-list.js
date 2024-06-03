@@ -34,12 +34,14 @@ export default function ActivityList() {
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [rows, setRows] = useState([]);
-  const [status, setStatus] = useState('DRAFT');
+  const [status, setStatus] = useState("DRAFT");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionText, setActionText] = useState('');
   const [message, setMessage] = useState('');
   const [onPrimaryButtonClick, setOnPrimaryButtonClick] = useState(null); // Renamed state
   const [notificationProps, setNotificationProps] = useState(null);
+  const [tempSelectedItem, setTempSelectedItem] = useState({}); // Temporarily store selected item
+  const [activityDefnKey, setActivityDefnKey] = useState("");
 
   // Rollout operation states
   const [openRolloutModal, setOpenRolloutModal] = useState(false);
@@ -54,21 +56,19 @@ export default function ActivityList() {
 
   // Function to fetch and set data from the API
   const fetchAndSetData = useCallback(() => {
-    ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status)
-      .then((data) => {
-        setRows(data.content);
-        setTotalRows(data.pageContent.totalElements);
-      })
-      .catch((error) => {
-        console.error('Failed to fetch data:', error);
-        setNotificationProps({
-          open: true,
-          title: 'Error - ',
-          subtitle: 'Failed to fetch data',
-          kind: 'error',
-          onCloseButtonClick: () => setNotificationProps(null)
-        });
+    ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status).then((data) => {
+      setRows(data.content);
+      setTotalRows(data.pageContent.totalElements);
+    }).catch(error => {
+      console.error('Failed to fetch data:', error);
+      setNotificationProps({
+        open: true,
+        title: 'Error - ',
+        subtitle: 'Failed to fetch data',
+        kind: 'error',
+        onCloseButtonClick: () => setNotificationProps(null),
       });
+    });
   }, [pageNo, pageSize, sortDir, searchKey, status]);
 
   // useEffect to trigger fetchAndSetData whenever dependencies change
@@ -86,8 +86,8 @@ export default function ActivityList() {
   // Handler for changing filter selection
   const handleFilterChange = (selectedItems) => {
     if (Array.isArray(selectedItems.selectedItems)) {
-      const selectedIds = selectedItems.selectedItems.map((item) => item.id);
-      setStatus(selectedIds.join(','));
+      const selectedIds = selectedItems.selectedItems.map(item => item.id);
+      setStatus(selectedIds.join(","));
     } else {
       setStatus([]);
     }
@@ -125,8 +125,17 @@ export default function ActivityList() {
     }
   };
 
+  // Handler to clear the selected item
+  const clearSelectedItem = (id) => {
+    setTempSelectedItem(prevSelectedItems => ({
+      ...prevSelectedItems,
+      [id]: null
+    }));
+  };
+
   // Handler for marking activity as final
   const handleMarkAsFinal = async (id) => {
+
     try {
       let activityVersionKey;
       const response = await ActivityService.getActivityVersionkey(pageNo - 1, pageSize, sortDir, status, true, id);
@@ -136,14 +145,14 @@ export default function ActivityList() {
 
         const responseStatus = await ActivityService.markActivityDefinitionAsFinal(id, activityVersionKey);
 
-        if (responseStatus !== undefined && responseStatus === 'FINAL') {
+        if (responseStatus !== undefined && responseStatus === "FINAL") {
           fetchAndSetData();
           setNotificationProps({
             open: true,
             title: 'Success - ',
             subtitle: 'Action completed successfully!',
             kind: 'success',
-            onCloseButtonClick: () => setNotificationProps(null)
+            onCloseButtonClick: () => setNotificationProps(null),
           });
         } else {
           setNotificationProps({
@@ -151,7 +160,7 @@ export default function ActivityList() {
             title: 'Error - ',
             subtitle: 'Action not completed successfully!',
             kind: 'error',
-            onCloseButtonClick: () => setNotificationProps(null)
+            onCloseButtonClick: () => setNotificationProps(null),
           });
         }
       } else {
@@ -160,7 +169,7 @@ export default function ActivityList() {
           title: 'Error - ',
           subtitle: 'Action not completed successfully!',
           kind: 'error',
-          onCloseButtonClick: () => setNotificationProps(null)
+          onCloseButtonClick: () => setNotificationProps(null),
         });
       }
     } catch (error) {
@@ -170,7 +179,7 @@ export default function ActivityList() {
         title: 'Error - ',
         subtitle: 'Failed to mark as final activity',
         kind: 'error',
-        onCloseButtonClick: () => setNotificationProps(null)
+        onCloseButtonClick: () => setNotificationProps(null),
       });
     }
     handleModalClose()
@@ -179,8 +188,8 @@ export default function ActivityList() {
 
   // Handler for delete action initiation
   const handleDelete = (id) => {
-    setActionText('Delete');
-    setMessage('Are you sure you want to delete? The Activity status will be changed to Deleted.');
+    setActionText("Delete");
+    setMessage("Are you sure you want to delete? The Activity status will be changed to Deleted.");
     setOnPrimaryButtonClick(() => () => handleDeleteActivity(id)); // Updated
     setIsModalOpen(true);
   };
@@ -196,7 +205,7 @@ export default function ActivityList() {
           title: 'Success - ',
           subtitle: 'Action completed successfully!',
           kind: 'success',
-          onCloseButtonClick: () => setNotificationProps(null)
+          onCloseButtonClick: () => setNotificationProps(null),
         });
       } else {
         setNotificationProps({
@@ -204,7 +213,7 @@ export default function ActivityList() {
           title: 'Error - ',
           subtitle: 'Action not completed successfully!',
           kind: 'error',
-          onCloseButtonClick: () => setNotificationProps(null)
+          onCloseButtonClick: () => setNotificationProps(null),
         });
       }
     } catch (error) {
@@ -214,7 +223,7 @@ export default function ActivityList() {
         title: 'Error - ',
         subtitle: 'Failed to delete activity',
         kind: 'error',
-        onCloseButtonClick: () => setNotificationProps(null)
+        onCloseButtonClick: () => setNotificationProps(null),
       });
     }
     setIsModalOpen(false);
@@ -242,9 +251,9 @@ export default function ActivityList() {
   // Generate action items based on the activity status
   const getActionItem = (status, id) => {
     if (status === 'DRAFT' || status === '') {
-      return <ActivityDropdown id={id} items={ACTION_COLUMN_DRAFT} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />;
+      return <ActivityDropdown selectedItem={tempSelectedItem[id]} id={id} items={ACTION_COLUMN_DRAFT} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />;
     } else if (status === 'FINAL') {
-      return <ActivityDropdown id={id} items={ACTION_COLUMN_FINAL} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />;
+      return <ActivityDropdown selectedItem={tempSelectedItem[id]} id={id} items={ACTION_COLUMN_FINAL} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />;
     }
   };
 
@@ -344,7 +353,7 @@ export default function ActivityList() {
   return (
     <div className="activities-list-container">
       <TableContainer title="Activity Definitions">
-        <div className="header-buttons">
+        <div className='header-buttons'>
           {/* Search, New, Import buttons */}
           <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
           <Button className="new-button" renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
@@ -394,16 +403,17 @@ export default function ActivityList() {
                     <TableRow {...getRowProps({ row })} key={row.id}>
                       {row.cells.map((cell) => (
                         <TableCell key={cell.id}>
-                          {cell.info.header === 'action' ? getActionItem(status, row.id) : cell.info.header === 'ellipsis' ? getEllipsis(row.id) : cell.value}
+                          {cell.info.header === 'action' ? getActionItem(status, row.id)
+                            : cell.info.header === 'ellipsis' ? getEllipsis(row.id)
+                              : cell.value
+                          }
                         </TableCell>
                       ))}
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={headers.length} className="no-records-message">
-                      No records found
-                    </TableCell>
+                    <TableCell colSpan={headers.length} className="no-records-message">No records found</TableCell>
                   </TableRow>
                 )}
               </TableBody>
@@ -430,7 +440,7 @@ export default function ActivityList() {
         secondaryButtonText="Cancel"
         primaryButtonText={actionText}
         onPrimaryButtonClick={onPrimaryButtonClick}
-        onSecondaryButtonClick={() => setIsModalOpen(false)}
+        onSecondaryButtonClick={handleModalClose}
       >
         {message}
       </WrapperModal>

@@ -119,13 +119,14 @@ public class ActivityInstServiceImpl implements ActivityInstService{
             PcptActivityInst pcptActivityInst = null;
             PcptActivityInstDto pcptActivityInstDto = null;
             Blob pcptBlob = null;
+            DocumentContext json = null;
 
             for(ContextDataNodes nodes : partner.getContextDataNodes()) {
-                DocumentContext json = JsonPath.using(configuration).parse(contextData).set(nodes.getNodeRef(),nodes.getNodeValue());
-
-                byte[] pcptBytes = json.json().toString().getBytes(StandardCharsets.UTF_8);
-                pcptBlob = new SerialBlob(pcptBytes);
+                json = JsonPath.using(configuration).parse(contextData).set(nodes.getNodeRef(),nodes.getNodeValue());
             }
+
+            byte[] pcptBytes = json.json().toString().getBytes(StandardCharsets.UTF_8);
+            pcptBlob = new SerialBlob(pcptBytes);
 
             pcptActivityInstDto = PcptActivityInstDto.builder()
                     .pcptActivityInstKey(UUID.randomUUID().toString())

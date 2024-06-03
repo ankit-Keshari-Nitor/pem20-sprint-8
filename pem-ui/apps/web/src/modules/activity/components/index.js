@@ -1,3 +1,3 @@
-import ActivityDropdown from "./actions-dropdown";
+import ActivityDropdown from './actions-dropdown';
 
 export { ActivityDropdown };

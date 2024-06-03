@@ -298,8 +298,6 @@ $rqb-branch-style: $rqb-border-style !default;
   border-color: #0f62fe;
 }
 
-//End-query-builder-css
-
 .query-builder {
   margin-top: 1rem;
 }
@@ -415,7 +413,7 @@ $rqb-branch-style: $rqb-border-style !default;
 
 .btn-add-group {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .btn-add {

@@ -1,4 +1,4 @@
-import { API_URL } from './constants';
+import { API_URL } from './../constants';
 
 export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchKey = '', status = '') => {
   try {
@@ -116,3 +116,23 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
     return [];
   }
 };
+
+export const getActivityDetails = async (activityDefnKey) => {
+  try {
+    const url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}`;
+    const response = await fetch(url, {
+      method: 'GET'
+    });
+
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`);
+      return undefined;
+    }
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+    return [];
+  }
+};
+

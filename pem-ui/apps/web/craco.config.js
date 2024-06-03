@@ -6,6 +6,10 @@ const packages = [
     nodePath: '@b2bi/shell'
   },
   {
+    folderPath: '../../../../b2bi-ui-shared/packages/styles',
+    nodePath: '@b2bi/styles'
+  },
+  {
     folderPath: '../../packages/carbon-mappers/src',
     nodePath: '@b2bi/carbon-mappers'
   },

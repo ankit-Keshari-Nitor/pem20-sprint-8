@@ -5,10 +5,12 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
-    "@b2bi/shell-bdd": "^1.0.0"
+    "@cucumber/cucumber": "^10.1.0",
+    "@playwright/test": "^1.40.1",
+    "@types/node": "^20.10.6"
   },
   "scripts": {
-    "test-sanity": "cucumber-js test --tags \"(not (@Ignore or @ignore))\" ",
+    "test": "cucumber-js test --tags \"(not (@Ignore or @ignore))\" ",
     "test-current": "cucumber-js --tags \"(@current and (not (@Ignore or @ignore)))\" -f summary -f json:test/report/cucumber_report.json",
     "test-report": "node bdd/reporter.js"
   }

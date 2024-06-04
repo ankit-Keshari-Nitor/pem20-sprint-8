@@ -53,8 +53,11 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
           <span className="title">
             {selectedNode ? (
               <span>
-                {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})
-                <span> {selectedNode?.id} </span>
+                {selectedNode?.data?.editableProps.name ? (
+                  <span>{selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})</span>
+                ) : (
+                  <span>{selectedNode?.id} ({selectedNode?.data?.taskName})</span>
+                )}
               </span>
             ) : (
               <Grid>

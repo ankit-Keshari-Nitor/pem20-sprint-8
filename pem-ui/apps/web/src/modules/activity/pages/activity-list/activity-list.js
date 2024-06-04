@@ -356,10 +356,10 @@ export default function ActivityList() {
         <div className='header-buttons'>
           {/* Search, New, Import buttons */}
           <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
-          <Button className="new-button" renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
+          <Button size='sm' className="new-button" renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
             New
           </Button>
-          <Button kind="tertiary" className="import-button" renderIcon={Add}>
+          <Button size='sm' kind="tertiary" className="import-button" renderIcon={Add}>
             Import
           </Button>
           {/* Filter dropdown */}

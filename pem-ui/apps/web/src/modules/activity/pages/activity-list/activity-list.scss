@@ -77,6 +77,7 @@ tbody tr:nth-child {
 .import-button,
 .new-button {
   margin-left: 8px !important;
+  height: 46px !important;
 }
 
 .cds--search--expandable,
@@ -86,4 +87,8 @@ tbody tr:nth-child {
 
 .no-records-message {
   text-align: center !important;
+}
+
+#filter-dropdown {
+  bottom: 10px !important;
 }

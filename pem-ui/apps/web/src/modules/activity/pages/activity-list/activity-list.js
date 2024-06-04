@@ -25,6 +25,7 @@ import WrapperModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
 import RolloutWizard from '../../components/rollout-wizard';
 import TestWizard from '../../components/test-wizard/test-wizard.js';
+import { formValidation } from '../../../../../../../packages/page-designer/src/utils/helpers.js';
 
 export default function ActivityList() {
   // State hooks for managing various states
@@ -51,6 +52,14 @@ export default function ActivityList() {
   const [currentTestStep, setCurrentTestStep] = useState(0);
   const [testDialogData, setTestDialogData] = useState(TEST_DIALOG_DATA);
   const [currentTestData, setCurrentTestData] = useState(null);
+  const [formRenderSchema, setFormRenderSchema] = useState();
+
+  useEffect(() => {
+    if (testDialogData) {
+      let data = testDialogData[currentTestStep].schema.fields;
+      setFormRenderSchema(data);
+    }
+  }, [currentTestData, currentTestStep, testDialogData]);
 
   // Function to fetch and set data from the API
   const fetchAndSetData = useCallback(() => {
@@ -302,9 +311,24 @@ export default function ActivityList() {
     RolloutService.getTestList().then((data) => {
       setTestDialogData(data);
       setCurrentTestStep(0);
-      setCurrentTestData(data[currentTestStep]);
+      setCurrentTestData(data && data[currentTestStep]);
       setOpenTestModal(true);
     });
+  };
+
+  // Function to handle the Next/rollout Button Click
+  const handelTestFinishClick = () => {
+    let schema = JSON.parse(JSON.stringify(formRenderSchema));
+    schema = formValidation(schema);
+    setFormRenderSchema(schema);
+
+    if (currentTestStep < testDialogData.length - 1) {
+      setCurrentTestData(testDialogData[currentTestStep + 1]);
+      setCurrentTestStep(currentTestStep + 1);
+    } else if (currentTestStep === testDialogData.length - 1) {
+      setOpenTestModal(false);
+      // TODO -> Test API will call here
+    }
   };
 
   // Function to handle the Cancel/Previous Button Click
@@ -312,23 +336,12 @@ export default function ActivityList() {
     if (currentTestStep === 0) {
       setOpenTestModal(false);
     } else if (currentTestStep > 0 && currentTestStep <= testDialogData.length - 1) {
-      setCurrentTestStep(currentTestStep - 1);
       setCurrentTestData(testDialogData[currentTestStep - 1]);
+      setCurrentTestStep(currentTestStep - 1);
     }
   };
 
-  // Function to handle the Next/rollout Button Click
-  const handelTestFinishClick = () => {
-    if (currentTestStep < testDialogData.length - 1) {
-      setCurrentTestStep(currentTestStep + 1);
-      setCurrentTestData(testDialogData[currentTestStep + 1]);
-    } else if (currentTestStep === testDialogData.length - 1) {
-      setOpenTestModal(false);
-      // TODO -> Test API will call here
-    }
-  };
   // -------------------------------------Test operation End-------------------------------------------------
-
   return (
     <div className="activities-list-container">
       <TableContainer title="Activity Definitions">
@@ -436,7 +449,7 @@ export default function ActivityList() {
           <RolloutWizard currentStep={currentStep} handelStepChange={handelStepChange} />
         </WrapperModal>
       )}
-
+      {/* Modal for Test operation */}
       {openTestModal && (
         <WrapperModal
           isOpen={openTestModal}
@@ -447,7 +460,7 @@ export default function ActivityList() {
           onPrimaryButtonClick={handelTestFinishClick}
           onSecondaryButtonClick={handelTestCloseClick}
         >
-          <TestWizard currentTestData={currentTestData} />
+          <TestWizard currentTestData={currentTestData} formRenderSchema={formRenderSchema} />
         </WrapperModal>
       )}
       {/* Notification toast */}

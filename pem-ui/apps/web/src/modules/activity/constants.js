@@ -103,8 +103,79 @@ export const TEST_DIALOG_DATA = [
     schema: {
       fields: [
         {
-          id: 'df5fae77-5807-4b4a-856f-77be75152d33',
-          type: 'textinput'
+          id: '747c2c05-3adb-4f72-bf2b-434efb622020',
+          type: 'component',
+          component: {
+            type: 'textinput',
+            label: 'Text Input',
+            group: 'basic-input',
+            icon: {
+              key: null,
+              ref: null,
+              props: {},
+              _owner: null,
+              _store: {}
+            },
+            labelText: 'Test 1',
+            helperText: 'Input helper text'
+          }
+        },
+        {
+          type: 'row',
+          id: 'ca7fc2a7-2271-4a51-945c-80d22116470d',
+          maintype: 'group',
+          children: [
+            {
+              type: 'column',
+              id: '61c3ddfb-2e2b-439f-a920-0be2f267f389',
+              defaultsize: '16',
+              children: [
+                {
+                  id: '35bbcd42-5676-4c88-b7f5-57c615f44281',
+                  type: 'component',
+                  component: {
+                    type: 'textinput',
+                    label: 'Text Input',
+                    group: 'basic-input',
+                    icon: {
+                      key: null,
+                      ref: null,
+                      props: {},
+                      _owner: null,
+                      _store: {}
+                    },
+                    labelText: '1'
+                  }
+                }
+              ],
+              customsize: '7'
+            },
+            {
+              type: 'column',
+              id: 'b847fe5e-c04e-4920-813c-834d6043749d',
+              defaultsize: '16',
+              children: [
+                {
+                  id: '0290205a-fc92-47dd-a99e-ac912b4a18d9',
+                  type: 'component',
+                  component: {
+                    type: 'textinput',
+                    label: 'Text Input',
+                    group: 'basic-input',
+                    icon: {
+                      key: null,
+                      ref: null,
+                      props: {},
+                      _owner: null,
+                      _store: {}
+                    },
+                    labelText: '2'
+                  }
+                }
+              ],
+              customsize: '7'
+            }
+          ]
         }
       ]
     }
@@ -115,8 +186,38 @@ export const TEST_DIALOG_DATA = [
     schema: {
       fields: [
         {
-          id: 'df5fae77-5807-4b4a-856f-77be75152d33',
-          type: 'textinput'
+          id: 'f9d8a973-c0e4-4770-8114-970af260f7b4',
+          type: 'component',
+          component: {
+            type: 'textarea',
+            label: 'Text Area',
+            group: 'basic-input',
+            icon: {
+              key: null,
+              ref: null,
+              props: {},
+              _owner: null,
+              _store: {}
+            },
+            labelText: 'Test Area'
+          }
+        },
+        {
+          id: '56160e0a-80d6-4438-a9be-0e2d3e7cd337',
+          type: 'component',
+          component: {
+            type: 'textinput',
+            label: 'Text Input',
+            group: 'basic-input',
+            icon: {
+              key: null,
+              ref: null,
+              props: {},
+              _owner: null,
+              _store: {}
+            },
+            labelText: 'Text input'
+          }
         }
       ]
     }
@@ -125,12 +226,7 @@ export const TEST_DIALOG_DATA = [
     key: 'dialog-3',
     name: 'Dialog 3',
     schema: {
-      fields: [
-        {
-          id: 'df5fae77-5807-4b4a-856f-77be75152d33',
-          type: 'textinput'
-        }
-      ]
+      fields: [{ component: { type: 'textinput', label: 'Text Input', group: 'basic-input', icon: null }, id: '56160e0a-80d6-4438-a9be-0e2d3e7cd337', type: 'component' }]
     }
   }
 ];

@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import RolloutDetails from '../rollout-details-step';
+import RolloutDetails from '../rollout-wizard/elements/rollout-details-step';
 
 function createContainer() {
   const container = document.createElement('div');
@@ -59,12 +59,8 @@ describe('RolloutDetails Component', () => {
     render(getComponent());
 
     // then
-    const checkDateInput = screen.getAllByRole('textbox')[1];
-
+    const checkDateInput = screen.getByLabelText(/Due Date/);
     expect(checkDateInput).toBeInTheDocument();
-
-    const checkDateInputLabel = screen.getByLabelText('Due Date');
-    expect(checkDateInputLabel).toBeInTheDocument();
   });
 
   it('should render Alert Date label', function () {
@@ -72,12 +68,8 @@ describe('RolloutDetails Component', () => {
     render(getComponent());
 
     // then
-    const checkDueDateInput = screen.getAllByRole('textbox')[1];
-
+    const checkDueDateInput = screen.getByLabelText(/Alert Date/);
     expect(checkDueDateInput).toBeInTheDocument();
-
-    const checkDueDateInputLabel = screen.getByLabelText('Alert Date');
-    expect(checkDueDateInputLabel).toBeInTheDocument();
   });
 
   it('should render Alert Interval label', function () {
@@ -85,12 +77,8 @@ describe('RolloutDetails Component', () => {
     render(getComponent());
 
     // then
-    const checkAlertIntervalDateInput = screen.getAllByRole('textbox')[1];
-
+    const checkAlertIntervalDateInput = screen.getByLabelText(/Alert Interval/);
     expect(checkAlertIntervalDateInput).toBeInTheDocument();
-
-    const checkAlertIntervalDateInputLabel = screen.getByLabelText('Alert Interval');
-    expect(checkAlertIntervalDateInputLabel).toBeInTheDocument();
   });
 
   it('should renderClick to check Context Data label', function () {

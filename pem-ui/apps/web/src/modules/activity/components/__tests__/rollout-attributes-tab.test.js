@@ -21,35 +21,32 @@ describe('RolloutAttributeTab Component', () => {
 
   it('should render Attribute List Label', () => {
     // when;
-    render(getComponent());
+    render(getComponent(), { container });
 
     // then
-    expect(screen.getByTestId('rollout-gap-details')).toBeInTheDocument();
-
-    const checkAccordionLabel = screen.getByText('Attribute List');
-    expect(checkAccordionLabel).toBeInTheDocument();
+    const attributeListLabel = screen.getByText('Attribute List');
+    expect(attributeListLabel).toBeInTheDocument();
+    expect(attributeListLabel).toHaveClass('rollout-list-text');
   });
 
-  it('should render Attributes Label', () => {
+  it('should render Select attribute type dropdown', () => {
     // when;
-    render(getComponent());
+    render(getComponent(), { container });
 
     // then
-    expect(screen.getByTestId('rollout-gap-details')).toBeInTheDocument();
-
-    const checkAccordionLabel = screen.getByText('Attributes');
-    expect(checkAccordionLabel).toBeInTheDocument();
+    const selectInput = screen.getByLabelText('Select an attribute type');
+    expect(selectInput).toBeInTheDocument();
+    expect(selectInput).toHaveClass('cds--select-input');
   });
 
-  it('should render Trading Partners Label', () => {
+  it('should render Search input', () => {
     // when;
-    render(getComponent());
+    render(getComponent(), { container });
 
     // then
-    expect(screen.getByTestId('rollout-gap-details')).toBeInTheDocument();
-
-    const checkAccordionLabel = screen.getByText('Trading Partners');
-    expect(checkAccordionLabel).toBeInTheDocument();
+    const searchInput = screen.getByPlaceholderText('Search by attribute type');
+    expect(searchInput).toBeInTheDocument();
+    expect(searchInput).toHaveClass('cds--text-input');
   });
 });
 

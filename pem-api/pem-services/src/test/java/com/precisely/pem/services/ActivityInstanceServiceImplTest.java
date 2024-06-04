@@ -1,25 +1,25 @@
 package com.precisely.pem.services;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import com.precisely.pem.dtos.responses.ActivityInstPagnResp;
+import com.precisely.pem.dtos.requests.ActivityInstReq;
 import com.precisely.pem.dtos.responses.ActivityInstListResp;
+import com.precisely.pem.dtos.responses.ActivityInstPagnResp;
+import com.precisely.pem.dtos.responses.ActivityInstResp;
 import com.precisely.pem.dtos.responses.SponsorInfo;
+import com.precisely.pem.dtos.shared.ActivityInstDto;
+import com.precisely.pem.dtos.shared.PcptActivityInstDto;
 import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
+import com.precisely.pem.models.ActivityDefnVersion;
 import com.precisely.pem.models.ActivityInst;
-import com.precisely.pem.repositories.ActivityInstRepo;
+import com.precisely.pem.models.PcptActivityInst;
 import com.precisely.pem.repositories.SponsorRepo;
+import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -27,12 +27,13 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-public class ActivityInstanceServiceImplTest {
-    @Mock
-    private ActivityInstRepo activityInstRepo;
-    @Mock
-    private ModelMapper mapper;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+public class ActivityInstanceServiceImplTest extends BaseServiceTest {
     @Mock
     private SponsorRepo sponsorRepo;
     @InjectMocks
@@ -90,5 +91,55 @@ public class ActivityInstanceServiceImplTest {
         when(mapper.map(activityInst, ActivityInstListResp.class)).thenReturn(activityInstListResp);
         ActivityInstListResp response = activityInstService.getInstanceByKey("TEST_SPONSOR", "activityInstKey");
         assertEquals(activityInstListResp, response);
+    }
+
+    @Test
+    public void testCreateActivityInstance_Success() throws Exception {
+        ActivityInstDto activityInstDto = new ActivityInstDto();
+        ActivityInst activityInst = new ActivityInst();
+        activityInst.setActivityInstKey(TEST_ACTIVITY_INSTANCE_KEY);
+        PcptActivityInst pcptActivityInst = new PcptActivityInst();
+
+        when(activityDefnVersionRepo.findByActivityDefnKeyVersion(anyString())).thenReturn(getVCHActivityDefnVersionObj());
+        when(partnerRepo.findById(getListPartners().get(0).getPartnerKey())).thenReturn(Optional.ofNullable(getPartnerData()));
+        when(mapper.map(any(ActivityInstDto.class), eq(ActivityInst.class))).thenReturn(activityInst);
+        when(mapper.map(any(PcptActivityInstDto.class), eq(PcptActivityInst.class))).thenReturn(pcptActivityInst);
+
+        ActivityInstResp response = activityInstService.createActivityInstance("TEST_SPONSOR", getActivityInstanceDefnReq());
+
+        assertNotNull(response);
+        assertNotNull(response.getActivityInstKey());
+        verify(activityInstRepo, times(1)).save(any(ActivityInst.class));
+        verify(pcptInstRepo, times(getActivityInstanceDefnReq().getPartners().size())).save(any(PcptActivityInst.class));
+    }
+
+    @Test
+    public void testCreateActivityInstance_ResourceNotFoundException_NoActivityDefnVersion() {
+        when(activityDefnVersionRepo.findByActivityDefnKeyVersion(anyString())).thenReturn(null);
+
+        assertThrows(ResourceNotFoundException.class, () -> {
+            activityInstService.createActivityInstance("TEST_SPONSOR", getActivityInstanceDefnReq());
+        });
+    }
+
+    @Test
+    public void testCreateActivityInstance_ResourceNotFoundException_EmptyActivityDefnKey() {
+        ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
+        activityDefnVersion.setActivityDefnKey("");
+
+        assertThrows(ResourceNotFoundException.class, () -> {
+            activityInstService.createActivityInstance("TEST_SPONSOR", getActivityInstanceDefnReq());
+        });
+    }
+
+    @Test
+    public void testCreateActivityInstance_JSONException() throws Exception {
+        ActivityInstReq activityInstReq = getActivityInstanceDefnReq();
+        activityInstReq.setContextData("invalidJSON");
+        when(activityDefnVersionRepo.findByActivityDefnKeyVersion(anyString())).thenReturn(getVCHActivityDefnVersionObj());
+
+        assertThrows(JSONException.class, () -> {
+            activityInstService.createActivityInstance("TEST_SPONSOR", activityInstReq);
+        });
     }
 }

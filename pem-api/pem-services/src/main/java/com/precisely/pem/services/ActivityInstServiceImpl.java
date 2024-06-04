@@ -149,7 +149,7 @@ public class ActivityInstServiceImpl implements ActivityInstService{
             pcptInstRepo.save(pcptActivityInst);
         }
 
-        activityInstResp.setActivityInstKey(activityInst.getActivityInstKey());
+            activityInstResp.setActivityInstKey(activityInstDto.getActivityInstKey());
 
         return activityInstResp;
     }

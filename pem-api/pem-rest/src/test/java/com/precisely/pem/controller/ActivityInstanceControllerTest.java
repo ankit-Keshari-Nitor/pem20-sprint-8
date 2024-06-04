@@ -63,7 +63,7 @@ public class ActivityInstanceControllerTest extends BaseControllerTest{
     }
 
     @Test
-    void testGetInstanceById() throws ResourceNotFoundException {
+    void testGetInstanceByKey() throws ResourceNotFoundException {
         ActivityInstListResp activityInstListResp = new ActivityInstListResp();
 
         when(activityInstService.getInstanceByKey(anyString(), anyString())).thenReturn(activityInstListResp);

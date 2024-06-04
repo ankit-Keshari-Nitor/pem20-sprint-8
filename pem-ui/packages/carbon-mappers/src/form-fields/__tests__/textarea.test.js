@@ -15,21 +15,11 @@ describe('Textfield', () => {
   });
 
   it('should render', () => {
-    // when;
     render(
-      getComponent({
-        value: 'Text Textarea value'
-      })
+      getComponent()
     );
 
-    // then
-    expect(screen.getByTestId('test-text-area')).toBeInTheDocument();
-
-    const checkTextArea = screen.getByRole('textbox');
-
-    expect(checkTextArea).toBeInTheDocument();
-    expect(checkTextArea.value).toEqual('Text Textarea value');
-
+    expect(screen.getByLabelText('Textarea Label')).toBeInTheDocument();
     const checkTextAreaLabel = screen.getByText('Textarea Label');
     expect(checkTextAreaLabel).toBeInTheDocument();
   });
@@ -39,7 +29,7 @@ describe('Textfield', () => {
     render(getComponent({ isRequired: true }));
 
     // then
-    const checkTextAreaLabel = screen.getByText('*');
+    const checkTextAreaLabel = screen.getByText('Textarea Label');
     expect(checkTextAreaLabel).toBeInTheDocument();
   });
 

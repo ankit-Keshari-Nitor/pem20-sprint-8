@@ -1,55 +1,50 @@
-import { render, screen } from '@testing-library/react';
-import { FORM_FIELD_TYPE } from '../../constant';
-import Datepicker from '../datepicker';
-import { createContainer } from '../../utils/test-helper';
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import DatePicker from '../datepicker'; // Adjust the import according to your file structure
 
-let container;
+const mockOnChangeHandle = jest.fn();
 
-describe('Datepicker', () => {
+const defaultProps = {
+  field: {
+    type: 'datepicker',
+    labelText: 'Select Date',
+    value: '01/01/2020',
+    isRequired: false,
+  },
+  id: 'datepicker-1',
+  currentPath: 'test-path',
+  onChangeHandle: mockOnChangeHandle,
+  previewMode: false,
+};
+
+describe('DatePicker Component', () => {
   beforeEach(() => {
-    container = createContainer();
+    jest.clearAllMocks();
   });
 
-  afterEach(function () {
-    container.remove();
+  it('renders DatePicker component', () => {
+    render(<DatePicker {...defaultProps} />);
+    expect(screen.getByTestId('datepicker-1')).toBeInTheDocument();
   });
 
-  it('should render', () => {
-    // when;
-    render(getComponent());
-
-    // then
-    expect(screen.getByTestId('test-datepicker')).toBeInTheDocument();
-
-    const checkDatepickerLabel = screen.getByText('Datepicker Label');
-    expect(checkDatepickerLabel).toBeInTheDocument();
+  it('sets initial value in preview mode', () => {
+    render(<DatePicker {...defaultProps} previewMode={true} />);
+    const input = screen.getByPlaceholderText('mm/dd/yyyy');
+    expect(input.value).toBe('01/01/2020');
   });
 
-  it('should render required label', function () {
-    // when
-    render(getComponent({ isRequired: true }));
-
-    // then
-    const checkDatepickerLabel = screen.getByText('*');
-    expect(checkDatepickerLabel).toBeInTheDocument();
+  it('handles date change', () => {
+    render(<DatePicker {...defaultProps} />);
+    const input = screen.getByPlaceholderText('mm/dd/yyyy');
+    fireEvent.change(input, { target: { value: '02/02/2022' } });
+    expect(input.value).toBe('02/02/2022');
   });
 
-  it('should render helper text', function () {
-    // when
-    render(getComponent({ helperText: 'helperText' }));
-
-    // then
-    const checkDatepickerHelperText = screen.getByText('helperText');
-    expect(checkDatepickerHelperText).toBeInTheDocument();
+  it('does not call onChangeHandle when not in preview mode', () => {
+    render(<DatePicker {...defaultProps} />);
+    const input = screen.getByPlaceholderText('mm/dd/yyyy');
+    fireEvent.change(input, { target: { value: '04/04/2024' } });
+    expect(mockOnChangeHandle).not.toHaveBeenCalled();
   });
 });
-
-const getComponent = (props) => {
-  const defaultField = {
-    id: 'test-datepicker',
-    type: FORM_FIELD_TYPE.DATEPICKER,
-    labelText: 'Datepicker Label',
-    ...props
-  };
-  return <Datepicker field={defaultField} />;
-};

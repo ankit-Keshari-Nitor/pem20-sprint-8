@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import WrapperNotification from '../helpers/wrapper-notification-toast';
+import WrapperNotification from '../../helpers/wrapper-notification-toast';
 
 describe('WrapperNotification', () => {
     it('renders notification with correct props', () => {

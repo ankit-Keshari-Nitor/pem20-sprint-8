@@ -2,22 +2,44 @@
 import '@testing-library/jest-dom';
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import WrapperModal from '../helpers/wrapper-modal';
+import WrapperModal from '../../helpers/wrapper-modal';
 
 describe('WrapperModal component', () => {
 
     it('renders the modal with default props', () => {
-        const { getByText } = render(<WrapperModal isOpen={true} />);
-        expect(getByText('Confirmation')).toBeInTheDocument();
-        expect(getByText('Cancel')).toBeInTheDocument();
+        const setIsOpen = jest.fn();
+        const onPrimaryButtonClick = jest.fn();
+        const onSecondaryButtonClick = jest.fn();
+        const primaryButtonText = 'Primary Button';
+        const secondaryButtonText = 'Secondary Button';
+        const modalHeading = 'Confirmation';
+
+        const { getByLabelText, getByText } = render(
+            <WrapperModal
+                isOpen={true}
+                setIsOpen={setIsOpen}
+                primaryButtonText={primaryButtonText}
+                onPrimaryButtonClick={onPrimaryButtonClick}
+                secondaryButtonText={secondaryButtonText}
+                onSecondaryButtonClick={onSecondaryButtonClick}
+                modalHeading={modalHeading}
+            >
+                {/* You can add children components here if needed */}
+            </WrapperModal>
+        );
+
+        expect(getByLabelText(modalHeading)).toBeInTheDocument();
+        expect(getByText(primaryButtonText)).toBeInTheDocument();
+        expect(getByText(secondaryButtonText)).toBeInTheDocument();
     });
 
     it('calls onRequestClose when the modal is closed', () => {
-        const onRequestClose = jest.fn();
         const setIsOpen = jest.fn();
-        const { getByText } = render(<WrapperModal isOpen={true} setIsOpen={setIsOpen} onRequestClose={onRequestClose} />);
-        fireEvent.click(getByText('Cancel'));
-        expect(setIsOpen).toHaveBeenCalledTimes(1);
+        const { getByLabelText } = render(
+            <WrapperModal isOpen={true} setIsOpen={setIsOpen} />
+        );
+        fireEvent.click(getByLabelText('Close'));
+        expect(setIsOpen).toHaveBeenCalledWith(false);
     });
 
     it('calls handlePrimaryButtonClick when the primary button is clicked', () => {
@@ -25,7 +47,7 @@ describe('WrapperModal component', () => {
         const { getByText } = render(
             <WrapperModal
                 isOpen={true}
-                onRequestSubmit={handlePrimaryButtonClick}
+                onPrimaryButtonClick={handlePrimaryButtonClick} // Pass the function as the onPrimaryButtonClick prop
                 primaryButtonText="Mark as final"
             />
         );
@@ -35,7 +57,7 @@ describe('WrapperModal component', () => {
 
     it('renders the provided message', () => {
         const message = 'This is a test message';
-        const { getByText } = render(<WrapperModal isOpen={true} message={message} />);
+        const { getByText } = render(<WrapperModal isOpen={true} children={message} />);
         expect(getByText(message)).toBeInTheDocument();
     });
 });

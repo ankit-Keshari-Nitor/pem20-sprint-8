@@ -1,58 +1,46 @@
-import '@testing-library/jest-dom';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import RolloutGapDetails from '../rollout-wizard/elements/rollout-details-step';
+import '@testing-library/jest-dom'; // Add this line to import jest-dom matchers
+import RolloutGapDetails from '../rollout-wizard/elements/rollout-gap-step';
+import { Tab } from '@carbon/react';
 
-function createContainer() {
-  const container = document.createElement('div');
-  document.body.appendChild(container);
-  return container;
-}
-let container;
+jest.mock('../rollout-wizard/elements/rollout-group-tab', () => () => <div>Group Tab Content</div>);
+jest.mock('../rollout-wizard/elements/rollout-trading-tab', () => () => <div>Trading Partners Tab Content</div>);
+jest.mock('../rollout-wizard/elements/rollout-attributes-tab', () => () => <div>Attributes Tab Content</div>);
 
-describe('RolloutGapDetails Component', () => {
+describe('RolloutGapDetails', () => {
   beforeEach(() => {
-    container = createContainer();
+    window.matchMedia =
+      window.matchMedia ||
+      function () {
+        return {
+          matches: false,
+          addListener: function () {},
+          removeListener: function () {},
+        };
+      };
+  });
+  
+  afterEach(() => {
+    window.matchMedia = undefined;
   });
 
-  afterEach(function () {
-    container.remove();
+  it('renders Group tab by default', () => {
+    render(<RolloutGapDetails id="test-id" />);
+    expect(screen.getByText('Group Tab Content')).toBeInTheDocument();
   });
 
-  it('should render Group Label', () => {
-    // when;
-    render(getComponent());
-
-    // then
-    expect(screen.getByTestId('rollout-gap-details')).toBeInTheDocument();
-
-    const checkAccordionLabel = screen.getByText('Group');
-    expect(checkAccordionLabel).toBeInTheDocument();
+  it('renders Attributes tab content when Attributes tab is clicked', () => {
+    render(<RolloutGapDetails id="test-id" />);
+    const attributesTab = screen.getByRole('tab', { name: /Attributes/i });
+    attributesTab.click();
+    expect(screen.getByText('Attributes Tab Content')).toBeInTheDocument();
   });
 
-  it('should render Attributes Label', () => {
-    // when;
-    render(getComponent());
-
-    // then
-    expect(screen.getByTestId('rollout-gap-details')).toBeInTheDocument();
-
-    const checkAccordionLabel = screen.getByText('Attributes');
-    expect(checkAccordionLabel).toBeInTheDocument();
-  });
-
-  it('should render Trading Partners Label', () => {
-    // when;
-    render(getComponent());
-
-    // then
-    expect(screen.getByTestId('rollout-gap-details')).toBeInTheDocument();
-
-    const checkAccordionLabel = screen.getByText('Trading Partners');
-    expect(checkAccordionLabel).toBeInTheDocument();
+  it('renders Trading Partners tab content when Trading Partners tab is clicked', () => {
+    render(<RolloutGapDetails id="test-id" />);
+    const tradingPartnersTab = screen.getByRole('tab', { name: /Trading Partners/i });
+    tradingPartnersTab.click();
+    expect(screen.getByText('Trading Partners Tab Content')).toBeInTheDocument();
   });
 });
-
-const getComponent = () => {
-  return <RolloutGapDetails id={'rollout-gap-details'} />;
-};

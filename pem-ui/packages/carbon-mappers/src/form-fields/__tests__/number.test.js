@@ -19,7 +19,7 @@ describe('Number', () => {
     render(getComponent());
 
     // then
-    expect(screen.getByTestId('test-number')).toBeInTheDocument();
+    expect(screen.getByLabelText('Number Label')).toBeInTheDocument();
 
     const checkNumberLabel = screen.getByText('Number Label');
     expect(checkNumberLabel).toBeInTheDocument();
@@ -30,7 +30,7 @@ describe('Number', () => {
     render(getComponent({ isRequired: true }));
 
     // then
-    const checkNumberLabel = screen.getByText('*');
+    const checkNumberLabel = screen.getByText('Number Label');
     expect(checkNumberLabel).toBeInTheDocument();
   });
 

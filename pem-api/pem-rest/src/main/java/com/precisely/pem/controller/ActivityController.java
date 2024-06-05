@@ -1,8 +1,5 @@
 package com.precisely.pem.controller;
 
-import com.precisely.pem.Validator.SpecialCharValidator;
-import com.precisely.pem.Validator.MultipartFileValidator;
-import com.precisely.pem.Validator.SpecialCharValidator;
 import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
@@ -22,10 +19,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Size;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

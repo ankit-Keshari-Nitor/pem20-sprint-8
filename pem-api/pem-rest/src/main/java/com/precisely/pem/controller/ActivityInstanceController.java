@@ -1,7 +1,13 @@
 package com.precisely.pem.controller;
 
+import com.precisely.pem.commonUtil.InstStatus;
+import com.precisely.pem.commonUtil.SortBy;
+import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.dtos.requests.ActivityInstReq;
+import com.precisely.pem.dtos.responses.ActivityInstListResp;
+import com.precisely.pem.dtos.responses.ActivityInstPagnResp;
 import com.precisely.pem.dtos.responses.ActivityInstResp;
+import com.precisely.pem.dtos.shared.ActivityStatsDto;
 import com.precisely.pem.exceptionhandler.ErrorResponseDto;
 import com.precisely.pem.services.ActivityInstService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +25,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -48,10 +56,85 @@ public class ActivityInstanceController {
     public ResponseEntity<Object> createActivityInstance(@Valid @RequestBody ActivityInstReq activityInstReq,
                                                          @PathVariable(value = "sponsorContext", required = true) String sponsorContext) throws Exception {
         ActivityInstResp activityInstResp = activityInstService.createActivityInstance(sponsorContext,activityInstReq);
-        Link link = linkTo(methodOn(ActivityController.class).getActivityDefinitionByKey(sponsorContext,activityInstResp.getActivityInstKey())).withSelfRel();
+        Link link = linkTo(methodOn(ActivityInstanceController.class).getActivityInstanceByKey(sponsorContext,activityInstResp.getActivityInstKey())).withSelfRel();
         activityInstResp.setLocation(link.getHref());
         HttpHeaders headers = new HttpHeaders();
         headers.set("location", activityInstResp.getLocation());
         return new ResponseEntity<>(activityInstResp, headers, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Get Activity Instance by Key", tags = { "Activity Instance" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ActivityInstListResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityInstListResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "404", description = "There are no Instances", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
+    })
+    @GetMapping(value = "/{activityInstKey}",produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<Object> getActivityInstanceByKey(@PathVariable(value = "sponsorContext")String sponsorContext,
+                                                                 @PathVariable(value = "activityInstKey")String activityInstKey) throws Exception {
+        ActivityInstListResp activityInstResp = activityInstService.getInstanceByKey(sponsorContext,activityInstKey);
+        activityInstResp.setActivityTasks(null);//We will populate this data when we have the API in place.
+        activityInstResp.setPcptActivityInstances(null);//We will populate this data when we have the API in place.
+        return new ResponseEntity<>(activityInstResp, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get List of Activity Instances", tags = { "Activity Instance" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ActivityInstPagnResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityInstPagnResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "404", description = "There are no Instances", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
+    })
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<Object> getActivityInstanceList(@RequestParam(value = "name", defaultValue = "", required = false) String name,
+                                                          @RequestParam(value = "description",defaultValue = "", required = false) String description,
+                                                          @RequestParam(value = "status", defaultValue = "INPROGRESS", required = true) InstStatus status,
+                                                          @RequestParam(value = "activityDefnVersionKey", defaultValue = "", required = true) String activityDefnVersionKey,
+                                                          @RequestParam(value = "partnerKey", defaultValue = "", required = true) String partnerKey,
+                                                          @RequestParam(value = "activityStats", defaultValue = "", required = true) Boolean activityStats,
+                                                          @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                                          @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+                                                          @RequestParam(value = "sortBy", defaultValue = "modifyTs" ,required = false) SortBy sortBy,
+                                                          @RequestParam(value = "sortDir", defaultValue = "DESC", required = false) SortDirection sortDir,
+                                                          @PathVariable(value = "sponsorContext")String sponsorContext) throws Exception {
+        ActivityInstPagnResp activityDefnPaginationRes = activityInstService.getAllInstanceList(sponsorContext,name,description,status.getInstStatus(),activityDefnVersionKey,partnerKey,activityStats,pageNo, pageSize, sortBy ==null? "modify_ts":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
+        //        logic will change when API will get introduced to generate these values
+
+        ActivityStatsDto activityStatsDto = new ActivityStatsDto();
+        activityStatsDto.setCompleted(0);
+        activityStatsDto.setPartners(0);
+        activityStatsDto.setStarted(0);
+        activityStatsDto.setNotStarted(0);
+        activityStatsDto.setSponsorAction(0);
+//        logic will change when API will get introduced to generate these values
+
+        activityDefnPaginationRes.getContent().stream()
+                .map(p ->
+                {
+//                    Link link = null;
+//                    try {
+//                        link = linkTo(methodOn(ActivityInstanceController.class).createActivityInstance(new ActivityInstReq(),sponsorContext)).withSelfRel();
+//                    } catch (Exception e) {
+//                        throw new RuntimeException(e);
+//                    }
+                    p.setActivityTasks(null); //We will populate this data when we have the API in place.
+                    if(activityStats) {
+                        p.setActivityStats(activityStatsDto);
+                    }
+                    return p;
+                }).collect(Collectors.toList());
+
+        return new ResponseEntity<>(activityDefnPaginationRes, HttpStatus.OK);
     }
 }

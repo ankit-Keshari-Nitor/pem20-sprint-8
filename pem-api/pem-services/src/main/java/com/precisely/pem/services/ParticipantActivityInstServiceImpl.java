@@ -287,6 +287,22 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
         return participantActivityInstResp;
     }
 
+    @Override
+    public MessageResp startActivity(String sponsorContext, String pcptActivityInstKey) throws ResourceNotFoundException {
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
+        PcptActivityInst pcptActivityInst = pcptInstRepo.findByPcptActivityInstKey(pcptActivityInstKey);
+        if(Objects.isNull(pcptActivityInst)){
+            throw new ResourceNotFoundException("PcptInstanceNotFound", "The participant instance with key '" + pcptActivityInstKey + "' not found.");
+        }
+
+        pcptActivityInst.setPcptInstStatus(PcptInstStatus.STARTED.getPcptInstStatus());
+        pcptInstRepo.save(pcptActivityInst);
+
+        return MessageResp.builder()
+                .response("SUCCESS")
+                .build();
+    }
+
     private SponsorInfo validateSponsorContext(String sponsorContext) throws ResourceNotFoundException {
         SponsorInfo sponsorInfo = TenantContext.getTenantContext();
         if(Objects.isNull(sponsorInfo)){

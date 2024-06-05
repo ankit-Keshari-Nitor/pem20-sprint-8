@@ -42,9 +42,6 @@ public class ActivityInst extends BaseEntity{
     @Column(name="DUE_DATE")
     private String dueDate;
 
-    @Column(name="END_DATE")
-    private String endDate;
-
     @Column(name="ALERT_DATE")
     private String alertDate;
 

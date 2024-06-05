@@ -258,7 +258,7 @@ export default function ActivityList() {
     if (status === 'DRAFT' || status === '') {
       return (
         <ActivityDropdown
-          statusLabel={status}
+          statusLabel="Draft"
           selectedItem={tempSelectedItem[id]}
           id={id}
           items={ACTION_COLUMN_DRAFT}
@@ -268,7 +268,7 @@ export default function ActivityList() {
     } else if (status === 'FINAL') {
       return (
         <ActivityDropdown
-          statusLabel={status}
+          statusLabel="Mark as Final"
           selectedItem={tempSelectedItem[id]}
           id={id}
           items={ACTION_COLUMN_FINAL}

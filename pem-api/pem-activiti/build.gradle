@@ -6,6 +6,7 @@ group = 'com.precisely.pem'
 version = '1.0-SNAPSHOT'
 
 repositories {
+    google()
     maven {
         url 'https://artifacts.alfresco.com/nexus/content/repositories/activiti-releases'
     }

@@ -47,9 +47,9 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
     }
     @Test
     void testGetAllVersionDefinitionList() throws Exception {
-        String sponsorContext = "cashbank";
+        String sponsorContext = "test";
         String activityDefnKey = "name";
-        String applicationDescription = "test";
+        String applicationDescription = "desc";
         String status = "status";
         int pageNo = 0;
         int pageSize = 10;
@@ -57,8 +57,8 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         String sortDir = "sortDir";
         boolean isDefault = false;
         Page<ActivityDefnVersion> defnsPage = new PageImpl<>(getVersionList());
-        Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndDescriptionContaining(eq(activityDefnKey),eq(status),eq(sponsorContext),
-                        eq(applicationDescription),Mockito.any(Pageable.class)))
+        Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndIsDefaultAndDescriptionContaining(eq(activityDefnKey),eq(status),eq(sponsorContext),
+                        eq(isDefault),eq(applicationDescription),Mockito.any(Pageable.class)))
                 .thenReturn(defnsPage);
         ActivityDefnVersionDto dto = new ActivityDefnVersionDto();
         Mockito.when(mapper.map(Mockito.any(ActivityDefnVersion.class),eq(ActivityDefnVersionDto.class)))
@@ -92,7 +92,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         v2.setVersion(2.0);
         v2.setStatus("DRAFT");
         v2.setIsEncrypted(false);
-        v2.setIsDefault(false);
+        v2.setIsDefault(true);
         v2.setEncryptionKey("123");
         return Arrays.asList(v1,v2);
     }

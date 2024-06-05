@@ -13,7 +13,7 @@ const ActivityDefinition = {
 const routes = [
   {
     path: '/activities',
-    breadcrumb: 'mod-activity-designer:breadcrumb.definitions',
+    breadcrumb: 'mod-activity-definition:breadcrumb.definitions',
     resourceKey: 'DEFINITIONS.VIEW',
     element: (
       <Shell.RoutePage resourceKey="DEFINITIONS.VIEW" dataLoaderConfig={{}}>
@@ -25,7 +25,7 @@ const routes = [
   },
   {
     path: '/activities/new',
-    breadcrumb: 'mod-activity-designer:breadcrumb.workflow',
+    breadcrumb: 'mod-activity-definition:breadcrumb.workflow',
     resourceKey: 'DESIGNER.VIEW',
     element: (
       <Shell.RoutePage resourceKey="DESIGNER.VIEW" dataLoaderConfig={{}}>
@@ -37,7 +37,7 @@ const routes = [
   },
   {
     path: '/activities/:id',
-    breadcrumb: 'mod-activity-designer:breadcrumb.workflow',
+    breadcrumb: 'mod-activity-definition:breadcrumb.workflow',
     resourceKey: 'DESIGNER.VIEW',
     element: (
       <Shell.RoutePage resourceKey="DESIGNER.VIEW" dataLoaderConfig={{}}>

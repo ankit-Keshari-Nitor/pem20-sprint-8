@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './activity-list.scss';
+import Shell from '@b2bi/shell';
+import '@b2bi/styles/pages/list-page.scss';
 import * as ActivityService from '../../services/activity-service.js';
 import * as RolloutService from '../../services/rollout-service';
 import { NEW_ACTIVITY_URL, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
@@ -17,7 +19,8 @@ import {
   TableHeader,
   TableBody,
   TableCell,
-  Pagination
+  Pagination,
+  Section
 } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
 import ActivityDropdown from '../../components/actions-dropdown';
@@ -27,6 +30,7 @@ import RolloutWizard from '../../components/rollout-wizard';
 import TestWizard from '../../components/test-wizard/test-wizard.js';
 
 export default function ActivityList() {
+  const pageUtil = Shell.PageUtil();
   // State hooks for managing various states
   const [totalRows, setTotalRows] = useState(0);
   const [searchKey, setSearchKey] = useState('');
@@ -34,14 +38,14 @@ export default function ActivityList() {
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [rows, setRows] = useState([]);
-  const [status, setStatus] = useState("DRAFT");
+  const [status, setStatus] = useState('DRAFT');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionText, setActionText] = useState('');
   const [message, setMessage] = useState('');
   const [onPrimaryButtonClick, setOnPrimaryButtonClick] = useState(null); // Renamed state
   const [notificationProps, setNotificationProps] = useState(null);
   const [tempSelectedItem, setTempSelectedItem] = useState({}); // Temporarily store selected item
-  const [activityDefnKey, setActivityDefnKey] = useState("");
+  const [activityDefnKey, setActivityDefnKey] = useState('');
 
   // Rollout operation states
   const [openRolloutModal, setOpenRolloutModal] = useState(false);
@@ -56,19 +60,21 @@ export default function ActivityList() {
 
   // Function to fetch and set data from the API
   const fetchAndSetData = useCallback(() => {
-    ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status).then((data) => {
-      setRows(data.content);
-      setTotalRows(data.pageContent.totalElements);
-    }).catch(error => {
-      console.error('Failed to fetch data:', error);
-      setNotificationProps({
-        open: true,
-        title: 'Error - ',
-        subtitle: 'Failed to fetch data',
-        kind: 'error',
-        onCloseButtonClick: () => setNotificationProps(null),
+    ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status)
+      .then((data) => {
+        setRows(data.content);
+        setTotalRows(data.pageContent.totalElements);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch data:', error);
+        setNotificationProps({
+          open: true,
+          title: 'Error - ',
+          subtitle: 'Failed to fetch data',
+          kind: 'error',
+          onCloseButtonClick: () => setNotificationProps(null)
+        });
       });
-    });
   }, [pageNo, pageSize, sortDir, searchKey, status]);
 
   // useEffect to trigger fetchAndSetData whenever dependencies change
@@ -86,8 +92,8 @@ export default function ActivityList() {
   // Handler for changing filter selection
   const handleFilterChange = (selectedItems) => {
     if (Array.isArray(selectedItems.selectedItems)) {
-      const selectedIds = selectedItems.selectedItems.map(item => item.id);
-      setStatus(selectedIds.join(","));
+      const selectedIds = selectedItems.selectedItems.map((item) => item.id);
+      setStatus(selectedIds.join(','));
     } else {
       setStatus([]);
     }
@@ -101,7 +107,7 @@ export default function ActivityList() {
 
   // Handler for dropdown action changes
   const handleDropdownChange = (selectedItem, id) => {
-    setTempSelectedItem(prevSelectedItems => ({
+    setTempSelectedItem((prevSelectedItems) => ({
       ...prevSelectedItems,
       [id]: selectedItem
     })); // Temporarily store the selected item
@@ -127,7 +133,7 @@ export default function ActivityList() {
 
   // Handler to clear the selected item
   const clearSelectedItem = (id) => {
-    setTempSelectedItem(prevSelectedItems => ({
+    setTempSelectedItem((prevSelectedItems) => ({
       ...prevSelectedItems,
       [id]: null
     }));
@@ -135,7 +141,6 @@ export default function ActivityList() {
 
   // Handler for marking activity as final
   const handleMarkAsFinal = async (id) => {
-
     try {
       let activityVersionKey;
       const response = await ActivityService.getActivityVersionkey(pageNo - 1, pageSize, sortDir, status, true, id);
@@ -145,14 +150,14 @@ export default function ActivityList() {
 
         const responseStatus = await ActivityService.markActivityDefinitionAsFinal(id, activityVersionKey);
 
-        if (responseStatus !== undefined && responseStatus === "FINAL") {
+        if (responseStatus !== undefined && responseStatus === 'FINAL') {
           fetchAndSetData();
           setNotificationProps({
             open: true,
             title: 'Success - ',
             subtitle: 'Action completed successfully!',
             kind: 'success',
-            onCloseButtonClick: () => setNotificationProps(null),
+            onCloseButtonClick: () => setNotificationProps(null)
           });
         } else {
           setNotificationProps({
@@ -160,7 +165,7 @@ export default function ActivityList() {
             title: 'Error - ',
             subtitle: 'Action not completed successfully!',
             kind: 'error',
-            onCloseButtonClick: () => setNotificationProps(null),
+            onCloseButtonClick: () => setNotificationProps(null)
           });
         }
       } else {
@@ -169,7 +174,7 @@ export default function ActivityList() {
           title: 'Error - ',
           subtitle: 'Action not completed successfully!',
           kind: 'error',
-          onCloseButtonClick: () => setNotificationProps(null),
+          onCloseButtonClick: () => setNotificationProps(null)
         });
       }
     } catch (error) {
@@ -179,17 +184,17 @@ export default function ActivityList() {
         title: 'Error - ',
         subtitle: 'Failed to mark as final activity',
         kind: 'error',
-        onCloseButtonClick: () => setNotificationProps(null),
+        onCloseButtonClick: () => setNotificationProps(null)
       });
     }
-    handleModalClose()
+    handleModalClose();
     setIsModalOpen(false);
   };
 
   // Handler for delete action initiation
   const handleDelete = (id) => {
-    setActionText("Delete");
-    setMessage("Are you sure you want to delete? The Activity status will be changed to Deleted.");
+    setActionText('Delete');
+    setMessage('Are you sure you want to delete? The Activity status will be changed to Deleted.');
     setOnPrimaryButtonClick(() => () => handleDeleteActivity(id)); // Updated
     setIsModalOpen(true);
   };
@@ -205,7 +210,7 @@ export default function ActivityList() {
           title: 'Success - ',
           subtitle: 'Action completed successfully!',
           kind: 'success',
-          onCloseButtonClick: () => setNotificationProps(null),
+          onCloseButtonClick: () => setNotificationProps(null)
         });
       } else {
         setNotificationProps({
@@ -213,7 +218,7 @@ export default function ActivityList() {
           title: 'Error - ',
           subtitle: 'Action not completed successfully!',
           kind: 'error',
-          onCloseButtonClick: () => setNotificationProps(null),
+          onCloseButtonClick: () => setNotificationProps(null)
         });
       }
     } catch (error) {
@@ -223,7 +228,7 @@ export default function ActivityList() {
         title: 'Error - ',
         subtitle: 'Failed to delete activity',
         kind: 'error',
-        onCloseButtonClick: () => setNotificationProps(null),
+        onCloseButtonClick: () => setNotificationProps(null)
       });
     }
     setIsModalOpen(false);
@@ -251,9 +256,25 @@ export default function ActivityList() {
   // Generate action items based on the activity status
   const getActionItem = (status, id) => {
     if (status === 'DRAFT' || status === '') {
-      return <ActivityDropdown statusLabel={status} selectedItem={tempSelectedItem[id]} id={id} items={ACTION_COLUMN_DRAFT} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />;
+      return (
+        <ActivityDropdown
+          statusLabel={status}
+          selectedItem={tempSelectedItem[id]}
+          id={id}
+          items={ACTION_COLUMN_DRAFT}
+          onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)}
+        />
+      );
     } else if (status === 'FINAL') {
-      return <ActivityDropdown statusLabel={status} selectedItem={tempSelectedItem[id]} id={id} items={ACTION_COLUMN_FINAL} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />;
+      return (
+        <ActivityDropdown
+          statusLabel={status}
+          selectedItem={tempSelectedItem[id]}
+          id={id}
+          items={ACTION_COLUMN_FINAL}
+          onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)}
+        />
+      );
     }
   };
 
@@ -351,129 +372,135 @@ export default function ActivityList() {
   // -------------------------------------Test operation End-------------------------------------------------
 
   return (
-    <div className="activities-list-container">
-      <TableContainer title="Activity Definitions">
-        <div className='header-buttons'>
-          {/* Search, New, Import buttons */}
-          <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
-          <Button size='sm' className="new-button" renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
-            New
-          </Button>
-          <Button size='sm' kind="tertiary" className="import-button" renderIcon={Add}>
-            Import
-          </Button>
-          {/* Filter dropdown */}
-          <MultiSelect
-            className="filter-dropdown"
-            id="filter-dropdown"
-            titleText=""
-            label="Filter Option"
-            items={[
-              { id: 'DRAFT', text: 'DRAFT' },
-              { id: 'FINAL', text: 'FINAL' },
-              { id: 'DELETE', text: 'DELETE' }
-            ]}
-            itemToString={(item) => (item ? item.text : '')}
-            onChange={handleFilterChange} // Ensure this is correctly set to your onChange handler
-          />
-        </div>
-        {/* Data Table */}
-
-        <DataTable rows={rows} headers={ACTIVITY_LIST_COLUMNS} isSortable>
-          {({ rows, headers, getHeaderProps, getRowProps, getTableProps }) => (
-            <Table {...getTableProps()}>
-              <TableHead>
-                <TableRow>
-                  {headers.map((header) => (
-                    <TableHeader
-                      key={header.key}
-                      {...getHeaderProps({ header })}
-                      isSortable={header.key !== 'ellipsis' && header.key !== 'action'}
-                      sortDirection={sortDir}
-                      onClick={() => handleHeaderClick(header.key)}
-                    >
-                      {header.header}
-                    </TableHeader>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.length > 0 ? (
-                  rows.map((row) => (
-                    <TableRow {...getRowProps({ row })} key={row.id}>
-                      {row.cells.map((cell) => (
-                        <TableCell key={cell.id}>
-                          {cell.info.header === 'action' ? getActionItem(status, row.id)
-                            : cell.info.header === 'ellipsis' ? getEllipsis(row.id)
-                              : cell.value
-                          }
-                        </TableCell>
+    <>
+      <Shell.Page type="LIST" className="sfg--page--partner-list">
+        <Shell.PageHeader title={pageUtil.t('mod-activity-definition:list.title')} description={pageUtil.t('mod-activity-definition:list.pageDescription')}></Shell.PageHeader>
+        <Section className="page-notification-container">
+          <Shell.NotificationMessage></Shell.NotificationMessage>
+        </Section>
+        <Section className="page-body">
+          <TableContainer title="Activity Definitions">
+            <div className="header-buttons">
+              {/* Search, New, Import buttons */}
+              <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
+              <Button size="sm" className="new-button" renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
+                New
+              </Button>
+              <Button size="sm" kind="tertiary" className="import-button" renderIcon={Add}>
+                Import
+              </Button>
+              {/* Filter dropdown */}
+              <MultiSelect
+                className="filter-dropdown"
+                id="filter-dropdown"
+                titleText=""
+                label="Filter Option"
+                items={[
+                  { id: 'DRAFT', text: 'DRAFT' },
+                  { id: 'FINAL', text: 'FINAL' },
+                  { id: 'DELETE', text: 'DELETE' }
+                ]}
+                itemToString={(item) => (item ? item.text : '')}
+                onChange={handleFilterChange} // Ensure this is correctly set to your onChange handler
+              />
+            </div>
+            {/* Data Table */}
+            <DataTable rows={rows} headers={ACTIVITY_LIST_COLUMNS} isSortable>
+              {({ rows, headers, getHeaderProps, getRowProps, getTableProps }) => (
+                <Table {...getTableProps()}>
+                  <TableHead>
+                    <TableRow>
+                      {headers.map((header) => (
+                        <TableHeader
+                          key={header.key}
+                          {...getHeaderProps({ header })}
+                          isSortable={header.key !== 'ellipsis' && header.key !== 'action'}
+                          sortDirection={sortDir}
+                          onClick={() => handleHeaderClick(header.key)}
+                        >
+                          {header.header}
+                        </TableHeader>
                       ))}
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={headers.length} className="no-records-message">No records found</TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          )}
-        </DataTable>
-        {/* Pagination controls */}
-        <Pagination
-          backwardText="Previous page"
-          forwardText="Next page"
-          itemsPerPageText="Items per page:"
-          totalItems={totalRows !== undefined ? totalRows : 0}
-          pageSize={pageSize}
-          pageSizes={[5, 10, 20, 50]}
-          page={pageNo}
-          onChange={({ page, pageSize }) => handlePaginationChange(page, pageSize)}
-        />
-      </TableContainer>
-      {/* Modal for action confirmation */}
-      <WrapperModal
-        isOpen={isModalOpen}
-        setIsOpen={setIsModalOpen}
-        modalHeading="Confirmation"
-        secondaryButtonText="Cancel"
-        primaryButtonText={actionText}
-        onPrimaryButtonClick={onPrimaryButtonClick}
-        onSecondaryButtonClick={handleModalClose}
-      >
-        {message}
-      </WrapperModal>
-      {/* Modal for Rollout operation */}
-      {openRolloutModal && (
+                  </TableHead>
+                  <TableBody>
+                    {rows.length > 0 ? (
+                      rows.map((row) => (
+                        <TableRow {...getRowProps({ row })} key={row.id}>
+                          {row.cells.map((cell) => (
+                            <TableCell key={cell.id}>
+                              {cell.info.header === 'action' ? getActionItem(status, row.id) : cell.info.header === 'ellipsis' ? getEllipsis(row.id) : cell.value}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={headers.length} className="no-records-message">
+                          No records found
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              )}
+            </DataTable>
+            {/* Pagination controls */}
+            <Pagination
+              backwardText="Previous page"
+              forwardText="Next page"
+              itemsPerPageText="Items per page:"
+              totalItems={totalRows !== undefined ? totalRows : 0}
+              pageSize={pageSize}
+              pageSizes={[5, 10, 20, 50]}
+              page={pageNo}
+              onChange={({ page, pageSize }) => handlePaginationChange(page, pageSize)}
+            />
+          </TableContainer>
+        </Section>
+        {/* Modal for action confirmation */}
         <WrapperModal
-          isOpen={openRolloutModal}
-          setIsOpen={setOpenRolloutModal}
-          modalHeading={'Activity Rollout - ' + activityDetails?.name}
-          secondaryButtonText={currentStep === 0 ? 'Cancel' : 'Previous'}
-          primaryButtonText={currentStep === 0 ? 'Next' : 'Rollout'}
-          onPrimaryButtonClick={handelSubmitClick}
-          onSecondaryButtonClick={handelCloseClick}
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          modalHeading="Confirmation"
+          secondaryButtonText="Cancel"
+          primaryButtonText={actionText}
+          onPrimaryButtonClick={onPrimaryButtonClick}
+          onSecondaryButtonClick={handleModalClose}
         >
-          <RolloutWizard currentStep={currentStep} handelStepChange={handelStepChange} />
+          {message}
         </WrapperModal>
-      )}
-
-      {openTestModal && (
-        <WrapperModal
-          isOpen={openTestModal}
-          setIsOpen={setOpenTestModal}
-          modalHeading={'Activity Test - ' + activityDetails?.name}
-          secondaryButtonText={currentTestStep === 0 ? 'Cancel' : 'Previous'}
-          primaryButtonText={currentTestStep < testDialogData.length - 1 ? 'Next' : 'Finish'}
-          onPrimaryButtonClick={handelTestFinishClick}
-          onSecondaryButtonClick={handelTestCloseClick}
-        >
-          <TestWizard currentTestData={currentTestData} />
-        </WrapperModal>
-      )}
-      {/* Notification toast */}
-      {notificationProps && <WrapperNotification {...notificationProps} />}
-    </div>
+        {/* Modal for Rollout operation */}
+        {openRolloutModal && (
+          <WrapperModal
+            isOpen={openRolloutModal}
+            setIsOpen={setOpenRolloutModal}
+            modalHeading={'Activity Rollout - ' + activityDetails?.name}
+            secondaryButtonText={currentStep === 0 ? 'Cancel' : 'Previous'}
+            primaryButtonText={currentStep === 0 ? 'Next' : 'Rollout'}
+            onPrimaryButtonClick={handelSubmitClick}
+            onSecondaryButtonClick={handelCloseClick}
+          >
+            <RolloutWizard currentStep={currentStep} handelStepChange={handelStepChange} />
+          </WrapperModal>
+        )}
+        {/* Modal for Test operation */}
+        {openTestModal && (
+          <WrapperModal
+            isOpen={openTestModal}
+            setIsOpen={setOpenTestModal}
+            modalHeading={'Activity Test - ' + activityDetails?.name}
+            secondaryButtonText={currentTestStep === 0 ? 'Cancel' : 'Previous'}
+            primaryButtonText={currentTestStep < testDialogData.length - 1 ? 'Next' : 'Finish'}
+            onPrimaryButtonClick={handelTestFinishClick}
+            onSecondaryButtonClick={handelTestCloseClick}
+          >
+            <TestWizard currentTestData={currentTestData} />
+          </WrapperModal>
+        )}
+        {/* Notification toast */}
+        {notificationProps && <WrapperNotification {...notificationProps} />}
+      </Shell.Page>
+    </>
   );
 }

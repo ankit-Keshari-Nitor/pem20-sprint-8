@@ -228,7 +228,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         Optional<ActivityDefnVersion> versionObj = activityDefnVersionRepo.findById(activityDefnVersionKey);
 
         if(versionObj.isEmpty())
-            throw new ResourceNotFoundException("NA","NoDataFound","No data was found for the provided query parameter combination.");
+            throw new ResourceNotFoundException("NoDataFound","No data was found for the provided query parameter combination.");
 
         if(!versionObj.get().getStatus().equalsIgnoreCase(Status.FINAL.getStatus()))
             throw new ResourceNotFoundException("InvalidVersionStatus","Version Status is DRAFT/DELETE.Hence can not mark it to Default.");
@@ -272,7 +272,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             int blobLength = (int) blobData.length();
             byte[] byteArr = blobData.getBytes(1l, blobLength);
             String deploymentKey = pemActivitiService.deployProcessDefinition(activityDeploymentDto.getActivityName(), byteArr);
-            System.out.println("deploymentKey : " + deploymentKey);
+            log.info("deploymentKey : " + deploymentKey);
         }
     }
 

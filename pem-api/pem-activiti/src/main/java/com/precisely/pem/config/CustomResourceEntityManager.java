@@ -1,5 +1,6 @@
 package com.precisely.pem.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.delegate.event.ActivitiEventDispatcher;
 import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.engine.delegate.event.impl.ActivitiEventBuilder;
@@ -9,7 +10,7 @@ import org.activiti.engine.impl.persistence.entity.ResourceEntityManagerImpl;
 import org.activiti.engine.impl.persistence.entity.data.ResourceDataManager;
 
 import java.util.Base64;
-
+@Slf4j
 public class CustomResourceEntityManager extends ResourceEntityManagerImpl {
 
     public CustomResourceEntityManager(ProcessEngineConfigurationImpl processEngineConfiguration,
@@ -26,13 +27,13 @@ public class CustomResourceEntityManager extends ResourceEntityManagerImpl {
         // We will replace this with vault concept later
 
         String diagram = new String(entity.getBytes());
-		System.out.println("=========Insert : Input BPMN Schema=========");
-        System.out.println(diagram);
+		log.info("=========Insert : Input BPMN Schema=========");
+        log.info(diagram);
 
 
         // encode without padding
         String encoded = Base64.getEncoder().withoutPadding().encodeToString(entity.getBytes());
-		System.out.println("=========Insert :  Encoded BPMN Schema=========");
+		log.info("=========Insert :  Encoded BPMN Schema=========");
         entity.setBytes(encoded.getBytes());
 
         getDataManager().insert(entity); //this is resource insert method.

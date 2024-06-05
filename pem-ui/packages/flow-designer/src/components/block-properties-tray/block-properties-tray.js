@@ -92,7 +92,11 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
         open={openExpandMode}
         onRequestClose={() => setOpenExpandMode(false)}
         isFullWidth
-        modalHeading={selectedNode?.data?.editableProps.name}
+        modalHeading={selectedNode?.data?.editableProps.name ? (
+          <span>{selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})</span>
+        ) : (
+          <span>{selectedNode?.id} ({selectedNode?.data?.taskName})</span>
+        )}
         passiveModal
         primaryButtonText="Exit"
         secondaryButtonText="Cancel"

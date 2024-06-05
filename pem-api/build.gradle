@@ -9,7 +9,12 @@ group = 'com.precisely.pem'
 version = '1.0-SNAPSHOT'
 
 repositories {
+    google()
     mavenCentral()
+    maven {
+        url 'https://artifacts.alfresco.com/nexus/content/repositories/activiti-releases'
+    }
+
 }
 tasks.named("bootJar") {
     mainClass = 'com.precisely.pem.PEMApplication'
@@ -28,6 +33,7 @@ dependencies {
     implementation project(":pem-rest")
     implementation project(":pem-common")
     implementation project(":pem-services")
+//    implementation project(":pem-activiti")
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '3.2.4'
     implementation 'org.springframework.boot:spring-boot-gradle-plugin:3.0.4'
     implementation 'io.spring.dependency-management:io.spring.dependency-management.gradle.plugin:1.1.0'

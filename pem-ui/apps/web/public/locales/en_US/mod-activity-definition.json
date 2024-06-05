@@ -5,8 +5,8 @@
     "workflow": "Workflow"
   },
   "list": {
-    "title": "Activity Definitions",
-    "pageDescription": "Activity list page",
+    "title": "Definitions",
+    "pageDescription": "Definitions list page",
     "columns": {
       "name": "Partner Company",
       "website": "Website",

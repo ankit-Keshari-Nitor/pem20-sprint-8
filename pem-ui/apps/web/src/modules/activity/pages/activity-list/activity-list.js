@@ -379,31 +379,31 @@ export default function ActivityList() {
           <Shell.NotificationMessage></Shell.NotificationMessage>
         </Section>
         <Section className="page-body">
-          <TableContainer title="Activity Definitions">
-            <div className="header-buttons">
-              {/* Search, New, Import buttons */}
-              <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
-              <Button size="sm" className="new-button" renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
-                New
-              </Button>
-              <Button size="sm" kind="tertiary" className="import-button" renderIcon={Add}>
-                Import
-              </Button>
-              {/* Filter dropdown */}
-              <MultiSelect
-                className="filter-dropdown"
-                id="filter-dropdown"
-                titleText=""
-                label="Filter Option"
-                items={[
-                  { id: 'DRAFT', text: 'DRAFT' },
-                  { id: 'FINAL', text: 'FINAL' },
-                  { id: 'DELETE', text: 'DELETE' }
-                ]}
-                itemToString={(item) => (item ? item.text : '')}
-                onChange={handleFilterChange} // Ensure this is correctly set to your onChange handler
-              />
-            </div>
+          <div className="header-buttons">
+            {/* Search, New, Import buttons */}
+            <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
+            <Button size="sm" className="new-button" renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
+              New
+            </Button>
+            <Button size="sm" kind="tertiary" className="import-button" renderIcon={Add}>
+              Import
+            </Button>
+            {/* Filter dropdown */}
+            <MultiSelect
+              className="filter-dropdown"
+              id="filter-dropdown"
+              titleText=""
+              label="Filter Option"
+              items={[
+                { id: 'DRAFT', text: 'DRAFT' },
+                { id: 'FINAL', text: 'FINAL' },
+                { id: 'DELETE', text: 'DELETE' }
+              ]}
+              itemToString={(item) => (item ? item.text : '')}
+              onChange={handleFilterChange} // Ensure this is correctly set to your onChange handler
+            />
+          </div>
+          <TableContainer>
             {/* Data Table */}
             <DataTable rows={rows} headers={ACTIVITY_LIST_COLUMNS} isSortable>
               {({ rows, headers, getHeaderProps, getRowProps, getTableProps }) => (

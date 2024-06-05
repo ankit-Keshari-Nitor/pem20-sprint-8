@@ -64,13 +64,11 @@ tbody tr:nth-child {
 
 
 .header-buttons {
-  position: absolute !important;
-  top: 10px !important;
-  right: 10px !important;
+  position: relative !important;
   display: flex !important;
   flex-direction: row !important;
   justify-content: flex-end !important;
-  margin-bottom: 1rem !important;
+  background-color: #ffffff;
 }
 
 .filter-dropdown,

@@ -9,7 +9,7 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXT_FIELD,
       name: 'name',
-      labelText: 'Name*',
+      labelText: 'Name (required)',
       helperText: 'Name should not contain &,<,>,",\',.,{,}, characters.',
       isRequired: true,
       validate: [
@@ -32,12 +32,11 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXTAREA,
       name: 'description',
-      labelText: 'Description*',
+      labelText: 'Description',
+      enableCounter: true,
+      maxCount: 100,
       isRequired: true,
       validate: [
-        {
-          type: validatorTypes.REQUIRED
-        },
         {
           type: validatorTypes.MAX_LENGTH,
           threshold: 100,
@@ -48,11 +47,26 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXT_FIELD,
       name: 'estimate_days',
-      labelText: 'Estimate (Days)*',
+      labelText: 'Estimate (Days) (required)',
       isRequired: true,
       validate: [
         {
           type: validatorTypes.REQUIRED
+        }
+      ]
+    },
+    {
+      component: componentTypes.SELECT,
+      name: 'reopenTask',
+      labelText: 'Select Task to reopen up to when rejecting',
+      options: [
+        {
+          label: 'Task 1',
+          value: 'task-1'
+        },
+        {
+          label: 'Task 2',
+          value: 'task-2'
         }
       ]
     },
@@ -91,25 +105,15 @@ export const SCHEMA = {
         }
       ]
     },
-    {
-      component: componentTypes.SELECT,
-      name: 'reopenTask',
-      labelText: 'Select Task to reopen up to when rejecting',
-      options: [
-        {
-          label: 'Task 1',
-          value: 'task-1'
-        },
-        {
-          label: 'Task 2',
-          value: 'task-2'
-        }
-      ]
-    },
-    {
+    /* {
       component: componentTypes.CHECKBOX,
       name: 'show_to_partner',
       labelText: 'Show to partner'
+    }, */
+    {
+      component: componentTypes.CHECKBOX,
+      name: 'send_to_approval',
+      labelText: 'Send email when approved'
     },
     {
       component: componentTypes.CHECKBOX,

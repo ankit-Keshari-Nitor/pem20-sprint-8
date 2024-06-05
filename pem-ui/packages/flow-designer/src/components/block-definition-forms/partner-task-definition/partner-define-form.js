@@ -9,7 +9,7 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXT_FIELD,
       name: 'name',
-      labelText: 'Name*',
+      labelText: 'Name (required)',
       helperText: 'Name should not contain &,<,>,",\',.,{,}, characters.',
       isRequired: true,
       validate: [
@@ -32,13 +32,11 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXTAREA,
       name: 'description',
-      labelText: 'Description*',
+      labelText: 'Description',
       isRequired: true,
+      enableCounter: true,
+      maxCount: 100,
       validate: [
-        {
-          type: validatorTypes.REQUIRED,
-          message: 'Description is required'
-        },
         {
           type: validatorTypes.MAX_LENGTH,
           threshold: 100,
@@ -49,19 +47,13 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXT_FIELD,
       name: 'estimate_days',
-      labelText: 'Estimate (Days)*',
-      isRequired: true,
-      validate: [
-        {
-          type: validatorTypes.REQUIRED,
-          message: 'Estimate is required'
-        }
-      ]
+      labelText: 'Estimate (Days)',
+
     },
     {
       component: componentTypes.SELECT,
       name: 'role',
-      labelText: 'Role',
+      labelText: 'Role (optional)',
       options: [
         {
           label: 'Select Role',
@@ -97,11 +89,11 @@ export const SCHEMA = {
         }
       ]
     },
-    {
-      component: componentTypes.CHECKBOX,
-      name: 'show_to_partner',
-      labelText: 'Show to partner'
-    }
+    /*  {
+       component: componentTypes.CHECKBOX,
+       name: 'show_to_partner',
+       labelText: 'Show to partner'
+     } */
   ]
 };
 

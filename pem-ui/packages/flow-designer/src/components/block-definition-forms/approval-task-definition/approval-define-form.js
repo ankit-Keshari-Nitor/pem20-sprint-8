@@ -105,11 +105,6 @@ export const SCHEMA = {
         }
       ]
     },
-    /* {
-      component: componentTypes.CHECKBOX,
-      name: 'show_to_partner',
-      labelText: 'Show to partner'
-    }, */
     {
       component: componentTypes.CHECKBOX,
       name: 'send_to_approval',

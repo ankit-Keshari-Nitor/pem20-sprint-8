@@ -89,11 +89,15 @@ export const SCHEMA = {
         }
       ]
     },
-    
+
   ]
 };
 
 const PartnerDefineForm = ({ id, onCancelDefinitionForm, onSubmitDefinitionForm, selectedNode }) => {
+
+  let initialValues = {};
+  initialValues.name = selectedNode.id;
+
   return Object.keys(selectedNode?.data?.editableProps).length > 0 ? (
     <FormRenderer
       id={id}
@@ -108,6 +112,7 @@ const PartnerDefineForm = ({ id, onCancelDefinitionForm, onSubmitDefinitionForm,
   ) : (
     <FormRenderer
       id={id}
+      initialValues={initialValues}
       FormTemplate={FORM_TEMPLATE}
       componentMapper={COMPONENT_MAPPER}
       schema={SCHEMA}

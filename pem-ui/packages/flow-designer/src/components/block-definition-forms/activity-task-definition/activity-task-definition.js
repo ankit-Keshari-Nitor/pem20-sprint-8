@@ -29,13 +29,13 @@ export const SCHEMA = {
       name: 'description',
       labelText: 'Description',
       enableCounter: true,
-      maxCount: 80,
+      maxCount: 100,
       isRequired: true,
       validate: [
         {
           type: validatorTypes.MAX_LENGTH,
-          threshold: 80,
-          message: 'Name must be no longer then 80 characters'
+          threshold: 100,
+          message: 'Name must be no longer then 100 characters'
         }
       ]
     },

@@ -89,11 +89,7 @@ export const SCHEMA = {
         }
       ]
     },
-    /*  {
-       component: componentTypes.CHECKBOX,
-       name: 'show_to_partner',
-       labelText: 'Show to partner'
-     } */
+    
   ]
 };
 

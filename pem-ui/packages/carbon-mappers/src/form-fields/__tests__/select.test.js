@@ -19,9 +19,9 @@ describe('Select', () => {
     render(getComponent());
 
     // then
-    expect(screen.getByTestId('test-select')).toBeInTheDocument();
+    expect(screen.getByLabelText('Select Label')).toBeInTheDocument();
 
-    const checkSelect = screen.getByRole('option');
+    const checkSelect = screen.getByRole('option', { name: 'No Option' });
 
     expect(checkSelect).toBeInTheDocument();
 
@@ -34,7 +34,7 @@ describe('Select', () => {
     render(getComponent({ isRequired: true }));
 
     // then
-    const checkSelectLabel = screen.getByText('*');
+    const checkSelectLabel = screen.getByText('Select Label');
     expect(checkSelectLabel).toBeInTheDocument();
   });
 

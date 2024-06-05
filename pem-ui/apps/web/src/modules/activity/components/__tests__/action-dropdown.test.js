@@ -2,6 +2,7 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import ActivityDropdown from '../actions-dropdown';
+import { setTimeout } from 'timers/promises';
 
 describe('ActivityDropdown component', () => {
     const onChange = jest.fn();
@@ -30,10 +31,13 @@ describe('ActivityDropdown component', () => {
     });
 
     it('does not call onChange when no item is selected', async () => {
-        const { getByText } = render(<ActivityDropdown {...defaultProps} />);
+        const { getByText, queryByText } = render(<ActivityDropdown {...defaultProps} />);
         fireEvent.click(getByText('Choose an action'));
-        const cancelButton = await waitFor(() => getByText('Cancel'));
-        fireEvent.click(cancelButton);
+        await waitFor(() => getByText('Item 1'), { timeout: 500 }); // Wait for items to render
+        await setTimeout(100);
+        fireEvent.blur(getByText('Choose an action'));
+        await setTimeout(100);
+        await waitFor(() => expect(queryByText('Item 1')).toBeNull(), { timeout: 500 });
         expect(onChange).not.toHaveBeenCalled();
     });
 

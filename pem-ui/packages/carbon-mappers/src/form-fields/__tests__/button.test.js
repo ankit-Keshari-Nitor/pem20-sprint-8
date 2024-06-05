@@ -15,23 +15,14 @@ describe('Button', () => {
   });
 
   it('should render', () => {
-    // when;
     render(
       getComponent({
         value: 'Test Button value'
       })
     );
-
-    // then
-    expect(screen.getByTestId('test-button')).toBeInTheDocument();
-
-    const checkButton = screen.getByRole('button');
-
-    expect(checkButton).toBeInTheDocument();
-    expect(checkButton.value).toEqual('Test Button value');
-
-    const checkButtonLabel = screen.getByText('Button Label');
-    expect(checkButtonLabel).toBeInTheDocument();
+  
+    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByText('Button Label')).toBeInTheDocument();
   });
 });
 

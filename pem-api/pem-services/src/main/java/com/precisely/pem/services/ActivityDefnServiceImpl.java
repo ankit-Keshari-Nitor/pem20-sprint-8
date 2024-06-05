@@ -85,7 +85,7 @@
                         application, status, pageable);
             }
             if(defnsPage == null || defnsPage.isEmpty()) {
-                throw new ResourceNotFoundException("NA","NoDataFound", "No data was found for the provided query parameter combination.");
+                throw new ResourceNotFoundException("NoDataFound", "No data was found for the provided query parameter combination.");
             }
             List<ActivityDefn> listOfDefns = defnsPage.getContent();
             List<ActivityDefnListResp> defnContent = new ArrayList<>();
@@ -168,7 +168,7 @@
             SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
             Optional<ActivityDefn> result = Optional.ofNullable(activityDefnRepo.findByActivityDefnKeyAndSponsorKey(activityDefnKey, sponsorInfo.getSponsorKey()));;
             if(result.isEmpty()){
-                throw new ResourceNotFoundException("NA", "NoDataFound", "No data was found for the provided query parameter combination.");
+                throw new ResourceNotFoundException("NoDataFound", "No data was found for the provided query parameter combination.");
             }
             ModelMapper mapper = new ModelMapper();
             return mapper.map(result.get(), ActivityDefnListResp.class);

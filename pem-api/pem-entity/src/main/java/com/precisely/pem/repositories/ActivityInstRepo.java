@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ActivityInstRepo extends JpaRepository<ActivityInst,String> {
+    ActivityInst findByActivityDefnKeyVersion(String activityDefnVersionKey);
 }

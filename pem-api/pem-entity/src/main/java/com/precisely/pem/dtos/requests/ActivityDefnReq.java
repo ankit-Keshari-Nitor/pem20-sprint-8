@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ActivityDefnReq {
     @NotNull
     @SpecialCharValidator(fieldName = "name")
-    @Size(min = 1 , max = 80)
+    @Size(max = 80)
     private String name;
 
     @SpecialCharValidator(fieldName = "description")
@@ -25,5 +25,4 @@ public class ActivityDefnReq {
 
     @NotNull
     private Application application;
-
 }

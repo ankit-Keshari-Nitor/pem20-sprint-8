@@ -1,17 +1,16 @@
 package com.precisely.pem.exceptionhandler;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@AllArgsConstructor
 public class ResourceNotFoundException extends Exception{
     String fieldName;
     String errorCode;
     String message;
 
-    public ResourceNotFoundException(String fieldName, String errorCode, String message) {
-        this.fieldName = fieldName;
+    public ResourceNotFoundException(String errorCode, String message) {
         this.errorCode = errorCode;
         this.message = message;
     }

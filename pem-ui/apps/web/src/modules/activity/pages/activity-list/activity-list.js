@@ -253,7 +253,7 @@ export default function ActivityList() {
     if (status === 'DRAFT' || status === '') {
       return <ActivityDropdown statusLabel={status} selectedItem={tempSelectedItem[id]} id={id} items={ACTION_COLUMN_DRAFT} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />;
     } else if (status === 'FINAL') {
-      return <ActivityDropdown statusLabel={status} selectedItem={tempSelectedItem[id]} id={id} items={ACTION_COLUMN_FINAL} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />;
+      return <ActivityDropdown statusLabel={"Mark as Final"} selectedItem={tempSelectedItem[id]} id={id} items={ACTION_COLUMN_FINAL} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />;
     }
   };
 

@@ -26,7 +26,7 @@ body {
 .cds--search-magnifier {
   justify-content: flex-end;
   display: flex;
-  width: 100%;
+  /* width: 100%; */
   border: none;
   /* Ensure the container stretches full width */
 }
@@ -69,6 +69,12 @@ tbody tr:nth-child {
   flex-direction: row !important;
   justify-content: flex-end !important;
   background-color: #ffffff;
+  width: 45% !important;
+  left: 55% !important;
+}
+
+.headers {
+  background: #ffffff !important;
 }
 
 .filter-dropdown,

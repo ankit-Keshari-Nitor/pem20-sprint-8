@@ -13,6 +13,7 @@ import com.precisely.pem.repositories.ActivityInstRepo;
 import com.precisely.pem.repositories.CompanyRepo;
 import com.precisely.pem.repositories.PartnerRepo;
 import com.precisely.pem.repositories.PcptInstRepo;
+import com.precisely.pem.service.PEMActivitiService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -49,6 +50,9 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
     private ActivityInstRepo activityInstRepo;
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    PEMActivitiService pemActivitiService;
 
     @Override
     public ParticipantActivityInstPaginationResp getAllParticipantActivityInstances(String sponsorContext, String status, String activityInstKey,String activityDefnVersionKey, Boolean activityStats, String currentTask, String partnerName, String progress, int pageNo, int pageSize, String sortDir) throws Exception {
@@ -295,6 +299,7 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
             throw new ResourceNotFoundException("PcptInstanceNotFound", "The participant instance with key '" + pcptActivityInstKey + "' not found.");
         }
 
+        String processInstanceId = pemActivitiService.startProcessInstanceById("test");
         pcptActivityInst.setPcptInstStatus(PcptInstStatus.STARTED.getPcptInstStatus());
         pcptInstRepo.save(pcptActivityInst);
 

@@ -26,6 +26,8 @@ dependencies {
     implementation 'org.graalvm.js:js-scriptengine:23.0.0'
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.9.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.9.0'
 }
 
 test {

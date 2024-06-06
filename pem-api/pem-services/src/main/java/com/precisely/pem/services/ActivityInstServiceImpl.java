@@ -90,8 +90,6 @@ public class ActivityInstServiceImpl implements ActivityInstService{
                 .jsonProvider(new JsonOrgJsonProvider())
                 .build();
 
-        validatePartners(activityInstReq.getPartners());
-
         byte[] bytes = contextData.toString().getBytes(StandardCharsets.UTF_8);
         Blob blob = new SerialBlob(bytes);
 
@@ -119,42 +117,44 @@ public class ActivityInstServiceImpl implements ActivityInstService{
         activityInst = mapper.map(activityInstDto, ActivityInst.class);
         activityInstRepo.save(activityInst);
 
-        for(Partners partner : activityInstReq.getPartners()){
-            PcptActivityInst pcptActivityInst = null;
-            PcptActivityInstDto pcptActivityInstDto = null;
-            Blob pcptBlob = null;
-            DocumentContext json = null;
+        if(!activityInstReq.getRolloutInternally()) {
+            validatePartners(activityInstReq.getPartners());
+            for(Partners partner : activityInstReq.getPartners()){
+                PcptActivityInst pcptActivityInst = null;
+                PcptActivityInstDto pcptActivityInstDto = null;
+                Blob pcptBlob = null;
+                DocumentContext json = null;
 
-            for(ContextDataNodes nodes : partner.getContextDataNodes()) {
-                json = JsonPath.using(configuration).parse(contextData).set(nodes.getNodeRef(),nodes.getNodeValue());
+                for(ContextDataNodes nodes : partner.getContextDataNodes()) {
+                    json = JsonPath.using(configuration).parse(contextData).set(nodes.getNodeRef(),nodes.getNodeValue());
+                }
+
+                byte[] pcptBytes = json.json().toString().getBytes(StandardCharsets.UTF_8);
+                pcptBlob = new SerialBlob(pcptBytes);
+
+                pcptActivityInstDto = PcptActivityInstDto.builder()
+                        .pcptActivityInstKey(UUID.randomUUID().toString())
+                        .activityInstKey(activityInstDto.getActivityInstKey())
+                        .activityWorkflowInstKey("")
+                        .partnerKey(partner.getPartnerKey())
+                        .completionDate(null)
+                        .dueDate(activityInstDto.getDueDate())
+                        .pcptInstStatus(PcptInstStatus.NOT_STARTED.getPcptInstStatus())
+                        .sponsorKey(sponsorInfo.getSponsorKey())
+                        .isDeleted(false)
+                        .taskCompleted(false)
+                        .isEncrypted(false)
+                        .mailGroupKey("")
+                        .isAlreadyRolledOut(false)
+                        .pcptContextData(pcptBlob)
+                        .build();
+
+                pcptActivityInst = mapper.map(pcptActivityInstDto, PcptActivityInst.class);
+                pcptInstRepo.save(pcptActivityInst);
             }
-
-            byte[] pcptBytes = json.json().toString().getBytes(StandardCharsets.UTF_8);
-            pcptBlob = new SerialBlob(pcptBytes);
-
-            pcptActivityInstDto = PcptActivityInstDto.builder()
-                    .pcptActivityInstKey(UUID.randomUUID().toString())
-                    .activityInstKey(activityInstDto.getActivityInstKey())
-                    .activityWorkflowInstKey("")
-                    .partnerKey(partner.getPartnerKey())
-                    .completionDate(null)
-                    .dueDate(activityInstDto.getDueDate())
-                    .pcptInstStatus(PcptInstStatus.NOT_STARTED.getPcptInstStatus())
-                    .sponsorKey(sponsorInfo.getSponsorKey())
-                    .isDeleted(false)
-                    .taskCompleted(false)
-                    .isEncrypted(false)
-                    .mailGroupKey("")
-                    .isAlreadyRolledOut(false)
-                    .pcptContextData(pcptBlob)
-                    .build();
-
-            pcptActivityInst = mapper.map(pcptActivityInstDto, PcptActivityInst.class);
-            pcptInstRepo.save(pcptActivityInst);
         }
 
-            activityInstResp.setActivityInstKey(activityInstDto.getActivityInstKey());
-
+        activityInstResp.setActivityInstKey(activityInstDto.getActivityInstKey());
         return activityInstResp;
     }
 

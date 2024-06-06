@@ -30,7 +30,6 @@ export const SCHEMA = {
       labelText: 'Description',
       enableCounter: true,
       maxCount: 100,
-      isRequired: true,
       validate: [
         {
           type: validatorTypes.MAX_LENGTH,

@@ -32,16 +32,12 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXTAREA,
       name: 'description',
-      labelText: 'Description*',
-      isRequired: true,
+      labelText: 'Description',
       validate: [
-        {
-          type: validatorTypes.REQUIRED
-        },
         {
           type: validatorTypes.MAX_LENGTH,
           threshold: 100,
-          message: 'Name must be no longer then 100 characters'
+          message: 'Description must be no longer then 100 characters'
         }
       ]
     }

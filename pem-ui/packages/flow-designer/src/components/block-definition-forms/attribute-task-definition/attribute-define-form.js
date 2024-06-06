@@ -33,7 +33,6 @@ export const SCHEMA = {
       component: componentTypes.TEXTAREA,
       name: 'description',
       labelText: 'Description (optional)',
-      isRequired: true,
       enableCounter: true,
       maxCount: 100,
       validate: [
@@ -41,14 +40,14 @@ export const SCHEMA = {
         {
           type: validatorTypes.MAX_LENGTH,
           threshold: 100,
-          message: 'Name must be no longer then 100 characters'
+          message: 'Description must be no longer then 100 characters'
         }
       ]
     },
     {
       component: componentTypes.SELECT,
       name: 'attributeType',
-      labelText: 'Attribut Type*',
+      labelText: 'Attribut Type',
       options: [
         {
           label: 'My Partners',

@@ -35,12 +35,11 @@ export const SCHEMA = {
       labelText: 'Description',
       enableCounter: true,
       maxCount: 100,
-      isRequired: true,
       validate: [
         {
           type: validatorTypes.MAX_LENGTH,
           threshold: 100,
-          message: 'Name must be no longer then 100 characters'
+          message: 'Description must be no longer then 100 characters'
         }
       ]
     },

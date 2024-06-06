@@ -6,7 +6,8 @@
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 16px;
+  padding: 0px;
+
 }
 
 .block-properties-container .title-bar {
@@ -16,6 +17,7 @@
   user-select: none;
   justify-content: space-between;
   padding: 8px;
+  margin: 0.5rem;
 }
 
 .block-properties-container .title-bar .title {
@@ -43,9 +45,14 @@
   margin: 0.5rem 0.5rem 3rem 0.5rem;
 }
 
+.title-bar {
+  padding: inherit !important;
+}
+
 .activity-active {
-  padding: 0.4rem;
-  margin-left: -0.4rem;
+  /* padding: 0.4rem; */
+  padding: inherit;
+  margin-left: 0.5rem;
   margin-right: 0.5rem;
   background: #add8e6;
   color: #0043ce;
@@ -57,4 +64,14 @@
   .cds--label {
     display: none;
   }
+}
+
+.title span:nth-child(1) {
+  display: block !important;
+  margin-top: 0.5rem !important;
+}
+
+#versions {
+  margin: 1rem !important;
+  width: max-content !important;
 }

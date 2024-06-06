@@ -9,7 +9,7 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXTAREA,
       name: 'input',
-      labelText: 'Input*',
+      labelText: 'Input (required)',
       helperText: 'Provide a valid XML code and click the mapping button (...) to update the input XML with additional mapped parameters.',
       isRequired: true,
       validate: [
@@ -20,7 +20,7 @@ export const SCHEMA = {
         {
           type: validatorTypes.MAX_LENGTH,
           threshold: 100,
-          message: 'XSLT must be no longer then 100 characters'
+          message: 'Input must be no longer then 100 characters'
         }
       ]
     },
@@ -32,7 +32,7 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXTAREA,
       name: 'xslt',
-      labelText: 'XSLT*',
+      labelText: 'XSLT (required)',
       isRequired: true,
       validate: [
         {

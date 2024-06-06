@@ -8,6 +8,7 @@ import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.TenantContext;
+import com.precisely.pem.exceptionhandler.AlreadyDeletedException;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +45,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         SponsorInfo sponsorInfo = new SponsorInfo("cashbank","test");
         TenantContext.setTenantContext(sponsorInfo);
     }
+
     @Test
     void testGetAllVersionDefinitionList() throws Exception {
         String sponsorContext = "cashbank";
@@ -57,8 +58,8 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         String sortDir = "sortDir";
         boolean isDefault = false;
         Page<ActivityDefnVersion> defnsPage = new PageImpl<>(getVersionList());
-        Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndDescriptionContaining(eq(activityDefnKey),eq(status),eq(sponsorContext),
-                        eq(applicationDescription),Mockito.any(Pageable.class)))
+        Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndIsDefaultAndDescriptionContaining(eq(activityDefnKey),eq(status),eq(sponsorContext),
+                        eq(isDefault),eq(applicationDescription),Mockito.any(Pageable.class)))
                 .thenReturn(defnsPage);
         ActivityDefnVersionDto dto = new ActivityDefnVersionDto();
         Mockito.when(mapper.map(Mockito.any(ActivityDefnVersion.class),eq(ActivityDefnVersionDto.class)))
@@ -80,6 +81,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         v1.setEncryptionKey("123");
         return v1;
     }
+
     private List<ActivityDefnVersion> getVersionList() {
         ActivityDefnVersion v1 = new ActivityDefnVersion();
         v1.setVersion(1.0);
@@ -106,7 +108,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         assertNotNull(dto);
     }
     @Test
-    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, ResourceNotFoundException {
+    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, ResourceNotFoundException, AlreadyDeletedException {
         ActivityDefnServiceImplTest activityDefnServiceImplTest = new ActivityDefnServiceImplTest();
 
         Optional<ActivityDefn> activityDefn = Optional.ofNullable(activityDefnServiceImplTest.getVchActivityDefnObj());

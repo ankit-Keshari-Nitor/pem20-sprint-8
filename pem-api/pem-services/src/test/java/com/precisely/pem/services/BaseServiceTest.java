@@ -345,7 +345,7 @@ public class BaseServiceTest {
                 .name(TEST_APPLICATION_NAME)
                 .activityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY)
                 .sponsorKey("test")
-                .status(InstStatus.NEW.getInstStatus())
+                .status(InstStatus.STARTED.getInstStatus())
                 .alertFrequency(1)
                 .description(TEST_DESCRIPTION)
                 .defData(null)

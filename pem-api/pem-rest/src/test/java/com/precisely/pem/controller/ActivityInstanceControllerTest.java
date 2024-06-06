@@ -58,7 +58,7 @@ public class ActivityInstanceControllerTest extends BaseControllerTest{
                 .thenReturn(activityInstPagnResp);
 
         activityInstPagnResp.setContent(list);
-        ResponseEntity<Object> output = activityInstanceController.getActivityInstanceList("test","test", InstStatus.NEW,"test","test",false,1,1, SortBy.modifyTs, SortDirection.ASC,"cashbank");
+        ResponseEntity<Object> output = activityInstanceController.getActivityInstanceList("test","test", InstStatus.STARTED,"test","test",false,1,1, SortBy.modifyTs, SortDirection.ASC,"cashbank");
         assertNotNull(output);
     }
 

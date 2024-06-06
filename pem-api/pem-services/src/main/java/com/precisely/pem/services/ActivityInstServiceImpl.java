@@ -8,6 +8,7 @@ import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
 import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.InstStatus;
 import com.precisely.pem.commonUtil.PcptInstStatus;
+import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityInstReq;
 import com.precisely.pem.dtos.requests.ContextDataNodes;
 import com.precisely.pem.dtos.requests.Partners;
@@ -19,6 +20,7 @@ import com.precisely.pem.dtos.shared.ActivityInstDto;
 import com.precisely.pem.dtos.shared.PaginationDto;
 import com.precisely.pem.dtos.shared.PcptActivityInstDto;
 import com.precisely.pem.dtos.shared.TenantContext;
+import com.precisely.pem.exceptionhandler.InvalidStatusException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefnVersion;
 import com.precisely.pem.models.ActivityInst;
@@ -68,7 +70,7 @@ public class ActivityInstServiceImpl implements ActivityInstService{
 
     @Override
     @Transactional
-    public ActivityInstResp createActivityInstance(String sponsorContext, ActivityInstReq activityInstReq) throws ResourceNotFoundException, SQLException, JsonProcessingException, JSONException {
+    public ActivityInstResp createActivityInstance(String sponsorContext, ActivityInstReq activityInstReq) throws ResourceNotFoundException, SQLException, JsonProcessingException, JSONException, InvalidStatusException {
         ActivityInstResp activityInstResp = new ActivityInstResp();
         ActivityInst activityInst = null;
         ActivityInstDto activityInstDto = null;
@@ -78,6 +80,8 @@ public class ActivityInstServiceImpl implements ActivityInstService{
         ActivityDefnVersion activityDefnVersion = activityDefnVersionRepo.findByActivityDefnKeyVersion(activityInstReq.getActivityDefnVersionKey());
         if(Objects.isNull(activityDefnVersion) || activityDefnVersion.getActivityDefnKey().isEmpty()){
             throw new ResourceNotFoundException("NoDataFound", "No data was found for activity version key '" + activityInstReq.getActivityDefnVersionKey() + "'.");
+        } else if (activityDefnVersion.getStatus().equalsIgnoreCase(Status.FINAL.getStatus())) {
+            throw new InvalidStatusException("NotInFinalStatus", "The activity version with key '"+ activityDefnVersion.getActivityDefnKey() +"' is not in the 'FINAL' state.");
         }
 
         JSONObject contextData = new JSONObject(activityInstReq.getContextData());
@@ -97,7 +101,7 @@ public class ActivityInstServiceImpl implements ActivityInstService{
                 .activityDefnKey(activityDefnVersion.getActivityDefnKey())
                 .name(activityInstReq.getName())
                 .description(activityInstReq.getDescription())
-                .status(InstStatus.NEW.getInstStatus())
+                .status(InstStatus.STARTED.getInstStatus())
                 .startDate(LocalDate.now().toString())
                 .dueDate(activityInstReq.getDueDate().toLocalDate().toString())
                 .endDate(null)

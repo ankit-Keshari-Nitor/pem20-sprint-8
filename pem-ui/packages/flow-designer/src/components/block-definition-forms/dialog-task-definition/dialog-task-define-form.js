@@ -33,6 +33,7 @@ export const SCHEMA = {
       component: componentTypes.TEXTAREA,
       name: 'description',
       labelText: 'Description',
+      isRequired: true,
       maxCount: 100,
       validate: [
         {

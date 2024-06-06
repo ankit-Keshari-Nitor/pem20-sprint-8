@@ -34,6 +34,7 @@ export const SCHEMA = {
       name: 'description',
       labelText: 'Description',
       enableCounter: true,
+      isRequired: true,
       maxCount: 100,
       validate: [
         {
@@ -50,7 +51,8 @@ export const SCHEMA = {
       isRequired: true,
       validate: [
         {
-          type: validatorTypes.REQUIRED
+          type: validatorTypes.REQUIRED,
+          message: 'Estimate is required'
         }
       ]
     },

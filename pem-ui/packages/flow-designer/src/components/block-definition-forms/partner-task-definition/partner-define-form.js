@@ -34,6 +34,7 @@ export const SCHEMA = {
       name: 'description',
       labelText: 'Description',
       enableCounter: true,
+      isRequired: true,
       maxCount: 100,
       validate: [
         {

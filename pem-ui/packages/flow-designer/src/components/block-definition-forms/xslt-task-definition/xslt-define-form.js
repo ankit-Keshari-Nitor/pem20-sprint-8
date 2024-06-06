@@ -33,6 +33,8 @@ export const SCHEMA = {
       component: componentTypes.TEXTAREA,
       name: 'description',
       labelText: 'Description',
+      enableCounter: true,
+      isRequired: true,
       maxCount: 100,
       validate: [
         {
@@ -41,7 +43,7 @@ export const SCHEMA = {
           message: 'Description must be no longer then 100 characters'
         }
       ]
-    }
+    },
   ]
 };
 

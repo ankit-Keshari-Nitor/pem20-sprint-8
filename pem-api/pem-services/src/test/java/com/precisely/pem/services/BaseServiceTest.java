@@ -285,8 +285,8 @@ public class BaseServiceTest {
         pcptActivityInst.setActivityInstKey(TEST_ACTIVITY_INSTANCE_KEY);
         pcptActivityInst.setActivityWorkflowInstKey("test");
         pcptActivityInst.setPartnerKey(TEST_PARTNER_KEY);
-        pcptActivityInst.setCompletionDate(LocalDateTime.now().toString());
-        pcptActivityInst.setDueDate(LocalDateTime.now().toString());
+        pcptActivityInst.setCompletionDate(LocalDateTime.now());
+        pcptActivityInst.setDueDate(LocalDateTime.now());
         pcptActivityInst.setCurrentTask(TEST_CURRENT_TASK_NAME);
         pcptActivityInst.setPcptInstStatus(TEST_STATUS);
         pcptActivityInst.setIsDeleted(false);
@@ -301,8 +301,8 @@ public class BaseServiceTest {
         pcptActivityInst1.setActivityInstKey(TEST_ACTIVITY_INSTANCE_KEY);
         pcptActivityInst1.setActivityWorkflowInstKey("test1");
         pcptActivityInst1.setPartnerKey(TEST_PARTNER_KEY);
-        pcptActivityInst1.setCompletionDate(LocalDateTime.now().toString());
-        pcptActivityInst1.setDueDate(LocalDateTime.now().toString());
+        pcptActivityInst1.setCompletionDate(LocalDateTime.now());
+        pcptActivityInst1.setDueDate(LocalDateTime.now());
         pcptActivityInst1.setCurrentTask(TEST_CURRENT_TASK_NAME);
         pcptActivityInst1.setPcptInstStatus(TEST_STATUS);
         pcptActivityInst1.setIsDeleted(false);
@@ -320,8 +320,8 @@ public class BaseServiceTest {
         pcptActivityInst.setActivityInstKey(TEST_ACTIVITY_INSTANCE_KEY);
         pcptActivityInst.setActivityWorkflowInstKey("test");
         pcptActivityInst.setPartnerKey(TEST_PARTNER_KEY);
-        pcptActivityInst.setCompletionDate(LocalDateTime.now().toString());
-        pcptActivityInst.setDueDate(LocalDateTime.now().toString());
+        pcptActivityInst.setCompletionDate(LocalDateTime.now());
+        pcptActivityInst.setDueDate(LocalDateTime.now());
         pcptActivityInst.setCurrentTask(TEST_CURRENT_TASK_NAME);
         pcptActivityInst.setPcptInstStatus(TEST_STATUS);
         pcptActivityInst.setIsDeleted(false);
@@ -345,13 +345,13 @@ public class BaseServiceTest {
                 .name(TEST_APPLICATION_NAME)
                 .activityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY)
                 .sponsorKey("test")
-                .status(InstStatus.NEW.getInstStatus())
+                .status(InstStatus.STARTED.getInstStatus())
                 .alertFrequency(1)
                 .description(TEST_DESCRIPTION)
                 .defData(null)
-                .startDate(LocalDate.now())
-                .alertDate(LocalDate.now().toString())
-                .dueDate(LocalDate.now().toString())
+                .startDate(LocalDateTime.now())
+                .alertDate(LocalDateTime.now())
+                .dueDate(LocalDateTime.now())
                 .build();
     }
 
@@ -367,6 +367,7 @@ public class BaseServiceTest {
         activityInstReq.setAlertStartDate(LocalDateTime.now());
         activityInstReq.setAlertInterval(1);
         activityInstReq.setPartners(getListPartners());
+        activityInstReq.setRolloutInternally(false);
         return activityInstReq;
     }
 
@@ -394,6 +395,51 @@ public class BaseServiceTest {
         contextDataNodes1.setNodeValue("HTTPS");
         contextDataNodesList.add(contextDataNodes1);
         return contextDataNodesList;
+    }
+
+    protected List<ActivityInst> getActivityInstanceList() {
+        List<ActivityInst> activityInstList = new ArrayList<>();
+        ActivityInst inst1 = ActivityInst.builder()
+                .activityInstKey(TEST_ACTIVITY_INSTANCE_KEY)
+                .activityDefnKey(TEST_ACTIVITY_DEFN_KEY)
+                .application(TEST_APPLICATION_NAME)
+                .isEncrypted(false)
+                .isCreatedByPartner(false)
+                .isDeleted(false)
+                .emailPref(null)
+                .name(TEST_APPLICATION_NAME)
+                .activityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY)
+                .sponsorKey("test")
+                .status(InstStatus.STARTED.getInstStatus())
+                .alertFrequency(1)
+                .description(TEST_DESCRIPTION)
+                .defData(null)
+                .startDate(LocalDateTime.now())
+                .alertDate(LocalDateTime.now())
+                .dueDate(LocalDateTime.now())
+                .build();
+        ActivityInst inst2 = ActivityInst.builder()
+                .activityInstKey(TEST_ACTIVITY_INSTANCE_KEY)
+                .activityDefnKey(TEST_ACTIVITY_DEFN_KEY)
+                .application(TEST_APPLICATION_NAME)
+                .isEncrypted(false)
+                .isCreatedByPartner(false)
+                .isDeleted(false)
+                .emailPref(null)
+                .name(TEST_APPLICATION_NAME)
+                .activityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY)
+                .sponsorKey("test")
+                .status(InstStatus.STARTED.getInstStatus())
+                .alertFrequency(1)
+                .description(TEST_DESCRIPTION)
+                .defData(null)
+                .startDate(LocalDateTime.now())
+                .alertDate(LocalDateTime.now())
+                .dueDate(LocalDateTime.now())
+                .build();
+        activityInstList.add(inst1);
+        activityInstList.add(inst2);
+        return activityInstList;
     }
 
 }

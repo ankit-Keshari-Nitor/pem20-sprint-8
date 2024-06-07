@@ -100,7 +100,7 @@ public class ParticipantActivityInstanceController {
 
     }
 
-    @Operation(summary = "Start/Execute Activity", tags = { "Activity Instance" })
+    @Operation(summary = "Start/Execute Activity")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
                     @Content(schema = @Schema(implementation = ActivityInstListResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),

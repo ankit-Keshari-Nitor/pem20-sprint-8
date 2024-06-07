@@ -63,7 +63,7 @@ public class ActivityInstanceController {
         return new ResponseEntity<>(activityInstResp, headers, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Get Activity Instance by Key", tags = { "Activity Instance" })
+    @Operation(summary = "Get Activity Instance by Key")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
                     @Content(schema = @Schema(implementation = ActivityInstListResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
@@ -84,7 +84,7 @@ public class ActivityInstanceController {
         return new ResponseEntity<>(activityInstResp, HttpStatus.OK);
     }
 
-    @Operation(summary = "Get List of Activity Instances", tags = { "Activity Instance" })
+    @Operation(summary = "Get List of Activity Instances")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
                     @Content(schema = @Schema(implementation = ActivityInstPagnResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
@@ -96,13 +96,13 @@ public class ActivityInstanceController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
     })
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getActivityInstanceList(@RequestParam(value = "name", defaultValue = "", required = false) String name,
                                                           @RequestParam(value = "description",defaultValue = "", required = false) String description,
-                                                          @RequestParam(value = "status", defaultValue = "INPROGRESS", required = true) InstStatus status,
-                                                          @RequestParam(value = "activityDefnVersionKey", defaultValue = "", required = true) String activityDefnVersionKey,
-                                                          @RequestParam(value = "partnerKey", defaultValue = "", required = true) String partnerKey,
-                                                          @RequestParam(value = "activityStats", defaultValue = "", required = true) Boolean activityStats,
+                                                          @RequestParam(value = "status") InstStatus status,
+                                                          @RequestParam(value = "activityDefnVersionKey") String activityDefnVersionKey,
+                                                          @RequestParam(value = "partnerKey", defaultValue = "", required = false) String partnerKey,
+                                                          @RequestParam(value = "activityStats", defaultValue = "false") Boolean activityStats,
                                                           @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
                                                           @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
                                                           @RequestParam(value = "sortBy", defaultValue = "modifyTs" ,required = false) SortBy sortBy,

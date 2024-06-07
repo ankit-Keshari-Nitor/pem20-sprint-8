@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum InstStatus {
-    NEW ("NEW"), INPROGRESS ("INPROGRESS"), COMPLETED ("COMPLETED"), CLOSED ("CLOSED");
+    STARTED ("STARTED"), CLOSED ("CLOSED");
     private String instStatus;
 
     InstStatus(String instStatus) {

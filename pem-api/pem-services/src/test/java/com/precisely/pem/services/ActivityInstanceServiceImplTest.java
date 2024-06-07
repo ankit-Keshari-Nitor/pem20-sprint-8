@@ -12,21 +12,16 @@ import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefnVersion;
 import com.precisely.pem.models.ActivityInst;
 import com.precisely.pem.models.PcptActivityInst;
-import com.precisely.pem.repositories.SponsorRepo;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,8 +29,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 public class ActivityInstanceServiceImplTest extends BaseServiceTest {
-    @Mock
-    private SponsorRepo sponsorRepo;
+
     @InjectMocks
     private ActivityInstServiceImpl activityInstService;
 
@@ -47,7 +41,7 @@ public class ActivityInstanceServiceImplTest extends BaseServiceTest {
 
     @Test
     void testGetAllInstanceList_NoDataFound() {
-        Page pageable = new PageImpl<>(getInstanceList());
+        Page pageable = new PageImpl<>(getActivityInstanceList());
         when(activityInstRepo.findBySponsorKeyAndActivityDefnKeyVersionAndStatus(eq("TEST_SPONSOR"), eq("TEST"), eq("test"), Mockito.any(Pageable.class)))
                 .thenReturn(Page.empty());
         assertThrows(ResourceNotFoundException.class, () -> {
@@ -55,18 +49,10 @@ public class ActivityInstanceServiceImplTest extends BaseServiceTest {
         });
     }
 
-    private List<ActivityInst> getInstanceList() {
-        ActivityInst a = new ActivityInst();
-        ActivityInst b = new ActivityInst();
-        return Arrays.asList(a,b);
-    }
-
     @Test
     void testGetAllInstanceList_Success() throws ResourceNotFoundException {
-        Page pageable = new PageImpl<>(getInstanceList());
-        List<ActivityInst> activityInstList = new ArrayList<>();
-        ActivityInst activityInst = new ActivityInst();
-        activityInstList.add(activityInst);
+        Page pageable = new PageImpl<>(getActivityInstanceList());
+        ActivityInst activityInst = getActivityInstanceDefnObj();
         when(activityInstRepo.findBySponsorKeyAndActivityDefnKeyVersionAndStatus(anyString(), anyString(), anyString(), Mockito.any(Pageable.class)))
                 .thenReturn(pageable);
         ActivityInstListResp activityInstListResp = new ActivityInstListResp();

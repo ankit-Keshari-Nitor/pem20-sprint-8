@@ -5,6 +5,7 @@ import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
+import com.precisely.pem.dtos.shared.*;
 import com.precisely.pem.dtos.shared.ActivityDefnDataDto;
 import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.PaginationDto;
@@ -16,10 +17,8 @@ import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
-import com.precisely.pem.repositories.ActivityDefnDataRepo;
-import com.precisely.pem.repositories.ActivityDefnRepo;
-import com.precisely.pem.repositories.ActivityDefnVersionRepo;
-import com.precisely.pem.repositories.SponsorRepo;
+import com.precisely.pem.repositories.*;
+import com.precisely.pem.service.PEMActivitiService;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +47,10 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     private ActivityDefnDataRepo activityDefnDataRepo;
     @Autowired
     private ActivityDefnVersionRepo activityDefnVersionRepo;
+    @Autowired
+    PEMActivitiService pemActivitiService;
+    @Autowired
+    private ActivityDefnDeploymentCustomRepo activityDefnDeploymentCustomRepo;
     @Autowired
     private ModelMapper mapper;
     @Override
@@ -224,7 +227,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
         Optional<ActivityDefnVersion> versionObj = activityDefnVersionRepo.findById(activityDefnVersionKey);
 
-        if(!versionObj.isPresent())
+        if(versionObj.isEmpty())
             throw new ResourceNotFoundException("NoDataFound","No data was found for the provided query parameter combination.");
 
         if(!versionObj.get().getStatus().equalsIgnoreCase(Status.FINAL.getStatus()))
@@ -234,25 +237,43 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             throw new ResourceNotFoundException("AlreadyMarkedAsDefault","Version is already marked as Default.");
 
         ActivityDefnVersion version =versionObj.get();
-        version.setIsDefault(Boolean.parseBoolean("true"));
+        version.setIsDefault(true);
 
         List<ActivityDefnVersion> finalVersionList = activityDefnVersionRepo
                 .findByActivityDefnKeyAndStatusAndActivityDefnSponsorKey(activityDefnKey,Status.FINAL.getStatus(),
                         sponsorInfo.getSponsorKey());
         if(finalVersionList.size() > 1) {
-            Optional<ActivityDefnVersion> currentFinalVersionObj = Optional.ofNullable(finalVersionList
+            Optional<ActivityDefnVersion> currentFinalVersionObj = finalVersionList
                     .stream()
-                    .filter(p -> p.getIsDefault())
-                    .findAny().orElse(null));
+                    .filter(p -> p.getIsDefault() && !p.getActivityDefnKeyVersion().equalsIgnoreCase(activityDefnVersionKey))
+                    .findAny();
             ActivityDefnVersion currentFinalVersion = null;
             if (currentFinalVersionObj.isPresent()) {
                 currentFinalVersion = currentFinalVersionObj.get();
                 currentFinalVersion.setIsDefault(false);
+                activityDefnVersionRepo.save(currentFinalVersion);
             }
-            activityDefnVersionRepo.save(currentFinalVersion);
         }
-        activityDefnVersionRepo.save(version);
+        version = activityDefnVersionRepo.save(version);
+        String activityDefnKeyVersion = version.getActivityDefnKeyVersion();
+        deployDefaultADVersion(activityDefnKeyVersion);
         return new MarkAsFinalActivityDefinitionVersionResp("Success",LocalDateTime.now().toString());
+    }
+
+    public void deployDefaultADVersion(String activityDefnKeyVersion) throws SQLException {
+        List<Object[]> dtoList = activityDefnDeploymentCustomRepo.findActivitiesByActivityDefnKeyVersion(activityDefnKeyVersion);
+        ActivityDeploymentDto activityDeploymentDto = null;
+        if(dtoList != null && !dtoList.isEmpty()) {
+            for (Object[] dto : dtoList){
+                activityDeploymentDto = new ActivityDeploymentDto((String)dto[0],(String)dto[1],(String)dto[2],(String)dto[3],(String)dto[4],(String)dto[5],(Double)dto[6],(Blob)dto[7]);
+            }
+            System.out.println(dtoList.toString());
+            Blob blobData = activityDeploymentDto.getDefData();
+            int blobLength = (int) blobData.length();
+            byte[] byteArr = blobData.getBytes(1l, blobLength);
+            String deploymentKey = pemActivitiService.deployProcessDefinition(activityDeploymentDto.getActivityName(), byteArr);
+            log.info("deploymentKey : " + deploymentKey);
+        }
     }
 
     private static void validateUpdateActivityDefnReq(UpdateActivityVersionReq updateActivityVersionReq) throws Exception {

@@ -1,0 +1,10 @@
+rootProject.name = 'PEMApplication'
+include 'pem-activiti'
+include 'pem-controller'
+include 'pem-services'
+include 'pem-entity'
+include 'pem-rest'
+include 'pem-systemdata'
+include 'pem-liberty'
+include 'pem-common'
+

@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +45,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         SponsorInfo sponsorInfo = new SponsorInfo("cashbank","test");
         TenantContext.setTenantContext(sponsorInfo);
     }
+
     @Test
     void testGetAllVersionDefinitionList() throws Exception {
         String sponsorContext = "test";
@@ -81,6 +81,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         v1.setEncryptionKey("123");
         return v1;
     }
+
     private List<ActivityDefnVersion> getVersionList() {
         ActivityDefnVersion v1 = new ActivityDefnVersion();
         v1.setVersion(1.0);
@@ -100,13 +101,13 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     @Test
     void testGetAllVersionDefinitionById() throws Exception {
-        Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString())).thenReturn("cashbank");
+        Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString())).thenReturn("test");
         Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(Mockito.anyString(), Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(getVersion());
         ActivityDefnVersionListResp dto = activityVersionService.getVersionDefinitionById("test", "test", "test");
         assertNotNull(dto);
     }
-    /*@Test
+    @Test
     void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, ResourceNotFoundException, AlreadyDeletedException {
         ActivityDefnServiceImplTest activityDefnServiceImplTest = new ActivityDefnServiceImplTest();
 
@@ -115,7 +116,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         ActivityDefnData activityDefnData = activityDefnServiceImplTest.getVchActivityDefnDataObj();
         activityDefn.get().setVersions(Arrays.asList(activityDefnVersion));
 //        Mockito.when(req.getRequestURL()).thenReturn(new StringBuffer("http://localhost:9080/"));
-//        Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString())).thenReturn("test");
+        Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString())).thenReturn("cashbank");
         Mockito.when(activityDefnRepo.findById(Mockito.anyString())).thenReturn(activityDefn);
         Mockito.when(activityDefnDataRepo.save(Mockito.any())).thenReturn(activityDefnData);
         Mockito.when(activityDefnVersionRepo.save(Mockito.any())).thenReturn(activityDefnVersion);
@@ -125,9 +126,9 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         activityVersionReq.setIsEncrypted(true);
         activityVersionReq.setFile(file);
         activityVersionReq.setApplication(Application.PEM);
-        ActivityDefnVersionResp resp = activityVersionService.createActivityDefnVersion("test", "defnkey", activityVersionReq);
+        ActivityDefnVersionResp resp = activityVersionService.createActivityDefnVersion("test", "test", activityVersionReq);
         assertNotNull(resp);
-    }*/
+    }
 
     @Test
     void updateMarkAsFinal() throws Exception {

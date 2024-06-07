@@ -1,7 +1,13 @@
 package com.precisely.pem.controller;
 
+import com.precisely.pem.commonUtil.InstStatus;
+import com.precisely.pem.commonUtil.SortBy;
+import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.dtos.requests.ActivityInstReq;
+import com.precisely.pem.dtos.responses.ActivityInstListResp;
+import com.precisely.pem.dtos.responses.ActivityInstPagnResp;
 import com.precisely.pem.dtos.responses.ActivityInstResp;
+import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.services.ActivityInstService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +17,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 public class ActivityInstanceControllerTest extends BaseControllerTest{
 
@@ -31,10 +42,33 @@ public class ActivityInstanceControllerTest extends BaseControllerTest{
         ActivityInstResp resp = new ActivityInstResp();
         ActivityInstReq req = new ActivityInstReq();
 
-        Mockito.when(activityInstService.createActivityInstance(Mockito.anyString(),Mockito.any(ActivityInstReq.class)))
+        when(activityInstService.createActivityInstance(anyString(),Mockito.any(ActivityInstReq.class)))
                 .thenReturn(resp);
 
         ResponseEntity<Object> output = activityInstanceController.createActivityInstance(req, TEST_SPONSOR);
+        assertNotNull(output);
+    }
+
+    @Test
+    void testGetActivityInstanceList() throws Exception {
+        ActivityInstPagnResp activityInstPagnResp = new ActivityInstPagnResp();
+        List<ActivityInstListResp> list = new ArrayList<ActivityInstListResp>();
+
+        when(activityInstService.getAllInstanceList(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),Mockito.anyBoolean(),Mockito.anyInt(),Mockito.anyInt(), anyString(), anyString()))
+                .thenReturn(activityInstPagnResp);
+
+        activityInstPagnResp.setContent(list);
+        ResponseEntity<Object> output = activityInstanceController.getActivityInstanceList("test","test", InstStatus.STARTED,"test","test",false,1,1, SortBy.modifyTs, SortDirection.ASC,"cashbank");
+        assertNotNull(output);
+    }
+
+    @Test
+    void testGetInstanceByKey() throws ResourceNotFoundException {
+        ActivityInstListResp activityInstListResp = new ActivityInstListResp();
+
+        when(activityInstService.getInstanceByKey(anyString(), anyString())).thenReturn(activityInstListResp);
+
+        ActivityInstListResp output = activityInstService.getInstanceByKey("sponsorContext", "activityInstKey");
         assertNotNull(output);
     }
 }

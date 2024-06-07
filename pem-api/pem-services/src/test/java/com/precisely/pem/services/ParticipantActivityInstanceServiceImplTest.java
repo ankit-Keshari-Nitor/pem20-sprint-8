@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
 
 public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
+
     @InjectMocks
     protected ParticipantActivityInstServiceImpl participantActivityInstServiceImpl;
 

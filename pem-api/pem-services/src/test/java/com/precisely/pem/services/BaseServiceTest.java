@@ -1,11 +1,13 @@
 package com.precisely.pem.services;
 
+import com.precisely.pem.commonUtil.InstStatus;
 import com.precisely.pem.commonUtil.Status;
-import com.precisely.pem.models.ActivityDefn;
-import com.precisely.pem.models.ActivityDefnData;
-import com.precisely.pem.models.ActivityDefnVersion;
-import com.precisely.pem.models.PcptActivityInst;
+import com.precisely.pem.dtos.requests.ActivityInstReq;
+import com.precisely.pem.dtos.requests.ContextDataNodes;
+import com.precisely.pem.dtos.requests.Partners;
+import com.precisely.pem.models.*;
 import com.precisely.pem.repositories.*;
+import org.json.JSONObject;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -15,11 +17,9 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.anyString;
 
@@ -285,8 +285,8 @@ public class BaseServiceTest {
         pcptActivityInst.setActivityInstKey(TEST_ACTIVITY_INSTANCE_KEY);
         pcptActivityInst.setActivityWorkflowInstKey("test");
         pcptActivityInst.setPartnerKey(TEST_PARTNER_KEY);
-        pcptActivityInst.setCompletionDate(LocalDateTime.now().toString());
-        pcptActivityInst.setDueDate(LocalDateTime.now().toString());
+        pcptActivityInst.setCompletionDate(LocalDateTime.now());
+        pcptActivityInst.setDueDate(LocalDateTime.now());
         pcptActivityInst.setCurrentTask(TEST_CURRENT_TASK_NAME);
         pcptActivityInst.setPcptInstStatus(TEST_STATUS);
         pcptActivityInst.setIsDeleted(false);
@@ -301,8 +301,8 @@ public class BaseServiceTest {
         pcptActivityInst1.setActivityInstKey(TEST_ACTIVITY_INSTANCE_KEY);
         pcptActivityInst1.setActivityWorkflowInstKey("test1");
         pcptActivityInst1.setPartnerKey(TEST_PARTNER_KEY);
-        pcptActivityInst1.setCompletionDate(LocalDateTime.now().toString());
-        pcptActivityInst1.setDueDate(LocalDateTime.now().toString());
+        pcptActivityInst1.setCompletionDate(LocalDateTime.now());
+        pcptActivityInst1.setDueDate(LocalDateTime.now());
         pcptActivityInst1.setCurrentTask(TEST_CURRENT_TASK_NAME);
         pcptActivityInst1.setPcptInstStatus(TEST_STATUS);
         pcptActivityInst1.setIsDeleted(false);
@@ -320,8 +320,8 @@ public class BaseServiceTest {
         pcptActivityInst.setActivityInstKey(TEST_ACTIVITY_INSTANCE_KEY);
         pcptActivityInst.setActivityWorkflowInstKey("test");
         pcptActivityInst.setPartnerKey(TEST_PARTNER_KEY);
-        pcptActivityInst.setCompletionDate(LocalDateTime.now().toString());
-        pcptActivityInst.setDueDate(LocalDateTime.now().toString());
+        pcptActivityInst.setCompletionDate(LocalDateTime.now());
+        pcptActivityInst.setDueDate(LocalDateTime.now());
         pcptActivityInst.setCurrentTask(TEST_CURRENT_TASK_NAME);
         pcptActivityInst.setPcptInstStatus(TEST_STATUS);
         pcptActivityInst.setIsDeleted(false);
@@ -331,6 +331,70 @@ public class BaseServiceTest {
         pcptActivityInst.setMailGroupKey("test");
         pcptActivityInst.setIsAlreadyRolledOut(false);
         return pcptActivityInst;
+    }
+
+    protected ActivityInst getActivityInstanceDefnObj(){
+        return ActivityInst.builder()
+                .activityInstKey(TEST_ACTIVITY_INSTANCE_KEY)
+                .activityDefnKey(TEST_ACTIVITY_DEFN_KEY)
+                .application(TEST_APPLICATION_NAME)
+                .isEncrypted(false)
+                .isCreatedByPartner(false)
+                .isDeleted(false)
+                .emailPref(null)
+                .name(TEST_APPLICATION_NAME)
+                .activityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY)
+                .sponsorKey("test")
+                .status(InstStatus.STARTED.getInstStatus())
+                .alertFrequency(1)
+                .description(TEST_DESCRIPTION)
+                .defData(null)
+                .startDate(LocalDateTime.now())
+                .alertDate(LocalDateTime.now())
+                .dueDate(LocalDateTime.now())
+                .build();
+    }
+
+    protected ActivityInstReq getActivityInstanceDefnReq(){
+        ActivityInstReq activityInstReq = new ActivityInstReq();
+        activityInstReq.setActivityDefnVersionKey("testVersionKey");
+        String contextData = "{\"testNode\":\"originalValue\"}";
+        JSONObject jsonObject = new JSONObject(contextData);
+        activityInstReq.setContextData(jsonObject.toString());
+        activityInstReq.setName("testActivity");
+        activityInstReq.setDescription("testDescription");
+        activityInstReq.setDueDate(LocalDateTime.now());
+        activityInstReq.setAlertStartDate(LocalDateTime.now());
+        activityInstReq.setAlertInterval(1);
+        activityInstReq.setPartners(getListPartners());
+        activityInstReq.setRolloutInternally(false);
+        return activityInstReq;
+    }
+
+    protected List<Partners> getListPartners(){
+        List<Partners> partnersList = new ArrayList<>();
+        List<ContextDataNodes> contextDataNodesList = getContextDataNodes();
+        Partners partners = new Partners();
+        partners.setPartnerKey(TEST_PARTNER_KEY);
+        partners.setContextDataNodes(contextDataNodesList);
+        partnersList.add(partners);
+        return partnersList;
+    }
+
+    protected com.precisely.pem.models.Partners getPartnerData(){
+        com.precisely.pem.models.Partners partners = new com.precisely.pem.models.Partners();
+        partners.setPartnerKey(TEST_PARTNER_KEY);
+        partners.setPartnerStatus("APPROVED");
+        return partners;
+    }
+
+    protected List<ContextDataNodes> getContextDataNodes(){
+        List<ContextDataNodes> contextDataNodesList = new ArrayList<>();
+        ContextDataNodes contextDataNodes1 = new ContextDataNodes();
+        contextDataNodes1.setNodeRef("$.testNode");
+        contextDataNodes1.setNodeValue("HTTPS");
+        contextDataNodesList.add(contextDataNodes1);
+        return contextDataNodesList;
     }
 
 }

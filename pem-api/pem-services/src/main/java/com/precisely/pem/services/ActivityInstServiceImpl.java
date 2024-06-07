@@ -45,7 +45,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -100,7 +100,7 @@ public class ActivityInstServiceImpl implements ActivityInstService{
                 .name(activityInstReq.getName())
                 .description(activityInstReq.getDescription())
                 .status(InstStatus.STARTED.getInstStatus())
-                .startDate(LocalDate.now().toString())
+                .startDate(LocalDateTime.now().toString())
                 .dueDate(activityInstReq.getDueDate().toLocalDate().toString())
                 .endDate(null)
                 .alertDate(activityInstReq.getAlertStartDate().toLocalDate().toString())

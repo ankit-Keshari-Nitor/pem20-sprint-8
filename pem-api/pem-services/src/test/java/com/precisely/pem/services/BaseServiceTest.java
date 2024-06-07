@@ -397,4 +397,49 @@ public class BaseServiceTest {
         return contextDataNodesList;
     }
 
+    protected List<ActivityInst> getActivityInstanceList() {
+        List<ActivityInst> activityInstList = new ArrayList<>();
+        ActivityInst inst1 = ActivityInst.builder()
+                .activityInstKey(TEST_ACTIVITY_INSTANCE_KEY)
+                .activityDefnKey(TEST_ACTIVITY_DEFN_KEY)
+                .application(TEST_APPLICATION_NAME)
+                .isEncrypted(false)
+                .isCreatedByPartner(false)
+                .isDeleted(false)
+                .emailPref(null)
+                .name(TEST_APPLICATION_NAME)
+                .activityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY)
+                .sponsorKey("test")
+                .status(InstStatus.STARTED.getInstStatus())
+                .alertFrequency(1)
+                .description(TEST_DESCRIPTION)
+                .defData(null)
+                .startDate(LocalDateTime.now())
+                .alertDate(LocalDateTime.now())
+                .dueDate(LocalDateTime.now())
+                .build();
+        ActivityInst inst2 = ActivityInst.builder()
+                .activityInstKey(TEST_ACTIVITY_INSTANCE_KEY)
+                .activityDefnKey(TEST_ACTIVITY_DEFN_KEY)
+                .application(TEST_APPLICATION_NAME)
+                .isEncrypted(false)
+                .isCreatedByPartner(false)
+                .isDeleted(false)
+                .emailPref(null)
+                .name(TEST_APPLICATION_NAME)
+                .activityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY)
+                .sponsorKey("test")
+                .status(InstStatus.STARTED.getInstStatus())
+                .alertFrequency(1)
+                .description(TEST_DESCRIPTION)
+                .defData(null)
+                .startDate(LocalDateTime.now())
+                .alertDate(LocalDateTime.now())
+                .dueDate(LocalDateTime.now())
+                .build();
+        activityInstList.add(inst1);
+        activityInstList.add(inst2);
+        return activityInstList;
+    }
+
 }

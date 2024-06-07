@@ -1,13 +1,11 @@
 package com.precisely.pem.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Blob;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -37,13 +35,13 @@ public class ActivityInst extends BaseEntity{
     private String status;
 
     @Column(name="START_DATE")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @Column(name="DUE_DATE")
-    private String dueDate;
+    private LocalDateTime dueDate;
 
     @Column(name="ALERT_DATE")
-    private String alertDate;
+    private LocalDateTime alertDate;
 
     @Column(name="ALERT_FREQUENCY")
     private int alertFrequency;
@@ -71,4 +69,7 @@ public class ActivityInst extends BaseEntity{
 
     @Column(name="EMAIL_PREFERENCE")
     private String emailPref;
+
+    @OneToMany(mappedBy = "activityInst", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<PcptActivityInst> pcptInstances;
 }

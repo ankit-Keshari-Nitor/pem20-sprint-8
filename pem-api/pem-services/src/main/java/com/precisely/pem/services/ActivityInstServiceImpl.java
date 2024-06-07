@@ -78,10 +78,10 @@ public class ActivityInstServiceImpl implements ActivityInstService{
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
 
         ActivityDefnVersion activityDefnVersion = activityDefnVersionRepo.findByActivityDefnKeyVersion(activityInstReq.getActivityDefnVersionKey());
-        if(Objects.isNull(activityDefnVersion) || activityDefnVersion.getActivityDefnKey().isEmpty()){
+        if(Objects.isNull(activityDefnVersion) || activityDefnVersion.getActivityDefnKeyVersion().isEmpty()){
             throw new ResourceNotFoundException("NoDataFound", "No data was found for activity version key '" + activityInstReq.getActivityDefnVersionKey() + "'.");
-        } else if (activityDefnVersion.getStatus().equalsIgnoreCase(Status.FINAL.getStatus())) {
-            throw new InvalidStatusException("NotInFinalStatus", "The activity version with key '"+ activityDefnVersion.getActivityDefnKey() +"' is not in the 'FINAL' state.");
+        } else if (!activityDefnVersion.getStatus().equalsIgnoreCase(Status.FINAL.getStatus())) {
+            throw new InvalidStatusException("NotInFinalStatus", "The activity version with key '"+ activityDefnVersion.getActivityDefnKeyVersion() +"' is not in the 'FINAL' state.");
         }
 
         JSONObject contextData = new JSONObject(activityInstReq.getContextData());

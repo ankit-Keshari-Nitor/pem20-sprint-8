@@ -1,12 +1,10 @@
 package com.precisely.pem.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Blob;
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -30,13 +28,13 @@ public class PcptActivityInst extends BaseEntity{
     private String partnerKey;
 
     @Column(name="COMPLETION_DATE")
-    private String completionDate;
+    private LocalDateTime completionDate;
 
     @Column(name="CURRENT_TASK")
     private String currentTask;
 
     @Column(name="DUE_DATE")
-    private String dueDate;
+    private LocalDateTime dueDate;
 
     @Column(name="PCPT_INST_STATUS")
     private String pcptInstStatus;
@@ -61,4 +59,8 @@ public class PcptActivityInst extends BaseEntity{
 
     @Column(name="PCPT_CONTEXT_DATA")
     private Blob pcptContextData;
+
+    @ManyToOne
+    @JoinColumn(name = "activity_Inst_Details")
+    private ActivityInst activityInst;
 }

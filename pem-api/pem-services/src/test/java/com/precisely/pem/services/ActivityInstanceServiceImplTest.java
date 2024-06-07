@@ -12,12 +12,10 @@ import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefnVersion;
 import com.precisely.pem.models.ActivityInst;
 import com.precisely.pem.models.PcptActivityInst;
-import com.precisely.pem.repositories.SponsorRepo;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
@@ -34,8 +32,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 public class ActivityInstanceServiceImplTest extends BaseServiceTest {
-    @Mock
-    private SponsorRepo sponsorRepo;
+
     @InjectMocks
     private ActivityInstServiceImpl activityInstService;
 

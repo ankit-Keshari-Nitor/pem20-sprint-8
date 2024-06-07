@@ -58,10 +58,10 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         String sortDir = "sortDir";
         boolean isDefault = false;
         Page<ActivityDefnVersion> defnsPage = new PageImpl<>(getVersionList());
+        ActivityDefnVersionDto dto = new ActivityDefnVersionDto();
         Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndIsDefaultAndDescriptionContaining(eq(activityDefnKey),eq(status),eq(sponsorContext),
                         eq(isDefault),eq(applicationDescription),Mockito.any(Pageable.class)))
                 .thenReturn(defnsPage);
-        ActivityDefnVersionDto dto = new ActivityDefnVersionDto();
         Mockito.when(mapper.map(Mockito.any(ActivityDefnVersion.class),eq(ActivityDefnVersionDto.class)))
                 .thenReturn(dto);
         ActivityVersionDefnPaginationResp resp = activityVersionService
@@ -101,7 +101,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     @Test
     void testGetAllVersionDefinitionById() throws Exception {
-        Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString())).thenReturn("cashbank");
+        Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString())).thenReturn("test");
         Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(Mockito.anyString(), Mockito.anyString(),Mockito.anyString()))
                 .thenReturn(getVersion());
         ActivityDefnVersionListResp dto = activityVersionService.getVersionDefinitionById("test", "test", "test");

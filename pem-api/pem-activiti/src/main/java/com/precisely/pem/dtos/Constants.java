@@ -10,8 +10,10 @@ public class Constants {
     //TODO naming convention should be changed
     public static final String USER_NODE_RESOURCE_ID = "FormNode_1";
     public static final String END_NODE_RESOURCE_ID = "EndNode_1";
+    public static final String END_NODE_RESOURCE_ID_2 = "EndNode_2";
     public static final String START_NODE_RESOURCE_ID = "StartNode_1";
     public static final String API_NODE_1 = "apiNode1";
+    public static final String API_NODE_2 = "apiNode2";
     public static final String XSLT_NODE_1 = "xsltNode1";
     public static final String GATEWAY_1 = "gateway1";
     public static final String SEQUENCE_FLOW_RESOURCE_ID_1 = "SequenceFlow1";
@@ -19,4 +21,6 @@ public class Constants {
     public static final String SEQUENCE_FLOW_RESOURCE_ID_3 = "SequenceFlow3";
     public static final String SEQUENCE_FLOW_RESOURCE_ID_4 = "SequenceFlow4";
     public static final String SEQUENCE_FLOW_RESOURCE_ID_5 = "SequenceFlow5";
+    public static final String SEQUENCE_FLOW_RESOURCE_ID_6 = "SequenceFlow6";
+    public static final String SEQUENCE_FLOW_RESOURCE_ID_7 = "SequenceFlow7";
 }

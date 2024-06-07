@@ -85,19 +85,19 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 if ((flowElement instanceof ExclusiveGateway) || (flowElement instanceof InclusiveGateway)) {
                     Gateway gateway = (Gateway) flowElement;
                     String gatewayType = nodeMap.get(gateway.getId()).getGatewayType();
-                    ExtensionElement fieldElement = getStringExtensionElement(gatewayType);
+                    ExtensionElement fieldElement = getStringExtensionElement("gatewayType",gatewayType);
                     gateway.addExtensionElement(fieldElement);
                 }
             }
         }
     }
 
-    private ExtensionElement getStringExtensionElement(String value) {
+    private ExtensionElement getStringExtensionElement(String name,String value) {
         ExtensionElement fieldElement = new ExtensionElement();
         fieldElement.setName("activiti:field");
         fieldElement.setNamespacePrefix("activiti");
         ExtensionAttribute attribute = new ExtensionAttribute();
-        attribute.setValue("gatewayType");
+        attribute.setValue(name);
         attribute.setName("name");
         fieldElement.addAttribute(attribute);
 

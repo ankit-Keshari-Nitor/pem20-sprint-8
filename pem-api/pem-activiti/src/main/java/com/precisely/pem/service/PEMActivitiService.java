@@ -40,6 +40,15 @@ public interface PEMActivitiService {
      */
     String startProcessInstanceById(String processDefinitionId);
 
+    /*
+     * Starts a new process instance using the given process definition ID.
+     *
+     * @param processDefinitionId the ID of the process definition to start
+     * @param businessKey businessKey of process definition
+     * @return the started ProcessInstance ID
+     */
+    String startProcessInstanceById(String processDefinitionId, String businessKey, Map<String, Object> variables);
+
     /**
      * Completes a task identified by the given task ID.
      *

@@ -46,4 +46,7 @@ pem:
 server:
   port: 9080
 
-
+logging:
+  level:
+    root: INFO
+    printVariablesScript: DEBUG

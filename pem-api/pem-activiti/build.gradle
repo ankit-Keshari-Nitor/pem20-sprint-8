@@ -26,6 +26,13 @@ dependencies {
     implementation 'org.graalvm.js:js-scriptengine:23.0.0'
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.9.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.9.0'
+
+    implementation group: 'org.apache.groovy', name: 'groovy', version: '4.0.21'
+    implementation group: 'org.apache.groovy', name: 'groovy-jsr223', version: '4.0.21'
+    implementation group: 'org.apache.groovy', name: 'groovy-json', version: '4.0.21'
+    implementation group: 'org.openjdk.nashorn', name: 'nashorn-core', version: '15.4'
 }
 
 test {

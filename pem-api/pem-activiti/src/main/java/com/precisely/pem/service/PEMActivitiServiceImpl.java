@@ -60,6 +60,14 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     }
 
     @Override
+    public String startProcessInstanceById(String processDefinitionId, String businessKey, Map<String, Object> variables) {
+        log.debug("starting Process Instance By Definition Id : " + processDefinitionId);
+        String id =  runtimeService.startProcessInstanceById(processDefinitionId,businessKey,variables).getProcessInstanceId();
+        log.debug("started Process Instance Id : " + id);
+        return id;
+    }
+
+    @Override
     public void completeTask(String taskId) {
         taskService.complete(taskId);
     }

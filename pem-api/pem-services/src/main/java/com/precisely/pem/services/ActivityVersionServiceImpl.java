@@ -264,10 +264,11 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         List<Object[]> dtoList = activityDefnDeploymentCustomRepo.findActivitiesByActivityDefnKeyVersion(activityDefnKeyVersion);
         ActivityDeploymentDto activityDeploymentDto = null;
         if(dtoList != null && !dtoList.isEmpty()) {
+            log.info(dtoList.toString());
             for (Object[] dto : dtoList){
                 activityDeploymentDto = new ActivityDeploymentDto((String)dto[0],(String)dto[1],(String)dto[2],(String)dto[3],(String)dto[4],(String)dto[5],(Double)dto[6],(Blob)dto[7]);
             }
-            System.out.println(dtoList.toString());
+
             Blob blobData = activityDeploymentDto.getDefData();
             int blobLength = (int) blobData.length();
             byte[] byteArr = blobData.getBytes(1l, blobLength);

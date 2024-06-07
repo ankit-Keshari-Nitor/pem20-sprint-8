@@ -1,0 +1,68 @@
+package com.precisely.pem.converter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.precisely.pem.dtos.BpmnConverterRequest;
+import com.precisely.pem.dtos.Node;
+import com.precisely.pem.dtos.NodeTypes;
+import com.precisely.pem.service.BpmnConvertService;
+import com.precisely.pem.service.BpmnConvertServiceImpl;
+
+import java.util.List;
+import java.util.Objects;
+
+import static com.precisely.pem.dtos.Constants.TASK_HEIGHT;
+import static com.precisely.pem.dtos.Constants.TASK_WIDTH;
+
+public class SubProcessHandler extends AbstractNodeHandler {
+    @Override
+    public void handleNode(Node node, ObjectNode outputJson, ObjectMapper objectMapper, BpmnConverterRequest request) {
+        String type = node.getType();
+        BpmnConvertService bpmnConvertService = new BpmnConvertServiceImpl();
+        if(type.equalsIgnoreCase(NodeTypes.SUB_PROCESS.getName())){
+            String id =  node.getId();
+            String name = node.getName();
+            String description = node.getDescription();
+
+            double x = node.getDiagram().getX();
+            double y = node.getDiagram().getY();
+
+            // Set EndNoneEvent
+            ObjectNode subProcessChildShape = objectMapper.createObjectNode();
+            ObjectNode userTaskShapeBounds = subProcessChildShape.putObject("bounds");
+            userTaskShapeBounds.putObject("lowerRight").put("x", x +TASK_WIDTH).put("y", y +TASK_HEIGHT);
+            userTaskShapeBounds.putObject("upperLeft").put("x", x).put("y", y);
+            subProcessChildShape.putArray("dockers");
+            ArrayNode outgoing = subProcessChildShape.putArray("outgoing");
+            getOutGoingNode(request, id, outgoing);
+
+            ObjectNode properties = subProcessChildShape.putObject("properties");
+            // Map input fields to output JSON
+            properties.put("name", name);
+            properties.put("documentation", description);
+
+            //This will create Complete Cycle of Nodes within this subNode.
+            ObjectNode subNodeOutputJson = objectMapper.createObjectNode();
+            if(Objects.nonNull(node.getNodes()) && !node.getNodes().isEmpty()){
+                List<Node> subNodes = node.getNodes();
+                // Create and configure the chain of responsibility
+                NodeHandler startEventNodeHandler = bpmnConvertService.createNodeHandlerChain();
+                // Process each node through the chain
+                for (Node subNode : subNodes) {
+                    startEventNodeHandler.handleNode(subNode, subNodeOutputJson, objectMapper,request);
+                }
+            }
+
+            subProcessChildShape.set("childShapes",subNodeOutputJson.get("childShapes"));
+
+            subProcessChildShape.putObject("stencil").put("id", NodeTypes.SUB_PROCESS.getBpmnName());
+
+            subProcessChildShape.put("resourceId", id);
+
+            addChildShapes(outputJson,subProcessChildShape);
+        }else {
+        passToNext(node, outputJson, objectMapper, request);
+    }
+    }
+}

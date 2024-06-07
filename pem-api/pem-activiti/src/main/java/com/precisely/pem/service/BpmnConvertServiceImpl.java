@@ -112,19 +112,22 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
 
     //Whenever new Node comes, add into the last handler to include that New Node in the chain of execution
     //Chain of Responsibility
-    private NodeHandler createNodeHandlerChain() {
+    @Override
+    public NodeHandler createNodeHandlerChain() {
         NodeHandler startEventNodeHandler = new StartNodeHandler();
         NodeHandler endEventNodeHandler = new EndNodeHandler();
         NodeHandler formNodeHandler = new FormNodeHandler();
         NodeHandler apiNodeHandler = new ApiNodeHandler();
         NodeHandler xsltNodeHandler = new XsltNodeHandler();
         NodeHandler gatewayHandler = new GatewayNodeHandler();
+        NodeHandler subProcessHandler = new SubProcessHandler();
 
         startEventNodeHandler.setNextHandler(endEventNodeHandler);
         endEventNodeHandler.setNextHandler(formNodeHandler);
         formNodeHandler.setNextHandler(apiNodeHandler);
         apiNodeHandler.setNextHandler(xsltNodeHandler);
         xsltNodeHandler.setNextHandler(gatewayHandler);
+        gatewayHandler.setNextHandler(subProcessHandler);
         return startEventNodeHandler;
     }
 
@@ -167,7 +170,6 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             PemProcess pemProcess = PemProcess.builder().build();
             List<Node> nodes = new ArrayList<>();
             List<Connector> connectors = new ArrayList<>();
-            List<SubProcess> subProcesses = new ArrayList<>();
 
             for (FlowElement flowElement : process.getFlowElements()) {
                 if (flowElement instanceof SequenceFlow) {
@@ -186,7 +188,6 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
 
             pemProcess.setNodes(nodes);
             pemProcess.setConnectors(connectors);
-            pemProcess.setSubProcess(subProcesses);
             response.setProcess(pemProcess);
         }
 

@@ -8,7 +8,8 @@ public enum NodeTypes {
     API_NODE("apiNode","ServiceTask"),
     XSLT_NODE("xsltNode","ServiceTask"),
     EXCLUSIVE_GATEWAY("gateway","ExclusiveGateway"),
-    INCLUSIVE_GATEWAY("gateway","InclusiveGateway");
+    INCLUSIVE_GATEWAY("gateway","InclusiveGateway"),
+    SUB_PROCESS("PartnerTask","SubProcess");
 
     private String name;
     private String bpmnName;

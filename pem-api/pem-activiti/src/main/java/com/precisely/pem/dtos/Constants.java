@@ -10,8 +10,10 @@ public class Constants {
     //TODO naming convention should be changed
     public static final String USER_NODE_RESOURCE_ID = "FormNode_1";
     public static final String END_NODE_RESOURCE_ID = "EndNode_1";
+    public static final String SUB_END_NODE_RESOURCE_ID = "SubEndNode_1";
     public static final String END_NODE_RESOURCE_ID_2 = "EndNode_2";
     public static final String START_NODE_RESOURCE_ID = "StartNode_1";
+    public static final String SUB_START_NODE_RESOURCE_ID = "SubStartNode_1";
     public static final String API_NODE_1 = "apiNode1";
     public static final String API_NODE_2 = "apiNode2";
     public static final String XSLT_NODE_1 = "xsltNode1";

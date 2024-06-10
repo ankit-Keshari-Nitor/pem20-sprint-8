@@ -1,6 +1,5 @@
 export const NEW_ACTIVITY_URL = '#/activities/new';
 
-
 export const ROUTES = {
   NEW_ACTIVITY: '#/activities/new',
   ACTIVITY_LIST: '#/activities',
@@ -229,3 +228,13 @@ export const TEST_DIALOG_DATA = [
     }
   }
 ];
+
+export const ACTIVITY_DEFINITION_DATA = {
+  id: '',
+  versions: [],
+  selectedVersion: '',
+  name: '',
+  description: '',
+  contextData: '',
+  encrypt: ''
+};

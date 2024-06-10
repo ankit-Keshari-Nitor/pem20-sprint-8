@@ -1,3 +1,3 @@
-import useActivitykStore from './useActivityStore';
+import useActivityStore from './useActivityStore';
 
-export default useActivitykStore;
+export default useActivityStore;

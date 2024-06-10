@@ -6,7 +6,6 @@ import './preview-mode.scss';
 import { formValidation, updatePreviewChildToChildren } from '../../utils/helpers';
 
 const FormPreview = ({ layout, renderRow, componentMapper, onFieldDelete, openPreview, dataTestid, buttonView }) => {
-  console.log('layout', layout);
   const [formRenderSchema, setFormRenderSchema] = useState([]);
   useEffect(() => {
     setFormRenderSchema([...layout]);

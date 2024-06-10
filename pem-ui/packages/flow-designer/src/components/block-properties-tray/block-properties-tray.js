@@ -16,7 +16,7 @@ import { CrossIcon, ExpandIcon } from './../../icons';
 import { Column, Grid, Modal, Select, SelectItem } from '@carbon/react';
 import ActivityTaskDefinition from '../block-definition-forms/activity-task-definition';
 
-export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, setOpenPropertiesBlock, editDefinitionProp }) {
+export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, setOpenPropertiesBlock, editDefinitionProp, activityDefinitionData }) {
   const [openExpandMode, setOpenExpandMode] = useState(false);
 
   const getForm = (selectedNode) => {
@@ -42,7 +42,7 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
       case NODE_TYPE.API:
         return <ApiTaskDefinitionForm selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} />;
       default:
-        return <ActivityTaskDefinition id={'activity-drawer'} editDefinitionProp={editDefinitionProp} />;
+        return <ActivityTaskDefinition id={'activity-drawer'} editDefinitionProp={editDefinitionProp} activityDefinitionData={activityDefinitionData} />;
     }
   };
 

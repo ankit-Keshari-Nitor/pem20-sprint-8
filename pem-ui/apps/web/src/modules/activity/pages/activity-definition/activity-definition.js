@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Designer from '@b2bi/flow-designer';
 import { Button, Column, Grid } from '@carbon/react';
 import './activity-definition.css';
 import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
-import useActivitykStore from '../../store';
-import  { ROUTES } from '../../constants';
+import useActivityStore from '../../store';
+import { ROUTES } from '../../constants';
 
 export default function ActivityDefinition() {
-  const activityStore = useActivitykStore((state) => state.activities);
-  const editDefinitionProp = useActivitykStore((state)=> state.editDefinitionProps);
-  const editSchemaProp = useActivitykStore((state)=> state.editSchemaProps);
+  const activityStore = useActivityStore((state) => state.activities);
+  const activityReset = useActivityStore((state) => state.reset);
+  const editDefinitionProp = useActivityStore((state) => state.editDefinitionProps);
+  const editSchemaProp = useActivityStore((state) => state.editSchemaProps);
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
   const [activityDefinitionData, setActivityDefinitionData] = useState();
+  const ref = useRef();
 
   useEffect(() => {
-    if (activityDefinitionData?.name === '' || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
+    if (activityDefinitionData?.id !== '' || activityDefinitionData?.name === '' || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
       setShowActivityDefineDrawer(true);
     } else {
       setShowActivityDefineDrawer(false);
@@ -24,6 +26,11 @@ export default function ActivityDefinition() {
   useEffect(() => {
     setActivityDefinitionData(activityStore.definition);
   }, [activityStore]);
+
+  const handleActivityReset = () => {
+    ref.current?.handleRest();
+    activityReset();
+  };
 
   return (
     <>
@@ -44,10 +51,18 @@ export default function ActivityDefinition() {
           <HistoryIcon />
         </Column>
         <Column>
-          <Button id="saveactivity" href={ROUTES.ACTIVITY_LIST}>Save Activity</Button>
+          <Button id="saveactivity" href={ROUTES.ACTIVITY_LIST} onClick={() => handleActivityReset()}>
+            Save Activity
+          </Button>
         </Column>
       </Grid>
-      <Designer.WorkFlowDesigner showActivityDefineDrawer={showActivityDefineDrawer} editDefinitionProp={editDefinitionProp} editSchemaProp={editSchemaProp} />
+      <Designer.WorkFlowDesigner
+        ref={ref}
+        showActivityDefineDrawer={showActivityDefineDrawer}
+        editDefinitionProp={editDefinitionProp}
+        editSchemaProp={editSchemaProp}
+        activityDefinitionData={activityDefinitionData}
+      />
     </>
   );
 }

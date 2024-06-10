@@ -22,7 +22,7 @@ export default function ApprovalTaskDefinitionForm({ selectedNode }) {
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <ApprovalDefineForm id={'approval-define-form'} selectedNod={selectedNode} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
+            <ApprovalDefineForm id={'approval-define-form'} selectedNode={selectedNode} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>

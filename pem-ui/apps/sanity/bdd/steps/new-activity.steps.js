@@ -69,7 +69,7 @@ Given('User adds {string} task to the new activities', { timeout: 10 * 1000 }, a
 });
 
 Given('User save the new activity', { timeout: 10 * 1000 }, async function () {
-  const activitySaveBtn = await this.page.locator('div.activity-save a.activity');
+  const activitySaveBtn = await this.page.locator('a#saveactivity');
   await expect(activitySaveBtn).toBeVisible();
   await activitySaveBtn.click();
 });

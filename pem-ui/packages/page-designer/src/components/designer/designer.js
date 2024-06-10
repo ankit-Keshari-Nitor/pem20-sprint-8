@@ -286,7 +286,7 @@ export default function Designer({ componentMapper }) {
           onFieldDelete={onFieldDelete}
           openPreview={openPreview}
           dataTestid={'form-preview-id'}
-          buttonView
+          buttonView={true}
         />
       </Modal>
     </>

@@ -33,14 +33,12 @@ export default function RolloutTradingTab() {
       <Column className="col-margin" lg={8}>
         <Select id={`trading-partners-select`} labelText="Select an trading partners" onChange={handleOnChangeType}>
           <SelectItem value="" text="" />
-          <SelectItem value="option-1" text="Partner 1" />
-          <SelectItem value="option-2" text="Partner 2" />
-          <SelectItem value="option-3" text="Partner 3" />
-          <SelectItem value="option-4" text="Partner 4" />
+          <SelectItem value="option-1" text="Company/Unique ID" />
+          <SelectItem value="option-2" text="User ID" />
         </Select>
       </Column>
       <Column className="col-margin" lg={8}>
-        <TextInput id={`trading-partners-search`} type="text" placeholder="Search by trading partners" style={{ marginTop: '1.5rem' }} onChange={handleSearchInput} />
+        <TextInput id={`trading-partners-search`} type="text" placeholder="Search by attribute type" style={{ marginTop: '1.5rem' }} onChange={handleSearchInput} />
       </Column>
       <Column className="col-margin" lg={16}>
         <p id={`partner-list-label`} className="rollout-list-text">

@@ -2,7 +2,7 @@ import React from 'react';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE } from '../constant';
 import { NewTab } from '@carbon/icons-react';
-import TabCanvas from '../../../page-designer/src/components/canvas/tab-canvas';
+import PageDesigner from '@b2bi/page-designer';
 
 const type = FORM_FIELD_TYPE.TAB;
 
@@ -27,7 +27,7 @@ const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, o
         {row.children.map(({ children }, idx) => {
           return (
             <TabPanel>
-              <TabCanvas
+              <PageDesigner.TabCanvas
                 layout={children}
                 handleDrop={handleDrop}
                 renderRow={renderRow}

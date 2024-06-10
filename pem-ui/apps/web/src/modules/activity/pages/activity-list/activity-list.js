@@ -28,6 +28,7 @@ import WrapperModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
 import RolloutWizard from '../../components/rollout-wizard';
 import TestWizard from '../../components/test-wizard/test-wizard.js';
+import PageDesigner from '@b2bi/page-designer';
 
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
@@ -57,6 +58,14 @@ export default function ActivityList() {
   const [currentTestStep, setCurrentTestStep] = useState(0);
   const [testDialogData, setTestDialogData] = useState(TEST_DIALOG_DATA);
   const [currentTestData, setCurrentTestData] = useState(null);
+  const [formRenderSchema, setFormRenderSchema] = useState();
+
+  useEffect(() => {
+    if (testDialogData) {
+      let data = testDialogData[currentTestStep].schema.fields;
+      setFormRenderSchema(data);
+    }
+  }, [currentTestData, currentTestStep, testDialogData]);
 
   // Function to fetch and set data from the API
   const fetchAndSetData = useCallback(() => {
@@ -344,9 +353,24 @@ export default function ActivityList() {
     RolloutService.getTestList().then((data) => {
       setTestDialogData(data);
       setCurrentTestStep(0);
-      setCurrentTestData(data[currentTestStep]);
+      setCurrentTestData(data && data[currentTestStep]);
       setOpenTestModal(true);
     });
+  };
+
+  // Function to handle the Next/rollout Button Click
+  const handelTestFinishClick = () => {
+    let schema = JSON.parse(JSON.stringify(formRenderSchema));
+    schema = PageDesigner.formValidation(schema);
+    setFormRenderSchema(schema);
+
+    if (currentTestStep < testDialogData.length - 1) {
+      setCurrentTestData(testDialogData[currentTestStep + 1]);
+      setCurrentTestStep(currentTestStep + 1);
+    } else if (currentTestStep === testDialogData.length - 1) {
+      setOpenTestModal(false);
+      // TODO -> Test API will call here
+    }
   };
 
   // Function to handle the Cancel/Previous Button Click
@@ -354,23 +378,12 @@ export default function ActivityList() {
     if (currentTestStep === 0) {
       setOpenTestModal(false);
     } else if (currentTestStep > 0 && currentTestStep <= testDialogData.length - 1) {
-      setCurrentTestStep(currentTestStep - 1);
       setCurrentTestData(testDialogData[currentTestStep - 1]);
+      setCurrentTestStep(currentTestStep - 1);
     }
   };
 
-  // Function to handle the Next/rollout Button Click
-  const handelTestFinishClick = () => {
-    if (currentTestStep < testDialogData.length - 1) {
-      setCurrentTestStep(currentTestStep + 1);
-      setCurrentTestData(testDialogData[currentTestStep + 1]);
-    } else if (currentTestStep === testDialogData.length - 1) {
-      setOpenTestModal(false);
-      // TODO -> Test API will call here
-    }
-  };
   // -------------------------------------Test operation End-------------------------------------------------
-
   return (
     <>
       <Shell.Page type="LIST" className="sfg--page--partner-list">
@@ -379,7 +392,7 @@ export default function ActivityList() {
           <Shell.NotificationMessage></Shell.NotificationMessage>
         </Section>
         <Section className="page-body">
-          <div className='headers'>
+          <div className="headers">
             <div className="header-buttons">
               {/* Search, New, Import buttons */}
               <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
@@ -460,18 +473,6 @@ export default function ActivityList() {
             />
           </TableContainer>
         </Section>
-        {/* Modal for action confirmation */}
-        <WrapperModal
-          isOpen={isModalOpen}
-          setIsOpen={setIsModalOpen}
-          modalHeading="Confirmation"
-          secondaryButtonText="Cancel"
-          primaryButtonText={actionText}
-          onPrimaryButtonClick={onPrimaryButtonClick}
-          onSecondaryButtonClick={handleModalClose}
-        >
-          {message}
-        </WrapperModal>
         {/* Modal for Rollout operation */}
         {openRolloutModal && (
           <WrapperModal
@@ -482,6 +483,7 @@ export default function ActivityList() {
             primaryButtonText={currentStep === 0 ? 'Next' : 'Rollout'}
             onPrimaryButtonClick={handelSubmitClick}
             onSecondaryButtonClick={handelCloseClick}
+            onRequestClose={() => setOpenRolloutModal(false)}
           >
             <RolloutWizard currentStep={currentStep} handelStepChange={handelStepChange} />
           </WrapperModal>
@@ -496,8 +498,10 @@ export default function ActivityList() {
             primaryButtonText={currentTestStep < testDialogData.length - 1 ? 'Next' : 'Finish'}
             onPrimaryButtonClick={handelTestFinishClick}
             onSecondaryButtonClick={handelTestCloseClick}
+            onRequestClose={() => setOpenTestModal(false)}
+
           >
-            <TestWizard currentTestData={currentTestData} />
+            <TestWizard currentTestData={currentTestData} formRenderSchema={formRenderSchema} />
           </WrapperModal>
         )}
         {/* Notification toast */}

@@ -5,8 +5,8 @@ import { addEdge, useNodesState, useEdgesState } from 'reactflow';
 
 import './workflow-designer.scss';
 
-import Designer from '../../../../page-designer/src';
-import componentMapper from '../../../../carbon-mappers/src';
+import PageDesigner from '@b2bi/page-designer';
+import componentMapper from '@b2bi/carbon-mappers';
 
 import { DialogFlowDesigner, TaskFlowDesigner } from '../flow-designers';
 import {
@@ -215,7 +215,7 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinit
     <>
       {isPageDesignerActive ? (
         <DndProvider debugMode={true} backend={HTML5Backend}>
-          <Designer componentMapper={componentMapper} />
+          <PageDesigner.Designer componentMapper={componentMapper} />
         </DndProvider>
       ) : (
         <>

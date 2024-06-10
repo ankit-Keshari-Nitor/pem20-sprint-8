@@ -18,3 +18,17 @@ body,
 .cds--modal-scroll-content {
   overflow-x: hidden !important;
 }
+
+@media (min-width: 66rem) {
+  .cds--modal-container {
+    inline-size: 50% !important;
+    max-block-size: 84% !important ;
+  }
+}
+
+@media (min-width: 82rem) {
+  .cds--modal-container {
+      inline-size: 42% !important;
+  }
+}
+

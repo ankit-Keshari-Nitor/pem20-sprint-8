@@ -282,7 +282,7 @@ export const FORM_TEMPLATE = ({ formFields, schema }) => {
       ))}
       <FormSpy>
         {() => (
-          <div className="form-field">
+          <div>
             <Grid>
               <Column lg={8}>
                 <Button data-testid="cancel" name="cancel" kind="secondary" type="button" className="cancel-button" onClick={onCancel}>

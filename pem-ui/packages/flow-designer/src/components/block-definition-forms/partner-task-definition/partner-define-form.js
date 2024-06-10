@@ -9,7 +9,7 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXT_FIELD,
       name: 'name',
-      labelText: 'Name*',
+      labelText: 'Name (required)',
       helperText: 'Name should not contain &,<,>,",\',.,{,}, characters.',
       isRequired: true,
       validate: [
@@ -32,36 +32,28 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXTAREA,
       name: 'description',
-      labelText: 'Description*',
+      labelText: 'Description',
+      enableCounter: true,
       isRequired: true,
+      maxCount: 100,
       validate: [
-        {
-          type: validatorTypes.REQUIRED,
-          message: 'Description is required'
-        },
         {
           type: validatorTypes.MAX_LENGTH,
           threshold: 100,
-          message: 'Name must be no longer then 100 characters'
+          message: 'Description must be no longer then 100 characters'
         }
       ]
     },
     {
       component: componentTypes.TEXT_FIELD,
       name: 'estimate_days',
-      labelText: 'Estimate (Days)*',
-      isRequired: true,
-      validate: [
-        {
-          type: validatorTypes.REQUIRED,
-          message: 'Estimate is required'
-        }
-      ]
+      labelText: 'Estimate (Days)',
+
     },
     {
       component: componentTypes.SELECT,
       name: 'role',
-      labelText: 'Role',
+      labelText: 'Role (optional)',
       options: [
         {
           label: 'Select Role',
@@ -97,15 +89,15 @@ export const SCHEMA = {
         }
       ]
     },
-    {
-      component: componentTypes.CHECKBOX,
-      name: 'show_to_partner',
-      labelText: 'Show to partner'
-    }
+
   ]
 };
 
 const PartnerDefineForm = ({ id, onCancelDefinitionForm, onSubmitDefinitionForm, selectedNode }) => {
+
+  let initialValues = {};
+  initialValues.name = selectedNode.id;
+
   return Object.keys(selectedNode?.data?.editableProps).length > 0 ? (
     <FormRenderer
       id={id}
@@ -120,6 +112,7 @@ const PartnerDefineForm = ({ id, onCancelDefinitionForm, onSubmitDefinitionForm,
   ) : (
     <FormRenderer
       id={id}
+      initialValues={initialValues}
       FormTemplate={FORM_TEMPLATE}
       componentMapper={COMPONENT_MAPPER}
       schema={SCHEMA}

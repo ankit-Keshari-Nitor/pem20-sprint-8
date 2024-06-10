@@ -181,28 +181,41 @@ public class ActivityInstServiceImpl implements ActivityInstService{
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
         Page<ActivityInst> defnsPage = null;
-        if(name != null && !name.isEmpty() && name.contains("con:") && description != null && !description.isEmpty()) {
+        if(name != null && !name.isEmpty() && name.contains("con:") && description != null && !description.isEmpty() && activityDefnVersionKey != null && !activityDefnVersionKey.isEmpty()) {
             String conName = name.replace("con:","");
             System.out.println("conName="+conName);
             defnsPage = activityInstRepo.findBySponsorKeyAndNameContainingAndDescriptionContainingAndActivityDefnKeyVersionAndStatus(sponsorInfo.getSponsorKey(),
                     conName, description, activityDefnVersionKey, status, pageable);
-        }else if(name != null && !name.isEmpty() && !name.contains("con:") && description != null && !description.isEmpty()) {
+        }else if(name != null && !name.isEmpty() && !name.contains("con:") && description != null && !description.isEmpty() && activityDefnVersionKey != null && !activityDefnVersionKey.isEmpty()) {
             defnsPage = activityInstRepo.findBySponsorKeyAndNameAndDescriptionContainingAndActivityDefnKeyVersionAndStatus(sponsorInfo.getSponsorKey(),
                     name, description, activityDefnVersionKey, status, pageable);
-        }else if(name != null && !name.isEmpty() && name.contains("con:")) {
+        }else if(name != null && !name.isEmpty() && name.contains("con:") && activityDefnVersionKey != null && !activityDefnVersionKey.isEmpty()) {
             String conName = name.replace("con:","");
             System.out.println("conName="+conName);
             defnsPage = activityInstRepo.findBySponsorKeyAndNameContainingAndStatusAndAndActivityDefnKeyVersion(sponsorInfo.getSponsorKey(),
                     conName, status, activityDefnVersionKey, pageable);
-        }else if(name != null && !name.isEmpty() && !name.contains("con:")) {
+        }else if(name != null && !name.isEmpty() && !name.contains("con:") && activityDefnVersionKey != null && !activityDefnVersionKey.isEmpty()) {
             defnsPage = activityInstRepo.findBySponsorKeyAndNameAndStatusAndAndActivityDefnKeyVersion(sponsorInfo.getSponsorKey(),
                     name, status, activityDefnVersionKey, pageable);
-        }else if(description != null && !description.isEmpty()) {
+        }else if(description != null && !description.isEmpty() && activityDefnVersionKey != null && !activityDefnVersionKey.isEmpty()) {
             defnsPage = activityInstRepo.findBySponsorKeyAndDescriptionContainingAndActivityDefnKeyVersionAndStatus(sponsorInfo.getSponsorKey(),
                     description, activityDefnVersionKey, status, pageable);
-        }else {
+        }else if(activityDefnVersionKey != null && !activityDefnVersionKey.isEmpty()){
             defnsPage = activityInstRepo.findBySponsorKeyAndActivityDefnKeyVersionAndStatus(sponsorInfo.getSponsorKey(),
                     activityDefnVersionKey, status, pageable);
+        } else if (description != null && !description.isEmpty()) {
+            defnsPage = activityInstRepo.findBySponsorKeyAndDescriptionContainingAndStatus(sponsorInfo.getSponsorKey(), description,
+                    status, pageable);
+        } else if (name != null && !name.isEmpty() && name.contains("con:")) {
+            String conName = name.replace("con:","");
+            System.out.println("conName="+conName);
+            defnsPage = activityInstRepo.findBySponsorKeyAndNameContainingAndStatus(sponsorInfo.getSponsorKey(),
+                    conName, status, pageable);
+        }else if(name != null && !name.isEmpty() && !name.contains("con:")) {
+            defnsPage = activityInstRepo.findBySponsorKeyAndNameAndStatus(sponsorInfo.getSponsorKey(),
+                    name, status, pageable);
+        }else{
+            defnsPage = activityInstRepo.findBySponsorKeyAndStatus(sponsorInfo.getSponsorKey(), status, pageable);
         }
         if(defnsPage == null || defnsPage.isEmpty()) {
             throw new ResourceNotFoundException("","NoDataFound", "No data was found for the provided query parameter combination.");

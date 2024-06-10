@@ -1,12 +1,11 @@
 import React from 'react';
-import FormPreview from '../../../../../../../packages/page-designer/src/components/preview-mode';
-import componentMapper from './../../../../../../../packages/carbon-mappers/src/index';
-import { Row } from '../../../../../../../packages/page-designer/src/elements';
+import componentMapper from '@b2bi/carbon-mappers';
+import PageDesigner from '@b2bi/page-designer';
 
 export default function TestWizard({ currentTestData, formRenderSchema }) {
   const renderRow = (row, currentPath, renderRow, previewMode, onChangeHandle) => {
     return (
-      <Row
+      <PageDesigner.Row
         key={row.id}
         data={row}
         handleDrop={() => console.log('test')}
@@ -24,7 +23,7 @@ export default function TestWizard({ currentTestData, formRenderSchema }) {
   return (
     <div>
       {currentTestData.name}
-      <FormPreview layout={formRenderSchema} componentMapper={componentMapper} renderRow={renderRow} buttonView={false} />
+      <PageDesigner.FormPreview layout={formRenderSchema} componentMapper={componentMapper} renderRow={renderRow} buttonView={false} />
     </div>
   );
 }

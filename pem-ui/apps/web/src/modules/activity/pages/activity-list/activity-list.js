@@ -25,7 +25,7 @@ import WrapperModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
 import RolloutWizard from '../../components/rollout-wizard';
 import TestWizard from '../../components/test-wizard/test-wizard.js';
-import { formValidation } from '../../../../../../../packages/page-designer/src/utils/helpers.js';
+import PageDesigner from '@b2bi/page-designer';
 
 export default function ActivityList() {
   // State hooks for managing various states
@@ -319,7 +319,7 @@ export default function ActivityList() {
   // Function to handle the Next/rollout Button Click
   const handelTestFinishClick = () => {
     let schema = JSON.parse(JSON.stringify(formRenderSchema));
-    schema = formValidation(schema);
+    schema = PageDesigner.formValidation(schema);
     setFormRenderSchema(schema);
 
     if (currentTestStep < testDialogData.length - 1) {

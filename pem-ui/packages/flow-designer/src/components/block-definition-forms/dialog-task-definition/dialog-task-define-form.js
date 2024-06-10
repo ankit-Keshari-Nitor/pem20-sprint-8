@@ -9,7 +9,7 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXT_FIELD,
       name: 'name',
-      labelText: 'Name*',
+      labelText: 'Name (required)',
       helperText: 'Name should not contain &,<,>,",\',.,{,}, characters.',
       isRequired: true,
       validate: [
@@ -32,16 +32,14 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXTAREA,
       name: 'description',
-      labelText: 'Description*',
+      labelText: 'Description',
       isRequired: true,
+      maxCount: 100,
       validate: [
-        {
-          type: validatorTypes.REQUIRED
-        },
         {
           type: validatorTypes.MAX_LENGTH,
           threshold: 100,
-          message: 'Name must be no longer then 100 characters'
+          message: 'Description must be no longer then 100 characters'
         }
       ]
     }

@@ -3,5 +3,9 @@
     "definitions": "Definition",
     "designer": "Designer",
     "workflow": "Workflow"
+  },
+  "list": {
+    "title": "Definitions",
+    "pageDescription": "Definitions list page"
   }
 }

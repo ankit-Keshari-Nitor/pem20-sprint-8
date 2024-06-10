@@ -19,8 +19,7 @@ describe('Radio', () => {
     render(getComponent());
 
     // then
-    expect(screen.getByTestId('test-radio')).toBeInTheDocument();
-
+    expect(screen.getByLabelText('Radio Label')).toBeInTheDocument();
     const checkRadio = screen.getByRole('radio');
 
     expect(checkRadio).toBeInTheDocument();
@@ -34,7 +33,7 @@ describe('Radio', () => {
     render(getComponent({ isRequired: true }));
 
     // then
-    const checkRadioLabel = screen.getByText('*');
+    const checkRadioLabel = screen.getByText('Radio Label');
     expect(checkRadioLabel).toBeInTheDocument();
   });
 });

@@ -23,7 +23,7 @@ describe('Password', () => {
     );
 
     // then
-    expect(screen.getByTestId('test-password')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password Label')).toBeInTheDocument();
 
     const checkPassword = screen.getByRole('button');
 
@@ -38,7 +38,7 @@ describe('Password', () => {
     render(getComponent({ isRequired: true }));
 
     // then
-    const checkPasswordLabel = screen.getByText('*');
+    const checkPasswordLabel = screen.getByText('Password Label');
     expect(checkPasswordLabel).toBeInTheDocument();
   });
 

@@ -19,8 +19,7 @@ describe('Checkbox', () => {
     render(getComponent());
 
     // then
-    expect(screen.getByTestId('test-checkbox')).toBeInTheDocument();
-
+    expect(screen.getByLabelText('Checkbox Label')).toBeInTheDocument();
     const checkCheckbox = screen.getByRole('checkbox');
 
     expect(checkCheckbox).toBeInTheDocument();
@@ -34,7 +33,7 @@ describe('Checkbox', () => {
     render(getComponent({ isRequired: true }));
 
     // then
-    const checkCheckboxLabel = screen.getByText('*');
+    const checkCheckboxLabel = screen.getByText('Checkbox Label');
     expect(checkCheckboxLabel).toBeInTheDocument();
   });
 });

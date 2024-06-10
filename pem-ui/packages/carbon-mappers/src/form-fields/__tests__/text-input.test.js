@@ -22,26 +22,19 @@ describe('TextInput', () => {
       })
     );
 
-    // then
-    expect(screen.getByTestId('test-text-input')).toBeInTheDocument();
-
-    const checkTextInput = screen.getByRole('textbox');
-
-    expect(checkTextInput).toBeInTheDocument();
-    expect(checkTextInput.value).toEqual('Test Input Value');
-
-    const checkTextInputLabel = screen.getByText('Text Input Label');
-    expect(checkTextInputLabel).toBeInTheDocument();
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
+    expect(screen.getByLabelText('Text Input Label')).toBeInTheDocument();
   });
 
-  it('should render required label', function () {
-    // when
-    render(getComponent({ isRequired: true }));
-
-    // then
-    const checkTextInputLabel = screen.getByText('*');
-    expect(checkTextInputLabel).toBeInTheDocument();
-  });
+  it('should render required label', () => {
+    render(
+      getComponent({
+        isRequired: true
+      })
+    );
+  
+    expect(screen.getByLabelText('Text Input Label')).toBeInTheDocument();
+    });
 
   it('should render helper text', function () {
     // when

@@ -31,7 +31,8 @@ const getComponent = (props) => {
     id: 'test-link',
     type: FORM_FIELD_TYPE.LINK,
     labelText: 'Link Label',
+    hrefText: 'https://example.com', // Add a sample href for the link
     ...props
   };
-  return <Link field={defaultField} />;
+  return <Link field={defaultField} id="test-link" />;
 };

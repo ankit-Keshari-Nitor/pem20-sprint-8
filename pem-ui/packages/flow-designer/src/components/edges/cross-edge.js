@@ -1,9 +1,12 @@
 import React from 'react';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, useReactFlow } from 'reactflow';
 import './style.scss';
+import useTaskStore from '../../store';
 
-function CrossEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = { stroke: '#000' }, markerEnd }) {
+function CrossEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = { stroke: '#000' }, markerEnd, data }) {
   const { setEdges } = useReactFlow();
+  const deleteTaskEdge = useTaskStore((state) => state.deleteTaskEdge);
+  const deleteDialogEdge = useTaskStore((state) => state.deleteDialogEdge);
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -15,6 +18,11 @@ function CrossEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, tar
 
   const onEdgeClick = () => {
     setEdges((edges) => edges.filter((edge) => edge.id !== id));
+    if (data) {
+      deleteDialogEdge(data, id);
+    } else {
+      deleteTaskEdge(id);
+    }
   };
 
   return (

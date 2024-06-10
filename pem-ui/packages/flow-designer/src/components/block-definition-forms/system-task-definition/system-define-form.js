@@ -48,6 +48,9 @@ export const SCHEMA = {
 };
 
 const SystemDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefinitionForm }) => {
+  let initialValues = {};
+  initialValues.name = selectedNode.id;
+
   return Object.keys(selectedNode?.data?.editableProps).length > 0 ? (
     <FormRenderer
       id={id}
@@ -62,6 +65,7 @@ const SystemDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefin
   ) : (
     <FormRenderer
       id={id}
+      initialValues={initialValues}
       FormTemplate={FORM_TEMPLATE}
       componentMapper={COMPONENT_MAPPER}
       schema={SCHEMA}

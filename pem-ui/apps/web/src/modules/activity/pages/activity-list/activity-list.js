@@ -4,7 +4,7 @@ import Shell from '@b2bi/shell';
 import '@b2bi/styles/pages/list-page.scss';
 import * as ActivityService from '../../services/activity-service.js';
 import * as RolloutService from '../../services/rollout-service';
-import { NEW_ACTIVITY_URL, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
+import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
 import {
   OverflowMenu,
   OverflowMenuItem,
@@ -28,11 +28,13 @@ import WrapperModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
 import RolloutWizard from '../../components/rollout-wizard';
 import TestWizard from '../../components/test-wizard/test-wizard.js';
+import useActivityStore from '../../store';
 import PageDesigner from '@b2bi/page-designer';
 
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
   // State hooks for managing various states
+  const editDefinition = useActivityStore((state) => state.editDefinitionProps);
   const [totalRows, setTotalRows] = useState(0);
   const [searchKey, setSearchKey] = useState('');
   const [sortDir, setSortDir] = useState('ASC'); // Sorting direction state
@@ -208,6 +210,11 @@ export default function ActivityList() {
     setIsModalOpen(true);
   };
 
+  const handleEdit = (id) => {
+    const editRow = rows.filter((row) => row.id === id)[0];
+    editDefinition(editRow);
+  };
+
   // Handler for actual delete API call
   const handleDeleteActivity = async (id) => {
     try {
@@ -254,7 +261,7 @@ export default function ActivityList() {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
         <OverflowMenuItem itemText="View" />
-        <OverflowMenuItem itemText="Edit" />
+        <OverflowMenuItem itemText="Edit" onClick={() => handleEdit(id)} href={ROUTES.ACTIVITY_EDIT + id} />
         <OverflowMenuItem itemText="Export" />
         <OverflowMenuItem itemText="Create Version" />
         <OverflowMenuItem itemText="Delete" onClick={() => handleDelete(id)} />
@@ -396,7 +403,7 @@ export default function ActivityList() {
             <div className="header-buttons">
               {/* Search, New, Import buttons */}
               <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
-              <Button size="sm" className="new-button" renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
+              <Button size="sm" className="new-button" renderIcon={NewTab} href={ROUTES.NEW_ACTIVITY}>
                 New
               </Button>
               <Button size="sm" kind="tertiary" className="import-button" renderIcon={Add}>
@@ -473,6 +480,19 @@ export default function ActivityList() {
             />
           </TableContainer>
         </Section>
+        {/* Modal for action confirmation */}
+        <WrapperModal
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          modalHeading="Confirmation"
+          secondaryButtonText="Cancel"
+          primaryButtonText={actionText}
+          onPrimaryButtonClick={onPrimaryButtonClick}
+          onSecondaryButtonClick={handleModalClose}
+          onRequestClose={handleModalClose}
+        >
+          {message}
+        </WrapperModal>
         {/* Modal for Rollout operation */}
         {openRolloutModal && (
           <WrapperModal
@@ -499,7 +519,6 @@ export default function ActivityList() {
             onPrimaryButtonClick={handelTestFinishClick}
             onSecondaryButtonClick={handelTestCloseClick}
             onRequestClose={() => setOpenTestModal(false)}
-
           >
             <TestWizard currentTestData={currentTestData} formRenderSchema={formRenderSchema} />
           </WrapperModal>

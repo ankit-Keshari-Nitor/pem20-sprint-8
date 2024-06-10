@@ -47,8 +47,11 @@ export const SCHEMA = {
   ]
 };
 
-const XsltDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefinitionForm }) =>
-  Object.keys(selectedNode?.data?.editableProps).length > 0 ? (
+const XsltDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefinitionForm }) => {
+  let initialValues = {};
+  initialValues.name = selectedNode.id;
+
+  return Object.keys(selectedNode?.data?.editableProps).length > 0 ? (
     <FormRenderer
       id={id}
       FormTemplate={FORM_TEMPLATE}
@@ -62,6 +65,7 @@ const XsltDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefinit
   ) : (
     <FormRenderer
       id={id}
+      initialValues={initialValues}
       FormTemplate={FORM_TEMPLATE}
       componentMapper={COMPONENT_MAPPER}
       schema={SCHEMA}
@@ -70,5 +74,6 @@ const XsltDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefinit
       onReset={() => console.log('Resetting')}
     />
   );
+}
 
 export default XsltDefineForm;

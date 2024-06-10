@@ -4,7 +4,7 @@ import { expect } from '@playwright/test';
 Given('User provides definition details to new activity', { timeout: 10 * 1000 }, async function () {
   const field = await this.page.locator('div.block-properties-container').locator('div.form-field').first().locator('div.cds--text-input-wrapper');
   const wrapper = await field.locator('div.cds--text-input__field-outer-wrapper');
-  const inputfield = await wrapper.locator('div.cds--text-input__field-wrapper').locator('[data-testid="activity-name"]').first();
+  const inputfield = await wrapper.locator('div.cds--text-input__field-wrapper').locator('input#name').first();
   await expect(inputfield).toBeVisible();
   await inputfield.fill('Demo-Activity');
   await this.page.getByRole('button', { name: 'Save' }).first().click();
@@ -69,7 +69,7 @@ Given('User adds {string} task to the new activities', { timeout: 10 * 1000 }, a
 });
 
 Given('User save the new activity', { timeout: 10 * 1000 }, async function () {
-  const activityBtn = await this.page.locator('div.activity-save a.activity');
-  await expect(activityBtn).toBeVisible();
-  await activityBtn.click();
+  const activitySaveBtn = await this.page.locator('div.activity-save a.activity');
+  await expect(activitySaveBtn).toBeVisible();
+  await activitySaveBtn.click();
 });

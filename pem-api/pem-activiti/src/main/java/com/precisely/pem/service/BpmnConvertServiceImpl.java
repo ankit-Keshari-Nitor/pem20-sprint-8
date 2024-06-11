@@ -7,6 +7,7 @@ import com.precisely.pem.converter.*;
 import com.precisely.pem.dtos.*;
 import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.*;
+import org.activiti.bpmn.model.SubProcess;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 
 import java.util.ArrayList;
@@ -22,8 +23,6 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
 
     @Override
     public BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel) throws JsonProcessingException {
-        PemProcess process = pemBpmnModel.getProcess();
-
         List<Node> nodes = pemBpmnModel.getProcess().getNodes();
 
         if (!nodes.isEmpty()) {
@@ -61,7 +60,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 sequenceFlowHandler.handleSequenceFlow(connectorNode,outputJson,objectMapper,bpmnConverterRequest);
             }
             // Set properties for canvas
-            setPropertiesForCanvas(outputJson);
+            setPropertiesForCanvas(outputJson,pemBpmnModel);
             BpmnModel bpmnModel = new BpmnJsonConverter().convertToBpmnModel(outputJson);
 
             //Map nodeId with each node.
@@ -130,15 +129,15 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         return startEventNodeHandler;
     }
 
-    private void setPropertiesForCanvas(ObjectNode outputJson) {
+    private void setPropertiesForCanvas(ObjectNode outputJson,PemBpmnModel pemBpmnModel) {
         ObjectNode propertiesNode = outputJson.putObject("properties");
         propertiesNode.put("author", "");
         propertiesNode.put("creationdate", "");
-        propertiesNode.put("documentation", "");
+        propertiesNode.put("documentation", pemBpmnModel.getDescription());
         propertiesNode.put("executionlisteners", "");
         propertiesNode.put("expressionlanguage", "http://www.w3.org/1999/XPath");
         propertiesNode.put("modificationdate", "");
-        propertiesNode.put("name", "Simple process");
+        propertiesNode.put("name", pemBpmnModel.getName());
         propertiesNode.put("orientation", "horizontal");
         propertiesNode.put("process_author", "");
         propertiesNode.put("process_id", "simpleProcess");
@@ -146,7 +145,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         propertiesNode.put("process_version", "");
         propertiesNode.put("targetnamespace", "http://www.activiti.org/processdef");
         propertiesNode.put("typelanguage", "http://www.w3.org/2001/XMLSchema");
-        propertiesNode.put("version", "");
+        propertiesNode.put("version", pemBpmnModel.getSchemaVersion());
 
         outputJson.put("resourceId", "canvas");
         outputJson.putArray("ssextensions");
@@ -159,8 +158,6 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     @Override
     public PemBpmnModel convertToPemProcess(BpmnModel bpmnModel, BpmnConverterRequest request) {
         PemBpmnModel response = PemBpmnModel.builder()
-                .name("PEM Activity")
-                .description("This is definitions 1")
                 .schemaVersion(5)
                 .build();
 
@@ -168,14 +165,16 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
 
         List<Process> processes = bpmnModel.getProcesses();
         for (Process process : processes) {
+            response.setName(process.getName());
+            response.setDescription(process.getDocumentation());
+
             PemProcess pemProcess = PemProcess.builder().build();
             List<Node> nodes = new ArrayList<>();
             List<Connector> connectors = new ArrayList<>();
 
+            /*reverse conversion started for Nodes*/
             for (FlowElement flowElement : process.getFlowElements()) {
-                if (flowElement instanceof SequenceFlow) {
-                    connectors.add(createConnector((SequenceFlow) flowElement, bpmnModel));
-                } else {
+                if(!(flowElement instanceof SequenceFlow)){
                     Node node = PemNodeFactory.createNode(flowElement,request);
                     if (node != null) {
                         GraphicInfo location = bpmnModel.getLocationMap().get(flowElement.getId());
@@ -187,12 +186,34 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 }
             }
 
+            /*reverse conversion started for Connectors*/
+            //Fetch all sequence flow from first layer of Nodes.
+            List<FlowElement> sequenceFlowElements = new ArrayList<>(process.getFlowElements().stream().filter(flowElement -> flowElement instanceof SequenceFlow).toList());
+
+            //Fetch all sequence flow and append in sequenceFlowElements List for all layers of subProcesses using recursive method appendSubProcessesSequenceFlow
+            //TODO This can throw StackOverFlowException, need to find solution
+            process.getFlowElements().stream()
+                    .filter(flowElement -> flowElement instanceof SubProcess)
+                    .forEach(subprocess -> appendSubProcessesSequenceFlow((SubProcess) subprocess, sequenceFlowElements));
+
+            for (FlowElement sequeunceFlowElement : sequenceFlowElements){
+                connectors.add(createConnector((SequenceFlow) sequeunceFlowElement, bpmnModel));
+            }
             pemProcess.setNodes(nodes);
             pemProcess.setConnectors(connectors);
             response.setProcess(pemProcess);
         }
-
         return response;
+    }
+
+    private static void appendSubProcessesSequenceFlow(SubProcess subprocess, List<FlowElement> sequenceFlowElements) {
+        for (FlowElement flowElement : subprocess.getFlowElements()){
+            if(flowElement instanceof SequenceFlow){
+                sequenceFlowElements.add(flowElement);
+            }else if ( flowElement instanceof SubProcess ){
+                appendSubProcessesSequenceFlow((SubProcess) flowElement,sequenceFlowElements);
+            }
+        }
     }
 
     private Connector createConnector(SequenceFlow sequenceFlow, BpmnModel bpmnModel) {

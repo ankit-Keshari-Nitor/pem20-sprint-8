@@ -126,6 +126,7 @@ public class PemNodeFactory {
         node.setId(subProcess.getId());
         node.setName(subProcess.getName());
 
+        //get Type of Sub Process from documentation field, which was appended during generate SubProcess BPMN definition
         setTypeAndDocumentation(subProcess, node);
 
         for (FlowElement sub : subProcess.getFlowElements()) {
@@ -143,7 +144,7 @@ public class PemNodeFactory {
         node.setNodes(nodes);
         return node;
     }
-
+    //description=type-description
     private static void setTypeAndDocumentation(SubProcess subProcess, Node node) {
         if (Objects.nonNull(subProcess.getDocumentation())) {
             String documentation = subProcess.getDocumentation();

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.precisely.pem.converter.*;
-import com.precisely.pem.dtos.SubProcess;
 import com.precisely.pem.dtos.*;
 import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.*;
@@ -165,6 +164,8 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 .schemaVersion(5)
                 .build();
 
+        request.setBpmnModel(bpmnModel);
+
         List<Process> processes = bpmnModel.getProcesses();
         for (Process process : processes) {
             PemProcess pemProcess = PemProcess.builder().build();
@@ -175,7 +176,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 if (flowElement instanceof SequenceFlow) {
                     connectors.add(createConnector((SequenceFlow) flowElement, bpmnModel));
                 } else {
-                    Node node = PemNodeFactory.createNode(flowElement);
+                    Node node = PemNodeFactory.createNode(flowElement,request);
                     if (node != null) {
                         GraphicInfo location = bpmnModel.getLocationMap().get(flowElement.getId());
                         if (location != null) {

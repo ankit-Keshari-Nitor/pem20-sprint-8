@@ -20,7 +20,8 @@ public class SubProcessHandler extends AbstractNodeHandler {
     public void handleNode(Node node, ObjectNode outputJson, ObjectMapper objectMapper, BpmnConverterRequest request) {
         String type = node.getType();
         BpmnConvertService bpmnConvertService = new BpmnConvertServiceImpl();
-        if(type.equalsIgnoreCase(NodeTypes.SUB_PROCESS.getName())){
+        if(type.equalsIgnoreCase(NodeTypes.PARTNER_SUB_PROCESS.getName()) || type.equalsIgnoreCase(NodeTypes.SYSTEM_SUB_PROCESS.getName())
+        || type.equalsIgnoreCase(NodeTypes.SPONSOR_SUB_PROCESS.getName())){
             String id =  node.getId();
             String name = node.getName();
             String description = node.getDescription();
@@ -39,8 +40,8 @@ public class SubProcessHandler extends AbstractNodeHandler {
 
             ObjectNode properties = subProcessChildShape.putObject("properties");
             // Map input fields to output JSON
-            properties.put("name", name);
-            properties.put("documentation", description);
+            properties.put("name", type+"-"+name);
+            properties.put("documentation", type+"-"+description);
 
             //This will create Complete Cycle of Nodes within this subNode.
             ObjectNode subNodeOutputJson = objectMapper.createObjectNode();
@@ -56,7 +57,7 @@ public class SubProcessHandler extends AbstractNodeHandler {
 
             subProcessChildShape.set("childShapes",subNodeOutputJson.get("childShapes"));
 
-            subProcessChildShape.putObject("stencil").put("id", NodeTypes.SUB_PROCESS.getBpmnName());
+            subProcessChildShape.putObject("stencil").put("id", NodeTypes.PARTNER_SUB_PROCESS.getBpmnName());// all has same BPMN Name i.e SubProcess
 
             subProcessChildShape.put("resourceId", id);
 

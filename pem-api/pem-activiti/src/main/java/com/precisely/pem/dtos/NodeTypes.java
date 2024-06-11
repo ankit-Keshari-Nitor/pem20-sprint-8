@@ -9,7 +9,9 @@ public enum NodeTypes {
     XSLT_NODE("xsltNode","ServiceTask"),
     EXCLUSIVE_GATEWAY("gateway","ExclusiveGateway"),
     INCLUSIVE_GATEWAY("gateway","InclusiveGateway"),
-    SUB_PROCESS("PartnerTask","SubProcess");
+    PARTNER_SUB_PROCESS("PartnerTask","SubProcess"),
+    SYSTEM_SUB_PROCESS("SystemTask","SubProcess"),
+    SPONSOR_SUB_PROCESS("SponsorTask","SubProcess");
 
     private String name;
     private String bpmnName;

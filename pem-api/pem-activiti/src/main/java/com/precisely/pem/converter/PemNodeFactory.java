@@ -1,15 +1,15 @@
 package com.precisely.pem.converter;
 
 import com.precisely.pem.dtos.*;
+import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.*;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 public class PemNodeFactory {
-    private static final Map<Class<? extends FlowElement>, Function<FlowElement, Node>> nodeCreators = new HashMap<>();
+    private static final Map<Class<? extends FlowElement>, BiFunction<FlowElement,BpmnConverterRequest, Node>> nodeCreators = new HashMap<>();
 
     static {
         nodeCreators.put(StartEvent.class, PemNodeFactory::createStartNode);
@@ -18,13 +18,14 @@ public class PemNodeFactory {
         nodeCreators.put(ServiceTask.class, PemNodeFactory::createServiceTaskNode);
         nodeCreators.put(ExclusiveGateway.class, PemNodeFactory::createGatewayNode);
         nodeCreators.put(InclusiveGateway.class, PemNodeFactory::createGatewayNode);
+        nodeCreators.put(SubProcess.class, PemNodeFactory::createSubProcessNode);
     }
 
-    public static Node createNode(FlowElement flowElement) {
-        return nodeCreators.getOrDefault(flowElement.getClass(), fe -> null).apply(flowElement);
+    public static Node createNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest) {
+        return nodeCreators.getOrDefault(flowElement.getClass(),(fe, req) -> null).apply(flowElement,bpmnConverterRequest);
     }
 
-    private static Node createStartNode(FlowElement flowElement) {
+    private static Node createStartNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest) {
         StartEvent startEvent = (StartEvent) flowElement;
         return Node.builder()
                 .id(startEvent.getId())
@@ -33,7 +34,7 @@ public class PemNodeFactory {
                 .build();
     }
 
-    private static Node createEndNode(FlowElement flowElement) {
+    private static Node createEndNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest) {
         EndEvent endEvent = (EndEvent) flowElement;
         return Node.builder()
                 .id(endEvent.getId())
@@ -42,7 +43,7 @@ public class PemNodeFactory {
                 .build();
     }
 
-    private static Node createUserTaskNode(FlowElement flowElement) {
+    private static Node createUserTaskNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest) {
         UserTask userTask = (UserTask) flowElement;
         Node node = new Node();
         node.setId(userTask.getId());
@@ -55,7 +56,7 @@ public class PemNodeFactory {
         return node;
     }
 
-    private static Node createServiceTaskNode(FlowElement flowElement) {
+    private static Node createServiceTaskNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest) {
         ServiceTask serviceTask = (ServiceTask) flowElement;
 
         /**
@@ -105,7 +106,7 @@ public class PemNodeFactory {
         return null;
     }
 
-    private static Node createGatewayNode(FlowElement flowElement) {
+    private static Node createGatewayNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest) {
         Gateway gateway = (Gateway) flowElement;
 
         Node node = new Node();
@@ -116,6 +117,54 @@ public class PemNodeFactory {
         node.setGatewayType(gatewayType);
         node.setType(NodeTypes.EXCLUSIVE_GATEWAY.getName());
         return node;
+    }
+
+    private static Node createSubProcessNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest){
+        Node node = new Node();
+        List<Node> nodes = new ArrayList<>();
+        SubProcess subProcess = (SubProcess) flowElement;
+        node.setId(subProcess.getId());
+        node.setName(subProcess.getName());
+
+        setTypeAndDocumentation(subProcess, node);
+
+        for (FlowElement sub : subProcess.getFlowElements()) {
+            //Recursive Call which creates SubNode again.
+            Node subNode = PemNodeFactory.createNode(sub,bpmnConverterRequest);
+            BpmnModel bpmnModel = bpmnConverterRequest.getBpmnModel();
+            if (subNode != null && bpmnModel != null) {
+                GraphicInfo location = bpmnModel.getLocationMap().get(flowElement.getId());
+                if (location != null) {
+                    subNode.setDiagram(Diagram.builder().x(location.getX()).y(location.getY()).build());
+                }
+                nodes.add(subNode);
+            }
+        }
+        node.setNodes(nodes);
+        return node;
+    }
+
+    private static void setTypeAndDocumentation(SubProcess subProcess, Node node) {
+        if (Objects.nonNull(subProcess.getDocumentation())) {
+            String documentation = subProcess.getDocumentation();
+            if (!documentation.isEmpty()) {
+                String[] parts = documentation.split("-", 2);
+                if (parts.length == 2) {
+                    node.setType(parts[0].trim());
+                    node.setDescription(parts[1].trim());
+                } else {
+                    node.setType(parts[0].trim());
+                    node.setDescription("");
+                }
+            } else {
+                node.setType("");
+                node.setDescription("");
+            }
+        } else {
+            node.setType("");
+            node.setDescription("");
+        }
+
     }
 }
 

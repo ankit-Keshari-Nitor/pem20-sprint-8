@@ -151,7 +151,7 @@
             ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
                     UUID.randomUUID().toString(), activityDefnobj.getActivityDefnKey(),
                     activityDefnData.getActivityDefnDataKey(), ApplicationConstants.DEFAULT_VERSION,
-                    String.valueOf(Status.DRAFT), true, false,
+                    String.valueOf(Status.DRAFT), false, false,
                     "", LocalDateTime.now(), "", LocalDateTime.now(),
                     "", ApplicationConstants.SCHEMA_VERSION,activityDefnReq.getDescription());
             activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);

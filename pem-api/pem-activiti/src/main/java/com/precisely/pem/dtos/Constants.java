@@ -3,11 +3,11 @@ package com.precisely.pem.dtos;
 public class Constants {
     public static final int WIDTH = 100;
     public static final int HEIGHT = 100;
-
-
     public static final int TASK_WIDTH = 200;
     public static final int TASK_HEIGHT =  200;
-    //TODO naming convention should be changed
+    public static final String PEM_PROCESS_ID = "PemProcess";
+
+    //TODO temporary constants, need to be removed.
     public static final String USER_NODE_RESOURCE_ID = "FormNode_1";
     public static final String END_NODE_RESOURCE_ID = "EndNode_1";
     public static final String SUB_END_NODE_RESOURCE_ID = "SubEndNode_1";

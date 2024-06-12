@@ -43,17 +43,8 @@ public class SubProcessHandler extends AbstractNodeHandler {
             properties.put("name", type+"-"+name);
             properties.put("documentation", type+"-"+description);
 
-            //This will create Complete Cycle of Nodes within this subNode.
-            ObjectNode subNodeOutputJson = objectMapper.createObjectNode();
-            if(Objects.nonNull(node.getNodes()) && !node.getNodes().isEmpty()){
-                List<Node> subNodes = node.getNodes();
-                // Create and configure the chain of responsibility
-                NodeHandler startEventNodeHandler = bpmnConvertService.createNodeHandlerChain();
-                // Process each node through the chain
-                for (Node subNode : subNodes) {
-                    startEventNodeHandler.handleNode(subNode, subNodeOutputJson, objectMapper,request);
-                }
-            }
+            //Recursive Call: This will create Complete Cycle of Nodes within this subNode.
+            ObjectNode subNodeOutputJson = generateSubProcessNode(node, objectMapper, request, bpmnConvertService);
 
             subProcessChildShape.set("childShapes",subNodeOutputJson.get("childShapes"));
 
@@ -65,5 +56,19 @@ public class SubProcessHandler extends AbstractNodeHandler {
         }else {
         passToNext(node, outputJson, objectMapper, request);
     }
+    }
+
+    private ObjectNode generateSubProcessNode(Node node, ObjectMapper objectMapper, BpmnConverterRequest request, BpmnConvertService bpmnConvertService) {
+        ObjectNode subNodeOutputJson = objectMapper.createObjectNode();
+        if(Objects.nonNull(node.getNodes()) && !node.getNodes().isEmpty()){
+            List<Node> subNodes = node.getNodes();
+            // Create and configure the chain of responsibility
+            NodeHandler startEventNodeHandler = bpmnConvertService.createNodeHandlerChain();
+            // Process each node through the chain
+            for (Node subNode : subNodes) {
+                startEventNodeHandler.handleNode(subNode, subNodeOutputJson, objectMapper, request);
+            }
+        }
+        return subNodeOutputJson;
     }
 }

@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.precisely.pem.dtos.Constants.PEM_PROCESS_ID;
+
 
 public class BpmnConvertServiceImpl implements BpmnConvertService{
 
@@ -140,7 +142,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         propertiesNode.put("name", pemBpmnModel.getName());
         propertiesNode.put("orientation", "horizontal");
         propertiesNode.put("process_author", "");
-        propertiesNode.put("process_id", "simpleProcess");
+        propertiesNode.put("process_id", PEM_PROCESS_ID);
         propertiesNode.put("process_namespace", "http://www.activiti.org/processdef");
         propertiesNode.put("process_version", "");
         propertiesNode.put("targetnamespace", "http://www.activiti.org/processdef");

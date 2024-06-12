@@ -23,4 +23,8 @@ public interface ActivityVersionService {
                                                             , UpdateActivityVersionReq updateActivityVersionReq) throws Exception ;
 
     MarkAsFinalActivityDefinitionVersionResp markAsDefaultActivityDefinitionVersion(String sponsorContext, String activityDefnKey,String activityDefnVersionKey) throws Exception;
+
+    ActivityDataResponse getActivityDataForSpecificVersion(String sponsorContext, String activityDefnKey,String activityDefnVersionKey)throws Exception;
+
+
 }

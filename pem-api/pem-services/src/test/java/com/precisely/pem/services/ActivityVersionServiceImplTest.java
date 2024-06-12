@@ -17,6 +17,7 @@ import com.precisely.pem.models.ActivityDefnVersion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.*;
@@ -24,6 +25,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +40,10 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     @InjectMocks
     ActivityVersionServiceImpl activityVersionService;
+
+    @Mock
+    private Blob mockBlob;
+
 
     @BeforeEach
     public void setup(){
@@ -249,6 +255,50 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
                         UpdateActivityVersionReq.builder().build()));
         assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_VERSION_REQUIRED_SINGLE_FIELD_TO_UPDATE);
 
+    }
+
+    @Test
+    void getActivityDataForSpecificVersion_Positive() throws Exception{
+        byte[] mockData = "Sample data".getBytes();
+        when(mockBlob.length()).thenReturn((long) mockData.length);
+        when(mockBlob.getBytes(1, (int) mockBlob.length())).thenReturn(mockData);
+
+        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+
+        ActivityDefnData activityDefnData = getVchActivityDefnDataObj();
+        activityDefnData.setDefData(mockBlob);
+        mockActivityDefnDataFindById().thenReturn(Optional.of(activityDefnData));
+
+        ActivityDataResponse activityDataResponse = activityVersionService
+                .getActivityDataForSpecificVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY);
+        assertNotNull(activityDataResponse);
+        assertNotNull(activityDataResponse.getFile());
+    }
+
+    @Test
+    void getActivityDataForSpecificVersion_Version_NotFound(){
+        mockActivityDefnVersionFindById().thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(Exception.class, () ->{
+            activityVersionService
+                    .getActivityDataForSpecificVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY);
+        });
+        assertEquals(ACTIVITY_DEFINITION_VERSION_NOT_FOUND,exception.getMessage());
+    }
+
+    @Test
+    void getActivityDataForSpecificVersion_VersionData_NotFound(){
+        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+
+        mockActivityDefnDataFindById().thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(Exception.class, () ->{
+            activityVersionService
+                    .getActivityDataForSpecificVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY);
+        });
+        assertEquals(ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND,exception.getMessage());
     }
 
 }

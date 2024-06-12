@@ -22,6 +22,7 @@ import com.precisely.pem.service.PEMActivitiService;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialBlob;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
@@ -258,6 +260,25 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         String activityDefnKeyVersion = version.getActivityDefnKeyVersion();
         deployDefaultADVersion(activityDefnKeyVersion);
         return new MarkAsFinalActivityDefinitionVersionResp("Success",LocalDateTime.now().toString());
+    }
+
+    @Override
+    public ActivityDataResponse getActivityDataForSpecificVersion(String sponsorContext, String activityDefnKey, String activityDefnVersionKey) throws Exception{
+        Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
+        if(activityDefnVersion.isEmpty())
+            throw new ResourceNotFoundException("activityDefnKeyVersion", "NoDataFound", "Activity Definition Version with key '" + activityDefnVersionKey + "' not found. Kindly check the activityDefnVersionKey.");
+
+        Optional<ActivityDefnData> activityDefnData = activityDefnDataRepo.findById(activityDefnVersion.get().getActivityDefnDataKey());
+        if(activityDefnData.isEmpty())
+            throw new ResourceNotFoundException("activityDefnData", "NoDataFound","Activity Definition Version Data with key '" + activityDefnVersion.get().getActivityDefnDataKey() + "' not found. Kindly check the activityDefnDataKey.");
+
+        Blob file = activityDefnData.get().getDefData();
+
+        return ActivityDataResponse
+                .builder()
+                .file(new ByteArrayResource(file.getBytes(1,(int)file.length())))
+                .fileName(activityDefnData.get().getActivityDefnDataKey()+".xml")
+                .build();
     }
 
     public void deployDefaultADVersion(String activityDefnKeyVersion) throws SQLException {

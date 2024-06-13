@@ -20,11 +20,11 @@ public class FileValidation implements ConstraintValidator<MultipartFileValidato
                         .addConstraintViolation();
                 return false;
             }
-            if (!Objects.requireNonNull(multipartFile.getContentType()).endsWith("xml") &&
-                    !Objects.requireNonNull(multipartFile.getOriginalFilename()).endsWith(".xml")) {
+            if (!Objects.requireNonNull(multipartFile.getContentType()).endsWith("json") &&
+                    !Objects.requireNonNull(multipartFile.getOriginalFilename()).endsWith(".json")) {
                 constraintValidatorContext.disableDefaultConstraintViolation();
                 constraintValidatorContext
-                        .buildConstraintViolationWithTemplate("file;OnlyXmlFile;The uploaded file does not appear to be in XML format. Please verify the file type.")
+                        .buildConstraintViolationWithTemplate("file;OnlyJsonFile;The uploaded file does not appear to be in Json format. Please verify the file type.")
                         .addConstraintViolation();
                 return false;
             }

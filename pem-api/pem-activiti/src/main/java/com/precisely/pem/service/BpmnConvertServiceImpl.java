@@ -1,20 +1,18 @@
 package com.precisely.pem.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.precisely.pem.converter.*;
 import com.precisely.pem.dtos.*;
 import org.activiti.bpmn.model.Process;
-import org.activiti.bpmn.model.*;
 import org.activiti.bpmn.model.SubProcess;
+import org.activiti.bpmn.model.*;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.precisely.pem.dtos.Constants.PEM_PROCESS_ID;
+import static com.precisely.pem.dtos.Constants.*;
 
 
 public class BpmnConvertServiceImpl implements BpmnConvertService{
@@ -89,6 +87,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         return null;
     }
 
+    /* This will add UserTask from System Side always into each subprocess. There should be Start Node in subprocess.*/
     private void addDefaultSystemUserTaskForAllSubProcess(List<Node> subProcessNodes,List<Connector> connectors,BpmnConverterRequest request,String userKeys,String roleKeys) {
 
         if(Objects.isNull(subProcessNodes) || Objects.isNull(userKeys) || Objects.isNull(roleKeys)){
@@ -99,8 +98,8 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
        for(Node node : subProcessNodes) {
             if(NodeTypes.START.getName().equalsIgnoreCase(node.getType())){
                 Node formNode = new FormNode();
-                formNode.setId("SystemUserTask-"+Math.random());
-                formNode.setName("User Task created by System for Sub Process");
+                formNode.setId(SYSTEM_USER_TASK +Math.random());
+                formNode.setName(SYSTEM_USER_TASK_NAME);
                 formNode.setType(NodeTypes.FORM.getName());
                 formNode.setDiagram(Diagram.builder()
                         .x(node.getDiagram().getX()+200)
@@ -110,17 +109,13 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 newNodes.add(formNode);
 
                 Connector newConnector = new Connector();
-                newConnector.setId("Connector"+formNode.getId());
+                newConnector.setId(SYSTEM_CONNECTOR +formNode.getId());
                 newConnector.setSource(formNode.getId());
 
                 List<String> connectorIds = request.getSourceMap().get(node.getId());
                 Connector connector = request.getConnectorsMap().get(connectorIds.get(0));//Append FormNode into our Start Node's first Connector.
                 newConnector.setTarget(connector.getTarget());
                 connector.setTarget(formNode.getId());
-
-                //Update SourceMap
-                //connectorIds.remove(0);
-                //connectorIds.add(newConnector.getId());
 
                 List<String> newConnectors = new ArrayList<>();
                 newConnectors.add(newConnector.getId());
@@ -131,6 +126,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
 
                 newConnector.setDiagram(connector.getDiagram());
 
+                //add new connector in Connectors List
                 connectors.add(newConnector);
             }else if(NodeTypes.PARTNER_SUB_PROCESS.getName().equalsIgnoreCase(node.getType()) ||
                     NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(node.getType())){

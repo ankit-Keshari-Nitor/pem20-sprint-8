@@ -12,8 +12,8 @@ import com.precisely.pem.service.BpmnConvertServiceImpl;
 import java.util.List;
 import java.util.Objects;
 
-import static com.precisely.pem.dtos.Constants.TASK_HEIGHT;
-import static com.precisely.pem.dtos.Constants.TASK_WIDTH;
+import static com.precisely.pem.dtos.Constants.HEIGHT;
+import static com.precisely.pem.dtos.Constants.WIDTH;
 
 public class SubProcessHandler extends AbstractNodeHandler {
     @Override
@@ -32,7 +32,7 @@ public class SubProcessHandler extends AbstractNodeHandler {
             // Set EndNoneEvent
             ObjectNode subProcessChildShape = objectMapper.createObjectNode();
             ObjectNode userTaskShapeBounds = subProcessChildShape.putObject("bounds");
-            userTaskShapeBounds.putObject("lowerRight").put("x", x +TASK_WIDTH).put("y", y +TASK_HEIGHT);
+            userTaskShapeBounds.putObject("lowerRight").put("x", x + WIDTH).put("y", y + HEIGHT);
             userTaskShapeBounds.putObject("upperLeft").put("x", x).put("y", y);
             subProcessChildShape.putArray("dockers");
             ArrayNode outgoing = subProcessChildShape.putArray("outgoing");

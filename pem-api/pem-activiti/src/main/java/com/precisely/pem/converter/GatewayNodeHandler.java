@@ -11,8 +11,8 @@ import lombok.extern.log4j.Log4j2;
 
 import java.util.Objects;
 
-import static com.precisely.pem.dtos.Constants.TASK_HEIGHT;
-import static com.precisely.pem.dtos.Constants.TASK_WIDTH;
+import static com.precisely.pem.dtos.Constants.HEIGHT;
+import static com.precisely.pem.dtos.Constants.WIDTH;
 
 @Log4j2
 public class GatewayNodeHandler extends AbstractNodeHandler{
@@ -36,7 +36,7 @@ public class GatewayNodeHandler extends AbstractNodeHandler{
 
             ObjectNode gatewayChildShape = objectMapper.createObjectNode();
             ObjectNode bounds = gatewayChildShape.putObject("bounds");
-            bounds.putObject("lowerRight").put("x", x + TASK_WIDTH).put("y", y + TASK_HEIGHT);
+            bounds.putObject("lowerRight").put("x", x + WIDTH).put("y", y + HEIGHT);
             bounds.putObject("upperLeft").put("x", x).put("y", y);
             gatewayChildShape.putArray("childShapes");
             gatewayChildShape.putArray("dockers");

@@ -10,6 +10,7 @@ import org.activiti.bpmn.model.*;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static com.precisely.pem.dtos.Constants.*;
@@ -63,7 +64,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                     .filter(node ->
                             NodeTypes.PARTNER_SUB_PROCESS.getName().equalsIgnoreCase(node.getType()) ||
                                     NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(node.getType())).forEach(node -> {
-                        addDefaultSystemUserTaskForAllSubProcess(node.getNodes(),connectors, bpmnConverterRequest,node.getUserKeys(),node.getUserKeys());
+                        addDefaultSystemUserTaskForAllSubProcess(node.getNodes(),connectors, bpmnConverterRequest,node.getUserKeys(),node.getRoleKeys());
             });
 
             // Process each node through the chain
@@ -87,11 +88,11 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         return null;
     }
 
-    /* This will add UserTask from System Side always into each subprocess. There should be Start Node in subprocess.*/
+    /* This will add UserTask from System Side into each subprocess. There should be Start Node in subprocess.*/
     private void addDefaultSystemUserTaskForAllSubProcess(List<Node> subProcessNodes,List<Connector> connectors,BpmnConverterRequest request,String userKeys,String roleKeys) {
 
+        //No SubProcess is present for this Node execution
         if(Objects.isNull(subProcessNodes) || Objects.isNull(userKeys) || Objects.isNull(roleKeys)){
-            //No SubProcess is present for this Node execution
             return;
         }
         List<Node> newNodes = new ArrayList<>();
@@ -102,27 +103,26 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 formNode.setName(SYSTEM_USER_TASK_NAME);
                 formNode.setType(NodeTypes.FORM.getName());
                 formNode.setDiagram(Diagram.builder()
-                        .x(node.getDiagram().getX()+200)
-                        .y(node.getDiagram().getY()+200).build());
+                        .x(node.getDiagram().getX()+SYSTEM_USER_TASK_POS)
+                        .y(node.getDiagram().getY()+SYSTEM_USER_TASK_POS).build());
                 formNode.setUserKeys(userKeys);
                 formNode.setRoleKeys(roleKeys);
                 newNodes.add(formNode);
 
                 Connector newConnector = new Connector();
-                newConnector.setId(SYSTEM_CONNECTOR +formNode.getId());
+                newConnector.setId(SYSTEM_CONNECTOR+Math.random());
                 newConnector.setSource(formNode.getId());
 
-                List<String> connectorIds = request.getSourceMap().get(node.getId());
-                Connector connector = request.getConnectorsMap().get(connectorIds.get(0));//Append FormNode into our Start Node's first Connector.
-                newConnector.setTarget(connector.getTarget());
-                connector.setTarget(formNode.getId());
+                List<String> connectorIds = request.getSourceMap().get(node.getId());//get Connectors associated with StartNode
+                Connector connector = request.getConnectorsMap().get(connectorIds.get(0));//Use first found Connector of StartNode.
+                newConnector.setTarget(connector.getTarget());//Set Existing Connector's Target to new Connector's Target
+                connector.setTarget(formNode.getId());//set tart of Existing Connector's with new FormNode
 
                 List<String> newConnectors = new ArrayList<>();
                 newConnectors.add(newConnector.getId());
-                request.getSourceMap().put(formNode.getId(),newConnectors);
+                request.getSourceMap().put(formNode.getId(),newConnectors);//Added newly created FormNode into Source-ConnectorIds map.
 
-                //Update ConnectorMap
-                request.getConnectorsMap().put(newConnector.getId(), newConnector);
+                request.getConnectorsMap().put(newConnector.getId(), newConnector);//Update ConnectorMap
 
                 newConnector.setDiagram(connector.getDiagram());
 
@@ -251,11 +251,11 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             List<FlowElement> sequenceFlowElements = new ArrayList<>(process.getFlowElements().stream().filter(flowElement -> flowElement instanceof SequenceFlow).toList());
 
             //Fetch all sequence flow and append in sequenceFlowElements List for all layers of subProcesses using recursive method appendSubProcessesSequenceFlow
-            //TODO This can throw StackOverFlowException, need to find solution
+            //Recursive Call
             process.getFlowElements().stream()
                     .filter(flowElement -> flowElement instanceof SubProcess)
                     .forEach(subprocess -> appendSubProcessesSequenceFlow((SubProcess) subprocess, sequenceFlowElements));
-
+            /*reverse conversion ended for Connectors*/
             for (FlowElement sequeunceFlowElement : sequenceFlowElements){
                 connectors.add(createConnector((SequenceFlow) sequeunceFlowElement, bpmnModel));
             }
@@ -267,6 +267,25 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     }
 
     private static void appendSubProcessesSequenceFlow(SubProcess subprocess, List<FlowElement> sequenceFlowElements) {
+
+        /* System Connectors Change
+         * Fetching System Connectors and Update existing Connectors Target.*/
+        AtomicReference<FlowElement> connector = new AtomicReference<>();
+        AtomicReference<FlowElement> systemConnector = new AtomicReference<>();
+        subprocess.getFlowElements().stream().filter(flowElement -> flowElement instanceof SequenceFlow).forEach(flowElement -> {
+            if(flowElement.getId().contains(SYSTEM_CONNECTOR)){
+                String targetRef = ((SequenceFlow) flowElement).getTargetRef();
+                ((SequenceFlow)connector.get()).setTargetRef(targetRef);
+                systemConnector.set(flowElement);
+            }else if (((SequenceFlow) flowElement).getTargetRef().contains(SYSTEM_USER_TASK)){
+                connector.set(flowElement);
+            }
+        });
+
+        /*Removing System Connector from subProcess's FlowElements*/
+        subprocess.getFlowElements().remove(systemConnector.get());
+
+        /*Add all SequenceFlow present in SubProcesses into Main sequenceFlowElements List.*/
         for (FlowElement flowElement : subprocess.getFlowElements()){
             if(flowElement instanceof SequenceFlow){
                 sequenceFlowElements.add(flowElement);
@@ -287,7 +306,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         List<GraphicInfo> locations = bpmnModel.getFlowLocationMap().get(sequenceFlow.getId());
         if (locations != null) {
             List<Diagram> diagrams = locations.stream()
-                    .map(location -> Diagram.builder().x(location.getX()).y(location.getY()).build())
+                    .map(location -> Diagram.builder().x((double) Constants.WIDTH /2).y(((double) Constants.HEIGHT /2)).build())
                     .collect(Collectors.toList());
             connector.setDiagram(diagrams);
         }

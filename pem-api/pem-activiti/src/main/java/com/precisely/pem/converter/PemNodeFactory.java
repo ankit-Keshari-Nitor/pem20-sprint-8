@@ -119,10 +119,10 @@ public class PemNodeFactory {
         return node;
     }
 
-    private static Node createSubProcessNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest){
+    private static Node createSubProcessNode(FlowElement subFlowElement,BpmnConverterRequest bpmnConverterRequest){
         Node node = new Node();
         List<Node> nodes = new ArrayList<>();
-        SubProcess subProcess = (SubProcess) flowElement;
+        SubProcess subProcess = (SubProcess) subFlowElement;
         node.setId(subProcess.getId());
         node.setName(subProcess.getName());
 
@@ -130,17 +130,29 @@ public class PemNodeFactory {
         setTypeAndDocumentation(subProcess, node);
 
         for (FlowElement sub : subProcess.getFlowElements()) {
+
+            if(sub instanceof UserTask){
+                String id = sub.getId();
+                if(id.contains(Constants.SYSTEM_USER_TASK)){
+                    node.setUserKeys(String.join(",", ((UserTask)sub).getCandidateUsers()));
+                    node.setRoleKeys(String.join(",", ((UserTask)sub).getCandidateGroups()));
+                    continue;
+                }
+            }
+
             //Recursive Call which creates SubNode again.
             Node subNode = PemNodeFactory.createNode(sub,bpmnConverterRequest);
+            GraphicInfo childLocation = bpmnConverterRequest.getBpmnModel().getLocationMap().get(sub.getId());
             BpmnModel bpmnModel = bpmnConverterRequest.getBpmnModel();
             if (subNode != null && bpmnModel != null) {
-                GraphicInfo location = bpmnModel.getLocationMap().get(flowElement.getId());
-                if (location != null) {
-                    subNode.setDiagram(Diagram.builder().x(location.getX()).y(location.getY()).build());
+                GraphicInfo parentLocation = bpmnModel.getLocationMap().get(subFlowElement.getId());
+                if (parentLocation != null) {
+                    subNode.setDiagram(Diagram.builder().x(childLocation.getX()-parentLocation.getX()).y(childLocation.getY()-parentLocation.getY()).build());
                 }
                 nodes.add(subNode);
             }
         }
+
         node.setNodes(nodes);
         return node;
     }

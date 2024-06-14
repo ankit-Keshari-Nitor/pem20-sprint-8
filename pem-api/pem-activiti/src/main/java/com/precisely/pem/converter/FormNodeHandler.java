@@ -4,10 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.precisely.pem.dtos.BpmnConverterRequest;
+import com.precisely.pem.dtos.Constants;
 import com.precisely.pem.dtos.Node;
 import com.precisely.pem.dtos.NodeTypes;
-
-import static com.precisely.pem.dtos.Constants.*;
 
 public class FormNodeHandler extends AbstractNodeHandler{
     @Override
@@ -28,7 +27,7 @@ public class FormNodeHandler extends AbstractNodeHandler{
             // Set EndNoneEvent
             ObjectNode userTaskChildShape = objectMapper.createObjectNode();
             ObjectNode userTaskShapeBounds = userTaskChildShape.putObject("bounds");
-            userTaskShapeBounds.putObject("lowerRight").put("x", x +TASK_WIDTH).put("y", y +TASK_HEIGHT);
+            userTaskShapeBounds.putObject("lowerRight").put("x", x + Constants.WIDTH).put("y", y + Constants.HEIGHT);
             userTaskShapeBounds.putObject("upperLeft").put("x", x).put("y", y);
             userTaskChildShape.putArray("childShapes");
             userTaskChildShape.putArray("dockers");

@@ -1,15 +1,9 @@
 package com.precisely.pem.converter;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.precisely.pem.dtos.ApiConfiguration;
-import com.precisely.pem.dtos.BpmnConverterRequest;
-import com.precisely.pem.dtos.Node;
-import com.precisely.pem.dtos.NodeTypes;
-
-import static com.precisely.pem.dtos.Constants.*;
+import com.precisely.pem.dtos.*;
 
 public class ApiNodeHandler extends AbstractNodeHandler{
     @Override
@@ -27,7 +21,7 @@ public class ApiNodeHandler extends AbstractNodeHandler{
             // Set EndNoneEvent
             ObjectNode apiNodeChildShape = objectMapper.createObjectNode();
             ObjectNode bounds = apiNodeChildShape.putObject("bounds");
-            bounds.putObject("lowerRight").put("x", x+TASK_WIDTH).put("y", y+TASK_HEIGHT);
+            bounds.putObject("lowerRight").put("x", x+ Constants.WIDTH).put("y", y+ Constants.HEIGHT);
             bounds.putObject("upperLeft").put("x", x).put("y", y);
 
             apiNodeChildShape.putArray("childShapes");

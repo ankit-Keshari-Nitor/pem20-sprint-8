@@ -29,5 +29,4 @@ public class Node {
     private String gatewayType;
     //Sub Process
     List<Node> nodes;
-    String owner;
 }

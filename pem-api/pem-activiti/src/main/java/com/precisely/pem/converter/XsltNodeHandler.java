@@ -1,6 +1,5 @@
 package com.precisely.pem.converter;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -9,8 +8,8 @@ import com.precisely.pem.dtos.Node;
 import com.precisely.pem.dtos.NodeTypes;
 import com.precisely.pem.dtos.XsltConfiguration;
 
-import static com.precisely.pem.dtos.Constants.TASK_HEIGHT;
-import static com.precisely.pem.dtos.Constants.TASK_WIDTH;
+import static com.precisely.pem.dtos.Constants.HEIGHT;
+import static com.precisely.pem.dtos.Constants.WIDTH;
 
 public class XsltNodeHandler extends AbstractNodeHandler{
     @Override
@@ -27,7 +26,7 @@ public class XsltNodeHandler extends AbstractNodeHandler{
 
             ObjectNode xsltNodeChildShape = objectMapper.createObjectNode();
             ObjectNode bounds = xsltNodeChildShape.putObject("bounds");
-            bounds.putObject("lowerRight").put("x", x + TASK_WIDTH).put("y", y + TASK_HEIGHT);
+            bounds.putObject("lowerRight").put("x", x + WIDTH).put("y", y + HEIGHT);
             bounds.putObject("upperLeft").put("x", x).put("y", y);
 
             xsltNodeChildShape.putArray("childShapes");

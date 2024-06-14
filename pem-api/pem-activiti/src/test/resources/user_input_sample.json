@@ -120,7 +120,8 @@
         "type" : "PartnerTask",
         "name": "My Process To call API",
         "description": "This process describes the order fulfilment workflow.",
-        "owner": "",
+        "userKeys": "user1,user2,user3",
+        "roleKeys": "group1,group2",
         "nodes": [      {
           "id": "SubStartNode_1",
           "type": "startEventNode",

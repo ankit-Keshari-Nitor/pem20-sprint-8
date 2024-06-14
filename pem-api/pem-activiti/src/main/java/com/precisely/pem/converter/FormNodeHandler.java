@@ -54,14 +54,12 @@ public class FormNodeHandler extends AbstractNodeHandler{
             // Create the items array
             ArrayNode itemsArray = objectMapper.createArrayNode();
 
-            ObjectNode newNode = objectMapper.createObjectNode();
-            newNode.put("name","yogesh"); //TODO change to exact Object from UI.
             // Create the first form property
             ObjectNode formProperty = objectMapper.createObjectNode();
             formProperty.put("id", "form");
             formProperty.put("name", "form");
             formProperty.put("type", "string");
-            formProperty.put("variable",newNode.toString() );
+            formProperty.put("variable",node.getForm());
             itemsArray.add(formProperty);
 
             // Set the items array and totalCount in formPropertiesNode

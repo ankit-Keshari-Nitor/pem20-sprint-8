@@ -10,10 +10,8 @@ import org.activiti.bpmn.model.*;
 import org.activiti.bpmn.model.SubProcess;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.swing.text.html.Option;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.precisely.pem.dtos.Constants.PEM_PROCESS_ID;
@@ -24,12 +22,13 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel) throws JsonProcessingException {
+    public BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel) {
         List<Node> nodes = pemBpmnModel.getProcess().getNodes();
 
         if (!nodes.isEmpty()) {
             // Create the output JSON structure
             ObjectNode outputJson = objectMapper.createObjectNode();
+            BpmnConverterRequest bpmnConverterRequest = new BpmnConverterRequest();
 
             // Set bounds for Canvas, can be static
             ObjectNode bounds = outputJson.putObject("bounds");
@@ -44,14 +43,30 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             Map<String,List<String>> sourceMap = new HashMap<>();
             for (Connector connector : connectors) {
                 String source = connector.getSource();
-                List<String> sources = sourceMap.getOrDefault(source,new ArrayList<>());
-                sources.add(connector.getId());
-                sourceMap.put(source,sources);
+                List<String> connectorIds = sourceMap.getOrDefault(source,new ArrayList<>());
+                connectorIds.add(connector.getId());
+                sourceMap.put(source,connectorIds);
             }
 
+            //Map nodeId with each node.
+            Map<String, Node> nodeMap = nodes.stream()
+                    .collect(Collectors.toMap(Node::getId, node -> node));
+
+            //Map nodeId with each node.
+            Map<String, Connector> connectorsMap = connectors.stream()
+                    .collect(Collectors.toMap(Connector::getId, connector -> connector));
+            bpmnConverterRequest.setConnectorsMap(connectorsMap);
+
             SequenceFlowHandler sequenceFlowHandler = new SequenceFlowHandler();
-            BpmnConverterRequest bpmnConverterRequest = new BpmnConverterRequest();
             bpmnConverterRequest.setSourceMap(sourceMap);
+
+            //Mandatory userKeys and roleKeys, each subprocess has startNode present always
+            nodes.stream()
+                    .filter(node ->
+                            NodeTypes.PARTNER_SUB_PROCESS.getName().equalsIgnoreCase(node.getType()) ||
+                                    NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(node.getType())).forEach(node -> {
+                        addDefaultSystemUserTaskForAllSubProcess(node.getNodes(),connectors, bpmnConverterRequest,node.getUserKeys(),node.getUserKeys());
+            });
 
             // Process each node through the chain
             for (Node node : nodes) {
@@ -63,19 +78,66 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             }
             // Set properties for canvas
             setPropertiesForCanvas(outputJson,pemBpmnModel);
+
             BpmnModel bpmnModel = new BpmnJsonConverter().convertToBpmnModel(outputJson);
 
-            //Map nodeId with each node.
-            Map<String,Node> nodeMap = new HashMap<>();
-            for (Node node : nodes) {
-                nodeMap.put(node.getId(),node);
-            }
             //Add custom fields in BpmnModel, fields for which we don't have BPMN JSON variable we have to manually add that in bpmn model.
             addCustomFieldsInBpmnModel(bpmnModel, nodeMap);
 
             return bpmnModel;
         }
         return null;
+    }
+
+    private void addDefaultSystemUserTaskForAllSubProcess(List<Node> subProcessNodes,List<Connector> connectors,BpmnConverterRequest request,String userKeys,String roleKeys) {
+
+        if(Objects.isNull(subProcessNodes) || Objects.isNull(userKeys) || Objects.isNull(roleKeys)){
+            //No SubProcess is present for this Node execution
+            return;
+        }
+        List<Node> newNodes = new ArrayList<>();
+       for(Node node : subProcessNodes) {
+            if(NodeTypes.START.getName().equalsIgnoreCase(node.getType())){
+                Node formNode = new FormNode();
+                formNode.setId("SystemUserTask-"+Math.random());
+                formNode.setName("User Task created by System for Sub Process");
+                formNode.setType(NodeTypes.FORM.getName());
+                formNode.setDiagram(Diagram.builder()
+                        .x(node.getDiagram().getX()+200)
+                        .y(node.getDiagram().getY()+200).build());
+                formNode.setUserKeys(userKeys);
+                formNode.setRoleKeys(roleKeys);
+                newNodes.add(formNode);
+
+                Connector newConnector = new Connector();
+                newConnector.setId("Connector"+formNode.getId());
+                newConnector.setSource(formNode.getId());
+
+                List<String> connectorIds = request.getSourceMap().get(node.getId());
+                Connector connector = request.getConnectorsMap().get(connectorIds.get(0));//Append FormNode into our Start Node's first Connector.
+                newConnector.setTarget(connector.getTarget());
+                connector.setTarget(formNode.getId());
+
+                //Update SourceMap
+                connectorIds.remove(0);
+                connectorIds.add(newConnector.getId());
+
+                List<String> newConnectors = new ArrayList<>();
+                newConnectors.add(newConnector.getId());
+                request.getSourceMap().put(formNode.getId(),newConnectors);
+
+                //Update ConnectorMap
+                request.getConnectorsMap().put(newConnector.getId(), newConnector);
+
+                newConnector.setDiagram(connector.getDiagram());
+
+                connectors.add(newConnector);
+            }else if(NodeTypes.PARTNER_SUB_PROCESS.getName().equalsIgnoreCase(node.getType()) ||
+                    NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(node.getType())){
+                addDefaultSystemUserTaskForAllSubProcess(node.getNodes(),connectors,request, node.getUserKeys(), node.getRoleKeys());
+            }
+        }
+       subProcessNodes.addAll(newNodes);
     }
 
     private void addCustomFieldsInBpmnModel(BpmnModel bpmnModel, Map<String, Node> nodeMap) {

@@ -10,6 +10,7 @@ import java.util.Map;
 @Data
 public class BpmnConverterRequest {
     Map<String, List<String>> sourceMap;
+    Map<String, Connector> connectorsMap;
     BpmnModel bpmnModel;
 
 }

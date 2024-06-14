@@ -10,6 +10,7 @@ import com.precisely.pem.dtos.Diagram;
 import com.precisely.pem.dtos.Node;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.precisely.pem.dtos.Constants.*;
 
@@ -41,14 +42,12 @@ public class SequenceFlowHandler {
         ObjectNode properties = connectorJson.putObject("properties");
         properties.put("bordercolor", "#000000");
         properties.put("conditionalflow", "None");
-        properties.put("conditionexpression", "");
-        properties.put("conditionsequenceflow", "");
+        properties.put("conditionsequenceflow", Objects.nonNull(connectorNode.getCondition()) ? connectorNode.getCondition() : "");
         properties.put("conditiontype", "None");
         properties.put("defaultflow", "None");
         properties.put("documentation", "");
         properties.put("isimmediate", "");
         properties.put("name", "");
-        properties.put("showdiamondmarker", "");
 
         // Set resourceId
         connectorJson.put("resourceId", connectorNode.getId().trim());

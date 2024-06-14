@@ -119,8 +119,8 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 connector.setTarget(formNode.getId());
 
                 //Update SourceMap
-                connectorIds.remove(0);
-                connectorIds.add(newConnector.getId());
+                //connectorIds.remove(0);
+                //connectorIds.add(newConnector.getId());
 
                 List<String> newConnectors = new ArrayList<>();
                 newConnectors.add(newConnector.getId());

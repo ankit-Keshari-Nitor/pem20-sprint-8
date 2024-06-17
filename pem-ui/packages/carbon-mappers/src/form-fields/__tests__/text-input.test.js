@@ -32,9 +32,9 @@ describe('TextInput', () => {
         isRequired: true
       })
     );
-  
+
     expect(screen.getByLabelText('Text Input Label')).toBeInTheDocument();
-    });
+  });
 
   it('should render helper text', function () {
     // when

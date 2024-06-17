@@ -20,7 +20,7 @@ describe('Button', () => {
         value: 'Test Button value'
       })
     );
-  
+
     expect(screen.getByRole('button')).toBeInTheDocument();
     expect(screen.getByText('Button Label')).toBeInTheDocument();
   });

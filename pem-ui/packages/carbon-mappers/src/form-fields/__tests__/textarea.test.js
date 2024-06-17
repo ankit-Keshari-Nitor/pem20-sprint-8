@@ -15,9 +15,7 @@ describe('Textfield', () => {
   });
 
   it('should render', () => {
-    render(
-      getComponent()
-    );
+    render(getComponent());
 
     expect(screen.getByLabelText('Textarea Label')).toBeInTheDocument();
     const checkTextAreaLabel = screen.getByText('Textarea Label');

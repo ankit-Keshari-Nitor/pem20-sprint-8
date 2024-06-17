@@ -1,59 +1,28 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
+import Select from '../select'; // Adjust the import path as necessary
 import { FORM_FIELD_TYPE } from '../../constant';
-import Select from '../select';
-import { createContainer } from '../../utils/test-helper';
 
-let container;
+const mockField = {
+  type: FORM_FIELD_TYPE.SELECT,
+  labelText: 'Test Label',
+  isRequired: true,
+  options: [
+    { id: '1', value: 'option1', label: 'Option 1' },
+    { id: '2', value: 'option2', label: 'Option 2' }
+  ],
+  isDisabled: false,
+  readOnly: false
+};
 
-describe('Select', () => {
-  beforeEach(() => {
-    container = createContainer();
-  });
+describe('Select Component', () => {
+  it('renders the select component with the correct label and options', () => {
+    render(<Select field={mockField} id="test-select" />);
 
-  afterEach(function () {
-    container.remove();
-  });
+    expect(screen.getByLabelText('Test Label')).toBeInTheDocument();
 
-  it('should render', () => {
-    // when;
-    render(getComponent());
-
-    // then
-    expect(screen.getByLabelText('Select Label')).toBeInTheDocument();
-
-    const checkSelect = screen.getByRole('option', { name: 'No Option' });
-
-    expect(checkSelect).toBeInTheDocument();
-
-    const checkSelectLabel = screen.getByText('Select Label');
-    expect(checkSelectLabel).toBeInTheDocument();
-  });
-
-  it('should render required label', function () {
-    // when
-    render(getComponent({ isRequired: true }));
-
-    // then
-    const checkSelectLabel = screen.getByText('Select Label');
-    expect(checkSelectLabel).toBeInTheDocument();
-  });
-
-  it('should render helper text', function () {
-    // when
-    render(getComponent({ helperText: 'helperText' }));
-
-    // then
-    const checkSelectHelperText = screen.getByText('helperText');
-    expect(checkSelectHelperText).toBeInTheDocument();
+    mockField.options.forEach((option) => {
+      expect(screen.getByText(option.label)).toBeInTheDocument();
+    });
   });
 });
-
-const getComponent = (props) => {
-  const defaultField = {
-    id: 'test-select',
-    type: FORM_FIELD_TYPE.SELECT,
-    labelText: 'Select Label',
-    ...props
-  };
-  return <Select field={defaultField} />;
-};

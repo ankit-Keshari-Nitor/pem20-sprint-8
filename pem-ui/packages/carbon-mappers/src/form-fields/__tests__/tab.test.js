@@ -3,19 +3,23 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import CustomTab from '../tab'; // Adjust the import path as necessary
 import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE } from '../../constant';
 import { NewTab } from '@carbon/icons-react';
-import TabCanvas from '../../../../page-designer/src/components/canvas/tab-canvas';
+import PageDesigner from '@b2bi/page-designer';
 
-// Mock TabCanvas to avoid dealing with its internal implementation
-jest.mock('../../../../page-designer/src/components/canvas/tab-canvas', () => jest.fn(() => <div>Mocked TabCanvas</div>));
+// Mock PageDesigner.TabCanvas to avoid dealing with its internal implementation
+jest.mock('@b2bi/page-designer', () => ({
+  TabCanvas: jest.fn(() => <div>Mocked TabCanvas</div>)
+}));
 
 // Mock window.matchMedia
-global.matchMedia = global.matchMedia || function () {
-  return {
-    matches: false,
-    addListener: function () { },
-    removeListener: function () { }
+global.matchMedia =
+  global.matchMedia ||
+  function () {
+    return {
+      matches: false,
+      addListener: function () {},
+      removeListener: function () {}
+    };
   };
-};
 
 const mockProps = {
   renderRow: jest.fn(),
@@ -42,12 +46,12 @@ describe('CustomTab Component', () => {
     expect(screen.getByRole('tablist')).toBeInTheDocument();
 
     // Check if the tab titles are rendered
-    mockProps.row.children.forEach(tab => {
+    mockProps.row.children.forEach((tab) => {
       expect(screen.getByText(tab.tabTitle)).toBeInTheDocument();
     });
 
     // Check if TabCanvas components are rendered for each tab
-    expect(TabCanvas).toHaveBeenCalledTimes(mockProps.row.children.length);
+    expect(PageDesigner.TabCanvas).toHaveBeenCalledTimes(mockProps.row.children.length);
   });
 
   it('handles tab click event correctly', () => {

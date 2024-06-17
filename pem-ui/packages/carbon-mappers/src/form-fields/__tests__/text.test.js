@@ -7,9 +7,7 @@ describe('Text', () => {
     const labelText = 'Test Label';
     const id = 'textTestId';
 
-    const { getByText, getByTestId } = render(
-      <Text field={{ labelText }} id={id} />
-    );
+    const { getByText, getByTestId } = render(<Text field={{ labelText }} id={id} />);
 
     const textElement = getByText(labelText);
 

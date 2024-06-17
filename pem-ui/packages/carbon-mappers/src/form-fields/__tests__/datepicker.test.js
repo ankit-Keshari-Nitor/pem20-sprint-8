@@ -10,12 +10,12 @@ const defaultProps = {
     type: 'datepicker',
     labelText: 'Select Date',
     value: '01/01/2020',
-    isRequired: false,
+    isRequired: false
   },
   id: 'datepicker-1',
   currentPath: 'test-path',
   onChangeHandle: mockOnChangeHandle,
-  previewMode: false,
+  previewMode: false
 };
 
 describe('DatePicker Component', () => {

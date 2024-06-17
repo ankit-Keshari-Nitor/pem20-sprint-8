@@ -3,7 +3,6 @@ import { Modal } from '@carbon/react';
 
 export default function WrapperModal({
   isOpen = false,
-  setIsOpen,
   onRequestClose,
   primaryButtonText = '',
   onSecondaryButtonClick,

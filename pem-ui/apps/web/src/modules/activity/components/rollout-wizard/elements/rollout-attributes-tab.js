@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Column, TextInput, Checkbox, Select, SelectItem } from '@carbon/react';
-import './style.scss';
+import { Grid, Column, TextInput, Checkbox, Select, SelectItem, Button } from '@carbon/react';
+import './../../style.scss';
 import * as RolloutService from '../../../services/rollout-service';
 
-export default function RolloutAttributeTab() {
+export default function RolloutAttributeTab({ handleAddAttributes }) {
   const [attributeList, setAttributeList] = useState([]);
   const [selectedAttributeType, setSelectedAttributeType] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
+  const [selectedAttributes, setSelectedAttributes] = React.useState([]);
+  const [selectedAttributesData, setSelectedAttributesData] = React.useState([]);
 
   useEffect(() => {
     getAttributeData(selectedAttributeType);
@@ -28,10 +31,36 @@ export default function RolloutAttributeTab() {
     console.log('e.target.value', e.target.value);
   };
 
+  const handleCheck = (item) => {
+    if (!selectedAttributes.includes(item.key)) {
+      setSelectedAttributes([...selectedAttributes, item.key]);
+      setSelectedAttributesData([...selectedAttributesData, item]);
+    } else {
+      setSelectedAttributes(selectedAttributes.filter((e) => e !== item.key));
+      setSelectedAttributesData(selectedAttributesData.filter((e) => e.key !== item.key));
+    }
+  };
+
+  const handleSelectAll = () => {
+    if (isChecked) {
+      setSelectedAttributes([]);
+      setSelectedAttributesData([]);
+      setIsChecked(false);
+    } else {
+      const keys = attributeList.map((e) => e.key);
+      setSelectedAttributes([...keys]);
+      setSelectedAttributesData([...attributeList]);
+      setIsChecked(true);
+    }
+  };
+
   return (
     <Grid className="define-grid">
       <Column className="col-margin" lg={8}>
-        <Select id={`attribute-select`} labelText="Select an attribute type" onChange={handleOnChangeType}>
+        <TextInput id={`attribute-search`} type="text" placeholder="Select by Attribute value" style={{ marginTop: '1.5rem' }} onChange={handleSearchInput} />
+      </Column>
+      <Column className="col-margin" lg={8}>
+        <Select id={`attribute-select`} labelText="Select Attribute type" onChange={handleOnChangeType}>
           <SelectItem value="" text="" />
           <SelectItem value="option-1" text="Attribute 1" />
           <SelectItem value="option-2" text="Attribute 2" />
@@ -39,14 +68,7 @@ export default function RolloutAttributeTab() {
           <SelectItem value="option-4" text="Attribute 4" />
         </Select>
       </Column>
-      <Column className="col-margin" lg={8}>
-        <TextInput id={`attribute-search`} type="text" placeholder="Search by attribute type" style={{ marginTop: '1.5rem' }} onChange={handleSearchInput} />
-      </Column>
-      <Column className="col-margin" lg={16}>
-        <p id={`attribute-list-label`} className="rollout-list-text">
-          Attribute List
-        </p>
-      </Column>
+
       {attributeList.length === 0 ? (
         <Column className="col-margin" lg={16}>
           <p id={`attribute-list-label`} className="no-data-display-text">
@@ -55,10 +77,20 @@ export default function RolloutAttributeTab() {
         </Column>
       ) : (
         <>
+          <Column className="select-all-checkbox" lg={8}>
+            <Checkbox id="select_all" labelText="select_all" checked={isChecked} onChange={handleSelectAll} />
+          </Column>
+          {selectedAttributes.length > 0 && (
+            <Column className="col-margin" lg={8}>
+              <Button size="sm" onClick={() => handleAddAttributes(selectedAttributesData)}>
+                Add
+              </Button>
+            </Column>
+          )}
           {attributeList.map((item) => {
             return (
               <Column className="col-margin" lg={16}>
-                <Checkbox id={item.key} labelText={item.value} s />
+                <Checkbox id={item.key} labelText={item.value} checked={selectedAttributes.includes(item.key)} onChange={() => handleCheck(item)} />
               </Column>
             );
           })}

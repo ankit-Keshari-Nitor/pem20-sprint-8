@@ -12,6 +12,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
   const [componentType, setComponentType] = React.useState();
   const [componentTypes, setComponentTypes] = React.useState([]);
   const [tabSubTitle, setTabSubTitle] = React.useState();
+  const [options, setOptions] = React.useState([]);
   const items = [
     { text: '1' },
     { text: '2' },
@@ -37,11 +38,26 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setTabSubTitle(selectedFiledProps?.component?.tabTitle);
     setComponentType(selectedFiledProps.component.type);
     setComponentTypes(collectPaletteEntries(componentMapper));
+    setOptions(selectedFiledProps?.component?.editableProps?.Basic.find(prop => prop.type === 'Options')?.value || []);
   }, [selectedFiledProps, componentMapper]);
 
   const handleChange = (e) => {
     columnSizeCustomization(e.target.value, selectedFiledProps.currentPathDetail);
     setComponentStyle([{ labelText: 'Column Size', text: e.target.value }]);
+  };
+
+  const handleAddOption = () => {
+    setOptions((prevOptions) => [...prevOptions, { label: '' }]);
+  };
+
+  const handleOptionChange = (index, value, key = '') => {
+    setOptions((prevOptions) => {
+      const newOptions = [...prevOptions];
+      newOptions[index].id = `${selectedFiledProps?.id}-${index}`;
+      key == 'label' ? newOptions[index].label = value : newOptions[index].value = value;
+      handleSchemaChanges(selectedFiledProps?.id, 'Basic', 'options', newOptions, selectedFiledProps?.currentPathDetail);
+      return newOptions;
+    });
   };
 
   const isLastChild = (path, layout) => {
@@ -75,6 +91,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
             </TabList>
             <TabPanels>
               <TabPanel className="tab-panel">
+
                 {/* Component Types Select */}
                 {componentStyle === undefined && tabSubTitle === undefined && (
                   <Select
@@ -154,6 +171,35 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                       </>
                     );
                   })}
+                {/* Option Section */}
+                {options.length > 0 && (
+                  <div className="options-section">
+                    <label className='cds--label'>Options</label>
+                    {options.map((option, index) => {
+                      return (
+                        <>
+                          <div key={index} className="option-input">
+                            <label className='cds--label'>Label {index}</label>
+                            <TextInput
+                              id={`option-${index}`}
+                              value={option?.label}
+                              onChange={(e) => handleOptionChange(index, e.target.value, 'label')}
+                            />
+                          </div>
+                          <div key={index} className="option-input">
+                            <label className='cds--label'>value {index}</label>
+                            <TextInput
+                              id={`option-${index}`}
+                              value={option?.value}
+                              onChange={(e) => handleOptionChange(index, e.target.value, 'value')}
+                            />
+                          </div>
+                        </>
+                      )
+                    })}
+                    <Button size='sm' onClick={handleAddOption}>Add Option</Button>
+                  </div>
+                )}
                 {/* Column Size Style  */}
                 {componentStyle && componentStyle.length > 0 && (
                   <>

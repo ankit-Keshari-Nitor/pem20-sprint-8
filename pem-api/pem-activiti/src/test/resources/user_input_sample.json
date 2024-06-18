@@ -1,0 +1,362 @@
+{
+  "name": "Pem Definitions 1",
+  "description": "This is definitions 1",
+  "schemaVersion": 5.0,
+  "process": {
+    "nodes": [
+      {
+        "id": "StartNode_1",
+        "type": "startEventNode",
+        "name": "Start",
+        "diagram": {
+          "x": 200,
+          "y": 200
+        }
+      },
+      {
+        "id": "EndNode_1",
+        "type": "endEventNode",
+        "name": "End",
+        "diagram": {
+          "x": 2500,
+          "y": 200
+        }
+      },
+      {
+        "id": "EndNode_2",
+        "type": "endEventNode",
+        "name": "End",
+        "diagram": {
+          "x": 1000,
+          "y": 650
+        }
+      },
+      {
+        "id": "FormNode_1",
+        "type": "formNode",
+        "name": "User Task Node",
+        "userKeys": "user1,user2,user3",
+        "roleKeys": "group1,group2",
+        "description": "description of formNode",
+        "form": "{\"fields\":[{\"id\":\"1f161396-681a-4ae8-b16f-4f4e4ed282ad\",\"type\":\"textinput\",\"labelText\":\"Email\",\"helperText\":\"Enter email\",\"min\":{\"value\":\"3\",\"message\":\"value should be min 3 char\"},\"max\":{\"value\":\"5\",\"message\":\"value should be max 5 char\"},\"isRequired\":{\"value\":true,\"message\":\"isRequired\"}},{\"id\":\"682127c1-f894-488b-97db-5d06bf8dff89\",\"type\":\"textarea\",\"labelText\":\"TextArea\"},{\"id\":\"1488e97a-975d-4822-b223-f0b0fccf6698\",\"type\":\"select\",\"labelText\":\"Select Filed\"},{\"id\":\"7450017e-e15a-4278-86fa-bb00c40069b5\",\"type\":\"checkbox\",\"labelText\":\"Check Box\"},{\"id\":\"a6bcd0f9-842c-4f6f-88f1-f232c2e59a30\",\"type\":\"radio\",\"labelText\":\"Radio\"},{\"id\":\"9431f756-10c0-4ca5-bab1-3ba27d33c0c3\",\"type\":\"toggle\",\"labelText\":\"Toggler\"},{\"id\":\"3b6ed547-f460-4ed7-9cc9-1c47f64e39e7\",\"type\":\"link\",\"labelText\":\"Link\"},{\"id\":\"ed3f7b49-0265-4fbe-8d4a-6be0a9775922\",\"type\":\"datepicker\",\"labelText\":\"Date Picker\"},{\"id\":\"29e61a98-968d-4303-b777-0959927aefe9\",\"type\":\"tab\",\"children\":[{\"id\":\"43969e1c-1490-47d8-b767-86c89bce91b3\",\"tabTitle\":\"Tab-1\",\"children\":[{\"id\":\"6baf6df7-9a83-4ead-be65-4711f6a4f887\",\"type\":\"radio\",\"labelText\":\"Radio Button\"}]},{\"id\":\"f68f60d9-4538-4047-8343-504a927c8a66\",\"tabTitle\":\"tab-2\",\"children\":[{\"id\":\"43989c6a-1e8c-4e40-b02b-743f6e0d3533\",\"type\":\"textarea\",\"labelText\":\"Text Area\"}]}]},{\"id\":\"6d13daa4-da42-4d16-851d-2df2b00fc8af\",\"type\":\"button\",\"labelText\":\"Submit\"}]}",
+        "diagram": {
+          "x": 1000,
+          "y": 200
+        }
+      }
+    ,
+      {
+        "id": "apiNode1",
+        "type": "apiNode",
+        "name": "API Node",
+        "description": "apiNode-Task to Call user list.",
+        "api": {
+          "apiConfiguration": "apiConfiguration",
+          "url": "https://jira.com/browse/PEM-273476",
+          "method": "GET",
+          "requestContentType": "JSON",
+          "responseContentType": "JSON",
+          "file": "file object",
+          "headers": "[{\"key\":\"value\"}]",
+          "requestBody": "{\"name\":\"test_name\"}",
+          "sampleResponse": "{\"name\":\"test_name\"}",
+          "responseBody": "{\"name\":\"test_name\"}"
+        },
+        "diagram": {
+          "x": 1500,
+          "y": 200
+        }
+      },{
+        "id": "apiNode2",
+        "type": "apiNode",
+        "name": "API Node",
+        "description": "apiNode-Task to Call user list.",
+        "api": {
+          "apiConfiguration": "apiConfiguration",
+          "url": "https://jira.com/browse/PEM-27076",
+          "method": "GET",
+          "requestContentType": "JSON",
+          "responseContentType": "JSON",
+          "file": "file object",
+          "headers": "[{\"key\":\"value\"}]",
+          "requestBody": "{\"name\":\"test_name\"}",
+          "sampleResponse": "{\"name\":\"test_name\"}",
+          "responseBody": "{\"name\":\"test_name\"}"
+        },
+        "diagram": {
+          "x": 700,
+          "y": 600
+        }
+      },{
+        "id": "xsltNode1",
+        "name": "XSLT Node",
+        "type": "xsltNode",
+        "description": "xsltNode- task",
+        "xslt": {
+          "input": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<catalog>\n  <cd>\n    <title>Empire Burlesque</title>\n    <artist>Bob Dylan</artist>\n    <country>USA</country>\n    <company>Columbia</company>\n    <price>10.90</price>\n    <year>1985</year>\n  </cd>\n</catalog>"
+        ,
+          "xslt": "<?xml version=\"1.0\"?>\n\n<xsl:stylesheet version=\"1.0\"\nxmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n\n<xsl:template match=\"/\">\n  <html>\n  <body>\n    <h2>My CD Collection</h2>\n    <table border=\"1\">\n      <tr bgcolor=\"#9acd32\">\n        <th>Title</th>\n        <th>Artist</th>\n      </tr>\n      <xsl:for-each select=\"catalog/cd\">\n        <tr>\n          <td><xsl:value-of select=\"title\"/></td>\n          <td><xsl:value-of select=\"artist\"/></td>\n        </tr>\n      </xsl:for-each>\n    </table>\n  </body>\n  </html>\n</xsl:template>\n\n</xsl:stylesheet>"
+        ,
+          "sampleOutput": "sample output object",
+          "output": "output object"
+        },
+        "diagram": {
+          "x": 2000,
+          "y": 200
+        }
+      },  {
+        "id": "gateway1",
+        "name": "Gateway node",
+        "type": "gateway",
+        "gatewayType": "branchStart",
+        "description": "Gateway Description.",
+        "diagram": {
+          "x": 500,
+          "y": 200
+        }
+      },
+      {
+        "id": "SubProcess_1",
+        "type" : "PartnerTask",
+        "name": "My Process To call API",
+        "description": "This process describes the order fulfilment workflow.",
+        "userKeys": "user1,user2,user3",
+        "roleKeys": "group1,group2",
+        "nodes": [      {
+          "id": "SubStartNode_1",
+          "type": "startEventNode",
+          "name": "Start",
+          "diagram": {
+            "x": 300,
+            "y": 1000
+          }
+        },
+          {
+            "id": "SubSubProcess_2",
+            "type" : "SponsorTask",
+            "name": "Sub Process Node",
+            "description": "This process describes the order fulfilment workflow.",
+            "userKeys": "user1,user2,user3",
+            "roleKeys": "group1,group2",
+            "nodes": [      {
+              "id": "SubSubStartNode_1",
+              "type": "startEventNode",
+              "name": "Start",
+              "diagram": {
+                "x": 300,
+                "y": 1500
+              }
+            },
+              {
+                "id": "SubSubEndNode_1",
+                "type": "endEventNode",
+                "name": "End",
+                "diagram": {
+                  "x": 600,
+                  "y": 1500
+                }
+              }
+            ],
+            "diagram" : { "x":1000,"y":1000}
+          },      {
+            "id": "SubEndNode_1",
+            "type": "endEventNode",
+            "name": "End",
+            "diagram": {
+              "x": 1500,
+              "y": 1000
+            }
+          }
+        ],
+        "diagram" : { "x":1500,"y":700}
+      }    ],
+    "connectors": [
+      {
+        "id": "SequenceFlow1",
+        "source": "StartNode_1",
+        "target": "gateway1",
+        "condition": "${condition1}",
+        "diagram": [
+          {
+            "x": 100,
+            "y": 100
+          },
+          {
+            "x": 100,
+            "y": 100
+          }
+        ]
+      }
+    ,
+      {
+        "id": "SequenceFlow2",
+        "source": "gateway1",
+        "target": "FormNode_1",
+        "condition": "${condition1}",
+        "diagram": [
+          {
+            "x": 100,
+            "y": 100
+          },
+          {
+            "x": 100,
+            "y": 100
+          }
+        ]
+      }
+    ,
+      {
+        "id": "SequenceFlow6",
+        "source": "gateway1",
+        "target": "apiNode2",
+        "condition": "${condition1}",
+        "diagram": [
+          {
+            "x": 100,
+            "y": 100
+          },
+          {
+            "x": 100,
+            "y": 100
+          }
+        ]
+      }
+    ,
+      {
+        "id": "SequenceFlow7",
+        "source": "apiNode2",
+        "target": "EndNode_2",
+        "condition": "${condition1}",
+        "diagram": [
+          {
+            "x": 100,
+            "y": 100
+          },
+          {
+            "x": 100,
+            "y": 100
+          }
+        ]
+      }
+    ,
+      {
+        "id": "SequenceFlow8",
+        "source": "FormNode_1",
+        "target": "SubProcess_1",
+        "condition": "${condition1}",
+        "diagram": [
+          {
+            "x": 100,
+            "y": 100
+          },
+          {
+            "x": 100,
+            "y": 100
+          }
+        ]
+      }
+    ,
+      {
+        "id": "SequenceFlow9",
+        "source": "SubStartNode_1",
+        "target": "SubSubProcess_2",
+        "condition": "${condition1}",
+        "diagram": [
+          {
+            "x": 100,
+            "y": 100
+          },
+          {
+            "x": 100,
+            "y": 100
+          }
+        ]
+      }
+    ,
+      {
+        "id": "SequenceFlow10",
+        "source": "SubSubProcess_2",
+        "target": "SubEndNode_1",
+        "condition": "${condition1}",
+        "diagram": [
+          {
+            "x": 100,
+            "y": 100
+          },
+          {
+            "x": 100,
+            "y": 100
+          }
+        ]
+      }
+    ,
+      {
+        "id": "SequenceFlow11",
+        "source": "SubSubStartNode_1",
+        "target": "SubSubEndNode_1",
+        "condition": "${condition1}",
+        "diagram": [
+          {
+            "x": 100,
+            "y": 100
+          },
+          {
+            "x": 100,
+            "y": 100
+          }
+        ]
+      }
+    ,
+      {
+        "id": "SequenceFlow3",
+        "source": "SubProcess_1",
+        "target": "apiNode1",
+        "condition": "${condition1}",
+        "diagram": [
+          {
+            "x": 100,
+            "y": 100
+          },
+          {
+            "x": 100,
+            "y": 100
+          }
+        ]
+      }
+    ,
+      {
+        "id": "SequenceFlow4",
+        "source": "apiNode1",
+        "target": "xsltNode1",
+        "condition": "${condition1}",
+        "diagram": [
+          {
+            "x": 100,
+            "y": 100
+          },
+          {
+            "x": 100,
+            "y": 100
+          }
+        ]
+      }
+    ,
+      {
+        "id": "SequenceFlow5",
+        "source": "xsltNode1",
+        "target": "EndNode_1",
+        "condition": "${condition1}",
+        "diagram": [
+          {
+            "x": 100,
+            "y": 100
+          },
+          {
+            "x": 100,
+            "y": 100
+          }
+        ]
+      }
+    ]
+  }
+}

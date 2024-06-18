@@ -7,6 +7,7 @@ import com.precisely.pem.dtos.requests.ContextDataNodes;
 import com.precisely.pem.dtos.requests.Partners;
 import com.precisely.pem.models.*;
 import com.precisely.pem.repositories.*;
+import com.precisely.pem.service.BpmnConvertService;
 import org.json.JSONObject;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
@@ -17,7 +18,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -37,8 +37,8 @@ public class BaseServiceTest {
     public static final String TEST_ACTIVITY_DEFN_VERSION_KEY = "test_activity_defn_version_key";
     public static final String TEST_ACTIVITY_DEFN_VERSION_DATA_KEY = "test_activity_defn_version_data_key";
     public static final String TEST_FILE_KEY = "file";
-    public static final String TEST_FILE_VALUE = "test.txt";
-    public static final String CONTENT_TYPE_TEXT = "text/plain";
+    public static final String TEST_FILE_VALUE = "test.json";
+    public static final String CONTENT_TYPE_TEXT = "application/json";
     public static final String TEST_FILE_DATA = "This is a test file.";
     public static final String TEST_APPLICATION_NAME = "name";
     public static final String TEST_DESCRIPTION = "description";
@@ -78,6 +78,8 @@ public class BaseServiceTest {
     protected PcptInstRepo pcptInstRepo;
     @Mock
     protected ModelMapper mapper;
+    @Mock
+    BpmnConvertService bpmnConvertService;
     @Mock
     protected UriComponentsBuilder uriBuilder;
 

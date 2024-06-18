@@ -9,6 +9,7 @@ import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.exceptionhandler.AlreadyDeletedException;
+import com.precisely.pem.exceptionhandler.BpmnConverterException;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.services.ActivityVersionService;
@@ -61,7 +62,7 @@ class ActivityVersionControllerTest extends BaseControllerTest{
     }
 
     @Test
-    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, AlreadyDeletedException {
+    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, AlreadyDeletedException, BpmnConverterException {
         MultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file.".getBytes());
         ActivityDefnVersionResp resp = new ActivityDefnVersionResp();
         Mockito.when(activityVersionService.createActivityDefnVersion(Mockito.anyString(),Mockito.anyString(),Mockito.any(ActivityVersionReq.class)))

@@ -49,7 +49,14 @@ public class PemNodeFactory {
         node.setId(userTask.getId());
         node.setName(userTask.getName());
         node.setType(NodeTypes.FORM.getName());
-        node.setForm("");//TODO
+        List<FormProperty> formProperty= userTask.getFormProperties();
+        for (int i = 0; i < formProperty.size(); i++) {
+            FormProperty item = formProperty.get(i);
+            if(item.getName().equalsIgnoreCase("form")){
+                node.setForm(item.getVariable());
+                break;
+            }
+        }
         node.setDescription(userTask.getDocumentation());
         node.setUserKeys(String.join(",", userTask.getCandidateUsers()));
         node.setRoleKeys(String.join(",", userTask.getCandidateGroups()));

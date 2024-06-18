@@ -50,9 +50,8 @@ public class PemNodeFactory {
         node.setName(userTask.getName());
         node.setType(NodeTypes.FORM.getName());
         List<FormProperty> formProperty= userTask.getFormProperties();
-        for (int i = 0; i < formProperty.size(); i++) {
-            FormProperty item = formProperty.get(i);
-            if(item.getName().equalsIgnoreCase("form")){
+        for (FormProperty item : formProperty) {
+            if (item.getName().equalsIgnoreCase("form")) {
                 node.setForm(item.getVariable());
                 break;
             }

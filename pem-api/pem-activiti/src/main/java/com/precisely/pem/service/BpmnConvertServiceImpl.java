@@ -1,24 +1,64 @@
 package com.precisely.pem.service;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.precisely.pem.converter.*;
 import com.precisely.pem.dtos.*;
+import com.precisely.pem.exceptionhandler.BpmnConverterException;
+import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.*;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
+import org.springframework.stereotype.Service;
 
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static com.precisely.pem.dtos.Constants.*;
 
-
+@Service
 public class BpmnConvertServiceImpl implements BpmnConvertService{
 
     ObjectMapper objectMapper = new ObjectMapper();
+
+    public BpmnConvertServiceImpl(){
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    }
+
+    @Override
+    public Blob getBpmnConvertedBlob(InputStream is) throws IOException, SQLException, BpmnConverterException  {
+        PemBpmnModel pemBpmnModel;
+        try(InputStream inputStream = is) {
+            pemBpmnModel  = objectMapper.readValue(inputStream, PemBpmnModel.class);
+        }
+        if(Objects.isNull(pemBpmnModel))
+            throw new BpmnConverterException("ConvertToBpmnDefinition", "Reading Json file failed.");
+
+        BpmnModel bpmnModel = convertIntoBpmnDefinition(pemBpmnModel);
+
+        if(Objects.isNull(bpmnModel))
+            throw new BpmnConverterException("ConvertToBpmnDefinition", "Convert To BPMN Definition Failed.");
+
+        byte[] bytes = generateBpmnXml(bpmnModel);
+
+        return new SerialBlob(bytes);
+    }
+
+    private byte[] generateBpmnXml(BpmnModel bpmnModel){
+        // Create the BpmnXMLConverter
+        BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+
+        // Convert the BpmnModel to XML
+        return bpmnXMLConverter.convertToXML(bpmnModel);
+    }
 
     @Override
     public BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel) {

@@ -6,14 +6,12 @@
     import com.precisely.pem.dtos.requests.UpdateActivityReq;
     import com.precisely.pem.dtos.responses.*;
     import com.precisely.pem.dtos.shared.*;
-    import com.precisely.pem.exceptionhandler.AlreadyDeletedException;
-    import com.precisely.pem.exceptionhandler.DuplicateEntryException;
-    import com.precisely.pem.exceptionhandler.ParamMissingException;
-    import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
+    import com.precisely.pem.exceptionhandler.*;
     import com.precisely.pem.models.ActivityDefn;
     import com.precisely.pem.models.ActivityDefnData;
     import com.precisely.pem.models.ActivityDefnVersion;
     import com.precisely.pem.repositories.*;
+    import com.precisely.pem.service.BpmnConvertService;
     import lombok.extern.log4j.Log4j2;
     import org.modelmapper.ModelMapper;
     import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +19,9 @@
     import org.springframework.data.domain.PageRequest;
     import org.springframework.data.domain.Pageable;
     import org.springframework.data.domain.Sort;
-    import org.springframework.http.HttpStatus;
     import org.springframework.stereotype.Service;
     import org.springframework.transaction.annotation.Transactional;
 
-    import javax.sql.rowset.serial.SerialBlob;
     import java.io.IOException;
     import java.sql.Blob;
     import java.sql.SQLException;
@@ -48,6 +44,8 @@
         private ModelMapper mapper;
         @Autowired
         private ActivityDefinitionVersionCustomRepo activityDefinitionVersionCustomRepo;
+        @Autowired
+        private BpmnConvertService bpmnConvertService;
 
         @Override
         public ActivityDefnPaginationRes getAllDefinitionList(String sponsorContext, String name,
@@ -113,7 +111,7 @@
 
         @Override
         @Transactional(rollbackFor = Exception.class)
-        public ActivityDefnResp createActivityDefinition(String sponsorContext, ActivityDefnReq activityDefnReq) throws IOException, SQLException, DuplicateEntryException, ResourceNotFoundException {
+        public ActivityDefnResp createActivityDefinition(String sponsorContext, ActivityDefnReq activityDefnReq) throws IOException, SQLException, DuplicateEntryException, ResourceNotFoundException, BpmnConverterException {
             ActivityDefnResp activityDefnResp = new ActivityDefnResp();
             ActivityDefn activityDefnobj = null;
             ActivityDefnData activityDefnData = null;
@@ -123,7 +121,7 @@
             SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
 
             Optional<ActivityDefn> duplicateEntry = Optional.ofNullable(activityDefnRepo.findByActivityName(activityDefnReq.getName()));
-            if(!duplicateEntry.isEmpty()){
+            if(duplicateEntry.isPresent()){
                 throw new DuplicateEntryException("name;DuplicateEntry;Entry already exists in database for name '"+duplicateEntry.get().getActivityName()+"'");
             }
 
@@ -135,9 +133,8 @@
             activityDefnobj = mapper.map(activityDefnDto, ActivityDefn.class);
             activityDefnobj = activityDefnRepo.save(activityDefnobj);
 
-            //Populating the Activity Definition Data Object
-            byte[] bytes = activityDefnReq.getFile().getBytes();
-            Blob blob = new SerialBlob(bytes);
+
+            Blob blob = bpmnConvertService.getBpmnConvertedBlob(activityDefnReq.getFile().getInputStream());
 
             ActivityDefnDataDto vchActivityDefnDataDto = new ActivityDefnDataDto(
                     UUID.randomUUID().toString(), blob, LocalDateTime.now(),

@@ -40,6 +40,10 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.9.0'
     testImplementation 'org.springframework:spring-mock:2.0.8'
 
+    implementation 'org.activiti:activiti-bpmn-converter:8.0.0'
+    implementation 'org.activiti:activiti-bpmn-model:8.0.0'
+    implementation 'org.activiti:activiti-json-converter:8.0.0'
+
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.1'
 }
 

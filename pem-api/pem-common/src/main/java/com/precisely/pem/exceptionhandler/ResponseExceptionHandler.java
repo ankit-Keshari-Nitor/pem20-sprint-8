@@ -64,6 +64,15 @@ public class ResponseExceptionHandler{
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errResp);
     }
 
+    @ExceptionHandler(BpmnConverterException.class)
+    protected ResponseEntity<Object> handleBpmnConverterConflict(BpmnConverterException ex, WebRequest request) {
+        ErrorResponseDto errResp = new ErrorResponseDto();
+        errResp.setErrorCode(ex.getErrorCode());
+        errResp.setTimestamp(LocalDateTime.now().toString());
+        errResp.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<Object> handleCharacterConflict(Exception ex, WebRequest request) {
         ErrorResponseDto errResp = new ErrorResponseDto();

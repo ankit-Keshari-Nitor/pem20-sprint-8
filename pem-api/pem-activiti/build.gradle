@@ -18,6 +18,7 @@ configurations {
 }
 
 dependencies {
+    implementation project(':pem-common')
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation 'org.activiti:activiti-spring-boot-starter:8.0.0'

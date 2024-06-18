@@ -9,10 +9,7 @@ import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
-import com.precisely.pem.exceptionhandler.AlreadyDeletedException;
-import com.precisely.pem.exceptionhandler.ErrorResponseDto;
-import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
-import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
+import com.precisely.pem.exceptionhandler.*;
 import com.precisely.pem.services.ActivityVersionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -107,7 +104,7 @@ public class ActivityVersionController {
     public ResponseEntity<Object> createActivityDefinitionVersion(@PathVariable(value = "sponsorContext")String sponsorContext,
                                                                   @PathVariable(value = "activityDefnKey")String activityDefnKey,
                                                                   @Valid ActivityVersionReq activityVersionReq
-    ) throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, AlreadyDeletedException {
+    ) throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, AlreadyDeletedException, BpmnConverterException {
         ActivityDefnVersionResp activityDefnVersionResp = activityVersionService.createActivityDefnVersion(sponsorContext, activityDefnKey, activityVersionReq);
         Link link = linkTo(methodOn(ActivityVersionController.class).createActivityDefinitionVersion(sponsorContext, activityDefnKey, activityVersionReq)).withSelfRel();
         activityDefnVersionResp.setLocation(link.getHref());

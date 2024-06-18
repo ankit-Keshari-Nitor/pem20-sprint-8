@@ -31,7 +31,6 @@ import useActivityStore from '../../store';
 import PageDesigner from '@b2bi/page-designer';
 import RolloutTest from '../../components/rollout-wizard/rollout-gap-details.js';
 import RolloutDetails from '../../components/rollout-wizard/rollout-details.js';
-import { useForm } from 'react-hook-form';
 
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
@@ -51,6 +50,7 @@ export default function ActivityList() {
   const [notificationProps, setNotificationProps] = useState(null);
   const [tempSelectedItem, setTempSelectedItem] = useState({}); // Temporarily store selected item
   const [activityDefnKey, setActivityDefnKey] = useState('');
+  const [activityDetails, setActivityDetails] = useState(null);
 
   // Test operation states
   const [openTestModal, setOpenTestModal] = useState(false);
@@ -342,24 +342,7 @@ export default function ActivityList() {
   // Rollout operation states
   const [openRolloutModal, setOpenRolloutModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
-  const [activityDetails, setActivityDetails] = useState(null);
   const [rolloutGapData, setRolloutGapData] = useState({ selectedGroupsData: [], selectedAttributesData: [], selectedPartnersData: [] });
-  const {
-    register,
-    formState: { errors },
-    handleSubmit
-  } = useForm({
-    mode: 'onChange',
-    defaultValues: {
-      name: '',
-      description: '',
-      due_date: '',
-      alert_date: '',
-      alert_interval: '',
-      rolling_out: 'partners',
-      partners_rollout: ''
-    }
-  });
 
   // Function to handle the Rollout operation
   const handleRolloutOperation = async (id) => {
@@ -368,18 +351,6 @@ export default function ActivityList() {
       setActivityDetails(activityDetailsResponse);
       setOpenRolloutModal(true);
     }
-  };
-
-  // Function to handle the Next/rollout Button Click
-  const handleSubmitClick = (data) => {
-    console.log('data', data);
-    // TODO -> Rollout API will call here
-  };
-
-  // Function to handle the Next/rollout Button Click
-  const handleBackToDetails = () => {
-    setOpenAddModal(false);
-    setOpenRolloutModal(true);
   };
 
   // Handler for actual delete API call
@@ -397,6 +368,12 @@ export default function ActivityList() {
     }
   };
 
+  // Function to handle the Next/rollout Button Click
+  const handleBackToDetails = () => {
+    setOpenAddModal(false);
+    setOpenRolloutModal(true);
+  };
+
   const handleAddGroups = (selectedGroupsData) => {
     setRolloutGapData((prev) => ({ ...prev, selectedGroupsData: [...selectedGroupsData] }));
   };
@@ -409,9 +386,12 @@ export default function ActivityList() {
     setRolloutGapData((prev) => ({ ...prev, selectedPartnersData: [...selectedPartnersData] }));
   };
 
-  const onSubmit = (data) => {
+  // Function to handle the Next/rollout Button Click
+  const handleSubmitClick = (data) => {
     console.log('data', data);
+    // TODO -> Rollout API will call here
   };
+
   // -------------------------------------Rollout operation End-------------------------------------------------
 
   return (
@@ -428,10 +408,6 @@ export default function ActivityList() {
           onRequestClose={() => setOpenRolloutModal(false)}
         >
           <RolloutDetails
-            errors={errors}
-            onSubmit={onSubmit}
-            register={register}
-            handleSubmit={handleSubmit}
             handleAddClick={() => {
               setOpenAddModal(true);
               setOpenRolloutModal(false);

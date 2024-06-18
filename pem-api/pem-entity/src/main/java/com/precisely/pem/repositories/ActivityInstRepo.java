@@ -22,4 +22,12 @@ public interface ActivityInstRepo extends JpaRepository<ActivityInst,String> {
     Page<ActivityInst> findBySponsorKeyAndActivityDefnKeyVersionAndStatus(String sponsorKey, String activityDefnVersionKey, String status, Pageable pageable);
 
     ActivityInst findByActivityInstKey(String activityInstKey);
+
+    Page<ActivityInst> findBySponsorKeyAndDescriptionContainingAndStatus(String sponsorKey, String description, String status, Pageable pageable);
+
+    Page<ActivityInst> findBySponsorKeyAndNameContainingAndStatus(String sponsorKey, String conName, String status, Pageable pageable);
+
+    Page<ActivityInst> findBySponsorKeyAndNameAndStatus(String sponsorKey, String name, String status, Pageable pageable);
+
+    Page<ActivityInst> findBySponsorKeyAndStatus(String sponsorKey, String status, Pageable pageable);
 }

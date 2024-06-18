@@ -52,15 +52,15 @@
         "description": "apiNode-Task to Call user list.",
         "api": {
           "apiConfiguration": "apiConfiguration",
-          "url": "https://jira.syncsort.com/browse/PEM-27076",
+          "url": "https://jira.com/browse/PEM-273476",
           "method": "GET",
           "requestContentType": "JSON",
           "responseContentType": "JSON",
           "file": "file object",
           "headers": "[{\"key\":\"value\"}]",
-          "requestBody": "{\"name\":\"Yogesh\"}",
-          "sampleResponse": "{\"name\":\"Yogesh\"}",
-          "responseBody": "{\"name\":\"Yogesh\"}"
+          "requestBody": "{\"name\":\"test_name\"}",
+          "sampleResponse": "{\"name\":\"test_name\"}",
+          "responseBody": "{\"name\":\"test_name\"}"
         },
         "diagram": {
           "x": 1500,
@@ -73,15 +73,15 @@
         "description": "apiNode-Task to Call user list.",
         "api": {
           "apiConfiguration": "apiConfiguration",
-          "url": "https://jira.syncsort.com/browse/PEM-27076",
+          "url": "https://jira.com/browse/PEM-27076",
           "method": "GET",
           "requestContentType": "JSON",
           "responseContentType": "JSON",
           "file": "file object",
           "headers": "[{\"key\":\"value\"}]",
-          "requestBody": "{\"name\":\"Yogesh\"}",
-          "sampleResponse": "{\"name\":\"Yogesh\"}",
-          "responseBody": "{\"name\":\"Yogesh\"}"
+          "requestBody": "{\"name\":\"test_name\"}",
+          "sampleResponse": "{\"name\":\"test_name\"}",
+          "responseBody": "{\"name\":\"test_name\"}"
         },
         "diagram": {
           "x": 700,
@@ -178,8 +178,8 @@
         "condition": "${condition1}",
         "diagram": [
           {
-            "x": 50,
-            "y": 50
+            "x": 100,
+            "y": 100
           },
           {
             "x": 100,
@@ -233,8 +233,8 @@
             "y": 100
           },
           {
-            "x": 50,
-            "y": 50
+            "x": 100,
+            "y": 100
           }
         ]
       }
@@ -250,8 +250,8 @@
             "y": 100
           },
           {
-            "x": 50,
-            "y": 50
+            "x": 100,
+            "y": 100
           }
         ]
       }
@@ -263,8 +263,8 @@
         "condition": "${condition1}",
         "diagram": [
           {
-            "x": 50,
-            "y": 50
+            "x": 100,
+            "y": 100
           },
           {
             "x": 100,
@@ -284,8 +284,8 @@
             "y": 100
           },
           {
-            "x": 50,
-            "y": 50
+            "x": 100,
+            "y": 100
           }
         ]
       }
@@ -297,12 +297,12 @@
         "condition": "${condition1}",
         "diagram": [
           {
-            "x": 50,
-            "y": 50
+            "x": 100,
+            "y": 100
           },
           {
-            "x": 50,
-            "y": 50
+            "x": 100,
+            "y": 100
           }
         ]
       }
@@ -352,8 +352,8 @@
             "y": 100
           },
           {
-            "x": 50,
-            "y": 50
+            "x": 100,
+            "y": 100
           }
         ]
       }

@@ -6,9 +6,9 @@ import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
-import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.exceptionhandler.AlreadyDeletedException;
+import com.precisely.pem.exceptionhandler.BpmnConverterException;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
@@ -19,11 +19,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +36,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class ActivityVersionServiceImplTest extends BaseServiceTest{
@@ -90,7 +95,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
     }
 
     @Test
-    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, AlreadyDeletedException {
+    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, AlreadyDeletedException, BpmnConverterException {
         ActivityDefnServiceImplTest activityDefnServiceImplTest = new ActivityDefnServiceImplTest();
 
         Optional<ActivityDefn> activityDefn = Optional.ofNullable(activityDefnServiceImplTest.getVchActivityDefnObj());
@@ -102,7 +107,10 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         when(activityDefnDataRepo.save(any())).thenReturn(activityDefnData);
         when(activityDefnVersionRepo.save(any())).thenReturn(activityDefnVersion);
 
-        MultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file.".getBytes());
+        MultipartFile file = new MockMultipartFile(TEST_FILE_KEY, TEST_FILE_VALUE, CONTENT_TYPE_TEXT, TEST_FILE_DATA.getBytes());
+        Blob blob = mock(Blob.class);
+        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream())).thenReturn(blob);
+
         ActivityVersionReq activityVersionReq = new ActivityVersionReq();
         activityVersionReq.setIsEncrypted(true);
         activityVersionReq.setFile(file);
@@ -172,6 +180,9 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         mockActivityDefnDataSave(activityDefnData).thenReturn(activityDefnData);
 
         MultipartFile file = getMultipartFile();
+        Blob blob = mock(Blob.class);
+        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream())).thenReturn(blob);
+
         MessageResp resp = activityVersionService.
                 updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
                         UpdateActivityVersionReq.builder().description(TEST_DESCRIPTION).file(file).isEncrypted(Boolean.TRUE).build());
@@ -193,6 +204,9 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         mockActivityDefnDataSave(activityDefnData).thenReturn(activityDefnData);
 
         MultipartFile file = getMultipartFile();
+        Blob blob = mock(Blob.class);
+        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream())).thenReturn(blob);
+
         MessageResp resp = activityVersionService.
                 updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
                         UpdateActivityVersionReq.builder().file(file).build());

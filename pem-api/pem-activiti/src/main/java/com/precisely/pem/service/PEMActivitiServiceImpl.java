@@ -1,25 +1,33 @@
 package com.precisely.pem.service;
 
+import com.precisely.pem.config.PEMUserDetailsService;
+import com.precisely.pem.dtos.task.TaskDTO;
 import lombok.extern.log4j.Log4j2;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import org.activiti.api.task.model.Task;
+import org.activiti.api.task.runtime.TaskRuntime;
+import org.activiti.bpmn.converter.BpmnXMLConverter;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.FormProperty;
+import org.activiti.bpmn.model.UserTask;
+import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.repository.Deployment;
-import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.impl.util.io.InputStreamSource;
+import org.activiti.engine.impl.util.json.JSONObject;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,10 +43,21 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     private TaskService taskService;
 
     @Autowired
+    private TaskRuntime taskRuntime;
+
+    @Autowired
     private RepositoryService repositoryService;
+
 
     @Autowired
     private HistoryService historyService;
+
+    @Autowired
+    private ProcessEngine processEngine;
+
+
+    @Autowired
+    PEMUserDetailsService pemUserDetailsService;
 
     @Override
     public ProcessInstance startProcessInstanceByKey(String processDefinitionKey) {
@@ -54,7 +73,7 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     @Override
     public String startProcessInstanceById(String processDefinitionId) {
         log.debug("starting Process Instance By Definition Id : " + processDefinitionId);
-        String id =  runtimeService.startProcessInstanceById(processDefinitionId).getProcessInstanceId();
+        String id = runtimeService.startProcessInstanceById(processDefinitionId).getProcessInstanceId();
         log.debug("started Process Instance Id : " + id);
         return id;
     }
@@ -62,7 +81,7 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     @Override
     public String startProcessInstanceById(String processDefinitionId, String businessKey, Map<String, Object> variables) {
         log.debug("starting Process Instance By Definition Id : " + processDefinitionId);
-        String id =  runtimeService.startProcessInstanceById(processDefinitionId,businessKey,variables).getProcessInstanceId();
+        String id = runtimeService.startProcessInstanceById(processDefinitionId, businessKey, variables).getProcessInstanceId();
         log.debug("started Process Instance Id : " + id);
         return id;
     }
@@ -70,6 +89,43 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     @Override
     public void completeTask(String taskId) {
         taskService.complete(taskId);
+    }
+
+    @Override
+    public void completeUserTask(String taskId, String input) throws Exception {
+        // TODO :
+        try {
+            // TODO: We have not integrated authentication in application,
+            //  Problem : We can not read task details without Auth
+            //  Error: Unauthorized.
+            //  Response if task not found for given user : Unable to find task for the given id: TaskId for user: user1 (with groups: [] & with roles: [USER]),
+
+            // TODO : Temp code to fix above problem
+            UserDetails userDetails = pemUserDetailsService.loadUserByUsername("user1");
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // Mark task as complete
+            taskService.complete(taskId);
+
+            // Read task details
+            Task task = (Task) taskRuntime.task(taskId);
+
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                    .processInstanceId(task.getProcessInstanceId())
+                    .singleResult();
+
+            Map<String, Object> variables = processInstance.getProcessVariables();
+            if (variables == null) {
+                variables = new HashMap<>();
+            }
+            JSONObject contextData = new JSONObject(variables.get("contextData"));
+            contextData.put(taskId,input);
+            variables.put("contextData", contextData);
+            runtimeService.setVariables(task.getProcessInstanceId(), variables);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
     @Override
@@ -83,12 +139,12 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     }
 
     @Override
-    public List<Task> getTasksForUser(String assignee) {
+    public List<org.activiti.engine.task.Task> getTasksForUser(String assignee) {
         return taskService.createTaskQuery().taskAssignee(assignee).list();
     }
 
     @Override
-    public List<Task> getTasksForGroup(String candidateGroup) {
+    public List<org.activiti.engine.task.Task> getTasksForGroup(String candidateGroup) {
         return taskService.createTaskQuery().taskCandidateGroup(candidateGroup).list();
     }
 
@@ -109,7 +165,7 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
 
     @Override
     public String deployProcessDefinition(String name, byte[] bpmnData) {
-        String id = repositoryService.createDeployment().addBytes(name+".bpmn", bpmnData).deploy().getId();
+        String id = repositoryService.createDeployment().addBytes(name + ".bpmn", bpmnData).deploy().getId();
         return repositoryService.createProcessDefinitionQuery().deploymentId(id).singleResult().getKey();
     }
 
@@ -137,6 +193,58 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     @Override
     public void deleteProcessDefinition(String processDefinitionId) {
         repositoryService.deleteDeployment(processDefinitionId, true);
+    }
+
+    @Override
+    public TaskDTO getTaskDetails(String taskId) throws Exception {
+        TaskDTO task = null;
+        Map<String, Object> variables = new HashMap<>();
+        // TODO: We have not integrated authentication in application,
+        //  Problem : We can not read task details without Auth
+        //  Error: Unauthorized.
+        //  Response if task not found for given user : Unable to find task for the given id: TaskId for user: user1 (with groups: [] & with roles: [USER]),
+
+        // TODO : Temp code to fix above problem
+        UserDetails userDetails = pemUserDetailsService.loadUserByUsername("user1");
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        try {
+            task = (TaskDTO) taskRuntime.task(taskId);
+            variables = task.getVariables();
+            if (variables == null) {
+                variables = new HashMap<>();
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(task.getProcessInstanceId())
+                .singleResult();
+
+        if (processInstance != null) {
+            String processDefinitionId = processInstance.getProcessDefinitionId();
+            // Get the BPMN model using the process definition ID
+            InputStream processStream = repositoryService.getProcessModel(processDefinitionId);
+            BpmnModel bpmnModel = new BpmnXMLConverter().convertToBpmnModel(new InputStreamSource(processStream), false, false);
+            for (org.activiti.bpmn.model.Process process : bpmnModel.getProcesses()) {
+                // Iterate over the flow elements in the process
+                for (FlowElement flowElement : process.getFlowElements()) {
+                    if (flowElement instanceof UserTask) {
+                        UserTask userTask = (UserTask) flowElement;
+                        List<FormProperty> formProperty = userTask.getFormProperties();
+                        for (FormProperty item : formProperty) {
+                            if (item.getName().equalsIgnoreCase("form")) {
+                                variables.put("form", item.getVariable());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        task.setVariables(variables);
+        return task;
     }
 
     @Override

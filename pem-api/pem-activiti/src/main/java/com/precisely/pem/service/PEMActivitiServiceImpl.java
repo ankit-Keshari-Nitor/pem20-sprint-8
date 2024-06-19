@@ -233,10 +233,12 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
                 for (FlowElement flowElement : process.getFlowElements()) {
                     if (flowElement instanceof UserTask) {
                         UserTask userTask = (UserTask) flowElement;
-                        List<FormProperty> formProperty = userTask.getFormProperties();
-                        for (FormProperty item : formProperty) {
-                            if (item.getName().equalsIgnoreCase("form")) {
-                                variables.put("form", item.getVariable());
+                        if (userTask.getId().equalsIgnoreCase(taskId)) {
+                            List<FormProperty> formProperty = userTask.getFormProperties();
+                            for (FormProperty item : formProperty) {
+                                if (item.getName().equalsIgnoreCase("form")) {
+                                    variables.put("form", item.getVariable());
+                                }
                             }
                         }
                     }

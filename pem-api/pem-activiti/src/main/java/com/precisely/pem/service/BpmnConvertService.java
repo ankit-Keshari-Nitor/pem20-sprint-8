@@ -15,7 +15,7 @@ import java.sql.SQLException;
 
 public interface BpmnConvertService {
     BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel, BpmnConverterRequest bpmnConverterRequest) ;
-    Blob getBpmnConvertedBlob(InputStream is,String processId) throws IOException, SQLException, BpmnConverterException;
+    Blob getBpmnConvertedBlob(InputStream is,BpmnConverterRequest bpmnConverterRequest) throws IOException, SQLException, BpmnConverterException;
     PemBpmnModel convertToPemProcess(BpmnModel bpmnModel, BpmnConverterRequest request);
     NodeHandler createNodeHandlerChain();
     InputStreamResource getPemBpmnJsonData(Blob activityDefnData) throws SQLException, XMLStreamException, IOException;

@@ -3,6 +3,7 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.Status;
+import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
@@ -114,7 +115,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
         MultipartFile file = new MockMultipartFile(TEST_FILE_KEY, TEST_FILE_VALUE, CONTENT_TYPE_TEXT, TEST_FILE_DATA.getBytes());
         Blob blob = mock(Blob.class);
-        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream())).thenReturn(blob);
+        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream(), BpmnConverterRequest.builder().processId(TEST_BPMN_PROCESS_ID).build())).thenReturn(blob);
 
         ActivityVersionReq activityVersionReq = new ActivityVersionReq();
         activityVersionReq.setIsEncrypted(true);
@@ -186,7 +187,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
         MultipartFile file = getMultipartFile();
         Blob blob = mock(Blob.class);
-        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream())).thenReturn(blob);
+        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream(),BpmnConverterRequest.builder().processId(TEST_BPMN_PROCESS_ID).build())).thenReturn(blob);
 
         MessageResp resp = activityVersionService.
                 updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
@@ -210,7 +211,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
         MultipartFile file = getMultipartFile();
         Blob blob = mock(Blob.class);
-        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream())).thenReturn(blob);
+        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream(),BpmnConverterRequest.builder().processId(TEST_BPMN_PROCESS_ID).build())).thenReturn(blob);
 
         MessageResp resp = activityVersionService.
                 updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,

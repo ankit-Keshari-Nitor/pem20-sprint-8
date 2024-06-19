@@ -39,7 +39,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     }
 
     @Override
-    public Blob getBpmnConvertedBlob(InputStream is) throws IOException, SQLException, BpmnConverterException  {
+    public Blob getBpmnConvertedBlob(InputStream is,BpmnConverterRequest bpmnConverterRequest) throws IOException, SQLException, BpmnConverterException  {
         PemBpmnModel pemBpmnModel;
         try(InputStream inputStream = is) {
             pemBpmnModel  = objectMapper.readValue(inputStream, PemBpmnModel.class);
@@ -47,7 +47,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         if(Objects.isNull(pemBpmnModel))
             throw new BpmnConverterException("ConvertToBpmnDefinition", "Reading Json file failed.");
 
-        BpmnModel bpmnModel = convertIntoBpmnDefinition(pemBpmnModel);
+        BpmnModel bpmnModel = convertIntoBpmnDefinition(pemBpmnModel,bpmnConverterRequest);
 
         if(Objects.isNull(bpmnModel))
             throw new BpmnConverterException("ConvertToBpmnDefinition", "Convert To BPMN Definition Failed.");
@@ -85,13 +85,12 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     }
 
     @Override
-    public BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel) {
+    public BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel, BpmnConverterRequest bpmnConverterRequest) {
         List<Node> nodes = pemBpmnModel.getProcess().getNodes();
 
         if (!nodes.isEmpty()) {
             // Create the output JSON structure
             ObjectNode outputJson = objectMapper.createObjectNode();
-            BpmnConverterRequest bpmnConverterRequest = new BpmnConverterRequest();
 
             // Set bounds for Canvas, can be static
             ObjectNode bounds = outputJson.putObject("bounds");
@@ -140,7 +139,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 sequenceFlowHandler.handleSequenceFlow(connectorNode,outputJson,objectMapper,bpmnConverterRequest);
             }
             // Set properties for canvas
-            setPropertiesForCanvas(outputJson,pemBpmnModel);
+            setPropertiesForCanvas(outputJson,pemBpmnModel,bpmnConverterRequest);
 
             BpmnModel bpmnModel = new BpmnJsonConverter().convertToBpmnModel(outputJson);
 
@@ -253,7 +252,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         return startEventNodeHandler;
     }
 
-    private void setPropertiesForCanvas(ObjectNode outputJson,PemBpmnModel pemBpmnModel) {
+    private void setPropertiesForCanvas(ObjectNode outputJson,PemBpmnModel pemBpmnModel,BpmnConverterRequest request) {
         ObjectNode propertiesNode = outputJson.putObject("properties");
         propertiesNode.put("author", "");
         propertiesNode.put("creationdate", "");
@@ -264,7 +263,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         propertiesNode.put("name", pemBpmnModel.getName());
         propertiesNode.put("orientation", "horizontal");
         propertiesNode.put("process_author", "");
-        propertiesNode.put("process_id", PEM_PROCESS_ID);
+        propertiesNode.put("process_id", request.getProcessId());
         propertiesNode.put("process_namespace", "http://www.activiti.org/processdef");
         propertiesNode.put("process_version", "");
         propertiesNode.put("targetnamespace", "http://www.activiti.org/processdef");

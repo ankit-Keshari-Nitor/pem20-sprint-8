@@ -2,6 +2,7 @@
 
     import com.precisely.pem.commonUtil.ApplicationConstants;
     import com.precisely.pem.commonUtil.Status;
+    import com.precisely.pem.dtos.BpmnConverterRequest;
     import com.precisely.pem.dtos.requests.ActivityDefnReq;
     import com.precisely.pem.dtos.requests.UpdateActivityReq;
     import com.precisely.pem.dtos.responses.*;
@@ -133,8 +134,19 @@
             activityDefnobj = mapper.map(activityDefnDto, ActivityDefn.class);
             activityDefnobj = activityDefnRepo.save(activityDefnobj);
 
+            ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
+                    UUID.randomUUID().toString(), activityDefnobj.getActivityDefnKey(),
+                    null, ApplicationConstants.DEFAULT_VERSION,
+                    String.valueOf(Status.DRAFT), false, false,
+                    "", LocalDateTime.now(), "", LocalDateTime.now(),
+                    "", ApplicationConstants.SCHEMA_VERSION,activityDefnReq.getDescription());
+            activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
+            activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
 
-            Blob blob = bpmnConvertService.getBpmnConvertedBlob(activityDefnReq.getFile().getInputStream());
+            Blob blob = bpmnConvertService.getBpmnConvertedBlob(activityDefnReq.getFile().getInputStream(),
+                    BpmnConverterRequest.builder()
+                            .processId(activityDefnVersion.getActivityDefnKeyVersion())
+                            .build());
 
             ActivityDefnDataDto vchActivityDefnDataDto = new ActivityDefnDataDto(
                     UUID.randomUUID().toString(), blob, LocalDateTime.now(),
@@ -145,14 +157,9 @@
             activityDefnData = mapper.map(vchActivityDefnDataDto, ActivityDefnData.class);
             activityDefnData = activityDefnDataRepo.save(activityDefnData);
 
-            ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
-                    UUID.randomUUID().toString(), activityDefnobj.getActivityDefnKey(),
-                    activityDefnData.getActivityDefnDataKey(), ApplicationConstants.DEFAULT_VERSION,
-                    String.valueOf(Status.DRAFT), false, false,
-                    "", LocalDateTime.now(), "", LocalDateTime.now(),
-                    "", ApplicationConstants.SCHEMA_VERSION,activityDefnReq.getDescription());
-            activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
-            activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
+            //update ActivityDefnDataKey activity definition version
+            activityDefnVersion.setActivityDefnDataKey(activityDefnData.getActivityDefnDataKey());
+            activityDefnVersionRepo.save(activityDefnVersion);
 
             activityDefnResp.setActivityDefnKey(activityDefnobj.getActivityDefnKey());
             activityDefnResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());

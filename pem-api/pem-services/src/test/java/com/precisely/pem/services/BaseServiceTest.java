@@ -50,7 +50,7 @@ public class BaseServiceTest {
     public static final String TEST_PARTNER_KEY = "test_partner_key";
     public static final String TEST_PARTNER_NAME = "test_partner_name";
     public static final String TEST_CURRENT_TASK_NAME = "test_current_task_name";
-
+    public static final String TEST_BPMN_PROCESS_ID = "test_bomn_process_id";
 
     //Response Messages
     public static final String ACTIVITY_DEFINITION_NOT_FOUND = "Activity Definition with key '"+TEST_ACTIVITY_DEFN_KEY+"' not found. Kindly check the activityDefnKey.";

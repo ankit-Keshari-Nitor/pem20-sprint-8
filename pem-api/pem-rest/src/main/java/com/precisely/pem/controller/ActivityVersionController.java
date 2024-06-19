@@ -22,7 +22,7 @@ import jakarta.validation.constraints.Size;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -187,14 +187,14 @@ public class ActivityVersionController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
     })
-    @PostMapping("/{activityDefnVersionKey}/data")
-    public ResponseEntity<ByteArrayResource> getActivityDataForSpecificVersion(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
+    @GetMapping("/{activityDefnVersionKey}/data")
+    public ResponseEntity<InputStreamResource> getActivityDataForSpecificVersion(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
         if(log.isEnabled(Level.INFO))
             log.info("getActivityDataForSpecificVersion: Starts");
         ActivityDataResponse activityDataResponse = activityVersionService.getActivityDataForSpecificVersion(sponsorContext,activityDefnKey,activityDefnVersionKey);
         return  ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + activityDataResponse.getFileName() + "\"")
-                .body(activityDataResponse.getFile());
+                .body(activityDataResponse.getStreamResource());
     }
 }

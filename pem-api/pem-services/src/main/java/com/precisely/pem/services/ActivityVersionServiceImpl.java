@@ -16,7 +16,7 @@ import com.precisely.pem.service.PEMActivitiService;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -264,12 +264,12 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         if(activityDefnData.isEmpty())
             throw new ResourceNotFoundException("activityDefnData", "NoDataFound","Activity Definition Version Data with key '" + activityDefnVersion.get().getActivityDefnDataKey() + "' not found. Kindly check the activityDefnDataKey.");
 
-        Blob file = activityDefnData.get().getDefData();
+        InputStreamResource resource = bpmnConvertService.getPemBpmnJsonData(activityDefnData.get().getDefData());
 
         return ActivityDataResponse
                 .builder()
-                .file(new ByteArrayResource(file.getBytes(1,(int)file.length())))
-                .fileName(activityDefnData.get().getActivityDefnDataKey()+".xml")
+                .streamResource(resource)
+                .fileName(activityDefnVersion.get().getActivityDefnDataKey()+".json")
                 .build();
     }
 

@@ -11,9 +11,14 @@ import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.*;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialBlob;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
@@ -58,6 +63,25 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
 
         // Convert the BpmnModel to XML
         return bpmnXMLConverter.convertToXML(bpmnModel);
+    }
+
+    @Override
+    public InputStreamResource getPemBpmnJsonData(Blob activityDefnData) throws SQLException, XMLStreamException, IOException {
+        InputStream inputStream = activityDefnData.getBinaryStream();
+
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream);
+
+        BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+        BpmnModel bpmnModel = bpmnXMLConverter.convertToBpmnModel(xmlStreamReader);
+
+        //This will convert BPMN Model into PemBpmnModel object.
+        PemBpmnModel pemBpmnModel = convertToPemProcess(bpmnModel, BpmnConverterRequest.builder().build());
+
+        String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(pemBpmnModel);
+        InputStream bpmnModelToJsonStream = new ByteArrayInputStream(jsonString.getBytes());
+
+        return new InputStreamResource(bpmnModelToJsonStream);
     }
 
     @Override

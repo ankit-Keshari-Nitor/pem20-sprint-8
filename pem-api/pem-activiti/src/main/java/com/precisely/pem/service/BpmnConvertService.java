@@ -5,15 +5,18 @@ import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.PemBpmnModel;
 import com.precisely.pem.exceptionhandler.BpmnConverterException;
 import org.activiti.bpmn.model.BpmnModel;
+import org.springframework.core.io.InputStreamResource;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
 
 public interface BpmnConvertService {
-    BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel) ;
-    Blob getBpmnConvertedBlob(InputStream is) throws IOException, SQLException, BpmnConverterException;
+    BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel, BpmnConverterRequest bpmnConverterRequest) ;
+    Blob getBpmnConvertedBlob(InputStream is,String processId) throws IOException, SQLException, BpmnConverterException;
     PemBpmnModel convertToPemProcess(BpmnModel bpmnModel, BpmnConverterRequest request);
     NodeHandler createNodeHandlerChain();
+    InputStreamResource getPemBpmnJsonData(Blob activityDefnData) throws SQLException, XMLStreamException, IOException;
 }

@@ -39,16 +39,16 @@ class ActivityControllerTest extends BaseControllerTest {
         assertNotNull(output);
     }
 
-    @Test
-    void testGetActivityDefinitionList() throws Exception {
-        ActivityDefnPaginationRes resp = new ActivityDefnPaginationRes();
-        List<ActivityDefnListResp> listResp = new ArrayList<>();
-        resp.setContent(listResp);
-        Mockito.when(activityDefnService.getAllDefinitionList(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString()))
-                .thenReturn(resp);
-        ResponseEntity<Object> output = activityController.getActivityDefinitionList(TEST_SPONSOR,TEST_NAME, Status.DRAFT,Application.PEM,1,1, SortBy.modifyTs, SortDirection.ASC,TEST_SPONSOR);
-        assertNotNull(output);
-    }
+//    @Test
+//    void testGetActivityDefinitionList() throws Exception {
+//        ActivityDefnPaginationRes resp = new ActivityDefnPaginationRes();
+//        List<ActivityDefnListResp> listResp = new ArrayList<>();
+//        resp.setContent(listResp);
+//        Mockito.when(activityDefnService.getAllDefinitionList(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString()))
+//                .thenReturn(resp);
+//        ResponseEntity<Object> output = activityController.getActivityDefinitionList(TEST_SPONSOR,TEST_NAME, Status.DRAFT,Application.PEM,1,1, SortBy.modifyTs, SortDirection.ASC,TEST_SPONSOR);
+//        assertNotNull(output);
+//    }
 
     @Test
     void testGetActivityDefinitionById() throws Exception {

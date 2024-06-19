@@ -223,10 +223,8 @@ public class ActivityInstServiceImpl implements ActivityInstService{
         List<ActivityInst> listOfDefns = defnsPage.getContent();
         List<ActivityInstListResp> defnContent = new ArrayList<>();
         defnContent = listOfDefns.stream()
-                .map(p ->
-                {
-                    return mapper.map(p, ActivityInstListResp.class);
-                }).collect(Collectors.toList());
+                .map(p -> mapper.map(p, ActivityInstListResp.class))
+                .collect(Collectors.toList());
 
         int totalPage = defnsPage.getTotalPages();
         long totalElements = defnsPage.getTotalElements();

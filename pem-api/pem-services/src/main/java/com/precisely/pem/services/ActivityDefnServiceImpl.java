@@ -28,6 +28,7 @@
     import java.time.LocalDateTime;
     import java.util.*;
     import java.util.stream.Collectors;
+    import java.util.stream.Stream;
 
     @Log4j2
     @Service
@@ -49,7 +50,7 @@
 
         @Override
         public ActivityDefnPaginationRes getAllDefinitionList(String sponsorContext, String name,
-                                                              String description, String application, String status,
+                                                              String description, String application, List<String> status,
                                                               int pageNo, int pageSize, String sortBy, String sortDir) throws Exception {
             ActivityDefnPaginationRes vchActivityDefinitionPaginationRes = new ActivityDefnPaginationRes();
             PaginationDto paginationDto = new PaginationDto();
@@ -59,39 +60,62 @@
             Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
             SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
             Page<ActivityDefn> defnsPage = null;
-            if(name != null && !name.isEmpty() && name.contains("con:") && description != null && !description.isEmpty()) {
-                String conName = name.replace("con:","");
-                System.out.println("conName="+conName);
-                defnsPage = activityDefnRepo.findBySponsorKeyAndActivityNameContainingAndActivityDescriptionContainingAndApplicationAndVersionsStatus(sponsorInfo.getSponsorKey(),
+//        List<String> validStatuses = StatusEnumValidator.validateStatuses(status);
+
+            if (name != null && !name.isEmpty() && name.contains("con:") && description != null && !description.isEmpty()) {
+                status = getStatusListOfString(status);
+                String conName = name.replace("con:", "");
+                System.out.println("conName=" + conName);
+                defnsPage = activityDefnRepo.findBySponsorKeyAndActivityNameContainingAndActivityDescriptionContainingAndApplicationAndVersionsStatusIn(sponsorInfo.getSponsorKey(),
                         conName, description, application, status, pageable);
-            }else if(name != null && !name.isEmpty() && !name.contains("con:") && description != null && !description.isEmpty()) {
-                defnsPage = activityDefnRepo.findBySponsorKeyAndActivityNameAndActivityDescriptionContainingAndApplicationAndVersionsStatus(sponsorInfo.getSponsorKey(),
+            } else if (name != null && !name.isEmpty() && !name.contains("con:") && description != null && !description.isEmpty()) {
+                status = getStatusListOfString(status);
+                defnsPage = activityDefnRepo.findBySponsorKeyAndActivityNameAndActivityDescriptionContainingAndApplicationAndVersionsStatusIn(sponsorInfo.getSponsorKey(),
                         name, description, application, status, pageable);
-            }else if(name != null && !name.isEmpty() && name.contains("con:")) {
-                String conName = name.replace("con:","");
-                System.out.println("conName="+conName);
-                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusAndActivityNameContaining(sponsorInfo.getSponsorKey(),
+            } else if (name != null && !name.isEmpty() && name.contains("con:")) {
+                status = getStatusListOfString(status);
+                String conName = name.replace("con:", "");
+                System.out.println("conName=" + conName);
+                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusInAndActivityNameContaining(sponsorInfo.getSponsorKey(),
                         application, status, conName, pageable);
-            }else if(name != null && !name.isEmpty() && !name.contains("con:")) {
-                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusAndActivityName(sponsorInfo.getSponsorKey(),
+            } else if (name != null && !name.isEmpty() && !name.contains("con:")) {
+                status = getStatusListOfString(status);
+                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusInAndActivityName(sponsorInfo.getSponsorKey(),
                         application, status, name, pageable);
-            }else if(description != null && !description.isEmpty()) {
-                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusAndActivityDescriptionContaining(sponsorInfo.getSponsorKey(),
+            } else if (description != null && !description.isEmpty()) {
+                status = getStatusListOfString(status);
+                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusInAndActivityDescriptionContaining(sponsorInfo.getSponsorKey(),
                         application, status, description, pageable);
-            }else {
-                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatus(sponsorInfo.getSponsorKey(),
+            } else {
+                status = getStatusListOfString(status);
+                defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusIn(sponsorInfo.getSponsorKey(),
                         application, status, pageable);
             }
-            if(defnsPage == null || defnsPage.isEmpty()) {
+
+            if (defnsPage == null || defnsPage.isEmpty()) {
                 throw new ResourceNotFoundException("NoDataFound", "No data was found for the provided query parameter combination.");
             }
             List<ActivityDefn> listOfDefns = defnsPage.getContent();
             List<ActivityDefnListResp> defnContent = new ArrayList<>();
 
             defnContent = listOfDefns.stream()
-                    .map(p ->
-                    {
-                        return mapper.map(p, ActivityDefnListResp.class);
+                    .map(p -> {
+                        List<ActivityDefnVersion> versionList = p.getVersions();
+                        ActivityDefnVersionListResp activityDefnVersionResp = new ActivityDefnVersionListResp();
+                        if(versionList != null && !versionList.isEmpty()){
+                            if(versionList.size() == 1) {
+                                activityDefnVersionResp = mapper.map(p.getVersions().get(0), ActivityDefnVersionListResp.class);
+                            } else {
+                                if(versionList.stream().filter(ActivityDefnVersion::getIsDefault).count() == 0){
+                                    activityDefnVersionResp = mapper.map(versionList.stream().sorted((p1, p2) -> p1.getCreateTs().compareTo(p2.getCreateTs())).findFirst().get(), ActivityDefnVersionListResp.class);
+                                } else {
+                                    activityDefnVersionResp = mapper.map(versionList.stream().filter(ActivityDefnVersion::getIsDefault).findAny().get(), ActivityDefnVersionListResp.class);
+                                }
+                            }
+                        }
+                        ActivityDefnListResp activityDefnListResp = mapper.map(p, ActivityDefnListResp.class);
+                        activityDefnListResp.setVersions(activityDefnVersionResp);
+                        return activityDefnListResp;
                     }).collect(Collectors.toList());
 
             int totalPage = defnsPage.getTotalPages();
@@ -244,6 +268,15 @@
             }
             log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
             return sponsorInfo;
+        }
+
+        private List<String> getStatusListOfString(List<String> status) {
+            if (status == null || status.isEmpty()) {
+                status = Stream.of(Status.values())
+                        .map(Enum::name)
+                        .collect(Collectors.toList());
+            }
+            return status;
         }
 
     }

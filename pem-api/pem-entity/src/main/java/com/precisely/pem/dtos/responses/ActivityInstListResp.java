@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 @Data
 public class ActivityInstListResp {
     private String activityInstKey;
-    private String activityDefnVersionKey;
+    private String activityDefnKeyVersion;
     private String name;
     private String description;
-    private String activityTasks;
+    //    private String activityTasks;
     private String alertFrequency;
     private LocalDateTime alertDate;
     private LocalDateTime dueDate;
@@ -19,7 +19,7 @@ public class ActivityInstListResp {
     private LocalDateTime startDate;
     private String status;
     private String sponsorKey;
-    private String pcptActivityInstances;
+    //    private String pcptActivityInstances;
     private ActivityStatsDto activityStats;
     private String emailStatus;
 }

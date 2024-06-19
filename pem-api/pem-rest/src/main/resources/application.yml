@@ -45,6 +45,7 @@ pem:
 
 server:
   port: 9080
+  connection-timeout: 60000
 
 logging:
   level:

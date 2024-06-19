@@ -28,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -78,16 +79,16 @@ public class ActivityController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
     })
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Object> getActivityDefinitionList(@RequestParam(value = "name", defaultValue = "", required = false) String name,
-                                                            @RequestParam(value = "description",defaultValue = "", required = false) String description,
-                                                            @RequestParam(value = "status", defaultValue = "DRAFT", required = true) Status status,
+    public ResponseEntity<Object> getActivityDefinitionList(@RequestParam(value = "name", required = false) String name,
+                                                            @RequestParam(value = "description", required = false) String description,
+                                                            @RequestParam(value = "status", required = false) List<String> status,
                                                             @RequestParam(value = "application", defaultValue = "PEM", required = true) Application application,
                                                             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
                                                             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
                                                             @RequestParam(value = "sortBy", defaultValue = "modifyTs" ,required = false) SortBy sortBy,
                                                             @RequestParam(value = "sortDir", defaultValue = "DESC", required = false) SortDirection sortDir,
                                                             @PathVariable(value = "sponsorContext")String sponsorContext) throws Exception {
-        ActivityDefnPaginationRes activityDefnPaginationRes = activityDefnService.getAllDefinitionList(sponsorContext,name,description,application.getApp(),status.getStatus(),pageNo, pageSize, sortBy ==null? "modify_ts":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
+        ActivityDefnPaginationRes activityDefnPaginationRes = activityDefnService.getAllDefinitionList(sponsorContext,name,description,application.getApp(),status,pageNo, pageSize, sortBy ==null? "modify_ts":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
         activityDefnPaginationRes.getContent().stream()
                 .map(p ->
                 {

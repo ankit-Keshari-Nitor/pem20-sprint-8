@@ -1,38 +1,47 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 import Toggle from '../toggle';
 
-describe('Toggle component', () => {
-  const field = {
-    labelText: 'Toggle Label',
+describe('Toggle Component', () => {
+  const mockField = {
+    labelText: 'Test Label',
     isRequired: true,
-    min: 0,
-    max: 10
-    // Add other necessary props for testing
+    labelA: 'No',
+    labelB: 'Yes',
+    readOnly: false,
   };
 
-  it('renders correctly', () => {
-    const { getByText } = render(<Toggle field={field} id="toggle-id" />);
-
-    expect(getByText('Toggle Label')).toBeInTheDocument();
-    expect(getByText(/Off|On/)).toBeInTheDocument();
+  it('should render without crashing', () => {
+    render(<Toggle field={mockField} id="toggle-id" />);
+    const toggleElement = screen.getByTestId('toggle-id');
+    expect(toggleElement).toBeInTheDocument();
   });
 
-  it('handles toggle events correctly', () => {
-    const { getByTestId } = render(<Toggle field={field} id="toggle-id" />);
-    const toggle = getByTestId('toggle-id');
-
-    // Simulate a toggle event
-    fireEvent.click(toggle);
-
-    // Test if the toggled state is true after clicking
-    expect(toggle).toHaveAttribute('aria-checked', 'false');
+  it('should display the correct label text', () => {
+    render(<Toggle field={mockField} id="toggle-id" />);
+    expect(screen.getByText('Test Label')).toBeInTheDocument();
   });
 
-  it('passes props correctly', () => {
-    const { getByTestId } = render(<Toggle field={field} id="toggle-id" />);
-
-    // Test if the toggled state is initially false
-    expect(getByTestId('toggle-id')).toHaveAttribute('aria-checked', 'true');
+  it('should handle default labelA values', () => {
+    const fieldWithDefaults = {
+      ...mockField,
+      labelA: undefined,
+      labelB: undefined,
+    };
+    render(<Toggle field={fieldWithDefaults} id="toggle-id" />);
+    expect(screen.getByText('No')).toBeInTheDocument();
   });
+
+  it('should pass additional props to the CarbonToggle component', () => {
+    const additionalProps = {
+      disabled: true,
+      defaultToggled: true,
+    };
+    render(<Toggle field={{ ...mockField, ...additionalProps }} id="toggle-id" />);
+    const toggleElement = screen.getByTestId('toggle-id');
+    expect(toggleElement).toBeDisabled();
+    expect(toggleElement).toHaveAttribute('aria-checked', 'true');
+  });
+
 });

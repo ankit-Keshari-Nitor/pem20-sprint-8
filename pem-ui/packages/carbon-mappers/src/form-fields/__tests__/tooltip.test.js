@@ -9,19 +9,19 @@ const field = {
 };
 
 describe('Tooltip Component ', () => {
-  test('Renders without crashing', () => {
+  it('Renders without crashing', () => {
     render(<Tooltip field={field} id="test-tooltip" />);
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  test('Renders with correct label text', () => {
+  it('Renders with correct label text', () => {
     render(<Tooltip field={field} id="test-tooltip" />);
     const tooltipTrigger = screen.getByRole('button');
     fireEvent.mouseOver(tooltipTrigger);
     expect(screen.getByText('Info tooltip')).toBeInTheDocument();
   });
 
-  test('Button click triggers the tooltip', () => {
+  it('Button click triggers the tooltip', () => {
     render(<Tooltip field={field} id="test-tooltip" />);
     const tooltipTrigger = screen.getByRole('button');
     fireEvent.click(tooltipTrigger);
@@ -29,7 +29,7 @@ describe('Tooltip Component ', () => {
     expect(screen.getByText('Info tooltip')).toBeVisible();
   });
 
-  test('Matches snapshot', () => {
+  it('Matches snapshot', () => {
     const { asFragment } = render(<Tooltip field={field} id="test-tooltip" />);
     expect(asFragment()).toMatchSnapshot();
   });

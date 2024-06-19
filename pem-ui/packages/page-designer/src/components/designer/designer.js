@@ -99,11 +99,19 @@ export default function Designer({ componentMapper }) {
       }
       let fieldData = findChildComponentById(layout, componentDetail.id);
 
+
       filedTypeConfig?.editableProps?.Basic.map((basicEditPops) => {
         if (fieldData?.component[basicEditPops?.propsName]) {
           return (basicEditPops.value = fieldData.component[basicEditPops?.propsName]);
         } else {
-          return (basicEditPops.value = '');
+          // Initialize options for checkbox-group and radio-group
+          if (basicEditPops?.propsName === "options") {
+            return (basicEditPops.value = [{
+              label: '', id: '', value: ''
+            }]);
+          } else {
+            return (basicEditPops.value = '');
+          }
         }
       });
 

@@ -2,6 +2,7 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.commonUtil.ApplicationConstants;
 import com.precisely.pem.commonUtil.Status;
+import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.requests.ActivityDefnReq;
 import com.precisely.pem.dtos.requests.UpdateActivityReq;
 import com.precisely.pem.dtos.responses.*;
@@ -21,28 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-    import com.precisely.pem.commonUtil.ApplicationConstants;
-    import com.precisely.pem.commonUtil.Status;
-    import com.precisely.pem.dtos.BpmnConverterRequest;
-    import com.precisely.pem.dtos.requests.ActivityDefnReq;
-    import com.precisely.pem.dtos.requests.UpdateActivityReq;
-    import com.precisely.pem.dtos.responses.*;
-    import com.precisely.pem.dtos.shared.*;
-    import com.precisely.pem.exceptionhandler.*;
-    import com.precisely.pem.models.ActivityDefn;
-    import com.precisely.pem.models.ActivityDefnData;
-    import com.precisely.pem.models.ActivityDefnVersion;
-    import com.precisely.pem.repositories.*;
-    import com.precisely.pem.service.BpmnConvertService;
-    import lombok.extern.log4j.Log4j2;
-    import org.modelmapper.ModelMapper;
-    import org.springframework.beans.factory.annotation.Autowired;
-    import org.springframework.data.domain.Page;
-    import org.springframework.data.domain.PageRequest;
-    import org.springframework.data.domain.Pageable;
-    import org.springframework.data.domain.Sort;
-    import org.springframework.stereotype.Service;
-    import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.sql.Blob;
@@ -173,8 +152,19 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
         activityDefnobj = mapper.map(activityDefnDto, ActivityDefn.class);
         activityDefnobj = activityDefnRepo.save(activityDefnobj);
 
+        ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
+                UUID.randomUUID().toString(), activityDefnobj.getActivityDefnKey(),
+                null, ApplicationConstants.DEFAULT_VERSION,
+                String.valueOf(Status.DRAFT), true, false,
+                "", LocalDateTime.now(), "", LocalDateTime.now(),
+                "", ApplicationConstants.SCHEMA_VERSION, activityDefnReq.getDescription());
+        activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
+        activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
 
-        Blob blob = bpmnConvertService.getBpmnConvertedBlob(activityDefnReq.getFile().getInputStream());
+        Blob blob = bpmnConvertService.getBpmnConvertedBlob(activityDefnReq.getFile().getInputStream(),
+                BpmnConverterRequest.builder()
+                        .processId(activityDefnVersion.getActivityDefnKeyVersion())
+                        .build());
 
         ActivityDefnDataDto vchActivityDefnDataDto = new ActivityDefnDataDto(
                 UUID.randomUUID().toString(), blob, LocalDateTime.now(),
@@ -185,35 +175,12 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
         activityDefnData = mapper.map(vchActivityDefnDataDto, ActivityDefnData.class);
         activityDefnData = activityDefnDataRepo.save(activityDefnData);
 
-        ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
-                UUID.randomUUID().toString(), activityDefnobj.getActivityDefnKey(),
-                activityDefnData.getActivityDefnDataKey(), ApplicationConstants.DEFAULT_VERSION,
-                String.valueOf(Status.DRAFT), true, false,
-                "", LocalDateTime.now(), "", LocalDateTime.now(),
-                "", ApplicationConstants.SCHEMA_VERSION, activityDefnReq.getDescription());
-        activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
-        activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
+        //update ActivityDefnDataKey activity definition version
+        activityDefnVersion.setActivityDefnDataKey(activityDefnData.getActivityDefnDataKey());
+        activityDefnVersionRepo.save(activityDefnVersion);
 
-            Blob blob = bpmnConvertService.getBpmnConvertedBlob(activityDefnReq.getFile().getInputStream(),
-                    BpmnConverterRequest.builder()
-                            .processId(activityDefnVersion.getActivityDefnKeyVersion())
-                            .build());
-
-            ActivityDefnDataDto vchActivityDefnDataDto = new ActivityDefnDataDto(
-                    UUID.randomUUID().toString(), blob, LocalDateTime.now(),
-                    "", LocalDateTime.now(), ""
-            );
-
-            //Populating the Activity Definition Version Object
-            activityDefnData = mapper.map(vchActivityDefnDataDto, ActivityDefnData.class);
-            activityDefnData = activityDefnDataRepo.save(activityDefnData);
-
-            //update ActivityDefnDataKey activity definition version
-            activityDefnVersion.setActivityDefnDataKey(activityDefnData.getActivityDefnDataKey());
-            activityDefnVersionRepo.save(activityDefnVersion);
-
-            activityDefnResp.setActivityDefnKey(activityDefnobj.getActivityDefnKey());
-            activityDefnResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
+        activityDefnResp.setActivityDefnKey(activityDefnobj.getActivityDefnKey());
+        activityDefnResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
 
         return activityDefnResp;
     }
@@ -314,3 +281,4 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
         log.info("Status selected : {}", status);
         return status;
     }
+}

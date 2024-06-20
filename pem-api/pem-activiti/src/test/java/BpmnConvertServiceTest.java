@@ -9,7 +9,6 @@ import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.Process;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
@@ -23,6 +22,7 @@ import static com.precisely.pem.dtos.Constants.PEM_PROCESS_ID;
 public class BpmnConvertServiceTest {
 
     public static final String PEM_DEFINITIONS_EXAMPLE = "Pem Definitions 1";
+    public static final String PEM_TEST_PROCESS = "PEM_TEST_PROCESS";
     BpmnConvertService bpmnConvertService = new BpmnConvertServiceImpl();
 
     public static String INPUT_FILE_NAME = "user_input_sample.json";
@@ -45,7 +45,7 @@ public class BpmnConvertServiceTest {
     public void convertUiJsonIntoBpmnDefinition() throws JsonProcessingException {
         PemBpmnModel pemBpmnModel = objectMapper.readValue(inputJson,PemBpmnModel.class);
 
-        BpmnModel bpmnModel = bpmnConvertService.convertIntoBpmnDefinition(pemBpmnModel);
+        BpmnModel bpmnModel = bpmnConvertService.convertIntoBpmnDefinition(pemBpmnModel, BpmnConverterRequest.builder().processId(PEM_TEST_PROCESS).build() );
 
         Assertions.assertNotNull(bpmnModel);
         Assertions.assertEquals(1,bpmnModel.getProcesses().size());
@@ -61,8 +61,8 @@ public class BpmnConvertServiceTest {
     public void convertBpmnDefinitionIntoUiJson() throws JsonProcessingException {
 
         BpmnModel bpmnModel = bpmnConvertService
-                .convertIntoBpmnDefinition(objectMapper.readValue(inputJson,PemBpmnModel.class));
-        PemBpmnModel pemBpmnModelOutput = bpmnConvertService.convertToPemProcess(bpmnModel, new BpmnConverterRequest());
+                .convertIntoBpmnDefinition(objectMapper.readValue(inputJson,PemBpmnModel.class),BpmnConverterRequest.builder().processId(PEM_TEST_PROCESS).build() );
+        PemBpmnModel pemBpmnModelOutput = bpmnConvertService.convertToPemProcess(bpmnModel, BpmnConverterRequest.builder().build());
 
         Assertions.assertNotNull(pemBpmnModelOutput);
         Assertions.assertEquals(PEM_DEFINITIONS_EXAMPLE,pemBpmnModelOutput.getName());

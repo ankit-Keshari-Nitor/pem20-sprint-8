@@ -1,6 +1,7 @@
 package com.precisely.pem.services;
 
 import com.precisely.pem.commonUtil.Application;
+import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.requests.ActivityDefnReq;
 import com.precisely.pem.dtos.requests.UpdateActivityReq;
 import com.precisely.pem.dtos.responses.ActivityDefnListResp;
@@ -14,6 +15,7 @@ import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -62,13 +64,13 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
 
     @Test
     void testCreateActivityDefinition() throws SQLException, IOException, DuplicateEntryException, ResourceNotFoundException, BpmnConverterException {
-    mockGetSponsorKey().thenReturn(TEST_SPONSOR);
+        mockGetSponsorKey().thenReturn(TEST_SPONSOR);
         Mockito.when(activityDefnRepo.save(Mockito.any())).thenReturn(getVchActivityDefnObj());
         Mockito.when(activityDefnDataRepo.save(Mockito.any())).thenReturn(getVchActivityDefnDataObj());
         Mockito.when(activityDefnVersionRepo.save(Mockito.any())).thenReturn(getVCHActivityDefnVersionObj());
         MultipartFile file = new MockMultipartFile(TEST_FILE_KEY, TEST_FILE_VALUE, CONTENT_TYPE_TEXT, TEST_FILE_DATA.getBytes());
         Blob blob = mock(Blob.class);
-        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream())).thenReturn(blob);
+        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream(), BpmnConverterRequest.builder().processId(TEST_BPMN_PROCESS_ID).build())).thenReturn(blob);
 
         ActivityDefnReq activityDefnReq = new ActivityDefnReq();
         activityDefnReq.setApplication(Application.PEM);

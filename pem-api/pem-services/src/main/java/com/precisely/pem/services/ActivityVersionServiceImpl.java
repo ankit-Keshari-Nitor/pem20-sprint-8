@@ -2,6 +2,7 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.commonUtil.ApplicationConstants;
 import com.precisely.pem.commonUtil.Status;
+import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
@@ -130,7 +131,19 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         log.info("count : " + activityDefn.getVersions().size());
 
-        Blob blob = bpmnConvertService.getBpmnConvertedBlob(activityVersionReq.getFile().getInputStream());
+        ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
+                UUID.randomUUID().toString(), activityDefnKey,
+                null, ++version,
+                Status.DRAFT.toString(), false, activityVersionReq.getIsEncrypted(),
+                "", LocalDateTime.now(), "", LocalDateTime.now(),
+                "", ApplicationConstants.SCHEMA_VERSION,activityVersionReq.getDescription()
+        );
+        activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
+        activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
+
+        Blob blob = bpmnConvertService.getBpmnConvertedBlob(activityVersionReq.getFile().getInputStream(), BpmnConverterRequest.builder()
+                .processId(activityDefnVersion.getActivityDefnKeyVersion())
+                .build());
 
         ActivityDefnDataDto vchActivityDefnDataDto = new ActivityDefnDataDto(
                 UUID.randomUUID().toString(), blob, LocalDateTime.now(),
@@ -141,15 +154,9 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         activityDefnData = mapper.map(vchActivityDefnDataDto, ActivityDefnData.class);
         activityDefnData = activityDefnDataRepo.save(activityDefnData);
 
-        ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
-                UUID.randomUUID().toString(), activityDefnKey,
-                activityDefnData.getActivityDefnDataKey(), ++version,
-                Status.DRAFT.toString(), false, activityVersionReq.getIsEncrypted(),
-                "", LocalDateTime.now(), "", LocalDateTime.now(),
-                "", ApplicationConstants.SCHEMA_VERSION,activityVersionReq.getDescription()
-        );
-        activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
-        activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
+        //update ActivityDefnDataKey activity definition version
+        activityDefnVersion.setActivityDefnDataKey(activityDefnData.getActivityDefnDataKey());
+        activityDefnVersionRepo.save(activityDefnVersion);
 
         activityDefnVersionResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
         activityDefnVersionResp.setActivityDefnKey(activityDefnKey);
@@ -197,7 +204,9 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         //Populating the Activity Definition Data Object
         if(Objects.nonNull(updateActivityVersionReq.getFile())){
-            Blob blob = bpmnConvertService.getBpmnConvertedBlob(updateActivityVersionReq.getFile().getInputStream());
+            Blob blob = bpmnConvertService.getBpmnConvertedBlob(updateActivityVersionReq.getFile().getInputStream(), BpmnConverterRequest.builder()
+                            .processId(activityDefnVersion.get().getActivityDefnKeyVersion())
+                            .build());
 
             activityDefnData.get().setDefData(blob);
             activityDefnData.get().setModifyTs(LocalDateTime.now());

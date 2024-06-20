@@ -187,7 +187,7 @@ public class ActivityVersionController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
     })
-    @GetMapping("/{activityDefnVersionKey}/data")
+    @GetMapping("/{activityDefnVersionKey}/actions/getData")
     public ResponseEntity<InputStreamResource> getActivityDataForSpecificVersion(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
         if(log.isEnabled(Level.INFO))
             log.info("getActivityDataForSpecificVersion: Starts");

@@ -21,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +29,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -284,10 +287,16 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         activityDefnData.setDefData(mockBlob);
         mockActivityDefnDataFindById().thenReturn(Optional.of(activityDefnData));
 
+        // Create an empty InputStream
+        InputStream emptyInputStream = new ByteArrayInputStream(new byte[0]);
+        // Create an InputStreamResource with the empty InputStream
+        InputStreamResource emptyResource = new InputStreamResource(emptyInputStream);
+        Mockito.when(bpmnConvertService.getPemBpmnJsonData(activityDefnData.getDefData())).thenReturn(emptyResource);
+
         ActivityDataResponse activityDataResponse = activityVersionService
                 .getActivityDataForSpecificVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY);
         assertNotNull(activityDataResponse);
-        assertNotNull(activityDataResponse.getFile());
+        assertNotNull(activityDataResponse.getStreamResource());
     }
 
     @Test

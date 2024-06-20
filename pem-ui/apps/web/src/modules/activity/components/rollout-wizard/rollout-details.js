@@ -73,7 +73,7 @@ export default function RolloutDetails({ handleAddClick }) {
       </Column>
       {/*  Alert Date */}
       <Column className="col-margin" lg={8}>
-        <DatePicker datePickerType="single" value={alertDate} minDate={new Date().setDate(new Date().getDate() + 1)} onChange={setAlertDate}>
+        <DatePicker datePickerType="single" value={alertDate} minDate={new Date().setDate(new Date().getDate() + 2)} onChange={setAlertDate}>
           <DatePickerInput
             id="alert_date"
             data-testid="alert-date"

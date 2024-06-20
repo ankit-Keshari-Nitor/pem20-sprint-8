@@ -169,6 +169,9 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         }
         activityDefnVersion.get().setStatus(String.valueOf(Status.FINAL));
         activityDefnVersion.get().setModifyTs(LocalDateTime.now());
+        if(activityDefnVersion.get().getIsDefault()){
+            deployDefaultADVersion(activityDefnVersionKey);
+        }
         ActivityDefnVersion savedActivityDefnVersion =  activityDefnVersionRepo.save(activityDefnVersion.get());
         ModelMapper mapper = new ModelMapper();
         return mapper.map(savedActivityDefnVersion, MarkAsFinalActivityDefinitionVersionResp.class);

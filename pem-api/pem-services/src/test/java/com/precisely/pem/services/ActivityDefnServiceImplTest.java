@@ -1,6 +1,7 @@
 package com.precisely.pem.services;
 
 import com.precisely.pem.commonUtil.Application;
+import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.requests.ActivityDefnReq;
 import com.precisely.pem.dtos.requests.UpdateActivityReq;
 import com.precisely.pem.dtos.responses.ActivityDefnListResp;
@@ -8,11 +9,13 @@ import com.precisely.pem.dtos.responses.MessageResp;
 import com.precisely.pem.dtos.responses.SponsorInfo;
 import com.precisely.pem.dtos.shared.ActivityDefnDto;
 import com.precisely.pem.dtos.shared.TenantContext;
+import com.precisely.pem.exceptionhandler.BpmnConverterException;
 import com.precisely.pem.exceptionhandler.DuplicateEntryException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -23,11 +26,13 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 
 
 class ActivityDefnServiceImplTest extends BaseServiceTest{
@@ -58,12 +63,14 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
 
 
     @Test
-    void testCreateActivityDefinition() throws SQLException, IOException, DuplicateEntryException, ResourceNotFoundException {
-    mockGetSponsorKey().thenReturn(TEST_SPONSOR);
+    void testCreateActivityDefinition() throws SQLException, IOException, DuplicateEntryException, ResourceNotFoundException, BpmnConverterException {
+        mockGetSponsorKey().thenReturn(TEST_SPONSOR);
         Mockito.when(activityDefnRepo.save(Mockito.any())).thenReturn(getVchActivityDefnObj());
         Mockito.when(activityDefnDataRepo.save(Mockito.any())).thenReturn(getVchActivityDefnDataObj());
         Mockito.when(activityDefnVersionRepo.save(Mockito.any())).thenReturn(getVCHActivityDefnVersionObj());
         MultipartFile file = new MockMultipartFile(TEST_FILE_KEY, TEST_FILE_VALUE, CONTENT_TYPE_TEXT, TEST_FILE_DATA.getBytes());
+        Blob blob = mock(Blob.class);
+        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream(), BpmnConverterRequest.builder().processId(TEST_BPMN_PROCESS_ID).build())).thenReturn(blob);
 
         ActivityDefnReq activityDefnReq = new ActivityDefnReq();
         activityDefnReq.setApplication(Application.PEM);

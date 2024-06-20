@@ -6,6 +6,10 @@ group = 'com.precisely.pem'
 version = '1.0-SNAPSHOT'
 
 repositories {
+    google()
+    maven {
+        url 'https://artifacts.alfresco.com/nexus/content/repositories/activiti-releases'
+    }
     mavenCentral()
 }
 
@@ -14,8 +18,25 @@ configurations {
 }
 
 dependencies {
+    implementation project(':pem-common')
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'org.activiti:activiti-spring-boot-starter:8.0.0'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '3.2.4'
+    implementation 'org.graalvm.js:js:23.0.0'
+    implementation 'org.graalvm.js:js-scriptengine:23.0.0'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    implementation 'org.activiti:activiti-bpmn-converter:8.0.0'
+    implementation 'org.activiti:activiti-bpmn-model:8.0.0'
+    implementation 'org.activiti:activiti-json-converter:8.0.0'
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.9.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.9.0'
+
+    implementation group: 'org.apache.groovy', name: 'groovy', version: '4.0.21'
+    implementation group: 'org.apache.groovy', name: 'groovy-jsr223', version: '4.0.21'
+    implementation group: 'org.apache.groovy', name: 'groovy-json', version: '4.0.21'
+    implementation group: 'org.openjdk.nashorn', name: 'nashorn-core', version: '15.4'
 }
 
 test {

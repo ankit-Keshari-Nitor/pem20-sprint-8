@@ -1,5 +1,7 @@
 package com.precisely.pem.services;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.precisely.pem.commonUtil.PcptInstProgress;
 import com.precisely.pem.commonUtil.PcptInstStatus;
 import com.precisely.pem.dtos.responses.*;
@@ -9,10 +11,9 @@ import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.exceptionhandler.ParamMissingException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.*;
-import com.precisely.pem.repositories.ActivityInstRepo;
-import com.precisely.pem.repositories.CompanyRepo;
-import com.precisely.pem.repositories.PartnerRepo;
-import com.precisely.pem.repositories.PcptInstRepo;
+import com.precisely.pem.repositories.*;
+import com.precisely.pem.service.PEMActivitiService;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
 public class ParticipantActivityInstServiceImpl implements ParticipantActivityInstService {
 
     @Autowired
@@ -49,6 +51,17 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
     private ActivityInstRepo activityInstRepo;
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    PEMActivitiService pemActivitiService;
+
+    @Autowired
+    private ActivityDefnVersionRepo activityDefnVersionRepo;
+    @Autowired
+    private ActivityDefnRepo activityDefnRepo;
+
+    @Autowired
+    ActivityProcDefRepo activityProcDefRepo;
 
     @Override
     public ParticipantActivityInstPaginationResp getAllParticipantActivityInstances(String sponsorContext, String status, String activityInstKey,String activityDefnVersionKey, Boolean activityStats, String currentTask, String partnerName, String progress, int pageNo, int pageSize, String sortDir) throws Exception {
@@ -191,7 +204,8 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
 
             ActivityInst activityInstance = activityInstRepo.findById(finalActivityInstKey).orElse(null);
             if (activityInstance != null) {
-                startDateMap.put(finalActivityInstKey, activityInstance.getStartDate().toString());
+                String startDate = String.valueOf(activityInstance.getStartDate());
+                startDateMap.put(finalActivityInstKey, startDate!=null ? startDate:null);
                 applicationMap.put(finalActivityInstKey, activityInstance.getApplication());
             }
 
@@ -279,10 +293,56 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
 
         ActivityInst activityInstance = activityInstRepo.findById(participantActivityInstResp.getActivityInstKey()).orElse(null);
         if (activityInstance != null) {
-            participantActivityInstResp.setApplication(activityInstance.getStartDate().toString());
-            participantActivityInstResp.setStartDate(activityInstance.getStartDate().toString());
+            String startDate = String.valueOf(activityInstance.getStartDate());
+            participantActivityInstResp.setApplication(activityInstance.getApplication());
+            participantActivityInstResp.setStartDate(startDate !=null ? startDate:null);
         }
         return participantActivityInstResp;
+    }
+
+    @Override
+    public MessageResp startActivity(String sponsorContext, String pcptActivityInstKey) throws ResourceNotFoundException {
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
+        PcptActivityInst pcptActivityInst = pcptInstRepo.findByPcptActivityInstKey(pcptActivityInstKey);
+        if(Objects.isNull(pcptActivityInst)){
+            throw new ResourceNotFoundException("PcptInstanceNotFound", "The participant instance with key '" + pcptActivityInstKey + "' not found.");
+        }
+
+        String activityInstanceKey = pcptActivityInst.getActivityInstKey();
+        ActivityInst activityInst = activityInstRepo.findByActivityInstKey(activityInstanceKey);
+        String activityDefnVersionKey = activityInst.getActivityDefnKeyVersion();
+        ActivityDefnVersion activityDefnVersion =  activityDefnVersionRepo.findByActivityDefnKeyVersion(activityDefnVersionKey);
+        String activityDefnKey = activityDefnVersion.getActivityDefnKey();
+        ActivityDefn activityDefn = activityDefnRepo.findByActivityDefnKey(activityDefnKey);
+        String activityName = activityDefn.getActivityName();
+
+        Blob contextDataBlob = pcptActivityInst.getPcptContextData();
+        byte[] contextDataByte = null;
+        try {
+            contextDataByte = contextDataBlob.getBytes(1, (int) contextDataBlob.length());
+        }catch (Exception e){
+            log.info(e);
+        }
+        if(contextDataByte == null)
+            throw new ResourceNotFoundException("NA", "The contextDataByte is empty.");
+
+        String contextDataStr = new String(contextDataByte);
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> map = null;
+        try{
+            map = mapper.readValue(contextDataStr, new TypeReference<>() {});
+        }catch (Exception e){
+            log.info(e);
+        }
+        log.info("Map content: " + map);
+        List<ActivityProcDef> activityProcDefList = activityProcDefRepo.findByresourceName(activityName+".bpmn");
+        String processInstanceId = pemActivitiService.startProcessInstanceById(activityProcDefList.get(0).getId(),null,map);
+        pcptActivityInst.setPcptInstStatus(PcptInstStatus.STARTED.getPcptInstStatus());
+        pcptInstRepo.save(pcptActivityInst);
+
+        return MessageResp.builder()
+                .response("SUCCESS")
+                .build();
     }
 
     private SponsorInfo validateSponsorContext(String sponsorContext) throws ResourceNotFoundException {

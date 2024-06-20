@@ -16,13 +16,12 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     initialization-mode: always
-
-
-server:
   tomcat:
     max-swallow-size: -1
   port: 9080
-
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
 springdoc:
   swagger-ui:
     path: /definition-documentation
@@ -33,3 +32,21 @@ springdoc:
 pem:
   openapi:
     dev-url: http://localhost:9080
+
+  activiti:
+    database-schema-update: true
+    db-history-used: true
+    check-process-definitions: true
+    process-definition-location-prefix: classpath:/processes/
+    # process-definition-location-suffixes:
+    # - **.bpmn
+    # - **.bpmn20.xml
+    history-level: FULL
+
+server:
+  port: 9080
+
+logging:
+  level:
+    root: INFO
+    printVariablesScript: DEBUG

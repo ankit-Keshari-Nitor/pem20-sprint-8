@@ -7,6 +7,9 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://artifacts.alfresco.com/nexus/content/repositories/activiti-releases'
+    }
 }
 
 configurations {
@@ -18,22 +21,24 @@ dependencies {
     implementation project(":pem-entity")
     implementation project(":pem-services")
     implementation project(":pem-common")
+    implementation project(":pem-activiti")
     //implementation 'com.ibm.db2.jcc:db2jcc:db2jcc4' // if you want to connect with db2 database, enable it
+    implementation 'org.json:json:20231013'
     implementation 'org.springframework.boot:spring-boot-starter-web:3.2.4'
     implementation 'org.springframework.boot:spring-boot-starter-hateoas:3.2.4'
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.3.0'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '3.2.0'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '3.2.0'
-    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.2.0'
+    implementation 'org.springframework.boot:spring-boot-devtools:3.2.0'
+    implementation 'org.modelmapper:modelmapper:3.2.0'
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.9.0'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.9.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.9.0'
+    testImplementation 'org.mockito:mockito-core:5.9.0'
     testImplementation 'org.springframework:spring-mock:2.0.8'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.17.0'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '3.2.4'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2:3.2.4'
 }
 
 test {

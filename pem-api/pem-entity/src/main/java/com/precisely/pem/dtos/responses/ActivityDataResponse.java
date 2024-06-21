@@ -8,7 +8,6 @@ import org.springframework.core.io.InputStreamResource;
 @Data
 @Builder
 public class ActivityDataResponse {
-    private ByteArrayResource file;
     private InputStreamResource streamResource;
     private String fileName;
 }

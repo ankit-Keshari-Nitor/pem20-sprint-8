@@ -4,7 +4,7 @@ import { Button, Column, Grid } from '@carbon/react';
 import './activity-definition.css';
 import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
 import useActivityStore from '../../store';
-import { ROUTES } from '../../constants';
+import { OPERATIONS, ROUTES } from '../../constants';
 
 export default function ActivityDefinition() {
   const activityStore = useActivityStore((state) => state.activities);
@@ -13,8 +13,10 @@ export default function ActivityDefinition() {
   const editSchemaProp = useActivityStore((state) => state.editSchemaProps);
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
   const [activityDefinitionData, setActivityDefinitionData] = useState();
+  const activityOperation = activityStore.operation;
+  console.log(activityOperation);
+  const readOnly = activityStore.operation === OPERATIONS.VIEW ? true : false;
   const ref = useRef();
-
   useEffect(() => {
     if (activityDefinitionData?.id !== '' || activityDefinitionData?.name === '' || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
       setShowActivityDefineDrawer(true);
@@ -26,6 +28,15 @@ export default function ActivityDefinition() {
   useEffect(() => {
     setActivityDefinitionData(activityStore.definition);
   }, [activityStore]);
+
+
+  useEffect(()=>{
+    return (()=>{
+      //clear the current activity from the store
+      console.log('clear the current activity from the store')
+    })
+ // TODO if we get activityDefinitionVersion Key and activityDefinition Key then make api call to load data
+  },[])
 
   const handleActivityReset = () => {
     ref.current?.handleRest();
@@ -51,7 +62,7 @@ export default function ActivityDefinition() {
           <HistoryIcon />
         </Column>
         <Column>
-          <Button id="saveactivity" href={ROUTES.ACTIVITY_LIST} onClick={() => handleActivityReset()}>
+          <Button id="saveactivity" href={ROUTES.ACTIVITY_LIST} disabled={readOnly} onClick={() => handleActivityReset()}>
             Save Activity
           </Button>
         </Column>
@@ -59,9 +70,15 @@ export default function ActivityDefinition() {
       <Designer.WorkFlowDesigner
         ref={ref}
         showActivityDefineDrawer={showActivityDefineDrawer}
+        setShowActivityDefineDrawer={setShowActivityDefineDrawer}
         editDefinitionProp={editDefinitionProp}
         editSchemaProp={editSchemaProp}
         activityDefinitionData={activityDefinitionData}
+        activityOperation={activityOperation}
+        readOnly={readOnly}
+        onVersionSelection={(selectedVersion)=> console.log(selectedVersion)}
+        versionData={[]}//todo -- this data will be based on version api response 
+        selectedVersion={"1"}//todo - pass current version id being loaded
       />
     </>
   );

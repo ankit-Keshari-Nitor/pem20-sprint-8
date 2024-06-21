@@ -4,10 +4,12 @@ import { ACTIVITY_DEFINITION_DATA } from '../constants';
 const activityStore = (set, get) => ({
   activities: {
     definition: {},
-    schema: {}
+    schema: {},
+    version: [],
+    operation: ''
   },
   // Activity Flow State
-  editDefinitionProps: (activity) => {
+  editDefinitionProps: (activity, operation) => {
     set((state) => {
       const copyNodes = ACTIVITY_DEFINITION_DATA;
       Object.keys(copyNodes).map((key) => {
@@ -16,20 +18,22 @@ const activityStore = (set, get) => ({
         }
         return copyNodes;
       });
-      return { activities: { definition: copyNodes, schema: state.activities.schema } };
+      return { activities: { definition: copyNodes, schema: state.activities.schema, version: [], operation: operation } };
     });
   },
-  editSchemaProps: (task) => {
+  editSchemaProps: (task,operation) => {
     set((state) => {
-      console.log('updating>>>', { activities: { definition: state.activities.definition, schema: { task } } });
-      return { activities: { definition: state.activities.definition, schema: { ...task } } };
+      console.log('updating>>>', { activities: { definition: state.activities.definition, schema: { ...task }, version: [], operation: operation } });
+      return { activities: { definition: state.activities.definition, schema: { ...task }, version: [], operation: operation } };
     });
   },
   reset: () => {
     set({
       activities: {
         definition: {},
-        schema: []
+        schema: {},
+        version: [],
+        operation: ''
       }
     });
   }

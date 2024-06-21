@@ -10,11 +10,16 @@ body,
 }
 
 .form-field {
-  padding: 0.5rem !important;
-  margin: 0.5rem !important
+  margin: 1rem !important;
 }
 
-/* .cds--modal-content,
+.col-margin {
+  margin: 0.5rem;
+  display: flex;
+}
+
+/*
+.cds--modal-content,
 .cds--modal-scroll-content {
   overflow-x: hidden !important;
 }
@@ -30,5 +35,11 @@ body,
   .cds--modal-container {
       inline-size: 42% !important;
   }
-} */
+}*/
+
+.cds--modal-scroll-content {
+  mask-image: linear-gradient(to bottom, var(--cds-layer) calc(100% - 0px), transparent calc(100% - 0px), transparent 100%),
+    linear-gradient(to left, var(--cds-layer) 0, 2px, transparent 2px), linear-gradient(to right, var(--cds-layer) 0, 2px, transparent 2px),
+    linear-gradient(to top, var(--cds-layer) 0, 2px, transparent 2px);
+}
 

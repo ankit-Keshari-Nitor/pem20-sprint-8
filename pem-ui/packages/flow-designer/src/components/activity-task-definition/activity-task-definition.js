@@ -1,26 +1,21 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
-import { FORM_TEMPLATE, COMPONENT_MAPPER } from '../../../constants';
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
+import { COMPONENT_MAPPER, FORM_TEMPLATE } from '../../constants';
 
 export const SCHEMA = {
   fields: [
     {
       component: componentTypes.TEXT_FIELD,
       name: 'name',
+      'data-testid': 'activity-name',
       labelText: 'Name (required)',
-      helperText: 'Name should not contain &,<,>,",\',.,{,}, characters.',
       isRequired: true,
       validate: [
         {
           type: validatorTypes.REQUIRED,
           message: 'Name is required'
-        },
-        {
-          type: validatorTypes.PATTERN,
-          pattern: /^[^&<>"'.{}]+$/i,
-          message: 'Name should not contain &,<,>,",\',.,{,}, characters.'
         },
         {
           type: validatorTypes.MAX_LENGTH,
@@ -33,7 +28,9 @@ export const SCHEMA = {
       component: componentTypes.TEXTAREA,
       name: 'description',
       labelText: 'Description',
+      enableCounter: true,
       isRequired: true,
+      maxCount: 100,
       validate: [
         {
           type: validatorTypes.MAX_LENGTH,
@@ -41,36 +38,40 @@ export const SCHEMA = {
           message: 'Description must be no longer then 100 characters'
         }
       ]
+    },
+    {
+      component: componentTypes.TEXTAREA,
+      name: 'contextData',
+      labelText: 'Context Data (Optional)'
+    },
+    {
+      component: componentTypes.CHECKBOX,
+      name: 'encrypted',
+      labelText: 'Encrypt'
     }
   ]
 };
 
-const ApiDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefinitionForm }) => {
-  let initialValues = {};
-  initialValues.name = selectedNode.id;
+const ActivityTaskDefinition = ({ id, editDefinitionProp, activityOperation, activityDefinitionData, readOnly }) => {
+  SCHEMA.fields = SCHEMA.fields.map((item) => ({ ...item, isReadOnly: readOnly }));
+  const onSubmitDefinitionForm = (values) => {
+    editDefinitionProp(values, activityOperation);
+  };
 
-  return Object.keys(selectedNode?.data?.editableProps).length > 0 ? (
+  const onCancelDefinitionForm = () => {
+    //setOpenCancelDialog(true);
+  };
+  return (
     <FormRenderer
       id={id}
-      initialValues={selectedNode?.data?.editableProps}
+      initialValues={activityDefinitionData}
       FormTemplate={FORM_TEMPLATE}
       componentMapper={COMPONENT_MAPPER}
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
-      onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
-    />
-  ) : (
-    <FormRenderer
-      id={id}
-      initialValues={initialValues}
-      FormTemplate={FORM_TEMPLATE}
-      componentMapper={COMPONENT_MAPPER}
-      schema={SCHEMA}
-      onSubmit={onSubmitDefinitionForm}
-      onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
+      onCancel={() => onCancelDefinitionForm()}
     />
   );
 };
-export default ApiDefineForm;
+
+export default ActivityTaskDefinition;

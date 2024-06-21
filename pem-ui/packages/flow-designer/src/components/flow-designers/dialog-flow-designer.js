@@ -8,7 +8,7 @@ import './style.scss';
 
 import BlocksTray from '../blocks-tray';
 import { CATEGORY_TYPES } from '../../constants';
-import BlockPropertiesTray from '../block-properties-tray/block-properties-tray';
+import BlockPropertiesTray from '../block-properties-tray';
 
 const DialogFlowDesigner = ({
   connectionLineStyle,
@@ -29,7 +29,8 @@ const DialogFlowDesigner = ({
   openDialogPropertiesBlock,
   selectedTaskNode,
   selectedDialogNode,
-  setOpenDialogPropertiesBlock
+  setOpenDialogPropertiesBlock,
+  readOnly
 }) => {
   return (
     <div className="dnd-flow">
@@ -72,7 +73,7 @@ const DialogFlowDesigner = ({
             <Panel defaultSize={40} minSize={20} maxSize={70}>
               <div className="dnd-flow">
                 <div className="task-activity-container">
-                  <BlockPropertiesTray selectedNode={selectedDialogNode} setOpenPropertiesBlock={setOpenDialogPropertiesBlock} selectedTaskNode={selectedTaskNode} />
+                  <BlockPropertiesTray selectedNode={selectedDialogNode} setOpenPropertiesBlock={setOpenDialogPropertiesBlock} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />
                 </div>
               </div>
             </Panel>

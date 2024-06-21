@@ -10,16 +10,16 @@ import {
   FormBlockIcon,
   ApiBlockIcon,
   XsltBlockIcon
-} from './icons';
+} from '../icons';
 import { MarkerType } from 'reactflow';
-import { StartNode, EndNode, GatewayNode, TaskNode } from './components/nodes';
+import { StartNode, EndNode, GatewayNode, TaskNode } from './../components/nodes';
 import { componentTypes, useFormApi, FormSpy } from '@data-driven-forms/react-form-renderer';
 import textField from '@data-driven-forms/carbon-component-mapper/text-field';
 import textarea from '@data-driven-forms/carbon-component-mapper/textarea';
 import select from '@data-driven-forms/carbon-component-mapper/select';
 import checkbox from '@data-driven-forms/carbon-component-mapper/checkbox';
 import { Button, Column, Grid } from '@carbon/react';
-import CrossEdge from './components/edges/cross-edge';
+import CrossEdge from './../components/edges/cross-edge';
 
 export const CATEGORY_TYPES = {
   TASK: 'task',
@@ -47,6 +47,7 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Partner Task',
     editableProps: {},
+    exitValidationData: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -60,6 +61,7 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Approval Task',
     editableProps: {},
+    exitValidationData: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -73,6 +75,7 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Attribute Task',
     editableProps: {},
+    exitValidationData: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -86,6 +89,7 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Sponsor Task',
     editableProps: {},
+    exitValidationData: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -99,6 +103,7 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Custom Task',
     editableProps: {},
+    exitValidationData: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -112,6 +117,7 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'System Task',
     editableProps: {},
+    exitValidationData: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -127,6 +133,7 @@ export const NODE_TYPES = [
     editableProps: {
       name: 'Gateway'
     },
+    exitValidationData: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -140,6 +147,7 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Dialog Task',
     editableProps: {},
+    exitValidationData: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -153,6 +161,7 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'API Task',
     editableProps: {},
+    exitValidationData: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -166,6 +175,7 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'XSLT Task',
     editableProps: {},
+    exitValidationData: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -181,6 +191,7 @@ export const NODE_TYPES = [
     editableProps: {
       name: 'Gateway'
     },
+    exitValidationData: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -273,6 +284,7 @@ export const COMPONENT_MAPPER = {
 
 export const FORM_TEMPLATE = ({ formFields, schema }) => {
   const { handleSubmit, onCancel } = useFormApi();
+  const readOnly = schema?.fields[0]?.isReadOnly;
   return (
     <form onSubmit={handleSubmit}>
       {formFields.map((formField, idx) => (
@@ -285,12 +297,12 @@ export const FORM_TEMPLATE = ({ formFields, schema }) => {
           <div>
             <Grid>
               <Column lg={8}>
-                <Button data-testid="cancel" name="cancel" kind="secondary" type="button" className="cancel-button" onClick={onCancel}>
+                <Button data-testid="cancel" name="cancel" kind="secondary" type="button" className="cancel-button" disabled={readOnly} onClick={onCancel}>
                   Cancel
                 </Button>
               </Column>
               <Column lg={8}>
-                <Button data-testid="save" color="primary" variant="contained" type="submit" style={{ width: '100%' }}>
+                <Button data-testid="save" color="primary" variant="contained" type="submit" disabled={readOnly} style={{ width: '100%' }}>
                   Save
                 </Button>
               </Column>
@@ -303,17 +315,100 @@ export const FORM_TEMPLATE = ({ formFields, schema }) => {
 };
 
 // Query Builder Constants
-export const QUERY_FIELDS = [
-  { name: 'string', label: 'String' },
-  { name: 'numeric', label: 'Numeric' },
-  { name: 'boolean', label: 'Boolean' },
-  { name: 'date', label: 'Date' }
+export const DEFAULT_OPERATORS = [
+  { name: '=', label: 'Equals (=)' },
+  { name: '!=', label: 'Not Equals (!=)' },
+  { name: '>', label: 'Greater than (>)' },
+  { name: '>=', label: 'Greater than or equal (>=)' },
+  { name: '<', label: 'Less than (<)' },
+  { name: '<=', label: 'Less than or equal (<=)' },
+  { name: 'contains', label: '[EAP?] contains' },
+  { name: 'beginsWith', label: '[EAP?] begins with' },
+  { name: 'endsWith', label: '[EAP?] ends with' },
+  { name: 'doesNotContain', label: '[EAP?] does not contain' },
+  { name: 'doesNotBeginWith', label: '[EAP?] does not begin with' },
+  { name: 'doesNotEndWith', label: '[EAP?] does not end with' },
+  { name: 'null', label: '[EAP?] is null' },
+  { name: 'notNull', label: '[EAP?] is not null' },
+  { name: 'in', label: '[EAP?] in' },
+  { name: 'notIn', label: '[EAP?] not in' },
+  { name: 'between', label: '[EAP?] between' },
+  { name: 'notBetween', label: '[EAP?] not between' }
 ];
+
+export const QUERY_FIELDS = [
+  {
+    name: 'string',
+    label: 'String',
+    operators: DEFAULT_OPERATORS.filter((op) =>
+      [
+        'Equals (=)',
+        'Not Equals (!=)',
+        'Greater than (>)',
+        'Greater than or equal (>=)',
+        'Less than (<)',
+        'Less than or equal (<=)',
+        '[EAP?] contains',
+        '[EAP?] begins with',
+        '[EAP?] ends with',
+        '[EAP?] does not contain',
+        '[EAP?] does not begin with',
+        '[EAP?] does not end with',
+        '[EAP?] is null',
+        '[EAP?] is not null',
+        '[EAP?] in',
+        '[EAP?] not in'
+      ].includes(op.label)
+    )
+  },
+  {
+    name: 'numeric',
+    label: 'Numeric',
+    operators: DEFAULT_OPERATORS.filter((op) =>
+      [
+        'Equals (=)',
+        'Not Equals (!=)',
+        'Greater than (>)',
+        'Greater than or equal (>=)',
+        'Less than (<)',
+        'Less than or equal (<=)',
+        '[EAP?] in',
+        '[EAP?] not in',
+        '[EAP?] between',
+        '[EAP?] not between'
+      ].includes(op.label)
+    )
+  },
+  {
+    name: 'boolean',
+    label: 'Boolean',
+    operators: DEFAULT_OPERATORS.filter((op) => ['Equals (=)', 'Not Equals (!=)'].includes(op.label))
+  },
+  {
+    name: 'date',
+    label: 'Date',
+    operators: DEFAULT_OPERATORS.filter((op) =>
+      [
+        'Equals (=)',
+        'Not Equals (!=)',
+        'Greater than (>)',
+        'Greater than or equal (>=)',
+        'Less than (<)',
+        'Less than or equal (<=)',
+        '[EAP?] is null',
+        '[EAP?] is not null',
+        '[EAP?] between',
+        '[EAP?] not between'
+      ].includes(op.label)
+    )
+  }
+];
+
 export const INITIAL_QUERY = {
   combinator: 'and',
   rules: [
-    { field: 'string', operator: ['', 'beginsWith'], value: '' },
-    { field: 'numeric', operator: ['', 'in'], value: '' }
+    //{ field: 'string', operator: ['', 'beginsWith'], value: '' },
+    // { field: 'numeric', operator: ['', 'in'], value: '' }
   ]
 };
 

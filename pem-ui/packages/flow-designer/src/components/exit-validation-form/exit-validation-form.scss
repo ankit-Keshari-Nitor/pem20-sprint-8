@@ -190,8 +190,6 @@ $rqb-branch-style: $rqb-border-style !default;
   }
 }
 
-// #region Drag-and-drop
-
 // Hover styles
 [data-inlinecombinators='disabled'] {
   .dndOver {
@@ -225,8 +223,6 @@ $rqb-branch-style: $rqb-border-style !default;
   }
 }
 
-// #endregion
-
 // #region Branch styles
 .queryBuilder-branches {
   .rule,
@@ -251,8 +247,6 @@ $rqb-branch-style: $rqb-border-style !default;
     }
   }
 }
-
-// #endregion
 
 .ruleGroup-combinators {
   .cds--select-input__wrapper {
@@ -325,7 +319,6 @@ $rqb-branch-style: $rqb-border-style !default;
 }
 
 .cancel-button {
-/*   background-color: #6f6f6f !important; */
   width: 99%;
   display: flex;
   justify-content: center;

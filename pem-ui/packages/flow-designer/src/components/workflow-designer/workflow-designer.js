@@ -31,7 +31,11 @@ const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
 let taskId = 0;
 const getNewTaskId = () => `Task_Name_${taskId++}`;
 
-const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionProp, editSchemaProp, activityDefinitionData }, ref) => {
+const WorkFlowDesigner = forwardRef(({ 
+  showActivityDefineDrawer, setShowActivityDefineDrawer, editDefinitionProp, editSchemaProp, 
+  activityDefinitionData, activityOperation, readOnly,
+  onVersionSelection,versionData,selectedVersion
+}, ref) => {
   //-------------------------------- State Management -------------------------------------
   const storeData = useTaskStore((state) => state.tasks);
   const addTaskNode = useTaskStore((state) => state.addTaskNodes);
@@ -43,7 +47,7 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
   const [isPageDesignerActive, setIsPageDesignerActive] = useState(false);
 
   // --------------------------------- Task Flow States -----------------------------------
-  const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState(showActivityDefineDrawer);
+  const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState();
   const taskFlowWrapper = useRef(null);
   const [taskNodes, setTaskNodes, onTaskNodesChange] = useNodesState(storeData.taskNodes);
   const [taskEdges, setTaskEdges, onTaskEdgesChange] = useEdgesState([]);
@@ -80,10 +84,10 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
       let newParam = params;
       newParam.type = 'crossEdge';
       newParam.markerEnd = endMarks;
-      newParam.data = selectedTaskNode?.id;
-      addDialogEdge(selectedTaskNode, addEdge({ ...newParam, style: { stroke: '#000' } }, dialogEdges.slice(0, storeData.taskEdges.length - 1)));
+      newParam.data = { id: selectedTaskNode?.id };
+      addDialogEdge(selectedTaskNode, addEdge({ ...newParam, style: { stroke: '#000' } }, dialogEdges));
     },
-    [addDialogEdge, dialogEdges, selectedTaskNode, storeData.taskEdges.length]
+    [addDialogEdge, dialogEdges, selectedTaskNode]
   );
 
   const onDialogNodeDragOver = useCallback((event) => {
@@ -91,9 +95,9 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
-  useEffect(() => {
+/*  useEffect(() => {
     setOpenTaskPropertiesBlock(showActivityDefineDrawer);
-  }, [showActivityDefineDrawer]);
+  }, [showActivityDefineDrawer]);*/
 
   useEffect(() => {
     if (storeData.taskNodes.length === 0) {
@@ -110,7 +114,7 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
       setDialogNodes(dialogNodeData?.data?.dialogNodes);
       setDialogEdges(dialogNodeData?.data?.dialogEdges);
     }
-    editSchemaProp(storeData);
+    editSchemaProp(storeData, activityOperation);
   }, [setTaskNodes, setTaskEdges, setDialogEdges, storeData, selectedTaskNode, editSchemaProp, setDialogNodes]);
 
   const onDialogNodeDrop = useCallback(
@@ -171,7 +175,8 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
       let newParam = params;
       newParam.type = 'crossEdge';
       newParam.markerEnd = endMarks;
-      addTaskEdge(addEdge({ ...newParam, style: { stroke: '#000' } }, storeData.taskEdges.slice(0, storeData.taskEdges.length - 1)));
+      newParam.data = { readOnly: readOnly };
+      !readOnly && addTaskEdge(addEdge({ ...newParam, style: { stroke: '#000' } }, storeData.taskEdges));
     },
     [addTaskEdge, storeData.taskEdges]
   );
@@ -231,6 +236,7 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
       setSelectedTaskNode(node);
       setDialogNodes(node.data.dialogNodes);
       setOpenTaskPropertiesBlock(true);
+      setShowActivityDefineDrawer(false)
     }
   };
 
@@ -265,6 +271,7 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
                 selectedTaskNode={selectedTaskNode}
                 openDialogPropertiesBlock={openDialogPropertiesBlock}
                 setOpenDialogPropertiesBlock={setOpenDialogPropertiesBlock}
+                readOnly={readOnly}
               />
             ) : (
               <TaskFlowDesigner
@@ -288,8 +295,14 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
                 openTaskPropertiesBlock={openTaskPropertiesBlock}
                 setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
                 showActivityDefineDrawer={showActivityDefineDrawer}
+                setShowActivityDefineDrawer={setShowActivityDefineDrawer}
                 editDefinitionProp={editDefinitionProp}
                 activityDefinitionData={activityDefinitionData}
+                activityOperation={activityOperation}
+                readOnly={readOnly}
+                onVersionSelection={onVersionSelection}
+                versionData={versionData}
+                selectedVersion={selectedVersion}
               />
             )}
           </div>

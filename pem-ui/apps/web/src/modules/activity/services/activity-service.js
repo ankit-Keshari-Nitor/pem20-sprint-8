@@ -136,3 +136,44 @@ export const getActivityDetails = async (activityDefnKey) => {
   }
 };
 
+/* ----------------------------- Get the version data of activity -------------------------------------------- */
+
+export const getActivityVersionData = async (activityDefnKey, activityDefnVersionKey) => {
+  try {
+    const url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}/versions/${activityDefnVersionKey}`;
+    const response = await fetch(url, {
+      method: 'GET'
+    });
+
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`);
+      return undefined;
+    }
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+    return [];
+  }
+};
+
+/* ----------------------------- Get the version list of activity -------------------------------------------- */
+
+export const getActivityVersionList = async (activityDefnKey) => {
+  try {
+    const url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}/versions`;
+    const response = await fetch(url, {
+      method: 'GET'
+    });
+
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`);
+      return undefined;
+    }
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+    return [];
+  }
+};

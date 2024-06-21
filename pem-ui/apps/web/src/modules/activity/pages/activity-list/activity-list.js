@@ -4,7 +4,7 @@ import Shell from '@b2bi/shell';
 import '@b2bi/styles/pages/list-page.scss';
 import * as ActivityService from '../../services/activity-service.js';
 import * as RolloutService from '../../services/rollout-service';
-import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
+import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA, OPERATIONS } from '../../constants';
 import {
   OverflowMenu,
   OverflowMenuItem,
@@ -207,9 +207,9 @@ export default function ActivityList() {
     setIsModalOpen(true);
   };
 
-  const handleEdit = (id) => {
+  const handleClick = (id, operation) => {
     const editRow = rows.filter((row) => row.id === id)[0];
-    editDefinition(editRow);
+    editDefinition(editRow, operation);
   };
 
   // Handler for actual delete API call
@@ -257,8 +257,8 @@ export default function ActivityList() {
   const getEllipsis = (id) => {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
-        <OverflowMenuItem itemText="View" />
-        <OverflowMenuItem itemText="Edit" onClick={() => handleEdit(id)} href={ROUTES.ACTIVITY_EDIT + id} />
+        <OverflowMenuItem itemText="View" onClick={() => handleClick(id, OPERATIONS.VIEW)} href={ROUTES.ACTIVITY_EDIT + id}/>
+        <OverflowMenuItem itemText="Edit" onClick={() => handleClick(id, OPERATIONS.EDIT)} href={ROUTES.ACTIVITY_EDIT + id} />
         <OverflowMenuItem itemText="Export" />
         <OverflowMenuItem itemText="Create Version" />
         <OverflowMenuItem itemText="Delete" onClick={() => handleDelete(id)} />

@@ -3,7 +3,7 @@ export const NEW_ACTIVITY_URL = '#/activities/new';
 export const ROUTES = {
   NEW_ACTIVITY: '#/activities/new',
   ACTIVITY_LIST: '#/activities',
-  ACTIVITY_EDIT: '#/activities/',
+  ACTIVITY_EDIT: '#/activities/'
 };
 
 
@@ -237,4 +237,11 @@ export const ACTIVITY_DEFINITION_DATA = {
   description: '',
   contextData: '',
   encrypt: ''
+};
+
+export const OPERATIONS = {
+  VIEW: 'view',
+  EDIT: 'edit',
+  EXPORT: 'export',
+  DELETE: 'delete'
 };

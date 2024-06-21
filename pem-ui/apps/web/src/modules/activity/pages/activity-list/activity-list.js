@@ -26,10 +26,11 @@ import { NewTab, Add } from '@carbon/icons-react';
 import ActivityDropdown from '../../components/actions-dropdown';
 import WrapperModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
-import RolloutWizard from '../../components/rollout-wizard';
 import TestWizard from '../../components/test-wizard/test-wizard.js';
 import useActivityStore from '../../store';
 import PageDesigner from '@b2bi/page-designer';
+import RolloutTest from '../../components/rollout-wizard/rollout-gap-details.js';
+import RolloutDetails from '../../components/rollout-wizard/rollout-details.js';
 
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
@@ -49,10 +50,6 @@ export default function ActivityList() {
   const [notificationProps, setNotificationProps] = useState(null);
   const [tempSelectedItem, setTempSelectedItem] = useState({}); // Temporarily store selected item
   const [activityDefnKey, setActivityDefnKey] = useState('');
-
-  // Rollout operation states
-  const [openRolloutModal, setOpenRolloutModal] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
   const [activityDetails, setActivityDetails] = useState(null);
 
   // Test operation states
@@ -294,58 +291,6 @@ export default function ActivityList() {
     }
   };
 
-  // Function to handle the Rollout operation
-  const handleRolloutOperation = async (id) => {
-    const activityDetailsResponse = await getActivityDetails(id);
-    if (activityDetailsResponse) {
-      setActivityDetails(activityDetailsResponse);
-      setCurrentStep(0);
-      setOpenRolloutModal(true);
-    }
-  };
-
-  // Function to handle the Progress Indicator Click
-  const handelStepChange = () => {
-    if (currentStep === 0) {
-      setCurrentStep(1);
-    } else {
-      setCurrentStep(0);
-    }
-  };
-
-  // Function to handle the Cancel/Previous Button Click
-  const handelCloseClick = () => {
-    if (currentStep === 0) {
-      setOpenRolloutModal(false);
-    } else {
-      setCurrentStep(0);
-    }
-  };
-
-  // Function to handle the Next/rollout Button Click
-  const handelSubmitClick = () => {
-    if (currentStep === 0) {
-      setCurrentStep(1);
-    } else {
-      // TODO -> Rollout API will call here
-    }
-  };
-
-  // Handler for actual delete API call
-  const getActivityDetails = async (id) => {
-    try {
-      const responseMsg = await ActivityService.getActivityDetails(id);
-      if (responseMsg) {
-        return responseMsg;
-      } else {
-        return null;
-      }
-    } catch (error) {
-      console.error('Failed to get activity details:', error);
-      return null;
-    }
-  };
-
   // -------------------------------------Test operation Start-------------------------------------------------
   // Function to handle the Test operation
   const handleTestOperation = async (id) => {
@@ -391,8 +336,99 @@ export default function ActivityList() {
   };
 
   // -------------------------------------Test operation End-------------------------------------------------
+
+  // -------------------------------------Rollout operation Start-------------------------------------------------
+
+  // Rollout operation states
+  const [openRolloutModal, setOpenRolloutModal] = useState(false);
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [rolloutGapData, setRolloutGapData] = useState({ selectedGroupsData: [], selectedAttributesData: [], selectedPartnersData: [] });
+
+  // Function to handle the Rollout operation
+  const handleRolloutOperation = async (id) => {
+    const activityDetailsResponse = await getActivityDetails(id);
+    if (activityDetailsResponse) {
+      setActivityDetails(activityDetailsResponse);
+      setOpenRolloutModal(true);
+    }
+  };
+
+  // Handler for actual delete API call
+  const getActivityDetails = async (id) => {
+    try {
+      const responseMsg = await ActivityService.getActivityDetails(id);
+      if (responseMsg) {
+        return responseMsg;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error('Failed to get activity details:', error);
+      return null;
+    }
+  };
+
+  // Function to handle the Next/rollout Button Click
+  const handleBackToDetails = () => {
+    setOpenAddModal(false);
+    setOpenRolloutModal(true);
+  };
+
+  const handleAddGroups = (selectedGroupsData) => {
+    setRolloutGapData((prev) => ({ ...prev, selectedGroupsData: [...selectedGroupsData] }));
+  };
+
+  const handleAddAttributes = (selectedAttributesData) => {
+    setRolloutGapData((prev) => ({ ...prev, selectedAttributesData: [...selectedAttributesData] }));
+  };
+
+  const handleAddPartners = (selectedPartnersData) => {
+    setRolloutGapData((prev) => ({ ...prev, selectedPartnersData: [...selectedPartnersData] }));
+  };
+
+  // Function to handle the Next/rollout Button Click
+  const handleSubmitClick = (data) => {
+    console.log('data', data);
+    // TODO -> Rollout API will call here
+  };
+
+  // -------------------------------------Rollout operation End-------------------------------------------------
+
   return (
     <>
+      {/* Modal for Rollout operation */}
+      {openRolloutModal && (
+        <WrapperModal
+          isOpen={openRolloutModal}
+          modalHeading={activityDetails?.name}
+          secondaryButtonText={'Cancel'}
+          primaryButtonText={'Rollout'}
+          onPrimaryButtonClick={handleSubmitClick}
+          onSecondaryButtonClick={() => setOpenRolloutModal(false)}
+          onRequestClose={() => setOpenRolloutModal(false)}
+        >
+          <RolloutDetails
+            handleAddClick={() => {
+              setOpenAddModal(true);
+              setOpenRolloutModal(false);
+            }}
+          />
+        </WrapperModal>
+      )}
+      {/* Modal for Add Partners and Groups, Attributes */}
+      {openAddModal && (
+        <WrapperModal
+          isOpen={openAddModal}
+          modalHeading={activityDetails?.name}
+          secondaryButtonText={'Back to Details'}
+          primaryButtonText={'Save'}
+          onPrimaryButtonClick={handleSubmitClick}
+          onSecondaryButtonClick={handleBackToDetails}
+          onRequestClose={() => setOpenAddModal(false)}
+        >
+          <RolloutTest handleAddGroups={handleAddGroups} handleAddAttributes={handleAddAttributes} handleAddPartners={handleAddPartners} rolloutGapData={rolloutGapData} />
+        </WrapperModal>
+      )}
       <Shell.Page type="LIST" className="sfg--page--partner-list">
         <Shell.PageHeader title={pageUtil.t('mod-activity-definition:list.title')} description={pageUtil.t('mod-activity-definition:list.pageDescription')}></Shell.PageHeader>
         <Section className="page-notification-container">
@@ -493,21 +529,6 @@ export default function ActivityList() {
         >
           {message}
         </WrapperModal>
-        {/* Modal for Rollout operation */}
-        {openRolloutModal && (
-          <WrapperModal
-            isOpen={openRolloutModal}
-            setIsOpen={setOpenRolloutModal}
-            modalHeading={'Activity Rollout - ' + activityDetails?.name}
-            secondaryButtonText={currentStep === 0 ? 'Cancel' : 'Previous'}
-            primaryButtonText={currentStep === 0 ? 'Next' : 'Rollout'}
-            onPrimaryButtonClick={handelSubmitClick}
-            onSecondaryButtonClick={handelCloseClick}
-            onRequestClose={() => setOpenRolloutModal(false)}
-          >
-            <RolloutWizard currentStep={currentStep} handelStepChange={handelStepChange} />
-          </WrapperModal>
-        )}
         {/* Modal for Test operation */}
         {openTestModal && (
           <WrapperModal

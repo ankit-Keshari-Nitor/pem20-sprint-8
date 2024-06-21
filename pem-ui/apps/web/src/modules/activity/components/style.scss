@@ -3,3 +3,73 @@
     linear-gradient(to left, var(--cds-layer) 0, 2px, transparent 2px), linear-gradient(to right, var(--cds-layer) 0, 2px, transparent 2px),
     linear-gradient(to top, var(--cds-layer) 0, 2px, transparent 2px);
 }
+
+.cds--tabs .cds--tab--list {
+  width: 100%;
+}
+
+.cds--modal-header__heading {
+  font-family: IBM Plex Sans;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0.1599999964237213px;
+  text-align: left;
+}
+
+.define-grid {
+  --cds-grid-gutter-start: none;
+  padding-inline: unset;
+}
+
+.col-margin {
+  margin: 0.5rem;
+  display: flex;
+}
+
+.partners_rollout-container {
+  margin: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.right-arrow-container {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+}
+
+.select-all-checkbox {
+  display: flex;
+  align-items: flex-end;
+  margin: 0.5rem;
+  display: flex;
+}
+
+.rollout-list-text {
+  font-family: IBM Plex Sans;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0.1599999964237213px;
+  text-align: left;
+}
+
+.no-data-display-text {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: IBM Plex Sans;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0.1599999964237213px;
+}
+
+.add-button {
+  margin-left: 1rem;
+  position: relative;
+  top: -16px;
+}

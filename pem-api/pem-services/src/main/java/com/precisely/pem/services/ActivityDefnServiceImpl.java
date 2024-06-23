@@ -48,6 +48,8 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
     private ActivityDefinitionVersionCustomRepo activityDefinitionVersionCustomRepo;
     @Autowired
     private BpmnConvertService bpmnConvertService;
+    private boolean nameflag = false;
+    private boolean descriptionflag = false;
 
     @Override
     public ActivityDefnPaginationRes getAllDefinitionList(String sponsorContext, String name,
@@ -63,28 +65,34 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
         Page<ActivityDefn> defnsPage = null;
 //        List<String> validStatuses = StatusEnumValidator.validateStatuses(status);
         status = getStatusListOfString(status);
+        if(name != null && !name.isEmpty()){
+            nameflag = true;
+        }
+        if(description != null && !description.isEmpty()){
+            descriptionflag = true;
+        }
 
-        if (name != null && !name.isEmpty() && name.contains("con:") && description != null && !description.isEmpty()) {
+        if (nameflag && name.contains("con:") && descriptionflag) {
             //This is for partial match for name and description with multiple status
             String conName = name.replace("con:", "");
             System.out.println("conName=" + conName);
             defnsPage = activityDefnRepo.findBySponsorKeyAndActivityNameContainingAndActivityDescriptionContainingAndApplicationAndVersionsStatusIn(sponsorInfo.getSponsorKey(),
                     conName, description, application, status, pageable);
-        } else if (name != null && !name.isEmpty() && !name.contains("con:") && description != null && !description.isEmpty()) {
+        } else if (nameflag && !name.contains("con:") && descriptionflag) {
             //This is for exact name and partial description match with multiple status
             defnsPage = activityDefnRepo.findBySponsorKeyAndActivityNameAndActivityDescriptionContainingAndApplicationAndVersionsStatusIn(sponsorInfo.getSponsorKey(),
                     name, description, application, status, pageable);
-        } else if (name != null && !name.isEmpty() && name.contains("con:")) {
+        } else if (nameflag && name.contains("con:")) {
             //This is for partial name match with multiple status
             String conName = name.replace("con:", "");
             System.out.println("conName=" + conName);
             defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusInAndActivityNameContaining(sponsorInfo.getSponsorKey(),
                     application, status, conName, pageable);
-        } else if (name != null && !name.isEmpty() && !name.contains("con:")) {
+        } else if (nameflag && !name.contains("con:")) {
             //This is for exact name match with multiple status
             defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusInAndActivityName(sponsorInfo.getSponsorKey(),
                     application, status, name, pageable);
-        } else if (description != null && !description.isEmpty()) {
+        } else if (descriptionflag) {
             //This is for partial description match with multiple status
             defnsPage = activityDefnRepo.findBySponsorKeyAndApplicationAndVersionsStatusInAndActivityDescriptionContaining(sponsorInfo.getSponsorKey(),
                     application, status, description, pageable);
@@ -114,7 +122,7 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
                 }).collect(Collectors.toList());
 
         int totalPage = defnsPage.getTotalPages();
-        long totalElements = defnsPage.getTotalElements();
+        long totalElements = defnsPage.getNumberOfElements();
         int size = defnsPage.getSize();
 
         paginationDto.setNumber(pageNo);

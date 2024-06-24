@@ -5,8 +5,7 @@ import lombok.Data;
 @Data
 public class ActivityDefnVersionListResp {
     public String activityDefnVersionKey;
-    public String description;
+    public long version;
     public Boolean isEncrypted;
-    public Boolean isDefault;
     public String status;
 }

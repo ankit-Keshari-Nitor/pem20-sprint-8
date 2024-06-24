@@ -21,6 +21,7 @@ public class PemNodeFactory {
         nodeCreators.put(ExclusiveGateway.class, PemNodeFactory::createGatewayNode);
         nodeCreators.put(InclusiveGateway.class, PemNodeFactory::createGatewayNode);
         nodeCreators.put(SubProcess.class, PemNodeFactory::createSubProcessNode);
+        nodeCreators.put(CallActivity.class, PemNodeFactory::createActivityNode);
     }
 
     public static Node createNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest) {
@@ -199,6 +200,33 @@ public class PemNodeFactory {
             node.setDescription("");
         }
 
+    }
+
+    private static Node createActivityNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest){
+        Node node = new Node();
+        CallActivity callActivity = (CallActivity) flowElement;
+        node.setId(callActivity.getId());
+        node.setName(callActivity.getName());
+        node.setType(NodeTypes.CALL_ACTIVITY.getName());
+        node.setTargetActivity(((CallActivity) flowElement).getCalledElement());
+        List<Variable> inVariables = ((CallActivity) flowElement).getInParameters().stream()
+                .map(data -> Variable.builder()
+                        .target(data.getTarget())
+                        .source(data.getSource())
+                        .build())
+                .collect(Collectors.toList());
+        node.setInVariables(inVariables);
+
+        List<Variable> outVariables = ((CallActivity) flowElement).getOutParameters().stream()
+                .map(data -> Variable.builder()
+                        .target(data.getTarget())
+                        .source(data.getSource())
+                        .build())
+                .collect(Collectors.toList());
+        node.setOutVariables(outVariables);
+
+
+        return node;
     }
 }
 

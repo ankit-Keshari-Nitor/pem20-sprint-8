@@ -30,7 +30,7 @@ public class ActivityDefnCustomRepoImpl implements ActivityDefnCustomRepo {
         // Main query
         CriteriaQuery<ActivityDefn> query = cb.createQuery(ActivityDefn.class);
         Root<ActivityDefn> activityDefnRoot = query.from(ActivityDefn.class);
-        Join<ActivityDefn, ActivityDefnVersion> versionsJoin = activityDefnRoot.join("defaultVersion");
+        Join<ActivityDefn, ActivityDefnVersion> versionsJoin = activityDefnRoot.join("versions");
         List<Predicate> predicates = buildPredicates(name, description, status, application, sponsorKey, cb, activityDefnRoot, versionsJoin);
         query.select(activityDefnRoot).where(cb.and(predicates.toArray(new Predicate[0])));
         // Pagination
@@ -41,7 +41,7 @@ public class ActivityDefnCustomRepoImpl implements ActivityDefnCustomRepo {
         // Count query
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<ActivityDefn> countRoot = countQuery.from(ActivityDefn.class);
-        Join<ActivityDefn, ActivityDefnVersion> countVersionsJoin = countRoot.join("defaultVersion");
+        Join<ActivityDefn, ActivityDefnVersion> countVersionsJoin = countRoot.join("versions");
         List<Predicate> countPredicates = buildPredicates(name, description, status, application, sponsorKey, cb, countRoot, countVersionsJoin);
         countQuery.select(cb.count(countRoot)).where(cb.and(countPredicates.toArray(new Predicate[0])));
         Long totalRecords = entityManager.createQuery(countQuery).getSingleResult();

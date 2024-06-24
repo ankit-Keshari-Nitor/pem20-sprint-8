@@ -82,7 +82,7 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
                         activityDefnVersionResp = mapper.map(versionList.stream().filter(ActivityDefnVersion::getIsDefault).findAny().get(), ActivityDefnVersionListResp.class);
                     }
                     ActivityDefnListResp activityDefnListResp = mapper.map(p, ActivityDefnListResp.class);
-                    activityDefnListResp.setDefaultVersion(activityDefnVersionResp);
+                    activityDefnListResp.setVersions(activityDefnVersionResp);
                     return activityDefnListResp;
                 }).collect(Collectors.toList());
 

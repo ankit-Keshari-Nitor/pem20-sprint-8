@@ -329,14 +329,16 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
         String contextDataStr = new String(contextDataByte);
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = null;
+        Map<String,Object> fullContextData = new HashMap<>();
         try{
             map = mapper.readValue(contextDataStr, new TypeReference<>() {});
+            fullContextData.put("contextData",map);
         }catch (Exception e){
             log.info(e);
         }
         log.info("Map content: " + map);
         List<ActivityProcDef> activityProcDefList = activityProcDefRepo.findByresourceName(activityName+".bpmn");
-        String processInstanceId = pemActivitiService.startProcessInstanceById(activityProcDefList.get(0).getId(),null,map);
+        String processInstanceId = pemActivitiService.startProcessInstanceById(activityProcDefList.get(0).getId(),null,fullContextData);
         pcptActivityInst.setPcptInstStatus(PcptInstStatus.STARTED.getPcptInstStatus());
         pcptInstRepo.save(pcptActivityInst);
 

@@ -37,7 +37,7 @@ public class ApiNodeHandler extends AbstractNodeHandler{
             properties.put("formproperties", "");
             properties.put("isforcompensation", "false");
             properties.put("looptype", "None");
-            properties.put("servicetaskclass", "org.test.TestClass");
+            properties.put("servicetaskclass", "com.precisely.pem.services.RestTemplateApiService");
             properties.put("usertaskassignment", "");
 
             apiNodeChildShape.put("resourceId", "servicetask");

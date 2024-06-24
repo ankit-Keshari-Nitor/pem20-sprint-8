@@ -1,6 +1,7 @@
 package com.precisely.pem.converter;
 
 import com.precisely.pem.dtos.*;
+import lombok.extern.log4j.Log4j2;
 import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.*;
 
@@ -8,6 +9,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
+@Log4j2
 public class PemNodeFactory {
     private static final Map<Class<? extends FlowElement>, BiFunction<FlowElement,BpmnConverterRequest, Node>> nodeCreators = new HashMap<>();
 
@@ -119,10 +121,18 @@ public class PemNodeFactory {
         node.setId(gateway.getId());
         node.setName(gateway.getName());
         node.setDescription(gateway.getDocumentation());
-        String gatewayType = gateway.getExtensionElements().get("activiti:field").get(0).getChildElements().get("activiti:string").get(0).getElementText();
-        node.setGatewayType(gatewayType);
+        node.setGatewayType(getGatewayType(gateway));
         node.setType(NodeTypes.EXCLUSIVE_GATEWAY.getName());
         return node;
+    }
+
+    private static String getGatewayType(Gateway gateway) {
+        try {
+            return gateway.getExtensionElements().get("field").get(0).getChildElements().get("string").get(0).getElementText();
+        }catch (Exception exception){
+            log.error("Gateway Type read failed {}", gateway.getId());
+        }
+        return null;
     }
 
     private static Node createSubProcessNode(FlowElement subFlowElement,BpmnConverterRequest bpmnConverterRequest){

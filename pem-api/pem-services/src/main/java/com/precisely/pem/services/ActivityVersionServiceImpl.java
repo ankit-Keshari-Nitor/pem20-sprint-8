@@ -17,6 +17,7 @@ import com.precisely.pem.service.PEMActivitiService;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -263,6 +264,25 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         String activityDefnKeyVersion = version.getActivityDefnKeyVersion();
         deployDefaultADVersion(activityDefnKeyVersion);
         return new MarkAsFinalActivityDefinitionVersionResp("Success",LocalDateTime.now().toString());
+    }
+
+    @Override
+    public ActivityDataResponse getActivityDataForSpecificVersion(String sponsorContext, String activityDefnKey, String activityDefnVersionKey) throws Exception{
+        Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
+        if(activityDefnVersion.isEmpty())
+            throw new ResourceNotFoundException("activityDefnKeyVersion", "NoDataFound", "Activity Definition Version with key '" + activityDefnVersionKey + "' not found. Kindly check the activityDefnVersionKey.");
+
+        Optional<ActivityDefnData> activityDefnData = activityDefnDataRepo.findById(activityDefnVersion.get().getActivityDefnDataKey());
+        if(activityDefnData.isEmpty())
+            throw new ResourceNotFoundException("activityDefnData", "NoDataFound","Activity Definition Version Data with key '" + activityDefnVersion.get().getActivityDefnDataKey() + "' not found. Kindly check the activityDefnDataKey.");
+
+        InputStreamResource resource = bpmnConvertService.getPemBpmnJsonData(activityDefnData.get().getDefData());
+
+        return ActivityDataResponse
+                .builder()
+                .streamResource(resource)
+                .fileName(activityDefnVersion.get().getActivityDefnDataKey()+".json")
+                .build();
     }
 
     public void deployDefaultADVersion(String activityDefnKeyVersion) throws SQLException {

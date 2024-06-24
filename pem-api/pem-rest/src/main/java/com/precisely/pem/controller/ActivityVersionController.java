@@ -37,7 +37,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Tag(name = "Activity Definition Version", description = "Activity Definition Version Management APIs")
-@RequestMapping("/sponsors/{sponsorContext}/v2/activityDefinitions/{activityDefnKey}/versions")
+@RequestMapping("/sponsors/{sponsorContext}/v2/activityDefinitions/{activityDefnKey}/defaultVersion")
 @RestController
 @Log4j2
 public class ActivityVersionController {

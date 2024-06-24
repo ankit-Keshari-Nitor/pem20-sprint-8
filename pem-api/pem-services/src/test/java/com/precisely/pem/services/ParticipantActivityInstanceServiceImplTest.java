@@ -91,7 +91,7 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
                 .getBytes());
         pcptActivityInst.setPcptContextData(blob);
         ActivityInst activityInst = new ActivityInst();
-        activityInst.setActivityDefnKeyVersion("activityDefnKeyVersion");
+        activityInst.setActivityDefnVersionKey("activityDefnVersionKey");
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
         activityDefnVersion.setActivityDefnKey("activityDefnKey");
         ActivityDefn activityDefn = new ActivityDefn();
@@ -101,9 +101,9 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
 
         when(pcptInstRepo.findByPcptActivityInstKey(anyString())).thenReturn(pcptActivityInst);
         when(activityInstRepo.findByActivityInstKey(anyString())).thenReturn(activityInst);
-        when(activityDefnVersionRepo.findByActivityDefnKeyVersion(anyString())).thenReturn(activityDefnVersion);
+        when(activityDefnVersionRepo.findByActivityDefnVersionKey(anyString())).thenReturn(activityDefnVersion);
         when(activityDefnRepo.findByActivityDefnKey(anyString())).thenReturn(activityDefn);
-        when(activityProcDefRepo.findByresourceName(anyString())).thenReturn(List.of(activityProcDef));
+        when(activityProcDefRepo.findByResourceName(anyString())).thenReturn(List.of(activityProcDef));
         when(objectMapper.readValue(anyString(), (Class<Object>) any())).thenReturn(Collections.emptyMap());
 
         when(pemActivitiService.startProcessInstanceById(anyString(), anyString(), anyMap())).thenReturn("processInstanceId");
@@ -115,9 +115,9 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
 
         verify(pcptInstRepo).findByPcptActivityInstKey(anyString());
         verify(activityInstRepo).findByActivityInstKey(anyString());
-        verify(activityDefnVersionRepo).findByActivityDefnKeyVersion(anyString());
+        verify(activityDefnVersionRepo).findByActivityDefnVersionKey(anyString());
         verify(activityDefnRepo).findByActivityDefnKey(anyString());
-        verify(activityProcDefRepo).findByresourceName(anyString());
+        verify(activityProcDefRepo).findByResourceName(anyString());
         verify(pcptInstRepo).save(pcptActivityInst);
     }
     @Test

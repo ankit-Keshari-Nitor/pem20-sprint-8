@@ -89,19 +89,22 @@ public class ActivityController {
                                                             @RequestParam(value = "sortDir", defaultValue = "DESC", required = false) SortDirection sortDir,
                                                             @PathVariable(value = "sponsorContext")String sponsorContext) throws Exception {
         ActivityDefnPaginationRes activityDefnPaginationRes = activityDefnService.getAllDefinitionList(sponsorContext,name,description,application.getApp(),status,pageNo, pageSize, sortBy ==null? "modify_ts":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
-        activityDefnPaginationRes.getContent().stream()
-                .map(p ->
-                {
-                    Link link = null;
-                    try {
-                        link = linkTo(methodOn(ActivityController.class).getActivityDefinitionByKey(sponsorContext, p.getActivityDefnKey())).withSelfRel();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    p.setActivityVersionLink(link.getHref());
-                    return p;
-                }).collect(Collectors.toList());
-
+        if (activityDefnPaginationRes.getContent() == null || activityDefnPaginationRes.getContent().isEmpty()) {
+            return new ResponseEntity<>(new ActivityDefnPaginationRes(), HttpStatus.OK);
+        } else {
+            activityDefnPaginationRes.getContent().stream()
+                    .map(p ->
+                    {
+                        Link link = null;
+                        try {
+                            link = linkTo(methodOn(ActivityController.class).getActivityDefinitionByKey(sponsorContext, p.getActivityDefnKey())).withSelfRel();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                        p.setActivityVersionLink(link.getHref());
+                        return p;
+                    }).collect(Collectors.toList());
+        }
         return new ResponseEntity<>(activityDefnPaginationRes, HttpStatus.OK);
     }
 

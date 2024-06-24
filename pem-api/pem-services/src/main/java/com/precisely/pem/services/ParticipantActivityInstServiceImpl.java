@@ -79,7 +79,7 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
         }
         if (activityInstKey.isEmpty() || activityDefnVersionKey.isEmpty()) {
             if(activityInstKey.isEmpty()){
-                activityInstKey = activityInstRepo.findByActivityDefnKeyVersion(activityDefnVersionKey).getActivityInstKey();
+                activityInstKey = activityInstRepo.findByActivityDefnVersionKey(activityDefnVersionKey).getActivityInstKey();
             }
         }
         if(status != null && !status.isEmpty() && currentTask != null && !currentTask.isEmpty() && partnerName != null && !partnerName.isEmpty() && progress != null && !progress.isEmpty()){
@@ -310,8 +310,8 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
 
         String activityInstanceKey = pcptActivityInst.getActivityInstKey();
         ActivityInst activityInst = activityInstRepo.findByActivityInstKey(activityInstanceKey);
-        String activityDefnVersionKey = activityInst.getActivityDefnKeyVersion();
-        ActivityDefnVersion activityDefnVersion =  activityDefnVersionRepo.findByActivityDefnKeyVersion(activityDefnVersionKey);
+        String activityDefnVersionKey = activityInst.getActivityDefnVersionKey();
+        ActivityDefnVersion activityDefnVersion =  activityDefnVersionRepo.findByActivityDefnVersionKey(activityDefnVersionKey);
         String activityDefnKey = activityDefnVersion.getActivityDefnKey();
         ActivityDefn activityDefn = activityDefnRepo.findByActivityDefnKey(activityDefnKey);
         String activityName = activityDefn.getActivityName();
@@ -335,7 +335,7 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
             log.info(e);
         }
         log.info("Map content: " + map);
-        List<ActivityProcDef> activityProcDefList = activityProcDefRepo.findByresourceName(activityName+".bpmn");
+        List<ActivityProcDef> activityProcDefList = activityProcDefRepo.findByResourceName(activityName+".bpmn");
         String processInstanceId = pemActivitiService.startProcessInstanceById(activityProcDefList.get(0).getId(),null,map);
         pcptActivityInst.setPcptInstStatus(PcptInstStatus.STARTED.getPcptInstStatus());
         pcptInstRepo.save(pcptActivityInst);

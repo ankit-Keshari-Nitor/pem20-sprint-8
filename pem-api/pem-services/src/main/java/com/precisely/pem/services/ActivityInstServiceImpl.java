@@ -77,11 +77,11 @@ public class ActivityInstServiceImpl implements ActivityInstService{
 
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
 
-        ActivityDefnVersion activityDefnVersion = activityDefnVersionRepo.findByActivityDefnKeyVersion(activityInstReq.getActivityDefnVersionKey());
-        if(Objects.isNull(activityDefnVersion) || activityDefnVersion.getActivityDefnKeyVersion().isEmpty()){
+        ActivityDefnVersion activityDefnVersion = activityDefnVersionRepo.findByActivityDefnVersionKey(activityInstReq.getActivityDefnVersionKey());
+        if(Objects.isNull(activityDefnVersion) || activityDefnVersion.getActivityDefnVersionKey().isEmpty()){
             throw new ResourceNotFoundException("NoDataFound", "No data was found for activity version key '" + activityInstReq.getActivityDefnVersionKey() + "'.");
         } else if (!activityDefnVersion.getStatus().equalsIgnoreCase(Status.FINAL.getStatus())) {
-            throw new InvalidStatusException("NotInFinalStatus", "The activity version with key '"+ activityDefnVersion.getActivityDefnKeyVersion() +"' is not in the 'FINAL' state.");
+            throw new InvalidStatusException("NotInFinalStatus", "The activity version with key '"+ activityDefnVersion.getActivityDefnVersionKey() +"' is not in the 'FINAL' state.");
         }
 
         JSONObject contextData = new JSONObject(activityInstReq.getContextData());
@@ -95,7 +95,7 @@ public class ActivityInstServiceImpl implements ActivityInstService{
 
         activityInstDto = ActivityInstDto.builder()
                 .activityInstKey(UUID.randomUUID().toString())
-                .activityDefnKeyVersion(activityInstReq.getActivityDefnVersionKey())
+                .activityDefnVersionKey(activityInstReq.getActivityDefnVersionKey())
                 .activityDefnKey(activityDefnVersion.getActivityDefnKey())
                 .name(activityInstReq.getName())
                 .description(activityInstReq.getDescription())
@@ -184,24 +184,24 @@ public class ActivityInstServiceImpl implements ActivityInstService{
         if(name != null && !name.isEmpty() && name.contains("con:") && description != null && !description.isEmpty() && activityDefnVersionKey != null && !activityDefnVersionKey.isEmpty()) {
             String conName = name.replace("con:","");
             System.out.println("conName="+conName);
-            defnsPage = activityInstRepo.findBySponsorKeyAndNameContainingAndDescriptionContainingAndActivityDefnKeyVersionAndStatus(sponsorInfo.getSponsorKey(),
+            defnsPage = activityInstRepo.findBySponsorKeyAndNameContainingAndDescriptionContainingAndActivityDefnVersionKeyAndStatus(sponsorInfo.getSponsorKey(),
                     conName, description, activityDefnVersionKey, status, pageable);
         }else if(name != null && !name.isEmpty() && !name.contains("con:") && description != null && !description.isEmpty() && activityDefnVersionKey != null && !activityDefnVersionKey.isEmpty()) {
-            defnsPage = activityInstRepo.findBySponsorKeyAndNameAndDescriptionContainingAndActivityDefnKeyVersionAndStatus(sponsorInfo.getSponsorKey(),
+            defnsPage = activityInstRepo.findBySponsorKeyAndNameAndDescriptionContainingAndActivityDefnVersionKeyAndStatus(sponsorInfo.getSponsorKey(),
                     name, description, activityDefnVersionKey, status, pageable);
         }else if(name != null && !name.isEmpty() && name.contains("con:") && activityDefnVersionKey != null && !activityDefnVersionKey.isEmpty()) {
             String conName = name.replace("con:","");
             System.out.println("conName="+conName);
-            defnsPage = activityInstRepo.findBySponsorKeyAndNameContainingAndStatusAndAndActivityDefnKeyVersion(sponsorInfo.getSponsorKey(),
+            defnsPage = activityInstRepo.findBySponsorKeyAndNameContainingAndStatusAndAndActivityDefnVersionKey(sponsorInfo.getSponsorKey(),
                     conName, status, activityDefnVersionKey, pageable);
         }else if(name != null && !name.isEmpty() && !name.contains("con:") && activityDefnVersionKey != null && !activityDefnVersionKey.isEmpty()) {
-            defnsPage = activityInstRepo.findBySponsorKeyAndNameAndStatusAndAndActivityDefnKeyVersion(sponsorInfo.getSponsorKey(),
+            defnsPage = activityInstRepo.findBySponsorKeyAndNameAndStatusAndAndActivityDefnVersionKey(sponsorInfo.getSponsorKey(),
                     name, status, activityDefnVersionKey, pageable);
         }else if(description != null && !description.isEmpty() && activityDefnVersionKey != null && !activityDefnVersionKey.isEmpty()) {
-            defnsPage = activityInstRepo.findBySponsorKeyAndDescriptionContainingAndActivityDefnKeyVersionAndStatus(sponsorInfo.getSponsorKey(),
+            defnsPage = activityInstRepo.findBySponsorKeyAndDescriptionContainingAndActivityDefnVersionKeyAndStatus(sponsorInfo.getSponsorKey(),
                     description, activityDefnVersionKey, status, pageable);
         }else if(activityDefnVersionKey != null && !activityDefnVersionKey.isEmpty()){
-            defnsPage = activityInstRepo.findBySponsorKeyAndActivityDefnKeyVersionAndStatus(sponsorInfo.getSponsorKey(),
+            defnsPage = activityInstRepo.findBySponsorKeyAndActivityDefnVersionKeyAndStatus(sponsorInfo.getSponsorKey(),
                     activityDefnVersionKey, status, pageable);
         } else if (description != null && !description.isEmpty()) {
             defnsPage = activityInstRepo.findBySponsorKeyAndDescriptionContainingAndStatus(sponsorInfo.getSponsorKey(), description,

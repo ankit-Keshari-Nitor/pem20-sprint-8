@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class ActivityInstListResp {
     private String activityInstKey;
-    private String activityDefnKeyVersion;
+    private String activityDefnVersionKey;
     private String name;
     private String description;
     //    private String activityTasks;

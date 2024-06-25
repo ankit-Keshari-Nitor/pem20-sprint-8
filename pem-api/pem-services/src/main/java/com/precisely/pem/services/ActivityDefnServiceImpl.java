@@ -253,7 +253,7 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
                     .collect(Collectors.toList());
         }
         if(StatusEnumValidator.validateStatuses(status).size() != status.size()){
-            throw new Exception("This is a validation exception on status");
+            throw new InvalidStatusException("InvalidStatus","The provided status is not valid. Please verify the status.");
         }
         log.info("Status selected : {}", status);
         return status;

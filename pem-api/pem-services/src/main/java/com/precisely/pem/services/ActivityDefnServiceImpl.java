@@ -1,5 +1,6 @@
 package com.precisely.pem.services;
 
+import com.precisely.pem.Validator.StatusEnumValidator;
 import com.precisely.pem.commonUtil.ApplicationConstants;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.BpmnConverterRequest;
@@ -245,11 +246,14 @@ public class ActivityDefnServiceImpl implements ActivityDefnService {
         return sponsorInfo;
     }
 
-    private List<String> getStatusListOfString(List<String> status) {
+    private List<String> getStatusListOfString(List<String> status) throws Exception {
         if (status == null || status.isEmpty()) {
             status = Stream.of(Status.values())
                     .map(Enum::name)
                     .collect(Collectors.toList());
+        }
+        if(StatusEnumValidator.validateStatuses(status).size() != status.size()){
+            throw new Exception("This is a validation exception on status");
         }
         log.info("Status selected : {}", status);
         return status;

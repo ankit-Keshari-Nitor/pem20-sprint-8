@@ -53,7 +53,7 @@ public class ActivityDefnCustomRepoImpl implements ActivityDefnCustomRepo {
         predicates.add(cb.equal(root.get("sponsorKey"), sponsorKey));
         predicates.add(cb.equal(root.get("application"), application));
         predicates.add(cb.isTrue(versionsJoin.get("isDefault")));
-        predicates.add(versionsJoin.get("status").in(getStatusListOfString(status)));
+        predicates.add(versionsJoin.get("status").in(status));
         if (name != null && !name.isEmpty()) {
             if (name.contains("con:")) {
                 String conName = name.replace("con:", "");
@@ -66,10 +66,5 @@ public class ActivityDefnCustomRepoImpl implements ActivityDefnCustomRepo {
             predicates.add(cb.like(root.get("activityDescription"), "%" + description + "%"));
         }
         return predicates;
-    }
-
-    private List<String> getStatusListOfString(List<String> status) {
-        // Implement your status conversion logic here
-        return StatusEnumValidator.validateStatuses(status);
     }
 }

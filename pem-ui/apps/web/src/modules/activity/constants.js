@@ -18,15 +18,19 @@ export const ACTION_COLUMN_KEYS = {
   VERSION: 'version',
   ACTIONS: 'action',
   ELLIPSIS: 'ellipsis',
-  ROLLOUT: 'rollout',
-  SAVE_AS: 'saveas',
-  VIEW: 'view',
-  TEST: 'test',
-  DELETE: 'delete',
-  SHARE_UNSHARE: 'shareunshare',
-  EXPORT: 'export',
-  MARK_AS_FINAL: 'markasfinal',
-  EDIT: 'edit'
+  ROLLOUT: 'Rollout',
+  VIEW: 'View',
+  TEST_ACTIVITY: 'Test Activity',
+  TEST_VERSION: 'Test Version',
+  DELETE: 'Delete',
+  SHARE_UNSHARE: 'Share/Unshared',
+  EXPORT_ACTIVITY: 'Export Activity',
+  EXPORT_VERSION: 'Export Version',
+  MARK_AS_FINAL: 'Mark As Final',
+  EDIT: 'Edit',
+  CLONE_ACTIVITY: 'Clone Activity',
+  CLONE_VERSION: 'Clone Version',
+  MARK_AS_DEFAULT: 'Mark As Default'
 };
 
 export const ACTIVITY_LIST_COLUMNS = [
@@ -36,16 +40,6 @@ export const ACTIVITY_LIST_COLUMNS = [
   { key: ACTION_COLUMN_KEYS.VERSION, header: 'Default Version' },
   { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
   { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' }
-];
-
-export const ACTION_COLUMN_FINAL = [
-  { key: ACTION_COLUMN_KEYS.ROLLOUT, label: 'Rollout' },
-  { key: ACTION_COLUMN_KEYS.TEST, label: 'Test' }
-];
-
-export const ACTION_COLUMN_DRAFT = [
-  { key: ACTION_COLUMN_KEYS.MARK_AS_FINAL, label: 'Mark as final' },
-  { key: ACTION_COLUMN_KEYS.TEST, label: 'Test' }
 ];
 
 export const ROLLOUT_STEPS = [

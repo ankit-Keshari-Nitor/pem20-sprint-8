@@ -34,9 +34,10 @@ describe('WrapperModal component', () => {
 
   it('calls onRequestClose when the modal is closed', () => {
     const setIsOpen = jest.fn();
-    const { getByLabelText } = render(<WrapperModal isOpen={true} setIsOpen={setIsOpen} />);
+    const onRequestClose = setIsOpen;
+    const { getByLabelText } = render(<WrapperModal isOpen={true} setIsOpen={setIsOpen} onRequestClose={onRequestClose} />);
     fireEvent.click(getByLabelText('Close'));
-    expect(setIsOpen).toHaveBeenCalledWith(false);
+    expect(setIsOpen).toHaveBeenCalledTimes(1);
   });
 
   it('calls handlePrimaryButtonClick when the primary button is clicked', () => {

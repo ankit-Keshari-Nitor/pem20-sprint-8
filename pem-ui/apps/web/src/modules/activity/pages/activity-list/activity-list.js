@@ -1,39 +1,25 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './activity-list.scss';
-import Shell from '@b2bi/shell';
-import '@b2bi/styles/pages/list-page.scss';
 import * as ActivityService from '../../services/activity-service.js';
 import * as RolloutService from '../../services/rollout-service';
-import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
+import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
 import {
-  OverflowMenu,
-  OverflowMenuItem,
   ExpandableSearch,
   MultiSelect,
   Button,
-  DataTable,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableHeader,
-  TableBody,
-  TableCell,
-  Pagination,
-  Section
+  TableContainer
 } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
-import ActivityDropdown from '../../components/actions-dropdown';
 import WrapperModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
 import TestWizard from '../../components/test-wizard/test-wizard.js';
 import useActivityStore from '../../store';
 import PageDesigner from '@b2bi/page-designer';
+import DataTableComponent from '../../components/datatable-component.js';
 import RolloutTest from '../../components/rollout-wizard/rollout-gap-details.js';
 import RolloutDetails from '../../components/rollout-wizard/rollout-details.js';
 
 export default function ActivityList() {
-  const pageUtil = Shell.PageUtil();
   // State hooks for managing various states
   const editDefinition = useActivityStore((state) => state.editDefinitionProps);
   const [totalRows, setTotalRows] = useState(0);
@@ -48,7 +34,6 @@ export default function ActivityList() {
   const [message, setMessage] = useState('');
   const [onPrimaryButtonClick, setOnPrimaryButtonClick] = useState(null); // Renamed state
   const [notificationProps, setNotificationProps] = useState(null);
-  const [tempSelectedItem, setTempSelectedItem] = useState({}); // Temporarily store selected item
   const [activityDefnKey, setActivityDefnKey] = useState('');
   const [activityDetails, setActivityDetails] = useState(null);
 
@@ -113,14 +98,11 @@ export default function ActivityList() {
     setPageSize(pageSize);
   };
 
-  // Handler for dropdown action changes
-  const handleDropdownChange = (selectedItem, id) => {
-    setTempSelectedItem((prevSelectedItems) => ({
-      ...prevSelectedItems,
-      [id]: selectedItem
-    })); // Temporarily store the selected item
+  // Handler for action changes
+  const handleActionChange = (selectedItem, id) => {
+
     setActivityDefnKey(id);
-    const itemId = selectedItem ? selectedItem.key : '';
+    const itemId = selectedItem
     switch (itemId) {
       case ACTION_COLUMN_KEYS.MARK_AS_FINAL:
         setActionText('Mark as final');
@@ -139,19 +121,11 @@ export default function ActivityList() {
     }
   };
 
-  // Handler to clear the selected item
-  const clearSelectedItem = (id) => {
-    setTempSelectedItem((prevSelectedItems) => ({
-      ...prevSelectedItems,
-      [id]: null
-    }));
-  };
-
   // Handler for marking activity as final
   const handleMarkAsFinal = async (id) => {
     try {
       let activityVersionKey;
-      const response = await ActivityService.getActivityVersionkey(pageNo - 1, pageSize, sortDir, status, true, id);
+      const response = await ActivityService.getActivityVersionkey(pageNo - 1, pageSize, sortDir, status, '', id);
 
       if (response !== undefined) {
         activityVersionKey = response[0].activityDefnKeyVersion;
@@ -249,47 +223,9 @@ export default function ActivityList() {
 
   // Handler for modal close/cancel
   const handleModalClose = () => {
-    clearSelectedItem(activityDefnKey); // Clear the selected item
     setIsModalOpen(false);
   };
 
-  // Generate the ellipsis menu for each row
-  const getEllipsis = (id) => {
-    return (
-      <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
-        <OverflowMenuItem itemText="View" />
-        <OverflowMenuItem itemText="Edit" onClick={() => handleEdit(id)} href={ROUTES.ACTIVITY_EDIT + id} />
-        <OverflowMenuItem itemText="Export" />
-        <OverflowMenuItem itemText="Create Version" />
-        <OverflowMenuItem itemText="Delete" onClick={() => handleDelete(id)} />
-      </OverflowMenu>
-    );
-  };
-
-  // Generate action items based on the activity status
-  const getActionItem = (status, id) => {
-    if (status === 'DRAFT' || status === '') {
-      return (
-        <ActivityDropdown
-          statusLabel="Draft"
-          selectedItem={tempSelectedItem[id]}
-          id={id}
-          items={ACTION_COLUMN_DRAFT}
-          onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)}
-        />
-      );
-    } else if (status === 'FINAL') {
-      return (
-        <ActivityDropdown
-          statusLabel="Mark as Final"
-          selectedItem={tempSelectedItem[id]}
-          id={id}
-          items={ACTION_COLUMN_FINAL}
-          onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)}
-        />
-      );
-    }
-  };
 
   // -------------------------------------Test operation Start-------------------------------------------------
   // Function to handle the Test operation
@@ -429,124 +365,86 @@ export default function ActivityList() {
           <RolloutTest handleAddGroups={handleAddGroups} handleAddAttributes={handleAddAttributes} handleAddPartners={handleAddPartners} rolloutGapData={rolloutGapData} />
         </WrapperModal>
       )}
-      <Shell.Page type="LIST" className="sfg--page--partner-list">
-        <Shell.PageHeader title={pageUtil.t('mod-activity-definition:list.title')} description={pageUtil.t('mod-activity-definition:list.pageDescription')}></Shell.PageHeader>
-        <Section className="page-notification-container">
-          <Shell.NotificationMessage></Shell.NotificationMessage>
-        </Section>
-        <Section className="page-body">
-          <div className="headers">
-            <div className="header-buttons">
-              {/* Search, New, Import buttons */}
-              <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
-              <Button size="sm" className="new-button" renderIcon={NewTab} href={ROUTES.NEW_ACTIVITY}>
-                New
-              </Button>
-              <Button size="sm" kind="tertiary" className="import-button" renderIcon={Add}>
-                Import
-              </Button>
-              {/* Filter dropdown */}
-              <MultiSelect
-                className="filter-dropdown"
-                id="filter-dropdown"
-                titleText=""
-                label="Filter Option"
-                items={[
-                  { id: 'DRAFT', text: 'DRAFT' },
-                  { id: 'FINAL', text: 'FINAL' },
-                  { id: 'DELETE', text: 'DELETE' }
-                ]}
-                itemToString={(item) => (item ? item.text : '')}
-                onChange={handleFilterChange} // Ensure this is correctly set to your onChange handler
-              />
-            </div>
-          </div>
-          <TableContainer>
-            {/* Data Table */}
-            <DataTable rows={rows} headers={ACTIVITY_LIST_COLUMNS} isSortable>
-              {({ rows, headers, getHeaderProps, getRowProps, getTableProps }) => (
-                <Table {...getTableProps()}>
-                  <TableHead>
-                    <TableRow>
-                      {headers.map((header) => (
-                        <TableHeader
-                          key={header.key}
-                          {...getHeaderProps({ header })}
-                          isSortable={header.key !== 'ellipsis' && header.key !== 'action'}
-                          sortDirection={sortDir}
-                          onClick={() => handleHeaderClick(header.key)}
-                        >
-                          {header.header}
-                        </TableHeader>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.length > 0 ? (
-                      rows.map((row) => (
-                        <TableRow {...getRowProps({ row })} key={row.id}>
-                          {row.cells.map((cell) => (
-                            <TableCell key={cell.id}>
-                              {cell.info.header === 'action' ? getActionItem(status, row.id) : cell.info.header === 'ellipsis' ? getEllipsis(row.id) : cell.value}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={headers.length} className="no-records-message">
-                          No records found
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              )}
-            </DataTable>
-            {/* Pagination controls */}
-            <Pagination
-              backwardText="Previous page"
-              forwardText="Next page"
-              itemsPerPageText="Items per page:"
-              totalItems={totalRows !== undefined ? totalRows : 0}
-              pageSize={pageSize}
-              pageSizes={[5, 10, 20, 50]}
-              page={pageNo}
-              onChange={({ page, pageSize }) => handlePaginationChange(page, pageSize)}
-            />
-          </TableContainer>
-        </Section>
-        {/* Modal for action confirmation */}
+      <div className="headers">
+        <div className="header-button-right">
+          {/* Header Title */}
+          Activity Definition
+        </div>
+        <div className="header-button-left">
+          {/* Search, New, Import buttons */}
+          <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
+          <Button size="sm" className="new-button" renderIcon={NewTab} href={ROUTES.NEW_ACTIVITY}>
+            New
+          </Button>
+          <Button size="sm" kind="tertiary" className="import-button" renderIcon={Add}>
+            Import
+          </Button>
+          {/* Filter dropdown */}
+          <MultiSelect
+            className="filter-dropdown"
+            id="filter-dropdown"
+            titleText=""
+            label="Filter Option"
+            items={[
+              { id: 'DRAFT', text: 'DRAFT' },
+              { id: 'FINAL', text: 'FINAL' },
+              { id: 'DELETE', text: 'DELETE' }
+            ]}
+            itemToString={(item) => (item ? item.text : '')}
+            onChange={handleFilterChange} // Ensure this is correctly set to your onChange handler
+          />
+        </div>
+      </div>
+
+      <TableContainer>
+        <DataTableComponent
+          headers={ACTIVITY_LIST_COLUMNS}
+          rows={rows}
+          status={status}
+          sortDir={sortDir}
+          totalRows={totalRows}
+          pageNo={pageNo}
+          pageSize={pageSize}
+          handlePaginationChange={handlePaginationChange}
+          handleDelete={handleDelete}
+          handleEdit={handleEdit}
+          handleActionChange={handleActionChange}
+          handleHeaderClick={handleHeaderClick}
+        />
+
+      </TableContainer>
+      {/*  </Section> */}
+      {/* Modal for action confirmation */}
+      <WrapperModal
+        isOpen={isModalOpen}
+        setIsOpen={setIsModalOpen}
+        modalHeading="Confirmation"
+        secondaryButtonText="Cancel"
+        primaryButtonText={actionText}
+        onPrimaryButtonClick={onPrimaryButtonClick}
+        onSecondaryButtonClick={handleModalClose}
+        onRequestClose={handleModalClose}
+      >
+        {message}
+      </WrapperModal>
+      {/* Modal for Test operation */}
+      {openTestModal && (
         <WrapperModal
-          isOpen={isModalOpen}
-          setIsOpen={setIsModalOpen}
-          modalHeading="Confirmation"
-          secondaryButtonText="Cancel"
-          primaryButtonText={actionText}
-          onPrimaryButtonClick={onPrimaryButtonClick}
-          onSecondaryButtonClick={handleModalClose}
-          onRequestClose={handleModalClose}
+          isOpen={openTestModal}
+          setIsOpen={setOpenTestModal}
+          modalHeading={'Activity Test - ' + activityDetails?.name}
+          secondaryButtonText={currentTestStep === 0 ? 'Cancel' : 'Previous'}
+          primaryButtonText={currentTestStep < testDialogData.length - 1 ? 'Next' : 'Finish'}
+          onPrimaryButtonClick={handelTestFinishClick}
+          onSecondaryButtonClick={handelTestCloseClick}
+          onRequestClose={() => setOpenTestModal(false)}
         >
-          {message}
+          <TestWizard currentTestData={currentTestData} formRenderSchema={formRenderSchema} />
         </WrapperModal>
-        {/* Modal for Test operation */}
-        {openTestModal && (
-          <WrapperModal
-            isOpen={openTestModal}
-            setIsOpen={setOpenTestModal}
-            modalHeading={'Activity Test - ' + activityDetails?.name}
-            secondaryButtonText={currentTestStep === 0 ? 'Cancel' : 'Previous'}
-            primaryButtonText={currentTestStep < testDialogData.length - 1 ? 'Next' : 'Finish'}
-            onPrimaryButtonClick={handelTestFinishClick}
-            onSecondaryButtonClick={handelTestCloseClick}
-            onRequestClose={() => setOpenTestModal(false)}
-          >
-            <TestWizard currentTestData={currentTestData} formRenderSchema={formRenderSchema} />
-          </WrapperModal>
-        )}
-        {/* Notification toast */}
-        {notificationProps && <WrapperNotification {...notificationProps} />}
-      </Shell.Page>
+      )}
+      {/* Notification toast */}
+      {notificationProps && <WrapperNotification {...notificationProps} />}
+
     </>
   );
 }

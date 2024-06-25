@@ -1,10 +1,10 @@
 rootProject.name = 'pem20'
-//include(':pem-ui')
-//project(':pem-ui').projectDir = file("pem-ui")
+include(':pem-ui')
+project(':pem-ui').projectDir = file("pem-ui")
 include ':pem-api'
 project(':pem-api').projectDir = file("pem-api")
-//include ':pem-liberty'
-//project(':pem-liberty').projectDir = file("pem-liberty")
+include ':pem-liberty'
+project(':pem-liberty').projectDir = file("pem-liberty")
 include(':pem-services')
 project(':pem-services').projectDir = file("pem-api/pem-services")
 include(':pem-entity')

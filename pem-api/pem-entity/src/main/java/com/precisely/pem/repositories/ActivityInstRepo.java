@@ -8,18 +8,18 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ActivityInstRepo extends JpaRepository<ActivityInst,String> {
-    ActivityInst findByActivityDefnKeyVersion(String activityDefnVersionKey);
-    Page<ActivityInst> findBySponsorKeyAndNameContainingAndDescriptionContainingAndActivityDefnKeyVersionAndStatus(String sponsorKey, String conName, String description, String activityDefnVersionKey, String status, Pageable pageable);
+    ActivityInst findByActivityDefnVersionKey(String activityDefnVersionKey);
+    Page<ActivityInst> findBySponsorKeyAndNameContainingAndDescriptionContainingAndActivityDefnVersionKeyAndStatus(String sponsorKey, String conName, String description, String activityDefnVersionKey, String status, Pageable pageable);
 
-    Page<ActivityInst> findBySponsorKeyAndNameAndDescriptionContainingAndActivityDefnKeyVersionAndStatus(String sponsorKey, String name, String description, String activityDefnVersionKey, String status, Pageable pageable);
+    Page<ActivityInst> findBySponsorKeyAndNameAndDescriptionContainingAndActivityDefnVersionKeyAndStatus(String sponsorKey, String name, String description, String activityDefnVersionKey, String status, Pageable pageable);
 
-    Page<ActivityInst> findBySponsorKeyAndNameContainingAndStatusAndAndActivityDefnKeyVersion(String sponsorKey, String conName, String status, String activityDefnVersionKey, Pageable pageable);
+    Page<ActivityInst> findBySponsorKeyAndNameContainingAndStatusAndAndActivityDefnVersionKey(String sponsorKey, String conName, String status, String activityDefnVersionKey, Pageable pageable);
 
-    Page<ActivityInst> findBySponsorKeyAndNameAndStatusAndAndActivityDefnKeyVersion(String sponsorKey, String name, String status, String activityDefnVersionKey, Pageable pageable);
+    Page<ActivityInst> findBySponsorKeyAndNameAndStatusAndAndActivityDefnVersionKey(String sponsorKey, String name, String status, String activityDefnVersionKey, Pageable pageable);
 
-    Page<ActivityInst> findBySponsorKeyAndDescriptionContainingAndActivityDefnKeyVersionAndStatus(String sponsorKey, String description, String activityDefnVersionKey, String status, Pageable pageable);
+    Page<ActivityInst> findBySponsorKeyAndDescriptionContainingAndActivityDefnVersionKeyAndStatus(String sponsorKey, String description, String activityDefnVersionKey, String status, Pageable pageable);
 
-    Page<ActivityInst> findBySponsorKeyAndActivityDefnKeyVersionAndStatus(String sponsorKey, String activityDefnVersionKey, String status, Pageable pageable);
+    Page<ActivityInst> findBySponsorKeyAndActivityDefnVersionKeyAndStatus(String sponsorKey, String activityDefnVersionKey, String status, Pageable pageable);
 
     ActivityInst findByActivityInstKey(String activityInstKey);
 

@@ -1,5 +1,6 @@
 spring:
   jpa:
+    #show-sql: true
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
@@ -45,6 +46,7 @@ pem:
 
 server:
   port: 9080
+  connection-timeout: 60000
 
 logging:
   level:

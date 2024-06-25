@@ -22,8 +22,8 @@ public class ActivityInst extends BaseEntity{
     @Column(name="ACTIVITY_DEFN_KEY")
     private String activityDefnKey;
 
-    @Column(name="ACTIVITY_DEFN_KEY_VERSION")
-    private String activityDefnKeyVersion;
+    @Column(name="ACTIVITY_DEFN_VERSION_KEY")
+    private String activityDefnVersionKey;
 
     @Column(name="ACTIVITY_INST_NAME")
     private String name;

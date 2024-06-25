@@ -14,7 +14,7 @@ import java.sql.Blob;
 public class ActivityInstDto {
     private String activityInstKey;
     private String activityDefnKey;
-    private String activityDefnKeyVersion;
+    private String activityDefnVersionKey;
     private String name;
     private String description;
     private String status;

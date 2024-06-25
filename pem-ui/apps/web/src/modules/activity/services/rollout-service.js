@@ -28,7 +28,6 @@ export const getAttributeList = async (selectedAttributeType) => {
 
 // TODO with actual api url
 export const getPartnerList = async (selectedPartnerType) => {
-  console.log('selectedPartnerType', selectedPartnerType);
   try {
     let response = [];
     if (selectedPartnerType === '') {

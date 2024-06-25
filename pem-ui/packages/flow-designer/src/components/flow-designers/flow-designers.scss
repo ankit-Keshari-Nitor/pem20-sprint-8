@@ -6,22 +6,25 @@
   width: 100%;
 }
 
-.dnd-flow .reactflow-wrapper {
-  display: flex;
-  flex-grow: 1;
-}
-
 .dnd-flow .task-tray-container {
   display: flex;
   align-items: center;
   width: 74px;
+  background-color: #ffffff;
 }
 
-.dnd-flow .task-activity-container {
+.dnd-flow .reactflow-wrapper {
+  display: flex;
+  flex-grow: 1;
+  background-color: #ffffff;
+}
+
+.dnd-flow .task-properties-container {
   width: 100%;
+  height: 100%;
   display: flex;
   position: sticky;
-  background-color: #e2e2e2;
+  background-color: #F1F1F1;
 }
 
 .react-flow__controls {

@@ -132,7 +132,6 @@ const ApprovalDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDef
     schema={SCHEMA}
     onSubmit={onSubmitDefinitionForm}
     onCancel={setOpenCancelDialog}
-    onReset={() => console.log('Resetting')}
   />
   ) : (
     <FormRenderer
@@ -143,7 +142,6 @@ const ApprovalDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDef
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
     />
   );
 };

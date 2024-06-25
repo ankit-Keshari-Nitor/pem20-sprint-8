@@ -72,8 +72,6 @@ const XsltPropertyForm = ({ id, setOpenCancelDialog, onSubmitPropertyForm }) => 
     componentMapper={COMPONENT_MAPPER}
     schema={SCHEMA}
     onSubmit={onSubmitPropertyForm}
-    onCancel={() => console.log('Cancelling')}
-    onReset={() => console.log('Resetting')}
   />
 );
 

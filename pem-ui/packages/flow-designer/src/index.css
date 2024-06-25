@@ -14,7 +14,7 @@ body,
   margin: 0.5rem !important
 }
 
-/* .cds--modal-content,
+.cds--modal-content,
 .cds--modal-scroll-content {
   overflow-x: hidden !important;
 }
@@ -30,5 +30,5 @@ body,
   .cds--modal-container {
       inline-size: 42% !important;
   }
-} */
+}
 

@@ -34,7 +34,7 @@ export default function ActivityDefinition() {
 
   return (
     <>
-      <Grid className="activity-actions">
+      {/* <Grid className="activity-actions">
         <Column>
           <CloneIcon />
         </Column>
@@ -55,7 +55,7 @@ export default function ActivityDefinition() {
             Save Activity
           </Button>
         </Column>
-      </Grid>
+      </Grid> */}
       <Designer.WorkFlowDesigner
         ref={ref}
         showActivityDefineDrawer={showActivityDefineDrawer}

@@ -1,16 +1,18 @@
 .task-tray-aside {
-  background: #eeeeee;
-  padding-top: 12px;
+  background: #EEEEEE;
   border-radius: 0px 9px 9px 0px;
+  padding-top: 16px;
 }
 
 .block-tray {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 72px;
+  height: 50px;
   border-radius: 2px;
-  margin-bottom: 12px;
   cursor: grab;
+  margin-bottom: 16px;
 }
 
 .block-tray.input {
@@ -22,8 +24,8 @@
 }
 
 .block-tray-field {
-  width: 72px;
-  height: 48px;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -35,9 +37,10 @@
   transition: all ease-in-out 0.05s;
   cursor: grab;
   background-color: #eeeeee;
+  padding: 0px;
 }
 
-.block-tray-field-icon {
+.block-tray-field .block-tray-field-icon {
   display: flex;
   justify-content: center;
   align-items: center;

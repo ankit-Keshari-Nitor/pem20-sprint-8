@@ -1,6 +1,6 @@
 import React from 'react';
 import { FileUploader as CarbonFileUploader } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, isDisabled, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, NameLabel, helperText, isRequired, labelText } from '../constant';
 import { FileAttachmentIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.FILE_UPLOADER;
@@ -37,8 +37,8 @@ FileUploader.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <FileAttachmentIcon />,
   editableProps: {
-    Basic: [labelText, isDisabled],
+    Basic: [NameLabel, labelText, helperText],
     Condition: []
   },
-  advanceProps: []
+  advanceProps: [isRequired]
 };

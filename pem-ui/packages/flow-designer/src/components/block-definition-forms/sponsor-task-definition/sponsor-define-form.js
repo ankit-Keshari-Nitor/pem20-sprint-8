@@ -105,7 +105,6 @@ const SponsorDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefi
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
     />
   ) : (
     <FormRenderer
@@ -116,7 +115,6 @@ const SponsorDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefi
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
     />
   );
 };

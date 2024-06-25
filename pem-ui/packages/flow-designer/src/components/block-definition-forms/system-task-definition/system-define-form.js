@@ -60,7 +60,6 @@ const SystemDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefin
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
     />
   ) : (
     <FormRenderer
@@ -71,7 +70,6 @@ const SystemDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefin
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
     />
   );
 };

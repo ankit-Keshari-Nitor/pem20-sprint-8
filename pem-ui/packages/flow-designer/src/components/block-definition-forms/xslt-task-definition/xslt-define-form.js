@@ -60,7 +60,6 @@ const XsltDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefinit
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
     />
   ) : (
     <FormRenderer
@@ -71,7 +70,6 @@ const XsltDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefinit
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
     />
   );
 }

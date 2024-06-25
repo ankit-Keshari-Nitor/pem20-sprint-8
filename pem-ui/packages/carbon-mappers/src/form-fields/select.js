@@ -1,16 +1,16 @@
 import React from 'react';
 import { Select as CarbonSelect, SelectItem } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, options, helperText, isDisabled, labelText, readOnly } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, options, helperText, NameLabel, placeHolder, labelText, readOnly, isRequired, mapping } from '../constant';
 import { SelectIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.SELECT;
 
 const Select = ({ field, id }) => {
-  const { type, labelText, isRequired, options, ...rest } = field;
+  const { type, labelText, label, isRequired, options, ...rest } = field;
 
   return (
     <>
-      <CarbonSelect data-testid={id} id={id} labelText={labelText} {...rest}>
+      <CarbonSelect data-testid={id} id={id} labelText={labelText === undefined ? label : labelText} {...rest}>
         {/*  <SelectItem text="No Option" value="no-option" /> */}
         {options &&
           options.map((element) => {
@@ -30,8 +30,8 @@ Select.config = {
   group: FORM_FIELD_GROUPS.SELECTION,
   icon: <SelectIcon />,
   editableProps: {
-    Basic: [labelText, helperText, isDisabled, readOnly, options],
+    Basic: [NameLabel, labelText, placeHolder, helperText, options,mapping, readOnly],
     Condition: []
   },
-  advanceProps: []
+  advanceProps: [isRequired]
 };

@@ -107,7 +107,6 @@ const PartnerDefineForm = ({ id, onCancelDefinitionForm, onSubmitDefinitionForm,
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={() => onCancelDefinitionForm()}
-      onReset={() => console.log('Resetting')}
     />
   ) : (
     <FormRenderer
@@ -118,7 +117,6 @@ const PartnerDefineForm = ({ id, onCancelDefinitionForm, onSubmitDefinitionForm,
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={() => onCancelDefinitionForm()}
-      onReset={() => console.log('Resetting')}
     />
   );
 };

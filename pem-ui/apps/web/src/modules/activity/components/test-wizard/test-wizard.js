@@ -8,13 +8,13 @@ export default function TestWizard({ currentTestData, formRenderSchema }) {
       <PageDesigner.Row
         key={row.id}
         data={row}
-        handleDrop={() => console.log('test')}
         path={currentPath}
         componentMapper={componentMapper}
-        onFieldSelect={() => console.log('test')}
         renderRow={renderRow}
-        onFieldDelete={() => console.log('test')}
         previewMode={previewMode}
+        handleDrop={() => console.log('test')}
+        onFieldSelect={() => console.log('test')}
+        onFieldDelete={() => console.log('test')}
         onChangeHandle={() => console.log('test')}
       />
     );

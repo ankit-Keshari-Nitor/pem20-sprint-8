@@ -99,7 +99,6 @@ const AttributeDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDe
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
     />
   ) : (
     <FormRenderer
@@ -110,7 +109,6 @@ const AttributeDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDe
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
     />
   );
 };

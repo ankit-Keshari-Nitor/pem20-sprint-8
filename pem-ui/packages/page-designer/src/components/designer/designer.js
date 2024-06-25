@@ -17,12 +17,27 @@ import {
   findChildComponentById,
   indexForChild
 } from '../../utils/helpers';
-import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE, TAB } from '../../constants/constants';
+import {
+  SIDEBAR_ITEM,
+  COMPONENT,
+  COLUMN,
+  INITIAL_DATA,
+  ACCORDION,
+  CUSTOM_COLUMN,
+  CUSTOM_SIZE,
+  SUBTAB,
+  CUSTOM_TITLE,
+  DEFAULTTITLE,
+  TAB,
+  NAME,
+  REGEXVALIDATION
+} from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Grid, Modal, Column } from '@carbon/react';
 import FormPreview from '../preview-mode';
+import { CrossIcon } from '../../icon';
 
-export default function Designer({ componentMapper }) {
+export default function Designer({ componentMapper, onClickPageDesignerBack, activityDefinitionData }) {
   const initialLayout = INITIAL_DATA.layout;
   const initialComponents = INITIAL_DATA.components;
   const [layout, setLayout] = useState(initialLayout);
@@ -31,6 +46,7 @@ export default function Designer({ componentMapper }) {
   const [open, setOpen] = useState(false);
   const [openPreview, setOpenPreview] = useState(false);
   const [deletedFieldPath, setDeletedFieldPath] = useState();
+  const [componentsName, setComponentsName] = useState([]);
 
   const handleDrop = useCallback(
     (dropZone, item) => {
@@ -59,8 +75,9 @@ export default function Designer({ componentMapper }) {
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
-          component: item.component
+          component: { ...item.component, name: 'form-control-' + newComponent.id.substring(0, 2) }
         };
+        setComponentsName((preState) => [...preState, { id: newItem.id, name: newItem.id }]);
         setLayout(handleMoveSidebarComponentIntoParent(layout, splitDropZonePath, newItem));
         return;
       }
@@ -98,17 +115,22 @@ export default function Designer({ componentMapper }) {
         filedTypeConfig = componentMapper[componentDetail.component.type].config;
       }
       let fieldData = findChildComponentById(layout, componentDetail.id);
-
-
       filedTypeConfig?.editableProps?.Basic.map((basicEditPops) => {
         if (fieldData?.component[basicEditPops?.propsName]) {
+          basicEditPops?.propsName === NAME && (basicEditPops.invalid = false);
           return (basicEditPops.value = fieldData.component[basicEditPops?.propsName]);
         } else {
           // Initialize options for checkbox-group and radio-group
-          if (basicEditPops?.propsName === "options") {
-            return (basicEditPops.value = [{
-              label: '', id: '', value: ''
-            }]);
+          if (basicEditPops?.propsName === 'options') {
+            return (basicEditPops.value = [
+              {
+                label: '',
+                id: '',
+                value: ''
+              }
+            ]);
+          } else if (basicEditPops?.propsName === 'labelText') {
+            return (basicEditPops.value = componentDetail.component.label);
           } else {
             return (basicEditPops.value = '');
           }
@@ -127,7 +149,7 @@ export default function Designer({ componentMapper }) {
         if (fieldData?.component[advancePops?.propsName]) {
           return (advancePops.value = fieldData.component[advancePops?.propsName]);
         } else {
-          return (advancePops.value = { value: '', message: '' });
+          return advancePops?.propsName === REGEXVALIDATION ? (advancePops.value = { pattern: 'None', value: '', message: '' }) : (advancePops.value = { value: '', message: '' });
         }
       });
     } else if (componentDetail.type === COLUMN) {
@@ -146,6 +168,7 @@ export default function Designer({ componentMapper }) {
 
   const handleSchemaChanges = (id, key, propsName, newValue, currentPathDetail) => {
     const componentPosition = currentPathDetail.split('-');
+    let uniqueName = true;
     if (key === SUBTAB) {
       const position = indexForChild(layout, componentPosition, 0);
       componentPosition.push(position);
@@ -163,10 +186,34 @@ export default function Designer({ componentMapper }) {
       setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
     } else {
       let objCopy = selectedFiledProps;
+      if (propsName === NAME) {
+        componentsName.map((item, idx) => {
+          if (item.name !== newValue) {
+            if (item.id === selectedFiledProps.id) {
+              setComponentsName((stateItems) => [
+                ...stateItems.slice(0, idx),
+                {
+                  ...stateItems[idx],
+                  name: newValue
+                },
+                ...stateItems.slice(idx + 1)
+              ]);
+            }
+          } else {
+            if (item.id !== selectedFiledProps.id) {
+              uniqueName = false;
+            }
+          }
+        });
+      }
       if (key !== 'advance') {
         objCopy.component.editableProps[key].map((config) => {
           if (config.propsName === propsName) {
             config.value = newValue;
+            config.invalid = false;
+            if (!uniqueName) {
+              config.invalid = true;
+            }
           }
         });
       } else {
@@ -177,7 +224,9 @@ export default function Designer({ componentMapper }) {
         });
       }
       setSelectedFiledProps({ ...objCopy });
-      setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
+      if (uniqueName) {
+        setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
+      }
     }
   };
 
@@ -215,24 +264,32 @@ export default function Designer({ componentMapper }) {
       />
     );
   };
+
   return (
     <>
       <div className="page-designer">
         <div className="header-container">
-          <Grid>
-            <Column sm={4}>
-              <span className="header-title">Form builder name 01</span>
+          <Grid className="inner-header">
+            <Column sm={4} className="title-container">
+              <span className="header-title">{activityDefinitionData && Object.keys(activityDefinitionData).length > 0 ? activityDefinitionData.name : 'New Form'}</span>
             </Column>
-            <Column sm={{ span: 2, offset: 12 }} style={{ marginLeft: '0.5rem' }}>
-              <Button kind="secondary" size="sm" onClick={() => setOpen(true)}>
-                View Schema
-              </Button>
-            </Column>
-            <Column sm={2} style={{ marginLeft: '1.5rem' }}>
-              <Button kind="secondary" size="sm" onClick={() => setOpenPreview(true)}>
-                Preview
-              </Button>
-            </Column>
+            <div className="header-button-wrapper">
+              {/* <Column>
+                <Button kind="secondary" size="sm" onClick={() => setOpen(true)}>
+                  View Schema
+                </Button>
+              </Column>
+              <Column>
+                <Button kind="secondary" size="sm" onClick={() => setOpenPreview(true)}>
+                  Preview
+                </Button>
+              </Column> */}
+              <Column>
+                <span onClick={onClickPageDesignerBack} className="icon">
+                  <CrossIcon />
+                </span>
+              </Column>
+            </div>
           </Grid>
         </div>
         <div className="layout-container">
@@ -258,14 +315,14 @@ export default function Designer({ componentMapper }) {
             </div>
           )}
         </div>
-        <Grid>
-          <Column sm={{ span: 2, offset: 12 }}>
-            <Button kind="secondary" className="cancel-button" size="sm">
+        <Grid className="property-panel-button ">
+          <Column className="column-button-wrapper">
+            <Button kind="secondary" className="cancelButton" size="sm">
               Cancel
             </Button>
           </Column>
-          <Column sm={2}>
-            <Button kind="secondary" className="save-button" size="sm">
+          <Column className="column-button-wrapper">
+            <Button kind="primary" className="saveButton" size="sm">
               Save
             </Button>
           </Column>

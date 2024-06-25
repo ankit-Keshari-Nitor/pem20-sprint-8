@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
-import { Toggle, TextInput, Button, Select, SelectItem, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
+import React, { useEffect, useState } from 'react';
+import { Toggle, TextInput, Button, Select, SelectItem, Tabs, TabList, Tab, TabPanels, TabPanel, TreeView, TreeNode, Modal, Grid, Column } from '@carbon/react';
 
 import './props-panel.scss';
-import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE } from '../../constants/constants';
+import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX } from '../../constants/constants';
 import { collectPaletteEntries } from '../../utils/helpers';
+import { ElippsisIcon } from '../../icon';
 
 export default function PropsPanel({ layout, selectedFiledProps, handleSchemaChanges, columnSizeCustomization, onFieldDelete, componentMapper, replaceComponet }) {
   const [editableProps, setEditableProps] = React.useState({});
@@ -13,6 +14,14 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
   const [componentTypes, setComponentTypes] = React.useState([]);
   const [tabSubTitle, setTabSubTitle] = React.useState();
   const [options, setOptions] = React.useState([]);
+  const [customRegexPattern, setCustomRegexPattern] = React.useState(false);
+  const [openMappingDialog, setOpenMappingDialog] = useState(false);
+  const [mappingSelectorValue, setMappingSelectorValue] = useState('');
+  const [mappedId, setMappedId] = useState('');
+  const [mappedKey, setMappedKey] = useState('');
+  const [mappedPropsName, setMappedPropsName] = useState('');
+  const [mappedCurrentPathDetail, setMappedCurrentPathDetail] = useState('');
+
   const items = [
     { text: '1' },
     { text: '2' },
@@ -38,8 +47,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setTabSubTitle(selectedFiledProps?.component?.tabTitle);
     setComponentType(selectedFiledProps.component.type);
     setComponentTypes(collectPaletteEntries(componentMapper));
-    setOptions(selectedFiledProps?.component?.editableProps?.Basic.find(prop => prop.type === 'Options')?.value || []);
-  }, [selectedFiledProps, componentMapper]);
+    setOptions(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.type === 'Options')?.value || []);
+  }, [selectedFiledProps, componentMapper, customRegexPattern]);
 
   const handleChange = (e) => {
     columnSizeCustomization(e.target.value, selectedFiledProps.currentPathDetail);
@@ -54,7 +63,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setOptions((prevOptions) => {
       const newOptions = [...prevOptions];
       newOptions[index].id = `${selectedFiledProps?.id}-${index}`;
-      key == 'label' ? newOptions[index].label = value : newOptions[index].value = value;
+      key == 'label' ? (newOptions[index].label = value) : (newOptions[index].value = value);
       handleSchemaChanges(selectedFiledProps?.id, 'Basic', 'options', newOptions, selectedFiledProps?.currentPathDetail);
       return newOptions;
     });
@@ -79,6 +88,44 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     replaceComponet(e, selectedFiledProps.currentPathDetail, newComponent);
     setComponentType(e.target.value);
   };
+
+  const handleRegexOption = (e, items, message, id, propsName, path) => {
+    const newRegex = items.filter((items) => items.value === e.target.value)[0];
+    const newValue = { pattern: newRegex.label, value: newRegex.value, message: message };
+    if (e.target.value === CUSTOMREGEX) {
+      newValue.customRegex = '';
+      setCustomRegexPattern(true);
+    }
+    handleSchemaChanges(id, 'advance', propsName, newValue, path);
+  };
+
+  const OpenMappingDialog = (id, key, propsName, currentPathDetail) => {
+    setOpenMappingDialog(true);
+    setMappedId(id);
+    setMappedKey(key);
+    setMappedPropsName(propsName);
+    setMappedCurrentPathDetail(currentPathDetail);
+  };
+
+  const mappingSelector = (selectedValue) => {
+    handleSchemaChanges(mappedId, mappedKey, mappedPropsName, selectedValue, mappedCurrentPathDetail);
+    setMappingSelectorValue(selectedValue);
+    setOpenMappingDialog(false);
+  };
+
+  const Temp = (
+    <TreeView label="Context Mapping">
+      <TreeNode label="First-Name">
+        <TreeNode label="Value-1" onClick={(e) => mappingSelector('Value-1')} />
+        <TreeNode label="Value-2" onClick={(e) => mappingSelector('Value-2')} />
+      </TreeNode>
+      <TreeNode label="Last-Name">
+        <TreeNode label="Value-1" onClick={(e) => mappingSelector('Value-1')} />
+        <TreeNode label="Value-2" onClick={(e) => mappingSelector('Value-2')} />
+      </TreeNode>
+    </TreeView>
+  );
+
   return (
     <div className="right-palette-container">
       {selectedFiledProps && (
@@ -91,9 +138,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
             </TabList>
             <TabPanels>
               <TabPanel className="tab-panel">
-
                 {/* Component Types Select */}
-                {componentStyle === undefined && tabSubTitle === undefined && (
+                {/* {componentStyle === undefined && tabSubTitle === undefined && (
                   <Select
                     className="component-types"
                     id={String(selectedFiledProps.id)}
@@ -106,7 +152,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                       return <SelectItem key={index} value={item.component.type} text={item.component.type} />;
                     })}
                   </Select>
-                )}
+                )} */}
                 {/* To Show the Add Tab Button */}
                 {selectedFiledProps?.type === TAB && (
                   <Button
@@ -136,18 +182,44 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           <>
                             {editableProps[key].map((item, idx) => {
                               return (
-                                key === 'Basic' &&
-                                (item.type === 'TextInput' ? (
-                                  <TextInput
-                                    key={idx}
-                                    id={String(idx)}
-                                    className="right-palette-form-item "
-                                    labelText={item.label}
-                                    value={item.value}
-                                    onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value, selectedFiledProps?.currentPathDetail)}
-                                  />
-                                ) : (
-                                  item.type === 'Toggle' && (
+                                <>
+                                  {/* TextInput */}
+                                  {key === 'Basic' && item.type === 'TextInput' && (
+                                    <TextInput
+                                      key={idx}
+                                      id={String(idx)}
+                                      className="right-palette-form-item "
+                                      labelText={item.label}
+                                      value={item.value}
+                                      invalid={item.invalid ? item.invalid : false}
+                                      invalidText={item.invalidText ? item.invalidText : null}
+                                      onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value, selectedFiledProps?.currentPathDetail)}
+                                    />
+                                  )}
+                                  {/* Mapping */}
+                                  {key === 'Basic' && item.type === 'mapping' && (
+                                    <>
+                                      <TextInput
+                                        key={idx}
+                                        id={String(idx)}
+                                        className="right-palette-form-item-mapping"
+                                        labelText={item.label}
+                                        value={item.value}
+                                        invalid={item.invalid ? item.invalid : false}
+                                        invalidText={item.invalidText ? item.invalidText : null}
+                                        onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value, selectedFiledProps?.currentPathDetail)}
+                                      />
+                                      <Button
+                                        size="md"
+                                        className="opt-btn"
+                                        kind="secondary"
+                                        renderIcon={ElippsisIcon}
+                                        onClick={() => OpenMappingDialog(selectedFiledProps?.id, key, item.propsName, selectedFiledProps?.currentPathDetail)}
+                                      ></Button>
+                                    </>
+                                  )}
+                                  {/* Toggle */}
+                                  {key === 'Basic' && item.type === 'Toggle' && (
                                     <ul key={idx}>
                                       <li>
                                         <Toggle
@@ -162,8 +234,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                         />
                                       </li>
                                     </ul>
-                                  )
-                                ))
+                                  )}
+                                </>
                               );
                             })}
                           </>
@@ -174,30 +246,52 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                 {/* Option Section */}
                 {options.length > 0 && (
                   <div className="options-section">
-                    <label className='cds--label'>Options</label>
+                    <label className="cds--label">Options</label>
                     {options.map((option, index) => {
                       return (
-                        <>
-                          <div key={index} className="option-input">
-                            <label className='cds--label'>Label {index}</label>
-                            <TextInput
-                              id={`option-${index}`}
-                              value={option?.label}
-                              onChange={(e) => handleOptionChange(index, e.target.value, 'label')}
-                            />
-                          </div>
-                          <div key={index} className="option-input">
-                            <label className='cds--label'>value {index}</label>
-                            <TextInput
-                              id={`option-${index}`}
-                              value={option?.value}
-                              onChange={(e) => handleOptionChange(index, e.target.value, 'value')}
-                            />
-                          </div>
-                        </>
-                      )
+                        <Grid>
+                          <Column lg={8}>
+                            <div key={index} className="option-input">
+                              <TextInput
+                                className="mapping-text-field"
+                                id={`option-${index}`}
+                                value={option?.label}
+                                placeholder={`Label-${index}`}
+                                onChange={(e) => handleOptionChange(index, e.target.value, 'label')}
+                              />
+                              <Button
+                                size="md"
+                                className="mapping-button"
+                                kind="secondary"
+                                renderIcon={ElippsisIcon}
+                                onClick={() => OpenMappingDialog(selectedFiledProps?.id, 'Basic', 'mapping', selectedFiledProps?.currentPathDetail)}
+                              ></Button>
+                            </div>
+                          </Column>
+                          <Column lg={8}>
+                            <div key={index} className="option-input">
+                              <TextInput
+                                className="mapping-text-field"
+                                id={`option-${index}`}
+                                value={option?.value}
+                                placeholder={`Value-${index}`}
+                                onChange={(e) => handleOptionChange(index, e.target.value, 'value')}
+                              />
+                              <Button
+                                size="md"
+                                className="mapping-button"
+                                kind="secondary"
+                                renderIcon={ElippsisIcon}
+                                onClick={() => OpenMappingDialog(selectedFiledProps?.id, 'Basic', 'options', selectedFiledProps?.currentPathDetail)}
+                              ></Button>
+                            </div>
+                          </Column>
+                        </Grid>
+                      );
                     })}
-                    <Button size='sm' onClick={handleAddOption}>Add Option</Button>
+                    <Button size="sm" onClick={handleAddOption}>
+                      Add Option
+                    </Button>
                   </div>
                 )}
                 {/* Column Size Style  */}
@@ -243,13 +337,15 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                   </>
                 )}
               </TabPanel>
+              {/* Advance Properties Field  */}
               <TabPanel className="tab-panel">
-                {/* Advance Properties Field  */}
                 {advanceProps && advanceProps.length > 0 && (
                   <>
                     {advanceProps.map((advncProps, idx) => {
+                      console.log('advanceProps', advanceProps);
                       return (
                         <>
+                          {/* Min - Max validation */}
                           {advncProps.type === 'TextInput' && (
                             <TextInput
                               key={idx}
@@ -264,7 +360,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     selectedFiledProps?.id,
                                     'advance',
                                     advncProps.propsName,
-                                    { value: e.target.value, message: advncProps.value.message },
+                                    { value: e.target.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
                                     selectedFiledProps?.currentPathDetail
                                   );
                                 } else {
@@ -272,13 +368,123 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     selectedFiledProps?.id,
                                     'advance',
                                     advncProps.propsName,
-                                    { value: e.target.value, message: advncProps.value.message },
+                                    { value: e.target.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
                                     selectedFiledProps?.currentPathDetail
                                   );
                                 }
                               }}
                             />
                           )}
+                          {/* Regex Validation */}
+                          {advncProps.type === OPTIONS && (
+                            <>
+                              <Select
+                                className="regex-types"
+                                id={String(selectedFiledProps.id)}
+                                labelText={advncProps.label}
+                                onChange={(e) =>
+                                  handleRegexOption(
+                                    e,
+                                    advncProps?.items,
+                                    advncProps.value.message,
+                                    selectedFiledProps?.id,
+                                    advncProps.propsName,
+                                    selectedFiledProps?.currentPathDetail
+                                  )
+                                }
+                                defaultValue={advncProps.value.value}
+                                value={advncProps.value.value}
+                              >
+                                {advncProps?.items.map((item, index) => {
+                                  return <SelectItem key={index} value={item.value} text={item.label} />;
+                                })}
+                              </Select>
+                              <TextInput
+                                key={`${idx}-'message'`}
+                                id={String(idx)}
+                                className="right-palette-form-item"
+                                labelText={'Message'}
+                                value={advncProps.value.message}
+                                onChange={(e) => {
+                                  if (isNaN(e.target.value)) {
+                                    e.preventDefault();
+                                    advncProps.type === OPTIONS
+                                      ? handleSchemaChanges(
+                                          selectedFiledProps?.id,
+                                          'advance',
+                                          advncProps.propsName,
+                                          { ...advncProps.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
+                                          selectedFiledProps?.currentPathDetail
+                                        )
+                                      : handleSchemaChanges(
+                                          selectedFiledProps?.id,
+                                          'advance',
+                                          advncProps.propsName,
+                                          {
+                                            value: advncProps.value.value,
+                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                          },
+                                          selectedFiledProps?.currentPathDetail
+                                        );
+                                  } else {
+                                    advncProps.type === OPTIONS
+                                      ? handleSchemaChanges(
+                                          selectedFiledProps?.id,
+                                          'advance',
+                                          advncProps.propsName,
+                                          {
+                                            pattern: advncProps.value.pattern,
+                                            value: advncProps.value.value,
+                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                          },
+                                          selectedFiledProps?.currentPathDetail
+                                        )
+                                      : handleSchemaChanges(
+                                          selectedFiledProps?.id,
+                                          'advance',
+                                          advncProps.propsName,
+                                          {
+                                            value: advncProps.value.value,
+                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                          },
+                                          selectedFiledProps?.currentPathDetail
+                                        );
+                                  }
+                                }}
+                              />
+                            </>
+                          )}
+                          {/* Custom Regex Validation */}
+                          {(advncProps?.value?.customRegex || advncProps?.value?.customRegex === '') && (
+                            <TextInput
+                              key={`customregex-${idx}`}
+                              id={`customregex-${String(idx)}`}
+                              className="right-palette-form-item"
+                              labelText={'Custom Regex'}
+                              value={advncProps.value.customRegex}
+                              onChange={(e) => {
+                                if (isNaN(e.target.value)) {
+                                  e.preventDefault();
+                                  handleSchemaChanges(
+                                    selectedFiledProps?.id,
+                                    'advance',
+                                    advncProps.propsName,
+                                    { pattern: advncProps.value.pattern, value: advncProps.value.value, customRegex: e.target.value, message: advncProps.value.message },
+                                    selectedFiledProps?.currentPathDetail
+                                  );
+                                } else {
+                                  handleSchemaChanges(
+                                    selectedFiledProps?.id,
+                                    'advance',
+                                    advncProps.propsName,
+                                    { pattern: advncProps.value.pattern, value: advncProps.value.value, customRegex: e.target.value, message: advncProps.value.message },
+                                    selectedFiledProps?.currentPathDetail
+                                  );
+                                }
+                              }}
+                            />
+                          )}
+                          {/* Required Validation */}
                           {advncProps.type === 'Toggle' && (
                             <Toggle
                               key={idx}
@@ -292,83 +498,47 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                   selectedFiledProps?.id,
                                   'advance',
                                   advncProps.propsName,
-                                  { value: !advncProps.value.value, message: advncProps.value.message },
+                                  {
+                                    value: !advncProps.value.value,
+                                    message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, !advncProps.value.value)
+                                  },
                                   selectedFiledProps?.currentPathDetail
                                 )
                               }
                               hideLabel
                             />
                           )}
-                          <TextInput
-                            key={`${idx}-'message'`}
-                            id={String(idx)}
-                            className="right-palette-form-item"
-                            labelText={'Message'}
-                            value={advncProps.value.message}
-                            onChange={(e) => {
-                              if (isNaN(e.target.value)) {
-                                e.preventDefault();
-                                handleSchemaChanges(
-                                  selectedFiledProps?.id,
-                                  'advance',
-                                  advncProps.propsName,
-                                  { value: advncProps.value.value, message: e.target.value },
-                                  selectedFiledProps?.currentPathDetail
-                                );
-                              } else {
-                                handleSchemaChanges(
-                                  selectedFiledProps?.id,
-                                  'advance',
-                                  advncProps.propsName,
-                                  { value: advncProps.value.value, messag: e.target.value },
-                                  selectedFiledProps?.currentPathDetail
-                                );
-                              }
-                            }}
-                          />
                         </>
                       );
                     })}
                   </>
                 )}
-                {/* Validation Properties Field  */}
-                {editableProps &&
-                  Object.keys(editableProps).map((key, idx) => {
-                    return (
-                      <>
-                        {editableProps[key] && editableProps[key].length > 0 && (
-                          <>
-                            {/* {editableProps[key].map((item, idx) => {
-                              return (
-                                key === 'Condition' && (
-                                  <ul key={idx}>
-                                    <li>
-                                      <Toggle
-                                        key={idx}
-                                        id={'toggle-' + String(idx) + '-' + selectedFiledProps?.id}
-                                        className="right-palette-form-item "
-                                        labelText={item.label}
-                                        defaultToggled={item.value}
-                                        toggled={item.value}
-                                        onClick={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, !item.value, selectedFiledProps?.currentPathDetail)}
-                                        hideLabel
-                                      />
-                                    </li>
-                                  </ul>
-                                )
-                              );
-                            })} */}
-                          </>
-                        )}
-                      </>
-                    );
-                  })}
               </TabPanel>
               <TabPanel className="tab-panel">Conditional Props</TabPanel>
             </TabPanels>
           </Tabs>
         </>
       )}
+      <Modal open={openMappingDialog} onRequestClose={() => setOpenMappingDialog(false)} passiveModal>
+        {Temp}
+      </Modal>
     </div>
   );
+}
+
+function getValidationMessage(label, propertiesName, value) {
+  console.log('value', value);
+  console.log('props', propertiesName);
+  switch (propertiesName) {
+    case 'isRequired':
+      return 'This is a required field';
+    case 'min':
+      return label + ' must be at least ' + value + 'characters';
+    case 'max':
+      return label + ' must be no longer than ' + value + 'characters';
+    case 'regexValidation':
+      return value;
+    default:
+      return 'regexValidation';
+  }
 }

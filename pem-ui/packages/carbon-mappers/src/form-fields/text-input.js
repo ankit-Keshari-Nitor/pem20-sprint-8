@@ -1,12 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { TextInput as CarbonTextInput } from '@carbon/react';
-import { FORM_FIELD_TYPE, minProps, maxProps, readOnly, helperText, FORM_FIELD_LABEL, FORM_FIELD_GROUPS, isRequired, labelText, isDisabled } from '../constant';
+import {
+  FORM_FIELD_TYPE,
+  minProps,
+  maxProps,
+  readOnly,
+  helperText,
+  FORM_FIELD_LABEL,
+  FORM_FIELD_GROUPS,
+  isRequired,
+  labelText,
+  placeHolder,
+  valueLabel,
+  NameLabel,
+  regexValidation,
+  mapping
+} from '../constant';
 import { TextInputIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.TEXT_INPUT;
 
 const TextInput = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
-  const { labelText, helperText, disabled, value, isRequired, min, max, ...rest } = field;
+  const { labelText, helperText, label, disabled, value, isRequired, min, max, ...rest } = field;
   const [fieldValue, setFieldValue] = useState();
 
   useEffect(() => {
@@ -20,7 +35,7 @@ const TextInput = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
         type={FORM_FIELD_TYPE.TEXT}
         data-testid={id}
         id={id}
-        labelText={labelText}
+        labelText={labelText === undefined ? label : labelText}
         helperText={helperText}
         disabled={disabled}
         defaultValue={''}
@@ -31,7 +46,6 @@ const TextInput = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
         }}
         {...rest}
       />
-      {/* <div style={rest.isRequiredInvalid ? { display: 'block', color: '#da1e28', fontSize: '0.75rem' } : { display: 'none' }}>This field is required!!</div> */}
     </>
   );
 };
@@ -45,8 +59,8 @@ TextInput.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <TextInputIcon />,
   editableProps: {
-    Basic: [labelText, helperText, isDisabled, readOnly],
+    Basic: [NameLabel, labelText, placeHolder, helperText, valueLabel, mapping, readOnly],
     Condition: []
   },
-  advanceProps: [minProps, maxProps, isRequired]
+  advanceProps: [minProps, maxProps, regexValidation, isRequired]
 };

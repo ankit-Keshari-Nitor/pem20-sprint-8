@@ -70,7 +70,6 @@ const ActivityTaskDefinition = ({ id, editDefinitionProp, activityDefinitionData
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={() => onCancelDefinitionForm()}
-      onReset={() => console.log('Resetting')}
     />
   );
 };

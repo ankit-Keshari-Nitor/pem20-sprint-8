@@ -58,7 +58,6 @@ const ApiDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefiniti
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
     />
   ) : (
     <FormRenderer
@@ -69,7 +68,6 @@ const ApiDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefiniti
       schema={SCHEMA}
       onSubmit={onSubmitDefinitionForm}
       onCancel={setOpenCancelDialog}
-      onReset={() => console.log('Resetting')}
     />
   );
 };

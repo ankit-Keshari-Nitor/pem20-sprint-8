@@ -108,7 +108,7 @@ export const placeHolder = {
 };
 
 export const valueLabel = {
-  propsName: 'value',
+  propsName: 'Default Value',
   label: 'Value',
   value: '',
   type: 'TextInput'

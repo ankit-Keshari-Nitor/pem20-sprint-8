@@ -67,9 +67,10 @@ const CarbonOperatorSelector = ({
         placeholder={'Operand'}
         labelText={''}
         onChange={(e) => multiValueHandler(e.target.value, 0)}
+        style={{ marginTop: '1.5rem' }}
         {...extraProps}
       />
-      <Button size="md" className="opt-btn" kind="secondary" renderIcon={ElippsisIcon} onClick={() => setOpenCancelDialog(true)}></Button>
+      <Button size="md" className="opt-btn" kind="secondary" renderIcon={ElippsisIcon} onClick={() => setOpenCancelDialog(true)} style={{ marginTop: '1.5rem' }}></Button>
       <WrapperModal openCancelDialog={openCancelDialog} setOpenCancelDialog={setOpenCancelDialog}>
         {Temp}
       </WrapperModal>

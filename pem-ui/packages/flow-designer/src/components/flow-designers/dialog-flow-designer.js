@@ -8,7 +8,7 @@ import './flow-designers.scss';
 
 import BlocksTray from '../blocks-tray';
 import { CATEGORY_TYPES } from '../../constants';
-import BlockPropertiesTray from '../block-properties-tray/block-properties-tray';
+import BlockPropertiesTray from '../block-properties-tray';
 
 const DialogFlowDesigner = ({
   connectionLineStyle,

@@ -131,15 +131,18 @@ const CarbonValueEditor = (allProps) => {
   return (
     <>
       <TextInput
+        id="operand-input"
+        labelText=""
         type={inputTypeCoerced}
         value={value}
         title={title}
         className={className}
         placeholder={'Operand'}
         onChange={(e) => handleOnChange(e.target.value)}
+        style={{ marginTop: '1.5rem' }}
         {...extraProps}
       />
-      <Button size="md" className="opt-btn" kind="secondary" renderIcon={ElippsisIcon} onClick={() => setOpenCancelDialog(true)}></Button>
+      <Button size="md" className="opt-btn" kind="secondary" renderIcon={ElippsisIcon} onClick={() => setOpenCancelDialog(true)} style={{ marginTop: '1.5rem' }}></Button>
       <WrapperModal openCancelDialog={openCancelDialog} setOpenCancelDialog={setOpenCancelDialog}>
         {Temp}
       </WrapperModal>

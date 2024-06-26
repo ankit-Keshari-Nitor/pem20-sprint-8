@@ -90,7 +90,6 @@
   --cds-grid-gutter-start: none;
   padding-inline: unset;
   margin-top: 1rem;
-  // background-color: #eeeeee;
 }
 
 .col-margin-right {
@@ -133,15 +132,4 @@
 
 .btn-add {
   margin-right: 0.5rem;
-}
-
-.form-field {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-.cds--modal-scroll-content {
-  mask-image: linear-gradient(to bottom, var(--cds-layer) calc(100% - 0px), transparent calc(100% - 0px), transparent 100%),
-    linear-gradient(to left, var(--cds-layer) 0, 2px, transparent 2px), linear-gradient(to right, var(--cds-layer) 0, 2px, transparent 2px),
-    linear-gradient(to top, var(--cds-layer) 0, 2px, transparent 2px);
 }

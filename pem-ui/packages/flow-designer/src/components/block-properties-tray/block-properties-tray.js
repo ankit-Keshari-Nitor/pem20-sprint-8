@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
-import './block-properties-tray.scss';
-import { NODE_TYPE } from '../../constants';
-import {
-  ApiTaskDefinitionForm,
-  ApprovalTaskDefinitionForm,
-  AttributeTaskDefinitionForm,
-  CustomTaskDefinitionForm,
-  DialogTaskDefinitionForm,
-  PartnerTaskDefinitionForm,
-  SponsorTaskDefinitionForm,
-  SystemTaskDefinitionForm,
-  XsltTaskDefinitionForm
-} from '../block-definition-forms';
-import { CrossIcon, ExpandIcon } from './../../icons';
 import { Column, Grid, Modal, Select, SelectItem } from '@carbon/react';
-import ActivityTaskDefinition from '../block-definition-forms/activity-task-definition';
+
+import { NODE_TYPE } from '../../constants';
+import { CrossIcon, ExpandIcon } from './../../icons';
+import BlockDefinitionForm from '../block-definition-form';
+import ActivityTaskDefinition from '../activity-task-definition';
+import {
+  PARTNER_FORM_SCHEMA,
+  APPROVAL_FORM_SCHEMA,
+  ATTRIBUTE_FORM_SCHEMA,
+  CUSTOM_FORM_SCHEMA,
+  DIALOG_FORM_SCHEMA,
+  SPONSOR_FORM_SCHEMA,
+  SYSTEM_FORM_SCHEMA,
+  XSLT_FROM_SCHEMA,
+  API_FORM_SCHEMA
+} from './../../constants/define-form-renderer.schema';
+
+import './block-properties-tray.scss';
 
 export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, setOpenPropertiesBlock, editDefinitionProp, activityDefinitionData }) {
   const [openExpandMode, setOpenExpandMode] = useState(false);
@@ -22,25 +25,25 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
   const getForm = (selectedNode) => {
     switch (selectedNode && selectedNode.type) {
       case NODE_TYPE.PARTNER:
-        return <PartnerTaskDefinitionForm selectedNode={selectedNode} />;
+        return <BlockDefinitionForm id={'partner-define-form'} schema={PARTNER_FORM_SCHEMA} selectedNode={selectedNode} />;
       case NODE_TYPE.APPROVAL:
-        return <ApprovalTaskDefinitionForm selectedNode={selectedNode} />;
+        return <BlockDefinitionForm id={'approval-define-form'} schema={APPROVAL_FORM_SCHEMA} selectedNode={selectedNode} />;
       case NODE_TYPE.ATTRIBUTE:
-        return <AttributeTaskDefinitionForm selectedNode={selectedNode} />;
+        return <BlockDefinitionForm id={'attribute-define-form'} schema={ATTRIBUTE_FORM_SCHEMA} selectedNode={selectedNode} />;
       case NODE_TYPE.SPONSOR:
-        return <SponsorTaskDefinitionForm selectedNode={selectedNode} />;
+        return <BlockDefinitionForm id={'sponsor-define-form'} schema={SPONSOR_FORM_SCHEMA} selectedNode={selectedNode} />;
       case NODE_TYPE.CUSTOM:
-        return <CustomTaskDefinitionForm selectedNode={selectedNode} />;
+        return <BlockDefinitionForm id={'custom-define-form'} schema={CUSTOM_FORM_SCHEMA} selectedNode={selectedNode} />;
       case NODE_TYPE.SYSTEM:
-        return <SystemTaskDefinitionForm selectedNode={selectedNode} />;
+        return <BlockDefinitionForm id={'system-define-form'} schema={SYSTEM_FORM_SCHEMA} selectedNode={selectedNode} />;
+      case NODE_TYPE.DIALOG:
+        return <BlockDefinitionForm id={'dialog-define-form'} schema={DIALOG_FORM_SCHEMA} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} />;
+      case NODE_TYPE.XSLT:
+        return <BlockDefinitionForm id={'xslt-define-form'} schema={XSLT_FROM_SCHEMA} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} />;
+      case NODE_TYPE.API:
+        return <BlockDefinitionForm id={'api-define-form'} schema={API_FORM_SCHEMA} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} />;
       case NODE_TYPE.GATEWAY:
         return null;
-      case NODE_TYPE.DIALOG:
-        return <DialogTaskDefinitionForm selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} />;
-      case NODE_TYPE.XSLT:
-        return <XsltTaskDefinitionForm selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} />;
-      case NODE_TYPE.API:
-        return <ApiTaskDefinitionForm selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} />;
       default:
         return <ActivityTaskDefinition id={'activity-drawer'} editDefinitionProp={editDefinitionProp} activityDefinitionData={activityDefinitionData} />;
     }
@@ -90,7 +93,7 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
             </span>
           </div>
         </div>
-        <div className="block-properties-form">{getForm(selectedNode)}</div>
+        {getForm(selectedNode)}
       </div>
       <Modal
         open={openExpandMode}

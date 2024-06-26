@@ -93,7 +93,7 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
             </span>
           </div>
         </div>
-        {getForm(selectedNode)}
+        <div className="block-properties-form">{getForm(selectedNode)}</div>
       </div>
       <Modal
         open={openExpandMode}

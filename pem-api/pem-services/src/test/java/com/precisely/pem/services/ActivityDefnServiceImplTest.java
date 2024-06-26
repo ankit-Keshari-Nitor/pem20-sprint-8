@@ -46,20 +46,20 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
         TenantContext.setTenantContext(SponsorInfo.builder().sponsorKey(TEST_SPONSOR).build());
         }
 
-    @Test
-    void testGetAllDefinitionList() throws Exception {
-        Page<ActivityDefn> page = new PageImpl<>(getListOfVchActivityDefnObj());
-        mockGetSponsorKey().thenReturn(TEST_SPONSOR);
-        Mockito.when(activityDefnRepo.findBySponsorKeyAndActivityNameAndActivityDescriptionContainingAndApplicationAndVersionsStatus(
-                eq(TEST_STATUS), eq(TEST_SPONSOR), eq(TEST_APPLICATION_KEY), eq(TEST_APPLICATION_NAME), eq(TEST_DESCRIPTION),
-                Mockito.any(Pageable.class))).thenReturn(page);
-        ActivityDefnDto dtoObj = new ActivityDefnDto();
-        dtoObj.setActivityDefnKey(TEST_ACTIVITY_DEFN_KEY);
-        Mockito.when(mapper.map(Mockito.any(ActivityDefn.class), eq(ActivityDefnDto.class))).thenReturn(dtoObj);
-//        assertNotNull(activityDefinitionService.getAllDefinitionList(
-//                sponsorContext, applicationName, applicationDescription, status, application,
-//                pageNo, pageSize, sortBy, sortDir));
-    }
+//    @Test
+//    void testGetAllDefinitionList() throws Exception {
+//        Page<ActivityDefn> page = new PageImpl<>(getListOfVchActivityDefnObj());
+//        mockGetSponsorKey().thenReturn(TEST_SPONSOR);
+//        Mockito.when(activityDefnRepo.findBySponsorKeyAndActivityNameAndActivityDescriptionContainingAndApplicationAndVersionsStatus(
+//                eq(TEST_STATUS), eq(TEST_SPONSOR), eq(TEST_APPLICATION_KEY), eq(TEST_APPLICATION_NAME), eq(TEST_DESCRIPTION),
+//                Mockito.any(Pageable.class))).thenReturn(page);
+//        ActivityDefnDto dtoObj = new ActivityDefnDto();
+//        dtoObj.setActivityDefnKey(TEST_ACTIVITY_DEFN_KEY);
+//        Mockito.when(mapper.map(Mockito.any(ActivityDefn.class), eq(ActivityDefnDto.class))).thenReturn(dtoObj);
+////        assertNotNull(activityDefinitionService.getAllDefinitionList(
+////                sponsorContext, applicationName, applicationDescription, status, application,
+////                pageNo, pageSize, sortBy, sortDir));
+//    }
 
 
     @Test

@@ -42,7 +42,7 @@ public class ActivityInstanceServiceImplTest extends BaseServiceTest {
     @Test
     void testGetAllInstanceList_NoDataFound() {
         Page pageable = new PageImpl<>(getActivityInstanceList());
-        when(activityInstRepo.findBySponsorKeyAndActivityDefnKeyVersionAndStatus(eq("TEST_SPONSOR"), eq("TEST"), eq("test"), Mockito.any(Pageable.class)))
+        when(activityInstRepo.findBySponsorKeyAndActivityDefnVersionKeyAndStatus(eq("TEST_SPONSOR"), eq("TEST"), eq("test"), Mockito.any(Pageable.class)))
                 .thenReturn(Page.empty());
         assertThrows(ResourceNotFoundException.class, () -> {
             activityInstService.getAllInstanceList("TEST_SPONSOR", "", "", "INPROGRESS", "activityDefnVersionKey", "", false, 0, 10, "modify_ts", "DESC");
@@ -53,7 +53,7 @@ public class ActivityInstanceServiceImplTest extends BaseServiceTest {
     void testGetAllInstanceList_Success() throws ResourceNotFoundException {
         Page pageable = new PageImpl<>(getActivityInstanceList());
         ActivityInst activityInst = getActivityInstanceDefnObj();
-        when(activityInstRepo.findBySponsorKeyAndActivityDefnKeyVersionAndStatus(anyString(), anyString(), anyString(), Mockito.any(Pageable.class)))
+        when(activityInstRepo.findBySponsorKeyAndActivityDefnVersionKeyAndStatus(anyString(), anyString(), anyString(), Mockito.any(Pageable.class)))
                 .thenReturn(pageable);
         ActivityInstListResp activityInstListResp = new ActivityInstListResp();
         when(mapper.map(activityInst, ActivityInstListResp.class)).thenReturn(activityInstListResp);
@@ -86,7 +86,7 @@ public class ActivityInstanceServiceImplTest extends BaseServiceTest {
         activityInst.setActivityInstKey(TEST_ACTIVITY_INSTANCE_KEY);
         PcptActivityInst pcptActivityInst = new PcptActivityInst();
 
-        when(activityDefnVersionRepo.findByActivityDefnKeyVersion(anyString())).thenReturn(getVCHActivityDefnVersionObj());
+        when(activityDefnVersionRepo.findByActivityDefnVersionKey(anyString())).thenReturn(getVCHActivityDefnVersionObj());
         when(partnerRepo.findById(getListPartners().get(0).getPartnerKey())).thenReturn(Optional.ofNullable(getPartnerData()));
         when(mapper.map(any(ActivityInstDto.class), eq(ActivityInst.class))).thenReturn(activityInst);
         when(mapper.map(any(PcptActivityInstDto.class), eq(PcptActivityInst.class))).thenReturn(pcptActivityInst);
@@ -101,7 +101,7 @@ public class ActivityInstanceServiceImplTest extends BaseServiceTest {
 
     @Test
     public void testCreateActivityInstance_ResourceNotFoundException_NoActivityDefnVersion() {
-        when(activityDefnVersionRepo.findByActivityDefnKeyVersion(anyString())).thenReturn(null);
+        when(activityDefnVersionRepo.findByActivityDefnVersionKey(anyString())).thenReturn(null);
 
         assertThrows(ResourceNotFoundException.class, () -> {
             activityInstService.createActivityInstance("TEST_SPONSOR", getActivityInstanceDefnReq());
@@ -122,7 +122,7 @@ public class ActivityInstanceServiceImplTest extends BaseServiceTest {
     public void testCreateActivityInstance_JSONException() throws Exception {
         ActivityInstReq activityInstReq = getActivityInstanceDefnReq();
         activityInstReq.setContextData("invalidJSON");
-        when(activityDefnVersionRepo.findByActivityDefnKeyVersion(anyString())).thenReturn(getVCHActivityDefnVersionObj());
+        when(activityDefnVersionRepo.findByActivityDefnVersionKey(anyString())).thenReturn(getVCHActivityDefnVersionObj());
 
         assertThrows(JSONException.class, () -> {
             activityInstService.createActivityInstance("TEST_SPONSOR", activityInstReq);

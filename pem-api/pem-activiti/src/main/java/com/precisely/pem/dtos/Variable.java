@@ -5,13 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class XsltConfiguration {
-    private String xslt;
-    private String input;
-    private String sampleOutput;
-    private String output;
+public class Variable {
+    private String source;
+    private String target;
 }

@@ -126,9 +126,8 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             nodes.stream()
                     .filter(node ->
                             NodeTypes.PARTNER_SUB_PROCESS.getName().equalsIgnoreCase(node.getType()) ||
-                                    NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(node.getType())).forEach(node -> {
-                        addDefaultSystemUserTaskForAllSubProcess(node.getNodes(),connectors, bpmnConverterRequest,node.getUserKeys(),node.getRoleKeys());
-            });
+                                    NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(node.getType())).forEach(node ->
+                            addDefaultSystemUserTaskForAllSubProcess(node.getNodes(),connectors, bpmnConverterRequest,node.getUserKeys(),node.getRoleKeys()));
 
             // Process each node through the chain
             for (Node node : nodes) {
@@ -242,6 +241,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         NodeHandler xsltNodeHandler = new XsltNodeHandler();
         NodeHandler gatewayHandler = new GatewayNodeHandler();
         NodeHandler subProcessHandler = new SubProcessHandler();
+        NodeHandler callActivity = new CallActivityNodeHandler();
 
         startEventNodeHandler.setNextHandler(endEventNodeHandler);
         endEventNodeHandler.setNextHandler(formNodeHandler);
@@ -249,6 +249,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         apiNodeHandler.setNextHandler(xsltNodeHandler);
         xsltNodeHandler.setNextHandler(gatewayHandler);
         gatewayHandler.setNextHandler(subProcessHandler);
+        subProcessHandler.setNextHandler(callActivity);
         return startEventNodeHandler;
     }
 

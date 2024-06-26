@@ -73,6 +73,8 @@ public class BaseServiceTest {
     @Mock
     protected ActivityDefnVersionRepo activityDefnVersionRepo;
     @Mock
+    protected ActivityDefnDeploymentCustomRepo activityDefnDeploymentCustomRepo;
+    @Mock
     protected PartnerRepo partnerRepo;
     @Mock
     protected PcptInstRepo pcptInstRepo;
@@ -232,7 +234,7 @@ public class BaseServiceTest {
 
     protected ActivityDefnVersion getVCHActivityDefnVersionObj(){
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
-        activityDefnVersion.setActivityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY);
+        activityDefnVersion.setActivityDefnVersionKey(TEST_ACTIVITY_DEFN_VERSION_KEY);
         activityDefnVersion.setActivityDefnKey(TEST_ACTIVITY_DEFN_KEY);
         activityDefnVersion.setVersion(0.0);
         activityDefnVersion.setActivityDefnDataKey("test");
@@ -249,7 +251,7 @@ public class BaseServiceTest {
 
     protected ActivityDefnVersion getDraftVCHActivityDefnVersionObj(){
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
-        activityDefnVersion.setActivityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY);
+        activityDefnVersion.setActivityDefnVersionKey(TEST_ACTIVITY_DEFN_VERSION_KEY);
         activityDefnVersion.setActivityDefnKey(TEST_ACTIVITY_DEFN_KEY);
         activityDefnVersion.setVersion(0.0);
         activityDefnVersion.setActivityDefnDataKey(TEST_ACTIVITY_DEFN_VERSION_DATA_KEY);
@@ -266,7 +268,7 @@ public class BaseServiceTest {
 
     protected ActivityDefnVersion getDeletedVCHActivityDefnVersionObj(){
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
-        activityDefnVersion.setActivityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY);
+        activityDefnVersion.setActivityDefnVersionKey(TEST_ACTIVITY_DEFN_VERSION_KEY);
         activityDefnVersion.setActivityDefnKey(TEST_ACTIVITY_DEFN_KEY);
         activityDefnVersion.setVersion(0.0);
         activityDefnVersion.setActivityDefnDataKey("test");
@@ -345,7 +347,7 @@ public class BaseServiceTest {
                 .isDeleted(false)
                 .emailPref(null)
                 .name(TEST_APPLICATION_NAME)
-                .activityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY)
+                .activityDefnVersionKey(TEST_ACTIVITY_DEFN_VERSION_KEY)
                 .sponsorKey("test")
                 .status(InstStatus.STARTED.getInstStatus())
                 .alertFrequency(1)
@@ -410,7 +412,7 @@ public class BaseServiceTest {
                 .isDeleted(false)
                 .emailPref(null)
                 .name(TEST_APPLICATION_NAME)
-                .activityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY)
+                .activityDefnVersionKey(TEST_ACTIVITY_DEFN_VERSION_KEY)
                 .sponsorKey("test")
                 .status(InstStatus.STARTED.getInstStatus())
                 .alertFrequency(1)
@@ -429,7 +431,7 @@ public class BaseServiceTest {
                 .isDeleted(false)
                 .emailPref(null)
                 .name(TEST_APPLICATION_NAME)
-                .activityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY)
+                .activityDefnVersionKey(TEST_ACTIVITY_DEFN_VERSION_KEY)
                 .sponsorKey("test")
                 .status(InstStatus.STARTED.getInstStatus())
                 .alertFrequency(1)

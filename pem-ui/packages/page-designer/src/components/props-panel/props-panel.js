@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Toggle, TextInput, Button, Select, SelectItem, Tabs, TabList, Tab, TabPanels, TabPanel, TreeView, TreeNode, Modal, Grid, Column } from '@carbon/react';
+import { Toggle, TextInput, Button, Select, SelectItem, FormLabel, Tabs, TabList, Tab, TabPanels, TabPanel, TreeView, TreeNode, Modal, Grid, Column } from '@carbon/react';
 
 import './props-panel.scss';
 import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX } from '../../constants/constants';
@@ -252,11 +252,19 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                           labelText={item.label}
                                           defaultToggled={Boolean(item.value)}
                                           toggled={Boolean(item.value)}
+                                          labelA={item?.labelA}
+                                          labelB={item?.labelB}
                                           onClick={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, !item.value, selectedFiledProps?.currentPathDetail)}
-                                          hideLabel
                                         />
                                       </li>
                                     </ul>
+                                  )}
+                                  {/* Text */}
+                                  {key === 'Basic' && item.type === 'text' && (
+                                    <div className='component-type-id'>
+                                      <FormLabel>{item.label}</FormLabel>
+                                      <FormLabel className='component-type-id-label'>{item.value}</FormLabel>
+                                    </div>
                                   )}
                                 </>
                               );

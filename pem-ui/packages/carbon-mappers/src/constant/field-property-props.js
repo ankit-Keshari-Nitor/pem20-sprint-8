@@ -40,7 +40,9 @@ export const readOnly = {
   propsName: 'readOnly',
   label: 'Read-only',
   value: false,
-  type: 'Toggle'
+  type: 'Toggle',
+  labelA: 'Yes',
+  labelB: 'No'
 };
 
 export const minProps = {
@@ -181,6 +183,5 @@ export const id = {
   propsName: 'id',
   label: 'ID',
   value: '',
-  type: 'TextInput',
-  readOnly: true,
+  type: 'text',
 };

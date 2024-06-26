@@ -1,6 +1,6 @@
 import React from 'react';
 import { RadioButton as CarbonRadioButton, RadioButtonGroup as CarbonRadioButtonGroup } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE,id, orientation, options, NameLabel, helperText, isRequired, labelText, readOnly } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, id, orientation, options, NameLabel, helperText, isRequired, labelText, readOnly } from '../constant';
 import { RadioIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.RADIOGROUP;
@@ -27,7 +27,7 @@ RadioButtonGroup.config = {
   group: FORM_FIELD_GROUPS.SELECTION,
   icon: <RadioIcon />,
   editableProps: {
-    Basic: [id,NameLabel, labelText, helperText, options, orientation, readOnly],
+    Basic: [id, NameLabel, labelText, helperText, options, orientation, readOnly],
     Condition: []
   },
   advanceProps: [isRequired]

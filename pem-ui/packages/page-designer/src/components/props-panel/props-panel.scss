@@ -28,6 +28,10 @@
   padding-bottom: 0.25rem;
 }
 
+.options-row-input {
+  display: flex !important;
+}
+
 .opt-btn {
   background-color: #e8e8e8;
   padding-inline-end: unset;
@@ -35,7 +39,7 @@
   margin-top: 1.5rem;
 }
 
-.opt-btn > svg {
+.opt-btn>svg {
   margin-right: 1rem;
 }
 
@@ -51,7 +55,7 @@
   border-color: #0f62fe;
 }
 
-.mapping-button > svg {
+.mapping-button>svg {
   margin-right: 1rem;
 }
 

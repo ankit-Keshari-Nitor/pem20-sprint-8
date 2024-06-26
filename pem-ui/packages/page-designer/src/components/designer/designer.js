@@ -72,10 +72,23 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           ...components,
           [newComponent.id]: newComponent
         });
+
+        // Condition for add options property
+        if (item.component.type === 'checkbox-group' || item.component.type === 'radio-group' || item.component.type === 'select') {
+          item.component.options = [
+            { label: 'Label-0', id: '', value: 'Value-0' }
+          ];
+        }
+
+        //Condition for Textarea row Property
+        if (item.component.type === 'textarea') {
+          item.component.height = '1';
+        }
+
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
-          component: { ...item.component, name: 'form-control-' + newComponent.id.substring(0, 2) }
+          component: { ...item.component, id: newComponent.id, name: 'form-control-' + newComponent.id.substring(0, 2) }
         };
         setComponentsName((preState) => [...preState, { id: newItem.id, name: newItem.id }]);
         setLayout(handleMoveSidebarComponentIntoParent(layout, splitDropZonePath, newItem));

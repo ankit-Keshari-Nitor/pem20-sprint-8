@@ -162,3 +162,25 @@ export const mapping = {
   value: '',
   type: 'mapping'
 };
+
+export const orientation = {
+  propsName: 'orientation',
+  label: 'Orientation',
+  value: false,
+  type: 'Toggle'
+}
+
+export const height = {
+  propsName: 'height',
+  label: 'Height',
+  value: '1',
+  type: 'TextInput'
+}
+
+export const id = {
+  propsName: 'id',
+  label: 'ID',
+  value: '',
+  type: 'TextInput',
+  readOnly: true,
+};

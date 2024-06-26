@@ -1,15 +1,15 @@
 import React from 'react';
 import { RadioButton as CarbonRadioButton, RadioButtonGroup as CarbonRadioButtonGroup } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, options, NameLabel, helperText, isRequired, labelText, readOnly } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE,id, orientation, options, NameLabel, helperText, isRequired, labelText, readOnly } from '../constant';
 import { RadioIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.RADIOGROUP;
 
 const RadioButtonGroup = ({ field, id, previewMode }) => {
-  const { type, labelText, label, isRequired, options, helperText, ...rest } = field;
+  const { type, labelText, label, isRequired, readOnly, orientation, options, helperText, ...rest } = field;
 
   return (
-    <CarbonRadioButtonGroup data-testid={`${id}-${previewMode}`} id={`${id}-${previewMode}`} legendText={labelText === undefined ? label : labelText} helperText={helperText}>
+    <CarbonRadioButtonGroup readOnly={readOnly} orientation={orientation ? 'horizontal' : 'vertical'} data-testid={`${id}-${previewMode}`} id={`${id}-${previewMode}`} legendText={labelText === undefined ? label : labelText} helperText={helperText}>
       {options &&
         options.map((element) => {
           return <CarbonRadioButton labelText={element?.label} id={`${element?.id}-${previewMode}`} value={element?.value} {...rest} />;
@@ -27,7 +27,7 @@ RadioButtonGroup.config = {
   group: FORM_FIELD_GROUPS.SELECTION,
   icon: <RadioIcon />,
   editableProps: {
-    Basic: [NameLabel, labelText, helperText, options, readOnly],
+    Basic: [id,NameLabel, labelText, helperText, options, orientation, readOnly],
     Condition: []
   },
   advanceProps: [isRequired]

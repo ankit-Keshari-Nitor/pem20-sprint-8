@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Toggle, TextInput, Button, Select, SelectItem, FormLabel, Tabs, TabList, Tab, TabPanels, TabPanel, TreeView, TreeNode, Modal, Grid, Column } from '@carbon/react';
+import { Toggle, TextInput, Button, Select, SelectItem, RadioButtonGroup, RadioButton, FormLabel, Tabs, TabList, Tab, TabPanels, TabPanel, TreeView, TreeNode, Modal, Grid, Column } from '@carbon/react';
 
 import './props-panel.scss';
 import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX } from '../../constants/constants';
@@ -22,6 +22,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
   const [mappedKey, setMappedKey] = useState('');
   const [mappedPropsName, setMappedPropsName] = useState('');
   const [mappedCurrentPathDetail, setMappedCurrentPathDetail] = useState('');
+  const [selectedRadioValue, setSelectedRadioValue] = useState('');
+
 
   const items = [
     { text: '1' },
@@ -48,6 +50,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setTabSubTitle(selectedFiledProps?.component?.tabTitle);
     setComponentType(selectedFiledProps.component.type);
     setComponentTypes(collectPaletteEntries(componentMapper));
+    setSelectedRadioValue(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.type === 'radio')?.value || '');
     setOptions(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.type === 'Options')?.value || []);
   }, [selectedFiledProps, componentMapper, customRegexPattern]);
 
@@ -264,6 +267,30 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     <div className='component-type-id'>
                                       <FormLabel>{item.label}</FormLabel>
                                       <FormLabel className='component-type-id-label'>{item.value}</FormLabel>
+                                    </div>
+                                  )}
+                                  {/* Radio */}
+                                  {key === 'Basic' && item.type === 'radio' && (
+                                    <div>
+                                      <RadioButtonGroup
+                                        legendText={item.label}
+                                        name={`radio-group-${selectedFiledProps?.id}`}
+                                        valueSelected={selectedRadioValue}
+                                        onChange={(value) => {
+                                          setSelectedRadioValue(value);
+                                          handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, value, selectedFiledProps?.currentPathDetail);
+                                        }}
+                                      >
+                                        {item?.options.length > 0 && item?.options.map((option, idx) => (
+                                          option?.value ? (
+                                            <RadioButton
+                                              key={idx}
+                                              labelText={option.label}
+                                              value={option.value}
+                                            />
+                                          ) : null
+                                        ))}
+                                      </RadioButtonGroup>
                                     </div>
                                   )}
                                 </>

@@ -168,8 +168,11 @@ export const mapping = {
 export const orientation = {
   propsName: 'orientation',
   label: 'Orientation',
-  value: false,
-  type: 'Toggle'
+  options: [
+    { label: 'Vertical', value: 'vertical' },
+    { label: 'Horizontal', value: 'horizontal' }
+  ],
+  type: 'radio'
 }
 
 export const height = {

@@ -6,15 +6,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.Node;
 import com.precisely.pem.dtos.NodeTypes;
+import com.precisely.pem.dtos.Variable;
 
 import static com.precisely.pem.dtos.Constants.HEIGHT;
 import static com.precisely.pem.dtos.Constants.WIDTH;
 
-public class CallActivityNodeHandler extends AbstractNodeHandler{
+public class CallActivityNodeHandler extends AbstractNodeHandler {
     @Override
     public void handleNode(Node node, ObjectNode outputJson, ObjectMapper objectMapper, BpmnConverterRequest request) {
         String type = node.getType();
-        if(type.equalsIgnoreCase(NodeTypes.CALL_ACTIVITY.getName())) {
+        if (type.equalsIgnoreCase(NodeTypes.CALL_ACTIVITY.getName())) {
             String id = node.getId();
             String name = node.getName();
             String description = node.getDescription();
@@ -39,51 +40,49 @@ public class CallActivityNodeHandler extends AbstractNodeHandler{
 
 
             // Setting "callactivitycalledelement"
-            callActivityProperties.put("callactivitycalledelement", "processId");
+            callActivityProperties.put("callactivitycalledelement", node.getTargetActivity());//processId of target process
 
             // Setting "callactivityinparameters"
             ObjectNode callactivityinparameters = callActivityProperties.putObject("callactivityinparameters");
             ArrayNode inParameters = callactivityinparameters.putArray("inParameters");
 
-            // Adding inParameters objects
-            ObjectNode inParam1 = inParameters.addObject();
-            inParam1.put("source", "test");
-            inParam1.put("sourceExpression", "");
-            inParam1.put("target", "test");
+            for (Variable inParam: node.getInVariables()){
+                // Adding inParameters objects
+                ObjectNode inParam1 = inParameters.addObject();
+                inParam1.put("source", inParam.getSource());
+                inParam1.put("sourceExpression", "${test}");//TODO need to check
+                inParam1.put("target", inParam.getTarget());
 
-            ObjectNode inParam2 = inParameters.addObject();
-            inParam2.put("source", "");
-            inParam2.put("sourceExpression", "${test}");
-            inParam2.put("target", "test");
-
+            }
             // Setting totalCount for inParameters
-            callactivityinparameters.put("totalCount", 2);
+            callactivityinparameters.put("totalCount", node.getInVariables().size());
 
             // Creating "callactivityoutparameters"
             ObjectNode callactivityoutparameters = callActivityProperties.putObject("callactivityoutparameters");
             ArrayNode outParameters = callactivityoutparameters.putArray("outParameters");
 
-            // Adding outParameters objects
-            ObjectNode outParam1 = outParameters.addObject();
-            outParam1.put("source", "test");
-            outParam1.put("sourceExpression", "");
-            outParam1.put("target", "test");
+            for (Variable outParam: node.getOutVariables()){
+                // Adding outParameters objects
+                ObjectNode outParam1 = outParameters.addObject();
+                outParam1.put("source", outParam.getSource());
+                outParam1.put("sourceExpression", "");
+                outParam1.put("target", outParam.getTarget());
+            }
 
             // Setting totalCount for outParameters
-            callactivityoutparameters.put("totalCount", 1);
+            callactivityoutparameters.put("totalCount", node.getOutVariables().size());
 
-            callActivityProperties.put("callactivitycalledelement","");//target processId
-            callActivityProperties.put("documentation",description);
-            callActivityProperties.put("isforcompensation","false");
-            callActivityProperties.put("looptype","None");
-            callActivityProperties.put("name",name);
+            callActivityProperties.put("documentation", description);
+            callActivityProperties.put("isforcompensation", "false");
+            callActivityProperties.put("looptype", "None");
+            callActivityProperties.put("name", name);
 
             callActivityChildShape.put("resourceId", id);// Identifier
             callActivityChildShape.putObject("stencil").put("id", "CallActivity");// Static identifier for Start Event
 
             addChildShapes(outputJson, callActivityChildShape);
-        }else {
+        } else {
             passToNext(node, outputJson, objectMapper, request);
         }
-        }
+    }
 }

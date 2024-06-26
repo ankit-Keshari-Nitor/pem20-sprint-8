@@ -50,7 +50,6 @@ public class CallActivityNodeHandler extends AbstractNodeHandler {
                 // Adding inParameters objects
                 ObjectNode inParam1 = inParameters.addObject();
                 inParam1.put("source", inParam.getSource());
-                inParam1.put("sourceExpression", "${test}");//TODO need to check
                 inParam1.put("target", inParam.getTarget());
 
             }

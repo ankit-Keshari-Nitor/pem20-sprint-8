@@ -21,14 +21,14 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
 
     const jsonData = await response.json();
 
-    const customizedData = jsonData && jsonData.content && jsonData.content.map((e) => ({
+    const customizedData = jsonData.content !== null && jsonData.content.map((e) => ({
       id: e.activityDefnKey,
       ...e
     }));
 
     return {
-      content: customizedData,
-      pageContent: jsonData.pageContent
+      content: customizedData || [],
+      pageContent: jsonData.pageContent || []
     };
   } catch (error) {
     console.error('Failed to fetch data:', error);

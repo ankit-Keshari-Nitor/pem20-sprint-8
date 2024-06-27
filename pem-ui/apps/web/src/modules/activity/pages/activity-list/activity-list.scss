@@ -61,18 +61,19 @@ tbody tr:nth-child {
 }
 
 
-.header-buttons {
+.header-button-left {
   position: relative !important;
   display: flex !important;
   flex-direction: row !important;
   justify-content: flex-end !important;
   background-color: #ffffff;
   width: 45% !important;
-  left: 55% !important;
+  left: 40% !important;
 }
 
 .headers {
   background: #ffffff !important;
+  padding-top: 0.5rem !important;
 }
 
 .filter-dropdown,
@@ -106,4 +107,69 @@ tbody tr:nth-child {
 
 .cds--btn__icon {
   inset-block-start: 14px !important
+}
+
+.action-item {
+  padding-right: 1rem !important;
+  width: 50% !important;
+}
+
+.action-item-delete {
+  border-color: #525252 !important;
+  color: #525252 !important
+}
+
+.overflow-option-delete {
+  background: #D1D1D1 !important;
+}
+
+.information-icon {
+  padding-top: 3px !important;
+}
+
+.checkmark-filled-encrypted {
+  color: #0F62FE !important;
+}
+
+.information-wrapper {
+  display: flex !important;
+}
+
+.encrypted-wrapper-text,
+.information-text {
+  padding-inline-start: 0.25rem !important;
+}
+
+.recently-view-text {
+  padding-inline-end: 0.5rem !important;
+}
+
+.encrypted-wrapper,
+.recently-view-wrapper {
+  display: inline-flex !important;
+}
+
+.close-filled-encrypted {
+  color: red !important
+}
+
+.cds--overflow-menu-options__btn:focus {
+  outline: none !important
+}
+
+.overflow-menu-icon {
+  margin-left: 70px !important;
+}
+
+.header-button-right {
+  display: flex !important;
+  background-color: #ffffff;
+  width: 15% !important;
+  justify-content: start !important;
+  float: left !important;
+  color: #525252 !important;
+  font-weight: 500 !important;
+  font-size: 18px !important;
+  padding-top: 1rem !important;
+  padding-left: 0.75rem !important;
 }

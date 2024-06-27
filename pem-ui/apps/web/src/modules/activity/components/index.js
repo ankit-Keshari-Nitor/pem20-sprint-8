@@ -1,3 +1,3 @@
-import ActivityDropdown from './actions-dropdown';
+import DataTableComponent from "./datatable-component";
 
-export { ActivityDropdown };
+export { DataTableComponent };

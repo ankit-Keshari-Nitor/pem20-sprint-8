@@ -86,8 +86,8 @@ public class RestTemplateApiService implements JavaDelegate {
                 nodeResultData.put("sampleResponse", sampleApiResponse);
                 nodeResultData.put("responseBody", response.getBody());
                 Map<String, Object> contextData = (Map<String, Object>) fullContextData.getOrDefault("contextData", new HashMap<>());
-                fullContextData.put("contextData", contextData);
                 contextData.put(serviceTaskId, nodeResultData);
+                fullContextData.put("contextData", contextData);
                 execution.setVariables(fullContextData);
             }
         } catch (IllegalArgumentException | HttpClientErrorException | HttpServerErrorException e) {

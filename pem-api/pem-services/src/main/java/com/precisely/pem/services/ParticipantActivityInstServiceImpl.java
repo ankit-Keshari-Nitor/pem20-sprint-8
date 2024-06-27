@@ -8,6 +8,7 @@ import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityInstStatsDto;
 import com.precisely.pem.dtos.shared.PaginationPcptInstDto;
 import com.precisely.pem.dtos.shared.TenantContext;
+import com.precisely.pem.exceptionhandler.InvalidStatusException;
 import com.precisely.pem.exceptionhandler.ParamMissingException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.*;
@@ -301,11 +302,13 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
     }
 
     @Override
-    public MessageResp startActivity(String sponsorContext, String pcptActivityInstKey) throws ResourceNotFoundException {
+    public MessageResp startActivity(String sponsorContext, String pcptActivityInstKey) throws ResourceNotFoundException, InvalidStatusException {
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
         PcptActivityInst pcptActivityInst = pcptInstRepo.findByPcptActivityInstKey(pcptActivityInstKey);
         if(Objects.isNull(pcptActivityInst)){
             throw new ResourceNotFoundException("PcptInstanceNotFound", "The participant instance with key '" + pcptActivityInstKey + "' not found.");
+        } else if(pcptActivityInst.getPcptInstStatus().equalsIgnoreCase(PcptInstStatus.STARTED.toString())){
+            throw new InvalidStatusException("AlreadyInStartedStatus","The participant activity instance with key '" + pcptActivityInstKey + "' is already in 'STARTED' state.");
         }
 
         String activityInstanceKey = pcptActivityInst.getActivityInstKey();

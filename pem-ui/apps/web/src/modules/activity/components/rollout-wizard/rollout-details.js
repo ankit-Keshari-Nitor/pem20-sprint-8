@@ -11,7 +11,45 @@ export default function RolloutDetails({ handleAddClick }) {
   const [alertInterval, setAlertInterval] = useState(0);
   const [rollingOut, setRollingOut] = useState('partners');
 
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [rolloutGapData, setRolloutGapData] = useState({ selectedGroupsData: [], selectedAttributesData: [], selectedPartnersData: [] });
+
+
+  // Handler for actual delete API call
+  const getActivityDetails = async (id) => {
+    try {
+      const responseMsg = await ActivityService.getActivityDetails(id);
+      if (responseMsg) {
+        return responseMsg;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error('Failed to get activity details:', error);
+      return null;
+    }
+  };
+
+  // Function to handle the Next/rollout Button Click
+  const handleBackToDetails = () => {
+    setOpenAddModal(false);
+    setOpenRolloutModal(true);
+  };
+
+  const handleAddGroups = (selectedGroupsData) => {
+    setRolloutGapData((prev) => ({ ...prev, selectedGroupsData: [...selectedGroupsData] }));
+  };
+
+  const handleAddAttributes = (selectedAttributesData) => {
+    setRolloutGapData((prev) => ({ ...prev, selectedAttributesData: [...selectedAttributesData] }));
+  };
+
+  const handleAddPartners = (selectedPartnersData) => {
+    setRolloutGapData((prev) => ({ ...prev, selectedPartnersData: [...selectedPartnersData] }));
+  };
+
   return (
+    <>
     <Grid className="define-grid">
       {/* Name */}
       <Column className="col-margin" lg={16}>
@@ -137,5 +175,21 @@ export default function RolloutDetails({ handleAddClick }) {
         </Column>
       )}
     </Grid>
+
+    {/* Modal for Add Partners and Groups, Attributes */}
+    {openAddModal && (
+      <WrapperModal
+        isOpen={openAddModal}
+        modalHeading={activityDetails?.name}
+        secondaryButtonText={'Back to Details'}
+        primaryButtonText={'Save'}
+        onPrimaryButtonClick={handleSubmitClick}
+        onSecondaryButtonClick={handleBackToDetails}
+        onRequestClose={() => setOpenAddModal(false)}
+      >
+        <RolloutTest handleAddGroups={handleAddGroups} handleAddAttributes={handleAddAttributes} handleAddPartners={handleAddPartners} rolloutGapData={rolloutGapData} />
+      </WrapperModal>
+    )}
+    </>
   );
 }

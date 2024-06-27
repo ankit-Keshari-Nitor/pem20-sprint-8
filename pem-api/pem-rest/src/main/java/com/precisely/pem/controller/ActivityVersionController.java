@@ -22,6 +22,7 @@ import jakarta.validation.constraints.Size;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -172,5 +173,28 @@ public class ActivityVersionController {
         if(log.isEnabled(Level.INFO))
             log.info("Retrieve all Activity Definitions: Starts");
         return  new ResponseEntity<>(activityVersionService.markAsDefaultActivityDefinitionVersion(sponsorContext,activityDefnKey,activityDefnVersionKey), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get Activity Definition Data for Specific Version of Activity Definition", tags = { "Activity Definition Version" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ActivityDataResponse.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityDataResponse.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+    })
+    @GetMapping("/{activityDefnVersionKey}/actions/getData")
+    public ResponseEntity<InputStreamResource> getActivityDataForSpecificVersion(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
+        if(log.isEnabled(Level.INFO))
+            log.info("getActivityDataForSpecificVersion: Starts");
+        ActivityDataResponse activityDataResponse = activityVersionService.getActivityDataForSpecificVersion(sponsorContext,activityDefnKey,activityDefnVersionKey);
+        return  ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + activityDataResponse.getFileName() + "\"")
+                .body(activityDataResponse.getStreamResource());
     }
 }

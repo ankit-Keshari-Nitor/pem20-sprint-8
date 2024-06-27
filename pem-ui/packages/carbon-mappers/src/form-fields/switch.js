@@ -16,7 +16,7 @@ const Switch = ({ field, id }) => {
 
 export default Switch;
 
-// Config of Button for Left Palette & Right Palette
+// Config of Switch for Left Palette & Right Palette
 Switch.config = {
   type,
   label: FORM_FIELD_LABEL.SWITCH,

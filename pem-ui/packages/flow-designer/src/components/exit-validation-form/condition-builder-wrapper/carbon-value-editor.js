@@ -1,5 +1,5 @@
-import { Checkbox, TextArea, TextInput, Toggle, Modal, TreeView, TreeNode, Button } from '@carbon/react';
 import * as React from 'react';
+import { Checkbox, TextArea, TextInput, Toggle, TreeView, TreeNode, Button, DatePicker, DatePickerInput, Select, SelectItem } from '@carbon/react';
 import { ValueSelector, getFirstOption, standardClassnames, useValueEditor } from 'react-querybuilder';
 import { ElippsisIcon } from '../../../icons';
 import { useState } from 'react';
@@ -99,12 +99,87 @@ const CarbonValueEditor = (allProps) => {
       </span>
     );
   }
-  switch (type) {
-    case 'select':
-      return <SelectorComponent {...props} className={className} title={title} value={value} disabled={disabled} handleOnChange={handleOnChange} options={values} />;
 
+  let rightOperandInput = null;
+  switch (allProps?.field) {
+    case 'string':
+      rightOperandInput = (
+        <>
+          <div style={{ marginTop: '1.5rem' }}>
+            <TextInput
+              id="operand-input"
+              labelText=""
+              type={inputTypeCoerced}
+              value={value}
+              title={title}
+              className={className}
+              placeholder={'Right Operand'}
+              onChange={(e) => {
+                let myString = e.target.value;
+                myString = myString.replace(/["']/g, '');
+                handleOnChange("'" + myString + "'");
+              }}
+              {...extraProps}
+            />
+          </div>
+        </>
+      );
+      break;
+    case 'numeric':
+      rightOperandInput = (
+        <>
+          <div style={{ marginTop: '1.5rem' }}>
+            <TextInput
+              id="operand-input"
+              labelText=""
+              type={inputTypeCoerced}
+              value={value}
+              title={title}
+              className={className}
+              placeholder={'Right Operand'}
+              onChange={(e) => handleOnChange(e.target.value)}
+              {...extraProps}
+            />
+          </div>
+        </>
+      );
+      break;
+    case 'boolean':
+      rightOperandInput = (
+        <>
+          <div style={{ marginTop: '1rem' }}>
+            <Select
+              id="operand-input"
+              labelText=""
+              className={className}
+              title={title}
+              value={value}
+              disabled={disabled}
+              onChange={(e) => handleOnChange(e.target.value)}
+              {...extraProps}
+            >
+              <SelectItem value="true" text="True" />
+              <SelectItem value="false" text="False" />
+            </Select>
+          </div>
+        </>
+      );
+      break;
+    case 'date':
+      rightOperandInput = (
+        <>
+          <div style={{ marginTop: '1.5rem' }}>
+            <DatePicker datePickerType="single" className={className} value={value} onChange={(e) => handleOnChange(e)}>
+              <DatePickerInput id="operand-input" labelText="" placeholder="mm/dd/yyyy" />
+            </DatePicker>
+          </div>
+        </>
+      );
+      break;
+    case 'select':
+      rightOperandInput = <SelectorComponent {...props} className={className} title={title} value={value} disabled={disabled} handleOnChange={handleOnChange} options={values} />;
     case 'multiselect':
-      return (
+      rightOperandInput = (
         <ValueSelector
           {...props}
           className={className}
@@ -117,29 +192,25 @@ const CarbonValueEditor = (allProps) => {
           listsAsArrays={listsAsArrays}
         />
       );
-
+      break;
     case 'textarea':
-      return <TextArea value={value} title={title} className={className} placeholder={placeHolderText} onChange={(e) => handleOnChange(e.target.value)} {...extraProps} />;
-
+      rightOperandInput = (
+        <TextArea value={value} title={title} className={className} placeholder={placeHolderText} onChange={(e) => handleOnChange(e.target.value)} {...extraProps} />
+      );
+      break;
     case 'switch':
-      return <Toggle className={className} isChecked={!!value} title={title} onChange={(e) => handleOnChange(e.target.checked)} {...extraProps} />;
-
+      rightOperandInput = <Toggle className={className} isChecked={!!value} title={title} onChange={(e) => handleOnChange(e.target.checked)} {...extraProps} />;
+      break;
     case 'checkbox':
-      return <Checkbox className={className} title={title} onChange={(e) => handleOnChange(e.target.checked)} isChecked={!!value} {...extraProps} />;
+      rightOperandInput = <Checkbox className={className} title={title} onChange={(e) => handleOnChange(e.target.checked)} isChecked={!!value} {...extraProps} />;
+      break;
   }
 
+  // Right Operand
   return (
     <>
-      <TextInput
-        type={inputTypeCoerced}
-        value={value}
-        title={title}
-        className={className}
-        placeholder={'Operand'}
-        onChange={(e) => handleOnChange(e.target.value)}
-        {...extraProps}
-      />
-      <Button size="md" className="opt-btn" kind="secondary" renderIcon={ElippsisIcon} onClick={() => setOpenCancelDialog(true)}></Button>
+      {rightOperandInput}
+      <Button size="md" className="opt-btn" kind="secondary" renderIcon={ElippsisIcon} onClick={() => setOpenCancelDialog(true)} style={{ marginTop: '1.5rem' }}></Button>
       <WrapperModal openCancelDialog={openCancelDialog} setOpenCancelDialog={setOpenCancelDialog}>
         {Temp}
       </WrapperModal>

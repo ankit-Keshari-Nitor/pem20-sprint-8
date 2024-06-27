@@ -64,6 +64,7 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
   const isActive = isOver && canDrop;
   return (
     <div className={classNames('dropZone', { active: isActive, isLast }, className)} ref={drop}>
+      {isActive ? <span className='release-text'>Release</span> : null}
       {className === 'plus-icon' && <ColumnPlusIcon />}
     </div>
   );

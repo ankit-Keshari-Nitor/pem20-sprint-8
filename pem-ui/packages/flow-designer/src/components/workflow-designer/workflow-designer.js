@@ -19,11 +19,12 @@ import {
   DIALOG_INITIAL_NODES,
   DIALOG_NODE_TYPES,
   DIALOG_EDGE_TYPES,
-  NODE_TYPE,
-  TASK_INITIAL_NODES
+  NODE_TYPE
 } from '../../constants';
 import { useEffect } from 'react';
 import useTaskStore from '../../store';
+import { Column, Grid } from '@carbon/react';
+import { CrossIcon } from '../../icons';
 
 let dialogId = 0;
 const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
@@ -63,8 +64,8 @@ const WorkFlowDesigner = forwardRef(({
   const [selectedDialogNode, setSelectedDialogNode] = useState(null);
 
   // --------------------------------- Dialog Flow Methods -----------------------------------
-  const onDialogNodeDoubleClick = (type) => {
-    if (type === NODE_TYPE.DIALOG) {
+  const onDialogNodeDoubleClick = (event, node) => {
+    if (node.type === NODE_TYPE.DIALOG) {
       setIsPageDesignerActive(true);
     }
   };
@@ -85,6 +86,7 @@ const WorkFlowDesigner = forwardRef(({
       newParam.type = 'crossEdge';
       newParam.markerEnd = endMarks;
       newParam.data = { id: selectedTaskNode?.id };
+     /// newParam.data = selectedTaskNode?.id;//incoming change
       addDialogEdge(selectedTaskNode, addEdge({ ...newParam, style: { stroke: '#000' } }, dialogEdges));
     },
     [addDialogEdge, dialogEdges, selectedTaskNode]
@@ -152,7 +154,19 @@ const WorkFlowDesigner = forwardRef(({
       let copyNodes = dialogNodes;
       copyNodes.map((copyNode) => {
         if (node.id === copyNode.id) {
-          copyNode.data.borderColor = '#023FB2';
+          switch (node.type) {
+            case NODE_TYPE.DIALOG:
+              copyNode.data.borderColor = '#D21CF0';
+              break;
+            case NODE_TYPE.XSLT:
+              copyNode.data.borderColor = '#FF611D';
+              break;
+            case NODE_TYPE.API:
+              copyNode.data.borderColor = '#3FBA13';
+              break;
+            default:
+              break;
+          }
         } else {
           copyNode.data.borderColor = '#0585FC';
         }
@@ -165,8 +179,8 @@ const WorkFlowDesigner = forwardRef(({
   };
 
   // --------------------------------- Task Flow Methods -----------------------------------
-  const onTaskNodeDoubleClick = (type) => {
-    if (type === NODE_TYPE.PARTNER || type === NODE_TYPE.SPONSOR || type === NODE_TYPE.CUSTOM || type === NODE_TYPE.SYSTEM) {
+  const onTaskNodeDoubleClick = (event, node) => {
+    if (node.type === NODE_TYPE.PARTNER || node.type === NODE_TYPE.SPONSOR || node.type === NODE_TYPE.CUSTOM || node.type === NODE_TYPE.SYSTEM) {
       setIsDialogFlowActive(true);
     }
   };
@@ -241,15 +255,34 @@ const WorkFlowDesigner = forwardRef(({
     }
   };
 
+  const onClickPageDesignerBack = () => {
+    setIsDialogFlowActive(true);
+    setIsPageDesignerActive(false);
+  };
+
+  const onClickDialogFlowBack = () => {
+    setIsDialogFlowActive(false);
+    setIsPageDesignerActive(false);
+  };
+
   return (
     <>
       {isPageDesignerActive ? (
         <DndProvider debugMode={true} backend={HTML5Backend}>
-          <PageDesigner.Designer componentMapper={componentMapper} />
+          <PageDesigner.Designer componentMapper={componentMapper} onClickPageDesignerBack={onClickPageDesignerBack} activityDefinitionData={activityDefinitionData} />
         </DndProvider>
       ) : (
         <>
           <div className="work-flow-designer">
+            {isDialogFlowActive && (
+              <div className="title-container">
+                <Column>
+                  <span onClick={onClickDialogFlowBack} className="icon">
+                    <CrossIcon />
+                  </span>
+                </Column>
+              </div>
+            )}
             {isDialogFlowActive ? (
               <DialogFlowDesigner
                 connectionLineStyle={connectionLineStyle}

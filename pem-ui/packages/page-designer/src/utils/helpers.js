@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { ROW, COLUMN, COMPONENT, GROUP, TAB, ACCORDION, CUSTOM_SIZE, SUBTAB, DEFAULTTITLE, SIDEBAR_ITEM } from '../constants/constants';
+import { validAlphaNumericOnly, validAlphaNumericNumber, validEmail, validInteger, validURL } from './regex';
 
 // a little function to help us with reordering the result
 export const reorder = (list, startIndex, endIndex) => {
@@ -471,6 +472,11 @@ export const formValidation = (formLayout) => {
           fieldItem.component.invalid = true;
           fieldItem.component.invalidText = fieldItem.component?.max.message;
         }
+        if (fieldItem.component?.regexValidation?.value && fieldItem.component?.regexValidation?.value !== undefined) {
+          const isValueValid = validateRegex(fieldItem.component?.value, fieldItem.component?.regexValidation);
+          fieldItem.component.invalid = isValueValid;
+          fieldItem.component.invalidText = fieldItem.component?.regexValidation.message;
+        }
         break;
       }
       default: {
@@ -479,6 +485,30 @@ export const formValidation = (formLayout) => {
     }
   });
   return formLayout;
+};
+
+const validateRegex = (inputValue, regexValidation) => {
+  switch (regexValidation?.pattern) {
+    case 'Lower- or Upper-case Alpha Numeric only':
+      return !validAlphaNumericOnly.test(inputValue);
+    case 'Lower- or Upper-case Alpha Numeric and Numbers only':
+      return !validAlphaNumericNumber.test(inputValue);
+    case 'Email Address':
+      return !validEmail.test(inputValue);
+    case 'Integer Number with min and max values':
+      return !validInteger.test(inputValue);
+    case 'URL':
+      return !validURL.test(inputValue);
+    case 'Custom Regular Expression':
+      return isValidCustomRegex(inputValue, regexValidation?.customRegex);
+    default:
+      break;
+  }
+};
+
+const isValidCustomRegex = (inputValue, customRegex) => {
+  const validCustomRegex = new RegExp(customRegex);
+  return !validCustomRegex.test(inputValue);
 };
 
 export const collectPaletteEntries = (formFields) => {

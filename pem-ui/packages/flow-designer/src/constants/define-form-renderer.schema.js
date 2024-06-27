@@ -580,3 +580,51 @@ export const XSLT_FROM_SCHEMA = {
     },
   ]
 };
+
+export const ACTIVITY_TASK_SCHEMA = {
+  fields: [
+    {
+      component: componentTypes.TEXT_FIELD,
+      name: 'name',
+      'data-testid': 'activity-name',
+      labelText: 'Name (required)',
+      isRequired: true,
+      validate: [
+        {
+          type: validatorTypes.REQUIRED,
+          message: 'Name is required'
+        },
+        {
+          type: validatorTypes.MAX_LENGTH,
+          threshold: 100,
+          message: 'Name must be no longer then 100 characters'
+        }
+      ]
+    },
+    {
+      component: componentTypes.TEXTAREA,
+      name: 'description',
+      labelText: 'Description',
+      enableCounter: true,
+      isRequired: true,
+      maxCount: 100,
+      validate: [
+        {
+          type: validatorTypes.MAX_LENGTH,
+          threshold: 100,
+          message: 'Description must be no longer then 100 characters'
+        }
+      ]
+    },
+    {
+      component: componentTypes.TEXTAREA,
+      name: 'contextData',
+      labelText: 'Context Data (Optional)'
+    },
+    {
+      component: componentTypes.CHECKBOX,
+      name: 'encrypted',
+      labelText: 'Encrypt'
+    }
+  ]
+};

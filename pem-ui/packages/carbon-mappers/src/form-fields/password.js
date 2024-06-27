@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { PasswordInput } from '@carbon/react';
-import { FORM_FIELD_TYPE, minProps, maxProps, readOnly, helperText, FORM_FIELD_LABEL, FORM_FIELD_GROUPS, isRequired, labelText, isDisabled } from '../constant';
+import {
+  FORM_FIELD_TYPE,
+  minProps,
+  maxProps,
+  readOnly,
+  NameLabel,
+  helperText,
+  FORM_FIELD_LABEL,
+  FORM_FIELD_GROUPS,
+  isRequired,
+  labelText,
+  placeHolder,
+  valueLabel,id,
+  regexValidation
+} from '../constant';
 import { Password as PasswordIcon } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.PASSWORD;
 
 const Password = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
-  const { labelText, helperText, disabled, value, isRequired, min, max, ...rest } = field;
+  const { labelText, helperText, label, disabled, value, isRequired, min, max, ...rest } = field;
   const [fieldValue, setFieldValue] = useState();
 
   useEffect(() => {
@@ -21,7 +35,7 @@ const Password = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
         type={FORM_FIELD_TYPE.TEXT}
         data-testid={id}
         id={id}
-        labelText={labelText}
+        labelText={labelText === undefined ? label : labelText}
         helperText={helperText}
         disabled={disabled}
         defaultValue={''}
@@ -45,8 +59,8 @@ Password.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <PasswordIcon />,
   editableProps: {
-    Basic: [labelText, helperText, isDisabled],
+    Basic: [id,NameLabel, labelText, placeHolder, helperText, valueLabel, readOnly],
     Condition: []
   },
-  advanceProps: [isRequired]
+  advanceProps: [minProps, maxProps, regexValidation, isRequired]
 };

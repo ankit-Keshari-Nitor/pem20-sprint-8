@@ -1,15 +1,15 @@
 import React from 'react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, id,NameLabel, mapping, labelText } from '../constant';
 import { TextIcon } from '../icons';
 
 const type = FORM_FIELD_TYPE.TEXT;
 
 const Text = ({ field, id }) => {
-  const { labelText } = field;
+  const { labelText, label } = field;
 
   return (
     <span data-testid={id} id={id}>
-      {labelText}
+      {labelText === undefined ? label : labelText}
     </span>
   );
 };
@@ -23,7 +23,7 @@ Text.config = {
   group: FORM_FIELD_GROUPS.ACTION,
   icon: <TextIcon />,
   editableProps: {
-    Basic: [labelText],
+    Basic: [id,NameLabel, labelText, mapping],
     Condition: []
   },
   advanceProps: []

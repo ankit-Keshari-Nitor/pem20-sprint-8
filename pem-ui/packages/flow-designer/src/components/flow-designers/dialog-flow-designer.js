@@ -24,6 +24,7 @@ const DialogFlowDesigner = ({
   onDialogNodeDrop,
   onDialogNodeDragOver,
   onDialogNodeClick,
+  onDialogNodeDoubleClick,
   DIALOG_NODE_TYPES,
   DIALOG_EDGE_TYPES,
   openDialogPropertiesBlock,
@@ -53,6 +54,7 @@ const DialogFlowDesigner = ({
                   onDrop={onDialogNodeDrop}
                   onDragOver={onDialogNodeDragOver}
                   onNodeClick={onDialogNodeClick}
+                  onNodeDoubleClick={onDialogNodeDoubleClick}
                   nodeTypes={DIALOG_NODE_TYPES}
                   edgeTypes={DIALOG_EDGE_TYPES}
                   onInit={setDialogFlowInstance}
@@ -70,10 +72,10 @@ const DialogFlowDesigner = ({
         {openDialogPropertiesBlock && (
           <>
             <PanelResizeHandle />
-            <Panel defaultSize={40} minSize={20} maxSize={70}>
+            <Panel defaultSize={35} minSize={20} maxSize={70}>
               <div className="dnd-flow">
-                <div className="task-activity-container">
-                  <BlockPropertiesTray selectedNode={selectedDialogNode} setOpenPropertiesBlock={setOpenDialogPropertiesBlock} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />
+                <div className="task-properties-container">
+                  <BlockPropertiesTray selectedNode={selectedDialogNode} setOpenPropertiesBlock={setOpenDialogPropertiesBlock} selectedTaskNode={selectedTaskNode} />
                 </div>
               </div>
             </Panel>

@@ -6,14 +6,14 @@ import { RadioIcon } from './../icons';
 const type = FORM_FIELD_TYPE.RADIO;
 
 const RadioButton = ({ field, id, previewMode }) => {
-  const { type, labelText, isRequired, ...rest } = field;
+  const { type, labelText, label, isRequired, ...rest } = field;
 
-  return <CarbonRadioButton data-testid={`${id}-${previewMode}`} id={`${id}-${previewMode}`} labelText={labelText} value={id} {...rest} />;
+  return <CarbonRadioButton data-testid={`${id}-${previewMode}`} id={`${id}-${previewMode}`} labelText={labelText === undefined ? label : labelText} value={id} {...rest} />;
 };
 
 export default RadioButton;
 
-// Config of Accordion for Left Palette & Right Palette
+// Config of Radio Button for Left Palette & Right Palette
 RadioButton.config = {
   type,
   label: FORM_FIELD_LABEL.RADIO,

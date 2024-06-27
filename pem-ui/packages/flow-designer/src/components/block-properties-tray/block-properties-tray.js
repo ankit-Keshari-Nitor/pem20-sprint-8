@@ -1,5 +1,23 @@
 import React, { useState } from 'react';
-import { Modal, } from '@carbon/react';
+import { Column, Grid, Modal, Select, SelectItem } from '@carbon/react';
+
+import { NODE_TYPE } from '../../constants';
+import { CrossIcon, ExpandIcon } from './../../icons';
+import BlockDefinitionForm from '../block-definition-form';
+import ActivityTaskDefinition from '../activity-task-definition';
+import {
+  PARTNER_FORM_SCHEMA,
+  APPROVAL_FORM_SCHEMA,
+  ATTRIBUTE_FORM_SCHEMA,
+  CUSTOM_FORM_SCHEMA,
+  DIALOG_FORM_SCHEMA,
+  SPONSOR_FORM_SCHEMA,
+  SYSTEM_FORM_SCHEMA,
+  XSLT_FROM_SCHEMA,
+  API_FORM_SCHEMA
+} from './../../constants/define-form-renderer.schema';
+
+import './block-properties-tray.scss';
 
 import { NODE_TYPE } from '../../constants';
 import { CrossIcon, ExpandIcon } from './../../icons';
@@ -83,7 +101,7 @@ export default function BlockPropertiesTray(props) {
             </span>
           </div>
         </div>
-        {getForm(selectedNode)}
+        <div className="block-properties-form">{getForm(selectedNode)}</div>
       </div>
       <Modal
         open={openExpandMode}

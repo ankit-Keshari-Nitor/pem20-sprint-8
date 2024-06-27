@@ -100,10 +100,6 @@ const CarbonValueEditor = (allProps) => {
     );
   }
 
-  const handleChange = (value) => {
-    handleOnChange(value);
-  };
-
   let rightOperandInput = null;
   switch (allProps?.field) {
     case 'string':
@@ -118,7 +114,11 @@ const CarbonValueEditor = (allProps) => {
               title={title}
               className={className}
               placeholder={'Right Operand'}
-              onChange={(e) => handleChange(e.target.value)}
+              onChange={(e) => {
+                let myString = e.target.value;
+                myString = myString.replace(/["']/g, '');
+                handleOnChange("'" + myString + "'");
+              }}
               {...extraProps}
             />
           </div>
@@ -137,7 +137,7 @@ const CarbonValueEditor = (allProps) => {
               title={title}
               className={className}
               placeholder={'Right Operand'}
-              onChange={(e) => handleChange(e.target.value)}
+              onChange={(e) => handleOnChange(e.target.value)}
               {...extraProps}
             />
           </div>
@@ -155,7 +155,7 @@ const CarbonValueEditor = (allProps) => {
               title={title}
               value={value}
               disabled={disabled}
-              onChange={(e) => handleChange(e.target.value)}
+              onChange={(e) => handleOnChange(e.target.value)}
               {...extraProps}
             >
               <SelectItem value="true" text="True" />
@@ -169,7 +169,7 @@ const CarbonValueEditor = (allProps) => {
       rightOperandInput = (
         <>
           <div style={{ marginTop: '1.5rem' }}>
-            <DatePicker datePickerType="single" className={className} value={value} onChange={(e) => handleChange(e)}>
+            <DatePicker datePickerType="single" className={className} value={value} onChange={(e) => handleOnChange(e)}>
               <DatePickerInput id="operand-input" labelText="" placeholder="mm/dd/yyyy" />
             </DatePicker>
           </div>

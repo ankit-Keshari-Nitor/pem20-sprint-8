@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 
+import javax.sql.rowset.serial.SerialBlob;
 import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -85,44 +86,44 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
 
     @Test
     public void testStartActivity_Success() throws Exception {
+        // Given
+        String sponsorContext = "testContext";
+        String pcptActivityInstKey = "testKey";
+
+        SponsorInfo sponsorInfo = new SponsorInfo(); // Assuming this is a POJO
         PcptActivityInst pcptActivityInst = new PcptActivityInst();
+        pcptActivityInst.setPcptInstStatus("NOT_STARTED");
         pcptActivityInst.setActivityInstKey("activityInstKey");
-        Blob blob = mock(Blob.class);
-        when(blob.length()).thenReturn(10L);
-        when(blob.getBytes(1, 10)).thenReturn("{\r\n  \"activityDefnVersionKey\": \"f532a80a-19fb-4e02-acbe-2a1d1958a90b\",\r\n  \"name\": \"Shrirang\",\r\n  \"description\": \"Sample\",\r\n  \"alertStartDate\": \"2024-05-19T04:17:51.418Z\",\r\n  \"alertInterval\": 2,\r\n  \"dueDate\": \"2024-05-19T04:17:51.418Z\",\r\n  \"partners\": [\r\n    {\r\n      \"partnerKey\": \"041fba37-ee7a-433a-b0bc-91ad45de6c39\",\r\n      \"contextDataNodes\": [\r\n        {\r\n          \"nodeRef\": \"$.applications.SponsorConfigurations.CustomProtocols.protocol[0]._value\",\r\n          \"nodeValue\": \"HTTPS\"\r\n        },\r\n\t\t{\r\n          \"nodeRef\": \"$.applications.SponsorConfigurations.CustomProtocols.protocol[1]._value\",\r\n          \"nodeValue\": \"HTTPS\"\r\n        },\r\n\t\t{\r\n          \"nodeRef\": \"$.applications.PR._type\",\r\n          \"nodeValue\": \"Shrirang\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n\"contextData\":\"\",\r\n  \"rolloutInternally\": false,\r\n  \"attributeValues\": [\r\n    {\r\n      \"attributeValueKey\": \"string\"\r\n    }\r\n  ],\r\n  \"attributeGroups\": [\r\n    {\r\n      \"attributeGroupKey\": \"string\"\r\n    }\r\n  ]\r\n}"
-                .getBytes());
-        pcptActivityInst.setPcptContextData(blob);
-        pcptActivityInst.setPcptInstStatus("");
+        pcptActivityInst.setPcptContextData(new SerialBlob("testData".getBytes()));
+
         ActivityInst activityInst = new ActivityInst();
         activityInst.setActivityDefnVersionKey("activityDefnVersionKey");
+
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
         activityDefnVersion.setActivityDefnKey("activityDefnKey");
+
         ActivityDefn activityDefn = new ActivityDefn();
         activityDefn.setActivityName("activityName");
+
         ActivityProcDef activityProcDef = new ActivityProcDef();
-        activityProcDef.setId("processDefId");
+        activityProcDef.setId("procDefId");
 
-        when(pcptInstRepo.findByPcptActivityInstKey(anyString())).thenReturn(pcptActivityInst);
-        when(activityInstRepo.findByActivityInstKey(anyString())).thenReturn(activityInst);
-        when(activityDefnVersionRepo.findByActivityDefnVersionKey(anyString())).thenReturn(activityDefnVersion);
-        when(activityDefnRepo.findByActivityDefnKey(anyString())).thenReturn(activityDefn);
-        when(activityProcDefRepo.findByResourceName(anyString())).thenReturn(List.of(activityProcDef));
-        when(objectMapper.readValue(anyString(), (Class<Object>) any())).thenReturn(Collections.emptyMap());
+        when(pcptInstRepo.findByPcptActivityInstKey(pcptActivityInstKey)).thenReturn(pcptActivityInst);
+        when(activityInstRepo.findByActivityInstKey("activityInstKey")).thenReturn(activityInst);
+        when(activityDefnVersionRepo.findByActivityDefnVersionKey("activityDefnVersionKey")).thenReturn(activityDefnVersion);
+        when(activityDefnRepo.findByActivityDefnKey("activityDefnKey")).thenReturn(activityDefn);
+        when(activityProcDefRepo.findByResourceName("activityName.bpmn")).thenReturn(Collections.singletonList(activityProcDef));
+        when(pemActivitiService.startProcessInstanceById(eq("procDefId"), any(), any())).thenReturn("processInstanceId");
 
-        when(pemActivitiService.startProcessInstanceById(anyString(), anyString(), anyMap())).thenReturn("processInstanceId");
+        // When
+        MessageResp response = participantActivityInstServiceImpl.startActivity(sponsorContext, pcptActivityInstKey);
 
-        MessageResp result = participantActivityInstServiceImpl.startActivity("sponsorContext", "pcptActivityInstKey");
-
-        assertNotNull(result);
-        assertEquals("SUCCESS", result.getResponse());
-
-        verify(pcptInstRepo).findByPcptActivityInstKey(anyString());
-        verify(activityInstRepo).findByActivityInstKey(anyString());
-        verify(activityDefnVersionRepo).findByActivityDefnVersionKey(anyString());
-        verify(activityDefnRepo).findByActivityDefnKey(anyString());
-        verify(activityProcDefRepo).findByResourceName(anyString());
-        verify(pcptInstRepo).save(pcptActivityInst);
+        // Then
+        assertNotNull(response);
+        assertEquals("SUCCESS", response.getResponse());
+        verify(pcptInstRepo, times(1)).save(pcptActivityInst);
     }
+
     @Test
     public void testStartActivity_ResourceNotFound() {
         when(pcptInstRepo.findByPcptActivityInstKey(anyString())).thenReturn(null);

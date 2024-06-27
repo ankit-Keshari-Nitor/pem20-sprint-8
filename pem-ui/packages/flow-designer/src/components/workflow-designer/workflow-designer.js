@@ -19,11 +19,12 @@ import {
   DIALOG_INITIAL_NODES,
   DIALOG_NODE_TYPES,
   DIALOG_EDGE_TYPES,
-  NODE_TYPE,
-  TASK_INITIAL_NODES
+  NODE_TYPE
 } from '../../constants';
 import { useEffect } from 'react';
 import useTaskStore from '../../store';
+import { Column, Grid } from '@carbon/react';
+import { CrossIcon } from '../../icons';
 
 let dialogId = 0;
 const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
@@ -59,8 +60,8 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
   const [selectedDialogNode, setSelectedDialogNode] = useState(null);
 
   // --------------------------------- Dialog Flow Methods -----------------------------------
-  const onDialogNodeDoubleClick = (type) => {
-    if (type === NODE_TYPE.DIALOG) {
+  const onDialogNodeDoubleClick = (event, node) => {
+    if (node.type === NODE_TYPE.DIALOG) {
       setIsPageDesignerActive(true);
     }
   };
@@ -81,9 +82,9 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
       newParam.type = 'crossEdge';
       newParam.markerEnd = endMarks;
       newParam.data = selectedTaskNode?.id;
-      addDialogEdge(selectedTaskNode, addEdge({ ...newParam, style: { stroke: '#000' } }, dialogEdges.slice(0, storeData.taskEdges.length - 1)));
+      addDialogEdge(selectedTaskNode, addEdge({ ...newParam, style: { stroke: '#000' } }, dialogEdges));
     },
-    [addDialogEdge, dialogEdges, selectedTaskNode, storeData.taskEdges.length]
+    [addDialogEdge, dialogEdges, selectedTaskNode]
   );
 
   const onDialogNodeDragOver = useCallback((event) => {
@@ -147,7 +148,19 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
       let copyNodes = dialogNodes;
       copyNodes.map((copyNode) => {
         if (node.id === copyNode.id) {
-          copyNode.data.borderColor = '#023FB2';
+          switch (node.type) {
+            case NODE_TYPE.DIALOG:
+              copyNode.data.borderColor = '#D21CF0';
+              break;
+            case NODE_TYPE.XSLT:
+              copyNode.data.borderColor = '#FF611D';
+              break;
+            case NODE_TYPE.API:
+              copyNode.data.borderColor = '#3FBA13';
+              break;
+            default:
+              break;
+          }
         } else {
           copyNode.data.borderColor = '#0585FC';
         }
@@ -160,8 +173,8 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
   };
 
   // --------------------------------- Task Flow Methods -----------------------------------
-  const onTaskNodeDoubleClick = (type) => {
-    if (type === NODE_TYPE.PARTNER || type === NODE_TYPE.SPONSOR || type === NODE_TYPE.CUSTOM || type === NODE_TYPE.SYSTEM) {
+  const onTaskNodeDoubleClick = (event, node) => {
+    if (node.type === NODE_TYPE.PARTNER || node.type === NODE_TYPE.SPONSOR || node.type === NODE_TYPE.CUSTOM || node.type === NODE_TYPE.SYSTEM) {
       setIsDialogFlowActive(true);
     }
   };
@@ -171,7 +184,7 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
       let newParam = params;
       newParam.type = 'crossEdge';
       newParam.markerEnd = endMarks;
-      addTaskEdge(addEdge({ ...newParam, style: { stroke: '#000' } }, storeData.taskEdges.slice(0, storeData.taskEdges.length - 1)));
+      addTaskEdge(addEdge({ ...newParam, style: { stroke: '#000' } }, storeData.taskEdges));
     },
     [addTaskEdge, storeData.taskEdges]
   );
@@ -234,63 +247,88 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
     }
   };
 
+  const onClickPageDesignerBack = () => {
+    setIsDialogFlowActive(true);
+    setIsPageDesignerActive(false);
+  };
+
+  const onClickDialogFlowBack = () => {
+    setIsDialogFlowActive(false);
+    setIsPageDesignerActive(false);
+  };
+
   return (
     <>
       {isPageDesignerActive ? (
         <DndProvider debugMode={true} backend={HTML5Backend}>
-          <PageDesigner.Designer componentMapper={componentMapper} />
+          <PageDesigner.Designer componentMapper={componentMapper} onClickPageDesignerBack={onClickPageDesignerBack} activityDefinitionData={activityDefinitionData} />
         </DndProvider>
       ) : (
         <>
           <div className="work-flow-designer">
+            {isDialogFlowActive && (
+              <div className="title-container">
+                <Column>
+                  <span onClick={onClickDialogFlowBack} className="icon">
+                    <CrossIcon />
+                  </span>
+                </Column>
+              </div>
+            )}
             {isDialogFlowActive ? (
-              <DialogFlowDesigner
-                connectionLineStyle={connectionLineStyle}
-                defaultViewport={defaultViewport}
-                snapGrid={snapGrid}
-                dialogFlowWrapper={dialogFlowWrapper}
-                dialogNodes={dialogNodes}
-                dialogEdges={dialogEdges}
-                onDialogNodesChange={onDialogNodesChange}
-                onDialogEdgesChange={onDialogEdgesChange}
-                dialogFlowInstance={dialogFlowInstance}
-                setDialogFlowInstance={setDialogFlowInstance}
-                onDialogNodeConnect={onDialogNodeConnect}
-                onDialogNodeDrop={onDialogNodeDrop}
-                onDialogNodeDragOver={onDialogNodeDragOver}
-                onDialogNodeClick={onDialogNodeClick}
-                DIALOG_NODE_TYPES={DIALOG_NODE_TYPES}
-                DIALOG_EDGE_TYPES={DIALOG_EDGE_TYPES}
-                selectedDialogNode={selectedDialogNode}
-                selectedTaskNode={selectedTaskNode}
-                openDialogPropertiesBlock={openDialogPropertiesBlock}
-                setOpenDialogPropertiesBlock={setOpenDialogPropertiesBlock}
-              />
+              <div className="flow-designer-container">
+                <DialogFlowDesigner
+                  connectionLineStyle={connectionLineStyle}
+                  defaultViewport={defaultViewport}
+                  snapGrid={snapGrid}
+                  dialogFlowWrapper={dialogFlowWrapper}
+                  dialogNodes={dialogNodes}
+                  dialogEdges={dialogEdges}
+                  onDialogNodesChange={onDialogNodesChange}
+                  onDialogEdgesChange={onDialogEdgesChange}
+                  dialogFlowInstance={dialogFlowInstance}
+                  setDialogFlowInstance={setDialogFlowInstance}
+                  onDialogNodeConnect={onDialogNodeConnect}
+                  onDialogNodeDrop={onDialogNodeDrop}
+                  onDialogNodeDragOver={onDialogNodeDragOver}
+                  onDialogNodeClick={onDialogNodeClick}
+                  onDialogNodeDoubleClick={onDialogNodeDoubleClick}
+                  DIALOG_NODE_TYPES={DIALOG_NODE_TYPES}
+                  DIALOG_EDGE_TYPES={DIALOG_EDGE_TYPES}
+                  selectedDialogNode={selectedDialogNode}
+                  selectedTaskNode={selectedTaskNode}
+                  openDialogPropertiesBlock={openDialogPropertiesBlock}
+                  setOpenDialogPropertiesBlock={setOpenDialogPropertiesBlock}
+                />
+              </div>
             ) : (
-              <TaskFlowDesigner
-                connectionLineStyle={connectionLineStyle}
-                defaultViewport={defaultViewport}
-                snapGrid={snapGrid}
-                taskFlowWrapper={taskFlowWrapper}
-                taskNodes={taskNodes}
-                taskEdges={taskEdges}
-                onTaskNodesChange={onTaskNodesChange}
-                onTaskEdgesChange={onTaskEdgesChange}
-                taskFlowInstance={taskFlowInstance}
-                setTaskFlowInstance={setTaskFlowInstance}
-                onTaskNodeConnect={onTaskNodeConnect}
-                onTaskNodeDrop={onTaskNodeDrop}
-                onTaskNodeDragOver={onTaskNodeDragOver}
-                onTaskNodeClick={onTaskNodeClick}
-                TASK_NODE_TYPES={TASK_NODE_TYPES}
-                TASK_EDGE_TYPES={TASK_EDGE_TYPES}
-                selectedTaskNode={selectedTaskNode}
-                openTaskPropertiesBlock={openTaskPropertiesBlock}
-                setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
-                showActivityDefineDrawer={showActivityDefineDrawer}
-                editDefinitionProp={editDefinitionProp}
-                activityDefinitionData={activityDefinitionData}
-              />
+              <div className="flow-designer-container">
+                <TaskFlowDesigner
+                  connectionLineStyle={connectionLineStyle}
+                  defaultViewport={defaultViewport}
+                  snapGrid={snapGrid}
+                  taskFlowWrapper={taskFlowWrapper}
+                  taskNodes={taskNodes}
+                  taskEdges={taskEdges}
+                  onTaskNodesChange={onTaskNodesChange}
+                  onTaskEdgesChange={onTaskEdgesChange}
+                  taskFlowInstance={taskFlowInstance}
+                  setTaskFlowInstance={setTaskFlowInstance}
+                  onTaskNodeConnect={onTaskNodeConnect}
+                  onTaskNodeDrop={onTaskNodeDrop}
+                  onTaskNodeDragOver={onTaskNodeDragOver}
+                  onTaskNodeClick={onTaskNodeClick}
+                  onTaskNodeDoubleClick={onTaskNodeDoubleClick}
+                  TASK_NODE_TYPES={TASK_NODE_TYPES}
+                  TASK_EDGE_TYPES={TASK_EDGE_TYPES}
+                  selectedTaskNode={selectedTaskNode}
+                  openTaskPropertiesBlock={openTaskPropertiesBlock}
+                  setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
+                  showActivityDefineDrawer={showActivityDefineDrawer}
+                  editDefinitionProp={editDefinitionProp}
+                  activityDefinitionData={activityDefinitionData}
+                />
+              </div>
             )}
           </div>
         </>

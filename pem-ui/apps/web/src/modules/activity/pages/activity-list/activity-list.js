@@ -47,6 +47,11 @@ export default function ActivityList() {
   const [currentTestData, setCurrentTestData] = useState(null);
   const [formRenderSchema, setFormRenderSchema] = useState();
 
+  // Rollout operation states
+  const [openRolloutModal, setOpenRolloutModal] = useState(false);
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [rolloutGapData, setRolloutGapData] = useState({ selectedGroupsData: [], selectedAttributesData: [], selectedPartnersData: [] });
+
   useEffect(() => {
     if (testDialogData) {
       let data = testDialogData[currentTestStep].schema.fields;
@@ -179,6 +184,7 @@ export default function ActivityList() {
   const handleEdit = (id) => {
     const editRow = rows.filter((row) => row.id === id)[0];
     editDefinition(editRow);
+    pageUtil.navigate(`${id}`, {});
   };
 
   // Handler for actual delete API call
@@ -269,12 +275,6 @@ export default function ActivityList() {
   // -------------------------------------Test operation End-------------------------------------------------
 
   // -------------------------------------Rollout operation Start-------------------------------------------------
-
-  // Rollout operation states
-  const [openRolloutModal, setOpenRolloutModal] = useState(false);
-  const [openAddModal, setOpenAddModal] = useState(false);
-  const [rolloutGapData, setRolloutGapData] = useState({ selectedGroupsData: [], selectedAttributesData: [], selectedPartnersData: [] });
-
   // Function to handle the Rollout operation
   const handleRolloutOperation = async (id) => {
     const activityDetailsResponse = await getActivityDetails(id);
@@ -319,7 +319,6 @@ export default function ActivityList() {
 
   // Function to handle the Next/rollout Button Click
   const handleSubmitClick = (data) => {
-    console.log('data', data);
     // TODO -> Rollout API will call here
   };
 

@@ -26,9 +26,7 @@ body {
 .cds--search-magnifier {
   justify-content: flex-end;
   display: flex;
-  /* width: 100%; */
   border: none;
-  /* Ensure the container stretches full width */
 }
 
 .cds--search-close {
@@ -43,7 +41,7 @@ body {
 }
 
 tbody tr:nth-child {
-  background-color: #f4f4f4 !important; // Light grey for odd rows
+  background-color: #F1F1F1 !important; // Light grey for odd rows
 }
 
 .cds--overflow-menu-options__btn {

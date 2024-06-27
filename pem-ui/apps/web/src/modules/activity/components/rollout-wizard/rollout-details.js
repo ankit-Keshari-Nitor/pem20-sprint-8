@@ -11,13 +11,6 @@ export default function RolloutDetails({ handleAddClick }) {
   const [alertInterval, setAlertInterval] = useState(0);
   const [rollingOut, setRollingOut] = useState('partners');
 
-  console.log('name', name);
-  console.log('description', description);
-  console.log('dueDate', dueDate);
-  console.log('alertDate', alertDate);
-  console.log('alertInterval', alertInterval);
-  console.log('rollingOut', rollingOut);
-
   return (
     <Grid className="define-grid">
       {/* Name */}

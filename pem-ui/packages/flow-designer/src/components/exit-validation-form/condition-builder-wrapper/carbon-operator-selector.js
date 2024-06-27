@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { toOptions, useValueEditor } from 'react-querybuilder';
-import { Button, Modal, Select, TextInput, TreeView, TreeNode } from '@carbon/react';
+import { Checkbox, TextInput, TreeView, TreeNode, Button, DatePicker, DatePickerInput, Select, SelectItem } from '@carbon/react';
 import { ElippsisIcon } from '../../../icons';
 import { useState } from 'react';
 import WrapperModal from '../../helpers';
@@ -56,27 +56,99 @@ const CarbonOperatorSelector = ({
     </TreeView>
   );
 
+  const handleChange = (value) => {
+    multiValueHandler(value, 0);
+  };
+
+  let leftOperandInput = null;
+  switch (_field) {
+    case 'string':
+      leftOperandInput = (
+        <>
+          <div style={{ marginTop: '1.5rem' }}>
+            <TextInput
+              id="txt-input"
+              labelText=""
+              value={valueAsArray.length > 1 ? valueAsArray[0] : ''}
+              title={title}
+              className={className}
+              placeholder={'Left Operand'}
+              onChange={(e) => {
+                let myString = e.target.value;
+                myString = myString.replace(/["']/g, '');
+                handleChange("'" + myString + "'");
+              }}
+              {...extraProps}
+            />
+          </div>
+        </>
+      );
+      break;
+    case 'numeric':
+      leftOperandInput = (
+        <>
+          <div style={{ marginTop: '1.5rem' }}>
+            <TextInput
+              id="txt-input"
+              labelText=""
+              value={valueAsArray.length > 1 ? valueAsArray[0] : ''}
+              title={title}
+              className={className}
+              placeholder={'Left Operand'}
+              onChange={(e) => handleChange(e.target.value)}
+              {...extraProps}
+            />
+          </div>
+        </>
+      );
+      break;
+    case 'boolean':
+      leftOperandInput = (
+        <>
+          <div style={{ marginTop: '1rem' }}>
+            <Select
+              id="txt-input"
+              labelText=""
+              className={className}
+              title={title}
+              value={valueAsArray[0]}
+              disabled={disabled}
+              onChange={(e) => handleChange(e.target.value)}
+              {...extraProps}
+            >
+              <SelectItem value="true" text="True" />
+              <SelectItem value="false" text="False" />
+            </Select>
+          </div>
+        </>
+      );
+      break;
+    case 'date':
+      leftOperandInput = (
+        <>
+          <div style={{ marginTop: '1.5rem' }}>
+            <DatePicker datePickerType="single" className={className} value={valueAsArray[0]} onChange={(e) => handleChange(e)}>
+              <DatePickerInput id="txt-input" labelText="" placeholder="mm/dd/yyyy" />
+            </DatePicker>
+          </div>
+        </>
+      );
+      break;
+  }
+
   return (
     <>
-      <TextInput
-        id="txt-input"
-        type="text"
-        value={valueAsArray.length > 1 ? valueAsArray[0] : ''}
-        title={title}
-        className={className}
-        placeholder={'Operand'}
-        labelText={''}
-        onChange={(e) => multiValueHandler(e.target.value, 0)}
-        {...extraProps}
-      />
-      <Button size="md" className="opt-btn" kind="secondary" renderIcon={ElippsisIcon} onClick={() => setOpenCancelDialog(true)}></Button>
+      {leftOperandInput}
+      <Button size="md" className="opt-btn" kind="secondary" renderIcon={ElippsisIcon} onClick={() => setOpenCancelDialog(true)} style={{ marginTop: '1.5rem' }}></Button>
       <WrapperModal openCancelDialog={openCancelDialog} setOpenCancelDialog={setOpenCancelDialog}>
         {Temp}
       </WrapperModal>
+      {/* Relational Operator Dropdown */}
       <Select
         id="selector-label"
         className={className}
         title={title}
+        labelText="Select Relational Operator"
         value={valueAsArray.length > 1 ? valueAsArray[1] : valueAsArray[0]}
         disabled={disabled}
         onChange={(e) => multiValueHandler(e.target.value, 1)}

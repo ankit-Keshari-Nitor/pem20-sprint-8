@@ -14,7 +14,7 @@ export const isDisabled = {
 
 export const isRequired = {
   propsName: 'isRequired',
-  label: 'IsRequired',
+  label: 'Required',
   value: {
     value: false,
     message: ''
@@ -24,28 +24,30 @@ export const isRequired = {
 
 export const helperText = {
   propsName: 'helperText',
-  label: 'Helper Text',
+  label: 'Help Text',
   value: '',
   type: 'TextInput'
 };
 
 export const hrefText = {
   propsName: 'hrefText',
-  label: 'Href',
+  label: 'URL',
   value: '',
   type: 'TextInput'
 };
 
 export const readOnly = {
   propsName: 'readOnly',
-  label: 'ReadOnly',
+  label: 'Read-only',
   value: false,
-  type: 'Toggle'
+  type: 'Toggle',
+  labelA: 'Yes',
+  labelB: 'No'
 };
 
 export const minProps = {
   propsName: 'min',
-  label: 'Min Value',
+  label: 'Min Length',
   value: {
     value: '',
     message: ''
@@ -55,7 +57,7 @@ export const minProps = {
 
 export const maxProps = {
   propsName: 'max',
-  label: 'Max Value',
+  label: 'Max Length',
   value: {
     value: '',
     message: ''
@@ -79,14 +81,110 @@ export const options = {
 
 export const labelA = {
   propsName: 'labelA',
-  label: 'Label A',
+  label: 'False Text',
   value: 'Yes',
   type: 'TextInput'
 };
 
 export const labelB = {
   propsName: 'labelB',
-  label: 'Label B',
+  label: 'True Text',
   value: 'No',
   type: 'TextInput'
+};
+
+export const NameLabel = {
+  propsName: 'name',
+  label: 'Name',
+  value: '',
+  type: 'TextInput',
+  invalid: false,
+  invalidText: 'Name should be unique'
+};
+
+export const placeHolder = {
+  propsName: 'placeHolder',
+  label: 'Placeholder Text',
+  value: '',
+  type: 'TextInput'
+};
+
+export const valueLabel = {
+  propsName: 'Default Value',
+  label: 'Value',
+  value: '',
+  type: 'TextInput'
+};
+
+export const regexValidation = {
+  propsName: 'regexValidation',
+  label: 'Regex',
+  items: [
+    {
+      label: 'None',
+      value: ''
+    },
+    {
+      label: 'Lower- or Upper-case Alpha Numeric only',
+      value: '/^(?=.*?[a-zA-Z])[a-zA-Z0-9]+$'
+    },
+    {
+      label: 'Lower- or Upper-case Alpha Numeric and Numbers only',
+      value: '/^(?=.*?d)[a-zA-Z0-9]+$'
+    },
+    {
+      label: 'Email Address',
+      value: '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/'
+    },
+    {
+      label: 'Integer Number with min and max values',
+      value: '1'
+    },
+    {
+      label: 'URL',
+      value:
+        '(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})'
+    },
+    {
+      label: 'Custom Regular Expression',
+      value: 'customRegex'
+    }
+  ],
+  value: {
+    pattern: '',
+    value: '',
+    message: ''
+  },
+  type: 'Options'
+};
+
+export const mapping = {
+  propsName: 'mapping',
+  label: 'Mapping',
+  value: '',
+  type: 'mapping'
+};
+
+export const orientation = {
+  propsName: 'orientation',
+  label: 'Orientation',
+  options: [
+    { label: 'Vertical', value: 'vertical' },
+    { label: 'Horizontal', value: 'horizontal' }
+  ],
+  type: 'radio'
+}
+
+export const height = {
+  propsName: 'height',
+  label: 'Height',
+  value: '1',
+  type: 'TextInput'
+}
+
+export const id = {
+  propsName: 'id',
+  label: 'ID',
+  value: '',
+  type: 'text',
 };

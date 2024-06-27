@@ -48,7 +48,7 @@ const CustomTab = ({ renderRow, row, currentPath, handleDrop, componentMapper, o
 
 export default CustomTab;
 
-// Config of Group for Left Palette & Right Palette
+// Config of Tab for Left Palette & Right Palette
 CustomTab.config = {
   type,
   label: FORM_FIELD_LABEL.TAB,

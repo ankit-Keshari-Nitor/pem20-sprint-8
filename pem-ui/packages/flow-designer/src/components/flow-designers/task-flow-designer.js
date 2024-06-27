@@ -8,7 +8,7 @@ import './style.scss';
 
 import BlocksTray from '../blocks-tray';
 import { CATEGORY_TYPES } from '../../constants';
-import BlockPropertiesTray from '../block-properties-tray/block-properties-tray';
+import BlockPropertiesTray from '../block-properties-tray';
 
 const TaskFlowDesigner = ({
   connectionLineStyle,
@@ -24,13 +24,14 @@ const TaskFlowDesigner = ({
   onTaskNodeDrop,
   onTaskNodeDragOver,
   onTaskNodeClick,
+  onTaskNodeDoubleClick,
   TASK_NODE_TYPES,
   TASK_EDGE_TYPES,
   openTaskPropertiesBlock,
   selectedTaskNode,
   setOpenTaskPropertiesBlock,
   editDefinitionProp,
-  activityDefinitionData,
+  activityDefinitionData
 }) => {
   return (
     <div className="dnd-flow">
@@ -54,13 +55,14 @@ const TaskFlowDesigner = ({
                   onDrop={onTaskNodeDrop}
                   onDragOver={onTaskNodeDragOver}
                   onNodeClick={onTaskNodeClick}
+                  onNodeDoubleClick={onTaskNodeDoubleClick}
                   nodeTypes={TASK_NODE_TYPES}
                   edgeTypes={TASK_EDGE_TYPES}
                   connectionLineStyle={connectionLineStyle}
                   defaultViewport={defaultViewport}
                   snapGrid={snapGrid}
                 >
-                  <Background color="#ccc" variant="dots" />
+                  <Background color="#ffffff" variant="dots" />
                   <Controls position="bottom-right" />
                 </ReactFlow>
               </div>
@@ -70,10 +72,15 @@ const TaskFlowDesigner = ({
         {openTaskPropertiesBlock && (
           <>
             <PanelResizeHandle />
-            <Panel defaultSize={40} minSize={20} maxSize={70}>
+            <Panel defaultSize={35} minSize={20} maxSize={70}>
               <div className="dnd-flow">
-                <div className="task-activity-container">
-                  <BlockPropertiesTray selectedNode={selectedTaskNode} setOpenPropertiesBlock={setOpenTaskPropertiesBlock} editDefinitionProp={editDefinitionProp} activityDefinitionData={  activityDefinitionData}/>
+                <div className="task-properties-container">
+                  <BlockPropertiesTray
+                    selectedNode={selectedTaskNode}
+                    setOpenPropertiesBlock={setOpenTaskPropertiesBlock}
+                    editDefinitionProp={editDefinitionProp}
+                    activityDefinitionData={activityDefinitionData}
+                  />
                 </div>
               </div>
             </Panel>

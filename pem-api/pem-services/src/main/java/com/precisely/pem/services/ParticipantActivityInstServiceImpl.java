@@ -303,7 +303,7 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
     }
 
     @Override
-    public MessageResp startActivity(String sponsorContext, String pcptActivityInstKey) throws ResourceNotFoundException {
+    public MessageResp startActivity(String sponsorContext, String pcptActivityInstKey) throws ResourceNotFoundException, InvalidStatusException {
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
         PcptActivityInst pcptActivityInst = pcptInstRepo.findByPcptActivityInstKey(pcptActivityInstKey);
         if(Objects.isNull(pcptActivityInst)){
@@ -314,10 +314,19 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
 
         String activityInstanceKey = pcptActivityInst.getActivityInstKey();
         ActivityInst activityInst = activityInstRepo.findByActivityInstKey(activityInstanceKey);
+        if(Objects.isNull(activityInst)){
+            throw new ResourceNotFoundException("ActivityInstanceNotFound", "The activity instance with key '" + activityInstanceKey + "' not found.");
+        }
         String activityDefnVersionKey = activityInst.getActivityDefnVersionKey();
         ActivityDefnVersion activityDefnVersion =  activityDefnVersionRepo.findByActivityDefnVersionKey(activityDefnVersionKey);
+        if(Objects.isNull(activityDefnVersion)){
+            throw new ResourceNotFoundException("ActivityVersionNotFound", "The activity definition version with key '" + activityDefnVersionKey + "' not found.");
+        }
         String activityDefnKey = activityDefnVersion.getActivityDefnKey();
         ActivityDefn activityDefn = activityDefnRepo.findByActivityDefnKey(activityDefnKey);
+        if(Objects.isNull(activityDefn)){
+            throw new ResourceNotFoundException("ActivityDefnNotFound", "The activity definition with key '" + activityDefnKey + "' not found.");
+        }
         String activityName = activityDefn.getActivityName();
 
         Blob contextDataBlob = pcptActivityInst.getPcptContextData();
@@ -342,8 +351,14 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
         }
         log.info("contextData Map content: " + contextData);
         List<ActivityProcDef> activityProcDefList = activityProcDefRepo.findByResourceName(activityName+".bpmn");
-        String processInstanceId = pemActivitiService.startProcessInstanceById(activityProcDefList.get(0).getId(),null,contextData);
+        if(Objects.isNull(activityProcDefList) || activityProcDefList.isEmpty()){
+            throw new ResourceNotFoundException("ActivityProcDefListEmpty", "The activity process definition not found.");
+        }
+        String processInstanceId = pemActivitiService.startProcessInstanceById(activityProcDefList.get(0).getId(),null,map);
         log.info("processInstanceId = "+processInstanceId);
+        if(Objects.isNull(processInstanceId)){
+            throw new ResourceNotFoundException("CouldNotStartInstance", "The participant activity instance could not be started. Kindly check.");
+        }
         pcptActivityInst.setActivityWorkflowInstKey(processInstanceId);
         pcptActivityInst.setPcptInstStatus(PcptInstStatus.STARTED.getPcptInstStatus());
         pcptInstRepo.save(pcptActivityInst);

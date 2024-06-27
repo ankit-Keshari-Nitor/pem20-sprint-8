@@ -3,7 +3,6 @@ package com.precisely.pem.controller;
 import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.SortBy;
 import com.precisely.pem.commonUtil.SortDirection;
-import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityDefnReq;
 import com.precisely.pem.dtos.responses.ActivityDefnListResp;
 import com.precisely.pem.dtos.responses.ActivityDefnPaginationRes;
@@ -11,17 +10,16 @@ import com.precisely.pem.dtos.responses.ActivityDefnResp;
 import com.precisely.pem.dtos.responses.MessageResp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 
 class ActivityControllerTest extends BaseControllerTest {
 
@@ -29,40 +27,53 @@ class ActivityControllerTest extends BaseControllerTest {
     void setup() throws Exception{
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void testCreateActivityDefinition() throws Exception {
-        ActivityDefnResp resp = new ActivityDefnResp();
-        Mockito.when(activityDefnService.createActivityDefinition(Mockito.anyString(),Mockito.any(ActivityDefnReq.class)))
-                .thenReturn(resp);
+        ActivityDefnReq activityDefnReq = new ActivityDefnReq();
+        ActivityDefnResp activityDefnResp = new ActivityDefnResp();
+
+        when(activityDefnService.createActivityDefinition(anyString(), any(ActivityDefnReq.class)))
+                .thenReturn(activityDefnResp);
+
         ActivityDefnReq req = new ActivityDefnReq();
-        ResponseEntity<Object> output = activityController.createActivityDefinition(req,TEST_SPONSOR);
-        assertNotNull(output);
+        ResponseEntity<Object> response = activityController.createActivityDefinition(req,TEST_SPONSOR);
+        assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+        assertEquals(response.getBody(),activityDefnResp);
     }
 
-//    @Test
-//    void testGetActivityDefinitionList() throws Exception {
-//        ActivityDefnPaginationRes resp = new ActivityDefnPaginationRes();
-//        List<ActivityDefnListResp> listResp = new ArrayList<>();
-//        resp.setContent(listResp);
-//        Mockito.when(activityDefnService.getAllDefinitionList(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString()))
-//                .thenReturn(resp);
-//        ResponseEntity<Object> output = activityController.getActivityDefinitionList(TEST_SPONSOR,TEST_NAME, Status.DRAFT,Application.PEM,1,1, SortBy.modifyTs, SortDirection.ASC,TEST_SPONSOR);
-//        assertNotNull(output);
-//    }
+    @Test
+    public void testGetActivityDefinitionList() throws Exception {
+        ActivityDefnPaginationRes activityDefnPaginationRes = getActivityDefnPaginationRes();
+
+        when(activityDefnService.getAllDefinitionList(anyString(), anyString(), anyString(),
+                anyString(), anyList(), anyInt(), anyInt(), anyString(), anyString()))
+                .thenReturn(activityDefnPaginationRes);
+
+        ResponseEntity<Object> response = activityController.getActivityDefinitionList(
+                null, null, new ArrayList<>(), Application.PEM, 0, 10, SortBy.modifyTs, SortDirection.DESC, TEST_SPONSOR);
+
+        assertEquals(response.getStatusCode(),HttpStatus.OK);
+        assertEquals(response.getBody(),activityDefnPaginationRes);
+    }
 
     @Test
-    void testGetActivityDefinitionById() throws Exception {
-        ActivityDefnListResp resp = new ActivityDefnListResp();
-        Mockito.when(activityDefnService.getActivityDefinitionByKey(Mockito.anyString(),Mockito.anyString()))
-                .thenReturn(resp);
-        ResponseEntity<Object> output = activityController.getActivityDefinitionByKey(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY);
-        assertNotNull(output);
+    public void testGetActivityDefinitionByKey() throws Exception {
+        ActivityDefnListResp activityDefnListResp = new ActivityDefnListResp();
+
+        when(activityDefnService.getActivityDefinitionByKey(anyString(), anyString()))
+                .thenReturn(activityDefnListResp);
+
+        ResponseEntity<Object> response = activityController.getActivityDefinitionByKey("sponsor1", "123");
+
+        assertEquals(response.getStatusCode(),HttpStatus.OK);
+        assertEquals(response.getBody(),activityDefnListResp);
     }
 
 
     @Test
     void deleteActivityDefinitionById() throws Exception {
-        Mockito.when(activityDefnService.deleteActivityDefinitionById(ArgumentMatchers.anyString(),ArgumentMatchers.anyString()))
+        when(activityDefnService.deleteActivityDefinitionById(anyString(), anyString()))
                 .thenReturn(MessageResp.builder().build());
 
         ResponseEntity<Object> resp = activityController.deleteActivityDefinitionByKey(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY);

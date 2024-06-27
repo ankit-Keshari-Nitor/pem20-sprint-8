@@ -13,7 +13,7 @@ export const API_URL = {
 
 export const ACTION_COLUMN_KEYS = {
   NAME: 'name',
-  ENCRYPTED: 'encrypted',
+  ENCRYPTED: 'isEncrypted',
   STATUS: 'status',
   VERSION: 'version',
   ACTIONS: 'action',
@@ -30,7 +30,9 @@ export const ACTION_COLUMN_KEYS = {
   EDIT: 'Edit',
   CLONE_ACTIVITY: 'Clone Activity',
   CLONE_VERSION: 'Clone Version',
-  MARK_AS_DEFAULT: 'Mark As Default'
+  MARK_AS_DEFAULT: 'Mark As Default',
+  ACTIVITYDEFVERSIONKEY: 'activityDefnVersionKey',
+  RESTORE: 'Restore'
 };
 
 export const ACTIVITY_LIST_COLUMNS = [
@@ -39,7 +41,9 @@ export const ACTIVITY_LIST_COLUMNS = [
   { key: ACTION_COLUMN_KEYS.STATUS, header: 'Current Status' },
   { key: ACTION_COLUMN_KEYS.VERSION, header: 'Default Version' },
   { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
-  { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' }
+  { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' },
+  { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' },
+
 ];
 
 export const ROLLOUT_STEPS = [

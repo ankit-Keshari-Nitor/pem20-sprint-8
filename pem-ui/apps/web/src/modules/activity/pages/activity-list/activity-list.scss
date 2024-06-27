@@ -113,6 +113,7 @@ tbody tr:nth-child {
 
 .action-item {
   padding-right: 1rem !important;
+  width: 50% !important;
 }
 
 .action-item-delete {
@@ -124,16 +125,34 @@ tbody tr:nth-child {
   background: #D1D1D1 !important;
 }
 
-.infomation-text {
-  padding-inline-start: 0.20rem !important;
-}
-
 .information-icon {
   padding-top: 3px !important;
 }
 
 .checkmark-filled-encrypted {
   color: #0F62FE !important;
+}
+
+.information-wrapper {
+  display: flex !important;
+}
+
+.encrypted-wrapper-text,
+.information-text {
+  padding-inline-start: 0.25rem !important;
+}
+
+.recently-view-text {
+  padding-inline-end: 0.5rem !important;
+}
+
+.encrypted-wrapper,
+.recently-view-wrapper {
+  display: inline-flex !important;
+}
+
+.close-filled-encrypted {
+  color: red !important
 }
 
 .cds--overflow-menu-options__btn:focus {

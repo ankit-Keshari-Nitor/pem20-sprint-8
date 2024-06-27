@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './activity-list.scss';
+import Shell from '@b2bi/shell';
+import '@b2bi/styles/pages/list-page.scss';
 import * as ActivityService from '../../services/activity-service.js';
 import * as RolloutService from '../../services/rollout-service';
 import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
@@ -20,6 +22,7 @@ import RolloutTest from '../../components/rollout-wizard/rollout-gap-details.js'
 import RolloutDetails from '../../components/rollout-wizard/rollout-details.js';
 
 export default function ActivityList() {
+  const pageUtil = Shell.PageUtil();
   // State hooks for managing various states
   const editDefinition = useActivityStore((state) => state.editDefinitionProps);
   const [totalRows, setTotalRows] = useState(0);
@@ -28,7 +31,7 @@ export default function ActivityList() {
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [rows, setRows] = useState([]);
-  const [status, setStatus] = useState('DRAFT');
+  const [status, setStatus] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionText, setActionText] = useState('');
   const [message, setMessage] = useState('');
@@ -55,7 +58,14 @@ export default function ActivityList() {
   const fetchAndSetData = useCallback(() => {
     ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status)
       .then((data) => {
-        setRows(data.content);
+        const updatedRows = data.content.map(row => ({
+          ...row,
+          activityDefnVersionKey: row.defaultVersion.activityDefnVersionKey,
+          version: row.defaultVersion.version,
+          isEncrypted: row.defaultVersion.isEncrypted,
+          status: row.defaultVersion.status,
+        }));
+        setRows(updatedRows);
         setTotalRows(data.pageContent.totalElements);
       })
       .catch((error) => {
@@ -99,7 +109,7 @@ export default function ActivityList() {
   };
 
   // Handler for action changes
-  const handleActionChange = (selectedItem, id) => {
+  const handleActionChange = (selectedItem, id, versionKey = '') => {
 
     setActivityDefnKey(id);
     const itemId = selectedItem
@@ -107,7 +117,7 @@ export default function ActivityList() {
       case ACTION_COLUMN_KEYS.MARK_AS_FINAL:
         setActionText('Mark as final');
         setMessage('The Activity can not be modified once you Mark as final. Do you want to Mark as final?');
-        setOnPrimaryButtonClick(() => () => handleMarkAsFinal(id)); // Updated
+        setOnPrimaryButtonClick(() => () => handleMarkAsFinal(id, versionKey)); // Updated
         setIsModalOpen(true);
         break;
       case ACTION_COLUMN_KEYS.ROLLOUT:
@@ -122,34 +132,18 @@ export default function ActivityList() {
   };
 
   // Handler for marking activity as final
-  const handleMarkAsFinal = async (id) => {
+  const handleMarkAsFinal = async (id, versionKey) => {
     try {
-      let activityVersionKey;
-      const response = await ActivityService.getActivityVersionkey(pageNo - 1, pageSize, sortDir, status, '', id);
-
-      if (response !== undefined) {
-        activityVersionKey = response[0].activityDefnKeyVersion;
-
-        const responseStatus = await ActivityService.markActivityDefinitionAsFinal(id, activityVersionKey);
-
-        if (responseStatus !== undefined && responseStatus === 'FINAL') {
-          fetchAndSetData();
-          setNotificationProps({
-            open: true,
-            title: 'Success - ',
-            subtitle: 'Action completed successfully!',
-            kind: 'success',
-            onCloseButtonClick: () => setNotificationProps(null)
-          });
-        } else {
-          setNotificationProps({
-            open: true,
-            title: 'Error - ',
-            subtitle: 'Action not completed successfully!',
-            kind: 'error',
-            onCloseButtonClick: () => setNotificationProps(null)
-          });
-        }
+      const responseStatus = await ActivityService.markActivityDefinitionAsFinal(id, versionKey);
+      if (responseStatus !== undefined && responseStatus === 'FINAL') {
+        fetchAndSetData();
+        setNotificationProps({
+          open: true,
+          title: 'Success - ',
+          subtitle: 'Action completed successfully!',
+          kind: 'success',
+          onCloseButtonClick: () => setNotificationProps(null)
+        });
       } else {
         setNotificationProps({
           open: true,
@@ -159,6 +153,7 @@ export default function ActivityList() {
           onCloseButtonClick: () => setNotificationProps(null)
         });
       }
+
     } catch (error) {
       console.error('Failed to mark as final activity:', error);
       setNotificationProps({
@@ -332,6 +327,7 @@ export default function ActivityList() {
 
   return (
     <>
+
       {/* Modal for Rollout operation */}
       {openRolloutModal && (
         <WrapperModal
@@ -368,7 +364,7 @@ export default function ActivityList() {
       <div className="headers">
         <div className="header-button-right">
           {/* Header Title */}
-          Activity Definition
+          {pageUtil.t('mod-activity-definition:list.title')}
         </div>
         <div className="header-button-left">
           {/* Search, New, Import buttons */}
@@ -400,7 +396,6 @@ export default function ActivityList() {
         <DataTableComponent
           headers={ACTIVITY_LIST_COLUMNS}
           rows={rows}
-          status={status}
           sortDir={sortDir}
           totalRows={totalRows}
           pageNo={pageNo}

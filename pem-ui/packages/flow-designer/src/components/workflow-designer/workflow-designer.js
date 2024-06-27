@@ -82,9 +82,9 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
       newParam.type = 'crossEdge';
       newParam.markerEnd = endMarks;
       newParam.data = selectedTaskNode?.id;
-      addDialogEdge(selectedTaskNode, addEdge({ ...newParam, style: { stroke: '#000' } }, dialogEdges.slice(0, storeData.taskEdges.length - 1)));
+      addDialogEdge(selectedTaskNode, addEdge({ ...newParam, style: { stroke: '#000' } }, dialogEdges));
     },
-    [addDialogEdge, dialogEdges, selectedTaskNode, storeData.taskEdges.length]
+    [addDialogEdge, dialogEdges, selectedTaskNode]
   );
 
   const onDialogNodeDragOver = useCallback((event) => {
@@ -162,7 +162,7 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
               break;
           }
         } else {
-          copyNode.data.borderColor = '#0585FC';          
+          copyNode.data.borderColor = '#0585FC';
         }
         return copyNode;
       });
@@ -184,7 +184,7 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
       let newParam = params;
       newParam.type = 'crossEdge';
       newParam.markerEnd = endMarks;
-      addTaskEdge(addEdge({ ...newParam, style: { stroke: '#000' } }, storeData.taskEdges.slice(0, storeData.taskEdges.length - 1)));
+      addTaskEdge(addEdge({ ...newParam, style: { stroke: '#000' } }, storeData.taskEdges));
     },
     [addTaskEdge, storeData.taskEdges]
   );

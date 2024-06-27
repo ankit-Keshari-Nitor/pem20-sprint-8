@@ -4,7 +4,7 @@ import ReactFlow, { ReactFlowProvider, Controls, Background } from 'reactflow';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
 import 'reactflow/dist/style.css';
-import './flow-designers.scss';
+import './style.scss';
 
 import BlocksTray from '../blocks-tray';
 import { CATEGORY_TYPES } from '../../constants';

@@ -1,8 +1,8 @@
 package com.precisely.pem.service;
 
+import com.precisely.pem.dtos.task.TaskDTO;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.security.core.userdetails.User;
@@ -55,6 +55,14 @@ public interface PEMActivitiService {
      * @param taskId the ID of the task to complete
      */
     void completeTask(String taskId);
+
+    /**
+     * Completes a task identified by the given task ID.
+     *
+     * @param taskId the ID of the task to complete
+     * @param input data the ID of the task to complete
+     */
+    void completeUserTask(String taskId, String input) throws Exception;
 
     /**
      * Claims a task for a specific user.
@@ -153,6 +161,14 @@ public interface PEMActivitiService {
 
 
     // Task Management
+
+    /**
+     * Retrieves the task details associated with a specific task.
+     *
+     * @param taskId the ID of the task to retrieve variables from
+     * @return a TaskDTO associated with the specified task
+     */
+    TaskDTO getTaskDetails(String taskId) throws Exception;
 
     /**
      * Retrieves the variables associated with a specific task.

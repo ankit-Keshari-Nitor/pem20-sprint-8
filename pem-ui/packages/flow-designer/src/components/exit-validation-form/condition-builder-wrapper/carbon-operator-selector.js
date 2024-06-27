@@ -94,7 +94,7 @@ const CarbonOperatorSelector = ({
               value={valueAsArray.length > 1 ? valueAsArray[0] : ''}
               title={title}
               className={className}
-              placeholder={'Right Operand'}
+              placeholder={'Left Operand'}
               onChange={(e) => handleChange(e.target.value)}
               {...extraProps}
             />
@@ -138,19 +138,6 @@ const CarbonOperatorSelector = ({
 
   return (
     <>
-      {/* Left Operand  */}
-      {/* <TextInput
-        id="txt-input"
-        type="text"
-        value={valueAsArray.length > 1 ? valueAsArray[0] : ''}
-        title={title}
-        className={className}
-        placeholder={'Left Operand'}
-        labelText={''}
-        onChange={(e) => multiValueHandler(e.target.value, 0)}
-        style={{ marginTop: '1.5rem' }}
-        {...extraProps}
-      /> */}
       {leftOperandInput}
       <Button size="md" className="opt-btn" kind="secondary" renderIcon={ElippsisIcon} onClick={() => setOpenCancelDialog(true)} style={{ marginTop: '1.5rem' }}></Button>
       <WrapperModal openCancelDialog={openCancelDialog} setOpenCancelDialog={setOpenCancelDialog}>
@@ -161,6 +148,7 @@ const CarbonOperatorSelector = ({
         id="selector-label"
         className={className}
         title={title}
+        labelText="Select Relational Operator"
         value={valueAsArray.length > 1 ? valueAsArray[1] : valueAsArray[0]}
         disabled={disabled}
         onChange={(e) => multiValueHandler(e.target.value, 1)}

@@ -4,73 +4,105 @@ import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.requests.ActivityDefnReq;
 import com.precisely.pem.dtos.requests.UpdateActivityReq;
-import com.precisely.pem.dtos.responses.ActivityDefnListResp;
-import com.precisely.pem.dtos.responses.MessageResp;
-import com.precisely.pem.dtos.responses.SponsorInfo;
+import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityDefnDto;
 import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.exceptionhandler.BpmnConverterException;
 import com.precisely.pem.exceptionhandler.DuplicateEntryException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
+import com.precisely.pem.models.ActivityDefnVersion;
+import com.precisely.pem.repositories.ActivityDefnCustomRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.mockito.*;
+import org.springframework.data.domain.*;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
-class ActivityDefnServiceImplTest extends BaseServiceTest{
+class ActivityDefnServiceImplTest extends BaseServiceTest {
 
     @InjectMocks
     protected ActivityDefnServiceImpl activityDefinitionService;
 
+    @Mock
+    private ActivityDefnCustomRepo activityDefnCustomRepo;
+
     @BeforeEach
-    public void setup(){
+    public void setup() {
         MockitoAnnotations.openMocks(this);
         TenantContext.setTenantContext(SponsorInfo.builder().sponsorKey(TEST_SPONSOR).build());
-        }
+    }
 
-//    @Test
-//    void testGetAllDefinitionList() throws Exception {
-//        Page<ActivityDefn> page = new PageImpl<>(getListOfVchActivityDefnObj());
-//        mockGetSponsorKey().thenReturn(TEST_SPONSOR);
-//        Mockito.when(activityDefnRepo.findBySponsorKeyAndActivityNameAndActivityDescriptionContainingAndApplicationAndVersionsStatus(
-//                eq(TEST_STATUS), eq(TEST_SPONSOR), eq(TEST_APPLICATION_KEY), eq(TEST_APPLICATION_NAME), eq(TEST_DESCRIPTION),
-//                Mockito.any(Pageable.class))).thenReturn(page);
-//        ActivityDefnDto dtoObj = new ActivityDefnDto();
-//        dtoObj.setActivityDefnKey(TEST_ACTIVITY_DEFN_KEY);
-//        Mockito.when(mapper.map(Mockito.any(ActivityDefn.class), eq(ActivityDefnDto.class))).thenReturn(dtoObj);
-////        assertNotNull(activityDefinitionService.getAllDefinitionList(
-////                sponsorContext, applicationName, applicationDescription, status, application,
-////                pageNo, pageSize, sortBy, sortDir));
-//    }
+    @Test
+    void testGetAllDefinitionList() throws Exception {
+        // Given
+        String sponsorContext = "testContext";
+        String name = "testName";
+        String description = "testDescription";
+        String application = "testApplication";
+        List<String> status = Arrays.asList("ACTIVE");
+        int pageNo = 0;
+        int pageSize = 10;
+        String sortBy = "modifyTs";
+        String sortDir = "DESC";
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, sortBy));
+        SponsorInfo sponsorInfo = new SponsorInfo(); // Assuming this is a POJO
+        sponsorInfo.setSponsorKey("testSponsorKey");
+
+        ActivityDefn activityDefn = new ActivityDefn(); // Assuming this is a POJO
+        ActivityDefnVersion version = new ActivityDefnVersion(); // Assuming this is a POJO
+        version.setIsDefault(true);
+        List<ActivityDefnVersion> versionList = Collections.singletonList(version);
+        activityDefn.setVersions(versionList);
+        List<ActivityDefn> activityDefnList = Collections.singletonList(activityDefn);
+        Page<ActivityDefn> defnsPage = new PageImpl<>(activityDefnList, pageable, 1);
+
+        when(activityDefinitionService.validateSponsorContext(sponsorContext)).thenReturn(sponsorInfo);
+        when(activityDefinitionService.getStatusListOfString(status)).thenReturn(status);
+        when(activityDefnCustomRepo.getActivityDefnsPage(name, description, status, application, sponsorInfo.getSponsorKey(), pageable))
+                .thenReturn(defnsPage);
+
+        ActivityDefnVersionListResp activityDefnVersionResp = new ActivityDefnVersionListResp(); // Assuming this is a POJO
+        when(mapper.map(version, ActivityDefnVersionListResp.class)).thenReturn(activityDefnVersionResp);
+
+        ActivityDefnListResp activityDefnListResp = new ActivityDefnListResp(); // Assuming this is a POJO
+        when(mapper.map(activityDefn, ActivityDefnListResp.class)).thenReturn(activityDefnListResp);
+
+        // When
+        ActivityDefnPaginationRes response = activityDefinitionService.getAllDefinitionList(sponsorContext, name, description, application, status, pageNo, pageSize, sortBy, sortDir);
+
+        // Then
+        assertNotNull(response);
+        assertFalse(response.getContent().isEmpty());
+        assertEquals(1, response.getContent().size());
+    }
 
 
     @Test
     void testCreateActivityDefinition() throws SQLException, IOException, DuplicateEntryException, ResourceNotFoundException, BpmnConverterException {
         mockGetSponsorKey().thenReturn(TEST_SPONSOR);
-        Mockito.when(activityDefnRepo.save(Mockito.any())).thenReturn(getVchActivityDefnObj());
-        Mockito.when(activityDefnDataRepo.save(Mockito.any())).thenReturn(getVchActivityDefnDataObj());
-        Mockito.when(activityDefnVersionRepo.save(Mockito.any())).thenReturn(getVCHActivityDefnVersionObj());
+        when(activityDefnRepo.save(Mockito.any())).thenReturn(getVchActivityDefnObj());
+        when(activityDefnDataRepo.save(Mockito.any())).thenReturn(getVchActivityDefnDataObj());
+        when(activityDefnVersionRepo.save(Mockito.any())).thenReturn(getVCHActivityDefnVersionObj());
         MultipartFile file = new MockMultipartFile(TEST_FILE_KEY, TEST_FILE_VALUE, CONTENT_TYPE_TEXT, TEST_FILE_DATA.getBytes());
         Blob blob = mock(Blob.class);
-        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream(), BpmnConverterRequest.builder().processId(TEST_BPMN_PROCESS_ID).build())).thenReturn(blob);
+        when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream(), BpmnConverterRequest.builder().processId(TEST_BPMN_PROCESS_ID).build())).thenReturn(blob);
 
         ActivityDefnReq activityDefnReq = new ActivityDefnReq();
         activityDefnReq.setApplication(Application.PEM);
@@ -78,7 +110,7 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
         activityDefnReq.setName(TEST_NAME);
         activityDefnReq.setFile(file);
 
-        assertNotNull(activityDefinitionService.createActivityDefinition(TEST_SPONSOR,activityDefnReq));
+        assertNotNull(activityDefinitionService.createActivityDefinition(TEST_SPONSOR, activityDefnReq));
     }
 
     @Test
@@ -86,15 +118,15 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
         mockGetSponsorKey().thenReturn(TEST_SPONSOR);
         mockActivityDefnKeyAndSoponsorKey().thenReturn(getVchActivityDefnObj());
         ActivityDefnListResp resp;
-        resp = activityDefinitionService.getActivityDefinitionByKey(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY);
+        resp = activityDefinitionService.getActivityDefinitionByKey(TEST_SPONSOR, TEST_ACTIVITY_DEFN_KEY);
         assertNotNull(resp);
     }
 
     @Test
     void updateActivityDefinition_NotFoundActivityDefinition() throws Exception {
-        mockActivityDefnKey().thenReturn(Optional.empty() );
+        mockActivityDefnKey().thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build()));
+        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR, TEST_ACTIVITY_DEFN_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build()));
         assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_NOT_FOUND);
     }
 
@@ -102,7 +134,7 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
     void updateActivityDefinition_AlreadyDeletedActivityDefinition() throws Exception {
         mockActivityDefnKey().thenReturn(Optional.ofNullable(getDeletedVchActivityDefnObj()));
 
-        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build()));
+        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR, TEST_ACTIVITY_DEFN_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build()));
         assertEquals(exception.getMessage(), ACTIVITY_DEFN_KEY_WHICH_IS_ALREADY_IN_DELETED_STATE);
     }
 
@@ -110,7 +142,7 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
     void updateActivityDefinition_Positive() throws Exception {
         mockActivityDefnKey().thenReturn(Optional.ofNullable(getVchActivityDefnObj()));
 
-        MessageResp resp =  activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR,TEST_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build());
+        MessageResp resp = activityDefinitionService.updateActivityDefinitionByKey(TEST_SPONSOR, TEST_KEY, UpdateActivityReq.builder().name(TEST_NAME).description(TEST_DESCRIPTION).build());
         assertNotNull(resp);
     }
 
@@ -130,23 +162,23 @@ class ActivityDefnServiceImplTest extends BaseServiceTest{
 
         mockFindByActivityDefnKey().thenReturn(getPartialDraftVersionList());
 
-        MessageResp response = activityDefinitionService.deleteActivityDefinitionById(TEST_SPONSOR,TEST_KEY);
+        MessageResp response = activityDefinitionService.deleteActivityDefinitionById(TEST_SPONSOR, TEST_KEY);
         assertNotNull(response);
     }
 
     @Test
     void deleteActivityDefinition_NotFoundActivityDefinition() throws Exception {
-        mockActivityDefnKeyAndSoponsorKey().thenReturn(null );
+        mockActivityDefnKeyAndSoponsorKey().thenReturn(null);
 
-        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.deleteActivityDefinitionById(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY));
+        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.deleteActivityDefinitionById(TEST_SPONSOR, TEST_ACTIVITY_DEFN_KEY));
         assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_NOT_FOUND);
     }
 
     @Test
-    void deleteActivityDefinition_AlreadyDeletedActivityDefinition(){
-        mockActivityDefnKeyAndSoponsorKey().thenReturn(getDeletedVchActivityDefnObj() );
+    void deleteActivityDefinition_AlreadyDeletedActivityDefinition() {
+        mockActivityDefnKeyAndSoponsorKey().thenReturn(getDeletedVchActivityDefnObj());
 
-        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.deleteActivityDefinitionById(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY));
+        Exception exception = assertThrows(Exception.class, () -> activityDefinitionService.deleteActivityDefinitionById(TEST_SPONSOR, TEST_ACTIVITY_DEFN_KEY));
         assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_ALREADY_DELETED);
     }
 

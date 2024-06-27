@@ -15,9 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
@@ -44,17 +45,37 @@ class ActivityControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetActivityDefinitionList() throws Exception {
-        ActivityDefnPaginationRes activityDefnPaginationRes = getActivityDefnPaginationRes();
+        // Given
+        String sponsorContext = "testContext";
+        String name = "testName";
+        String description = "testDescription";
+        List<String> status = Arrays.asList("ACTIVE");
+        Application application = Application.PEM; // or new Application("PEM");
+        int pageNo = 0;
+        int pageSize = 10;
+        SortBy sortBy = SortBy.modifyTs;
+        SortDirection sortDir = SortDirection.DESC;
 
-        when(activityDefnService.getAllDefinitionList(anyString(), anyString(), anyString(),
-                anyString(), anyList(), anyInt(), anyInt(), anyString(), anyString()))
-                .thenReturn(activityDefnPaginationRes);
+        ActivityDefnPaginationRes res = new ActivityDefnPaginationRes();
+        ActivityDefnListResp activityDefnRes = new ActivityDefnListResp();
+        activityDefnRes.setActivityDefnKey("testKey");
+        List<ActivityDefnListResp> activityDefnListRespList = new ArrayList<>();
+        activityDefnListRespList.add(activityDefnRes);
+        res.setContent(activityDefnListRespList);
+        when(activityDefnService.getAllDefinitionList(anyString(), anyString(), anyString(), anyString(), anyList(), anyInt(), anyInt(), anyString(), anyString()))
+                .thenReturn(res);
 
-        ResponseEntity<Object> response = activityController.getActivityDefinitionList(
-                null, null, new ArrayList<>(), Application.PEM, 0, 10, SortBy.modifyTs, SortDirection.DESC, TEST_SPONSOR);
+        // When
+        ResponseEntity<Object> response = activityController.getActivityDefinitionList(name, description, status, application, pageNo, pageSize, sortBy, sortDir, sponsorContext);
 
-        assertEquals(response.getStatusCode(),HttpStatus.OK);
-        assertEquals(response.getBody(),activityDefnPaginationRes);
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertInstanceOf(ActivityDefnPaginationRes.class, response.getBody());
+        ActivityDefnPaginationRes responseBody = (ActivityDefnPaginationRes) response.getBody();
+        assertNotNull(responseBody);
+        assertFalse(responseBody.getContent().isEmpty());
+        assertEquals(1, responseBody.getContent().size());
+        assertEquals("testKey", responseBody.getContent().get(0).getActivityDefnKey());
     }
 
     @Test

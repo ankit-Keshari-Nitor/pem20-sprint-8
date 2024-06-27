@@ -8,6 +8,8 @@ import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityInstStatsDto;
 import com.precisely.pem.dtos.shared.PaginationPcptInstDto;
 import com.precisely.pem.dtos.shared.TenantContext;
+import com.precisely.pem.dtos.task.TaskDTO;
+import com.precisely.pem.exceptionhandler.InvalidStatusException;
 import com.precisely.pem.exceptionhandler.ParamMissingException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.*;
@@ -79,7 +81,7 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
         }
         if (activityInstKey.isEmpty() || activityDefnVersionKey.isEmpty()) {
             if(activityInstKey.isEmpty()){
-                activityInstKey = activityInstRepo.findByActivityDefnKeyVersion(activityDefnVersionKey).getActivityInstKey();
+                activityInstKey = activityInstRepo.findByActivityDefnVersionKey(activityDefnVersionKey).getActivityInstKey();
             }
         }
         if(status != null && !status.isEmpty() && currentTask != null && !currentTask.isEmpty() && partnerName != null && !partnerName.isEmpty() && progress != null && !progress.isEmpty()){
@@ -307,11 +309,13 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
         if(Objects.isNull(pcptActivityInst)){
             throw new ResourceNotFoundException("PcptInstanceNotFound", "The participant instance with key '" + pcptActivityInstKey + "' not found.");
         }
+        if(pcptActivityInst.getPcptInstStatus().equalsIgnoreCase(PcptInstStatus.STARTED.getPcptInstStatus()))
+            throw new ResourceNotFoundException("AlreadyInStartedStatus", "The participant instance with key '" + pcptActivityInstKey + "' not found.");
 
         String activityInstanceKey = pcptActivityInst.getActivityInstKey();
         ActivityInst activityInst = activityInstRepo.findByActivityInstKey(activityInstanceKey);
-        String activityDefnVersionKey = activityInst.getActivityDefnKeyVersion();
-        ActivityDefnVersion activityDefnVersion =  activityDefnVersionRepo.findByActivityDefnKeyVersion(activityDefnVersionKey);
+        String activityDefnVersionKey = activityInst.getActivityDefnVersionKey();
+        ActivityDefnVersion activityDefnVersion =  activityDefnVersionRepo.findByActivityDefnVersionKey(activityDefnVersionKey);
         String activityDefnKey = activityDefnVersion.getActivityDefnKey();
         ActivityDefn activityDefn = activityDefnRepo.findByActivityDefnKey(activityDefnKey);
         String activityName = activityDefn.getActivityName();
@@ -329,22 +333,63 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
         String contextDataStr = new String(contextDataByte);
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = null;
-        Map<String,Object> fullContextData = new HashMap<>();
+        Map<String, Object> contextData = new HashMap<>();
         try{
             map = mapper.readValue(contextDataStr, new TypeReference<>() {});
-            fullContextData.put("contextData",map);
+            contextData.put("contextData",map);
         }catch (Exception e){
             log.info(e);
         }
-        log.info("Map content: " + map);
-        List<ActivityProcDef> activityProcDefList = activityProcDefRepo.findByresourceName(activityName+".bpmn");
-        String processInstanceId = pemActivitiService.startProcessInstanceById(activityProcDefList.get(0).getId(),null,fullContextData);
+        log.info("contextData Map content: " + contextData);
+        List<ActivityProcDef> activityProcDefList = activityProcDefRepo.findByResourceName(activityName+".bpmn");
+        String processInstanceId = pemActivitiService.startProcessInstanceById(activityProcDefList.get(0).getId(),null,contextData);
+        log.info("processInstanceId = "+processInstanceId);
+        pcptActivityInst.setActivityWorkflowInstKey(processInstanceId);
         pcptActivityInst.setPcptInstStatus(PcptInstStatus.STARTED.getPcptInstStatus());
         pcptInstRepo.save(pcptActivityInst);
 
         return MessageResp.builder()
                 .response("SUCCESS")
                 .build();
+    }
+
+    @Override
+    public ActivityTaskDto getTaskDetails(String sponsorContext, String pcptActivityInstKey, String taskKey) throws Exception {
+        ActivityTaskDto activityTaskDto = null;
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
+        Optional<PcptActivityInst> result = Optional.ofNullable(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(sponsorInfo.getSponsorKey(),pcptActivityInstKey));
+        if(result.get() != null) {
+            PcptActivityInst pcptActivityInst = result.get();
+            if(pcptActivityInst.getPcptInstStatus().equalsIgnoreCase(PcptInstStatus.STARTED.getPcptInstStatus())){
+                TaskDTO taskDTO = pemActivitiService.getTaskDetails(taskKey);
+                activityTaskDto = mapper.map(taskDTO, ActivityTaskDto.class);
+                activityTaskDto.setPcptActivityInstTaskKey(pcptActivityInstKey);
+                activityTaskDto.setActivityInstKey(result.get().getActivityInstKey());
+                activityTaskDto.setSponsorKey(sponsorInfo.getSponsorKey());
+            } else{
+                throw new ResourceNotFoundException("NA", "The PCPT instance is not in the necessary status to get the task details, Current status is " + pcptActivityInst.getPcptInstStatus());
+            }
+        }else
+            throw new ResourceNotFoundException("NA", "PCPT Instance not found.");
+
+        return activityTaskDto;
+    }
+
+    @Override
+    public MarkAsFinalActivityDefinitionVersionResp submitTask(String sponsorContext, String pcptActivityInstKey, String taskKey,String data) throws Exception {
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
+        Optional<PcptActivityInst> result = Optional.ofNullable(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(sponsorInfo.getSponsorKey(),pcptActivityInstKey));
+        if(result.get() != null) {
+            PcptActivityInst pcptActivityInst = result.get();
+            if(pcptActivityInst.getPcptInstStatus().equalsIgnoreCase(PcptInstStatus.STARTED.getPcptInstStatus())){
+                pemActivitiService.completeUserTask(taskKey, data);
+            } else{
+                throw new ResourceNotFoundException("NA", "The PCPT instance is not in the necessary status to submit the task, Current status is " + pcptActivityInst.getPcptInstStatus());
+            }
+        }else {
+            throw new ResourceNotFoundException("NA", "PCPT Instance not found.");
+        }
+        return new MarkAsFinalActivityDefinitionVersionResp("Success",LocalDateTime.now().toString());
     }
 
     private SponsorInfo validateSponsorContext(String sponsorContext) throws ResourceNotFoundException {

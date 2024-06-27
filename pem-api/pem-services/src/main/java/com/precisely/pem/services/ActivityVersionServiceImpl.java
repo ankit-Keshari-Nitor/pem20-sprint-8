@@ -2,6 +2,7 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.commonUtil.ApplicationConstants;
 import com.precisely.pem.commonUtil.Status;
+import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
@@ -16,6 +17,7 @@ import com.precisely.pem.service.PEMActivitiService;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -94,7 +96,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     @Override
     public ActivityDefnVersionListResp getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnVersionKey) throws Exception {
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
-        Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(activityDefnKey, activityDefnVersionKey,sponsorInfo.getSponsorKey()));
+        Optional<ActivityDefnVersion> result = Optional.ofNullable(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnVersionKeyAndActivityDefnSponsorKey(activityDefnKey, activityDefnVersionKey,sponsorInfo.getSponsorKey()));
         if(result.isEmpty()){
             throw new ResourceNotFoundException("NoDataFound", "No data was found for the provided query parameter combination.");
         }
@@ -130,7 +132,19 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         log.info("count : " + activityDefn.getVersions().size());
 
-        Blob blob = bpmnConvertService.getBpmnConvertedBlob(activityVersionReq.getFile().getInputStream());
+        ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
+                UUID.randomUUID().toString(), activityDefnKey,
+                null, ++version,
+                Status.DRAFT.toString(), false, activityVersionReq.getIsEncrypted(),
+                "", LocalDateTime.now(), "", LocalDateTime.now(),
+                "", ApplicationConstants.SCHEMA_VERSION,activityVersionReq.getDescription()
+        );
+        activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
+        activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
+
+        Blob blob = bpmnConvertService.getBpmnConvertedBlob(activityVersionReq.getFile().getInputStream(), BpmnConverterRequest.builder()
+                .processId(activityDefnVersion.getActivityDefnVersionKey())
+                .build());
 
         ActivityDefnDataDto vchActivityDefnDataDto = new ActivityDefnDataDto(
                 UUID.randomUUID().toString(), blob, LocalDateTime.now(),
@@ -141,17 +155,11 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         activityDefnData = mapper.map(vchActivityDefnDataDto, ActivityDefnData.class);
         activityDefnData = activityDefnDataRepo.save(activityDefnData);
 
-        ActivityDefnVersionDto activityDefnVersionDto = new ActivityDefnVersionDto(
-                UUID.randomUUID().toString(), activityDefnKey,
-                activityDefnData.getActivityDefnDataKey(), ++version,
-                Status.DRAFT.toString(), false, activityVersionReq.getIsEncrypted(),
-                "", LocalDateTime.now(), "", LocalDateTime.now(),
-                "", ApplicationConstants.SCHEMA_VERSION,activityVersionReq.getDescription()
-        );
-        activityDefnVersion = mapper.map(activityDefnVersionDto, ActivityDefnVersion.class);
-        activityDefnVersion = activityDefnVersionRepo.save(activityDefnVersion);
+        //update ActivityDefnDataKey activity definition version
+        activityDefnVersion.setActivityDefnDataKey(activityDefnData.getActivityDefnDataKey());
+        activityDefnVersionRepo.save(activityDefnVersion);
 
-        activityDefnVersionResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnKeyVersion());
+        activityDefnVersionResp.setActivityDefnVersionKey(activityDefnVersion.getActivityDefnVersionKey());
         activityDefnVersionResp.setActivityDefnKey(activityDefnKey);
 
         return activityDefnVersionResp;
@@ -161,7 +169,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     public MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersion(String activityDefnVersionKey) throws Exception {
         Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
         if(activityDefnVersion.isEmpty())
-            throw new ResourceNotFoundException("activityDefnKeyVersion", "NoDataFound", "Activity Definition Version with key '" + activityDefnVersionKey + "' not found. Kindly check the activityDefnVersionKey.");
+            throw new ResourceNotFoundException("activityDefnVersionKey", "NoDataFound", "Activity Definition Version with key '" + activityDefnVersionKey + "' not found. Kindly check the activityDefnVersionKey.");
 
         if(activityDefnVersion.get().getStatus().equalsIgnoreCase(Status.FINAL.getStatus()) ||
                 activityDefnVersion.get().getStatus().equalsIgnoreCase(Status.DELETE.getStatus())){
@@ -169,6 +177,9 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         }
         activityDefnVersion.get().setStatus(String.valueOf(Status.FINAL));
         activityDefnVersion.get().setModifyTs(LocalDateTime.now());
+        if(activityDefnVersion.get().getIsDefault()){
+            deployDefaultADVersion(activityDefnVersionKey);
+        }
         ActivityDefnVersion savedActivityDefnVersion =  activityDefnVersionRepo.save(activityDefnVersion.get());
         ModelMapper mapper = new ModelMapper();
         return mapper.map(savedActivityDefnVersion, MarkAsFinalActivityDefinitionVersionResp.class);
@@ -181,7 +192,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
         if(activityDefnVersion.isEmpty())
-            throw new ResourceNotFoundException("activityDefnKeyVersion", "NoDataFound", "Activity Definition Version with key '" + activityDefnVersionKey + "' not found. Kindly check the activityDefnVersionKey.");
+            throw new ResourceNotFoundException("activityDefnVersionKey", "NoDataFound", "Activity Definition Version with key '" + activityDefnVersionKey + "' not found. Kindly check the activityDefnVersionKey.");
 
         String activityStatus = activityDefnVersion.get().getStatus();
         if(activityStatus.equalsIgnoreCase(Status.FINAL.toString()) || activityStatus.equalsIgnoreCase(Status.DELETE.getStatus()))
@@ -194,7 +205,9 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         //Populating the Activity Definition Data Object
         if(Objects.nonNull(updateActivityVersionReq.getFile())){
-            Blob blob = bpmnConvertService.getBpmnConvertedBlob(updateActivityVersionReq.getFile().getInputStream());
+            Blob blob = bpmnConvertService.getBpmnConvertedBlob(updateActivityVersionReq.getFile().getInputStream(), BpmnConverterRequest.builder()
+                            .processId(activityDefnVersion.get().getActivityDefnVersionKey())
+                            .build());
 
             activityDefnData.get().setDefData(blob);
             activityDefnData.get().setModifyTs(LocalDateTime.now());
@@ -238,7 +251,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         if(finalVersionList.size() > 1) {
             Optional<ActivityDefnVersion> currentFinalVersionObj = finalVersionList
                     .stream()
-                    .filter(p -> p.getIsDefault() && !p.getActivityDefnKeyVersion().equalsIgnoreCase(activityDefnVersionKey))
+                    .filter(p -> p.getIsDefault() && !p.getActivityDefnVersionKey().equalsIgnoreCase(activityDefnVersionKey))
                     .findAny();
             ActivityDefnVersion currentFinalVersion = null;
             if (currentFinalVersionObj.isPresent()) {
@@ -248,13 +261,31 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             }
         }
         version = activityDefnVersionRepo.save(version);
-        String activityDefnKeyVersion = version.getActivityDefnKeyVersion();
-        deployDefaultADVersion(activityDefnKeyVersion);
+        deployDefaultADVersion(version.getActivityDefnVersionKey());
         return new MarkAsFinalActivityDefinitionVersionResp("Success",LocalDateTime.now().toString());
     }
 
-    public void deployDefaultADVersion(String activityDefnKeyVersion) throws SQLException {
-        List<Object[]> dtoList = activityDefnDeploymentCustomRepo.findActivitiesByActivityDefnKeyVersion(activityDefnKeyVersion);
+    @Override
+    public ActivityDataResponse getActivityDataForSpecificVersion(String sponsorContext, String activityDefnKey, String activityDefnVersionKey) throws Exception{
+        Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
+        if(activityDefnVersion.isEmpty())
+            throw new ResourceNotFoundException("activityDefnVersionKey", "NoDataFound", "Activity Definition Version with key '" + activityDefnVersionKey + "' not found. Kindly check the activityDefnVersionKey.");
+
+        Optional<ActivityDefnData> activityDefnData = activityDefnDataRepo.findById(activityDefnVersion.get().getActivityDefnDataKey());
+        if(activityDefnData.isEmpty())
+            throw new ResourceNotFoundException("activityDefnData", "NoDataFound","Activity Definition Version Data with key '" + activityDefnVersion.get().getActivityDefnDataKey() + "' not found. Kindly check the activityDefnDataKey.");
+
+        InputStreamResource resource = bpmnConvertService.getPemBpmnJsonData(activityDefnData.get().getDefData());
+
+        return ActivityDataResponse
+                .builder()
+                .streamResource(resource)
+                .fileName(activityDefnVersion.get().getActivityDefnDataKey()+".json")
+                .build();
+    }
+
+    public void deployDefaultADVersion(String activityDefnVersionKey) throws SQLException {
+        List<Object[]> dtoList = activityDefnDeploymentCustomRepo.findActivitiesByActivityDefnVersionKey(activityDefnVersionKey);
         ActivityDeploymentDto activityDeploymentDto = null;
         if(dtoList != null && !dtoList.isEmpty()) {
             log.info(dtoList.toString());

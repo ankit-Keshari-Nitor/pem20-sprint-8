@@ -1,9 +1,11 @@
 package com.precisely.pem.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.precisely.pem.commonUtil.PcptInstStatus;
 import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.PcptActivityInstDto;
 import com.precisely.pem.dtos.shared.TenantContext;
+import com.precisely.pem.dtos.task.TaskDTO;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.*;
 import com.precisely.pem.repositories.ActivityProcDefRepo;
@@ -90,8 +92,9 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
         when(blob.getBytes(1, 10)).thenReturn("{\r\n  \"activityDefnVersionKey\": \"f532a80a-19fb-4e02-acbe-2a1d1958a90b\",\r\n  \"name\": \"Shrirang\",\r\n  \"description\": \"Sample\",\r\n  \"alertStartDate\": \"2024-05-19T04:17:51.418Z\",\r\n  \"alertInterval\": 2,\r\n  \"dueDate\": \"2024-05-19T04:17:51.418Z\",\r\n  \"partners\": [\r\n    {\r\n      \"partnerKey\": \"041fba37-ee7a-433a-b0bc-91ad45de6c39\",\r\n      \"contextDataNodes\": [\r\n        {\r\n          \"nodeRef\": \"$.applications.SponsorConfigurations.CustomProtocols.protocol[0]._value\",\r\n          \"nodeValue\": \"HTTPS\"\r\n        },\r\n\t\t{\r\n          \"nodeRef\": \"$.applications.SponsorConfigurations.CustomProtocols.protocol[1]._value\",\r\n          \"nodeValue\": \"HTTPS\"\r\n        },\r\n\t\t{\r\n          \"nodeRef\": \"$.applications.PR._type\",\r\n          \"nodeValue\": \"Shrirang\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n\"contextData\":\"\",\r\n  \"rolloutInternally\": false,\r\n  \"attributeValues\": [\r\n    {\r\n      \"attributeValueKey\": \"string\"\r\n    }\r\n  ],\r\n  \"attributeGroups\": [\r\n    {\r\n      \"attributeGroupKey\": \"string\"\r\n    }\r\n  ]\r\n}"
                 .getBytes());
         pcptActivityInst.setPcptContextData(blob);
+        pcptActivityInst.setPcptInstStatus("");
         ActivityInst activityInst = new ActivityInst();
-        activityInst.setActivityDefnKeyVersion("activityDefnKeyVersion");
+        activityInst.setActivityDefnVersionKey("activityDefnVersionKey");
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
         activityDefnVersion.setActivityDefnKey("activityDefnKey");
         ActivityDefn activityDefn = new ActivityDefn();
@@ -101,9 +104,9 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
 
         when(pcptInstRepo.findByPcptActivityInstKey(anyString())).thenReturn(pcptActivityInst);
         when(activityInstRepo.findByActivityInstKey(anyString())).thenReturn(activityInst);
-        when(activityDefnVersionRepo.findByActivityDefnKeyVersion(anyString())).thenReturn(activityDefnVersion);
+        when(activityDefnVersionRepo.findByActivityDefnVersionKey(anyString())).thenReturn(activityDefnVersion);
         when(activityDefnRepo.findByActivityDefnKey(anyString())).thenReturn(activityDefn);
-        when(activityProcDefRepo.findByresourceName(anyString())).thenReturn(List.of(activityProcDef));
+        when(activityProcDefRepo.findByResourceName(anyString())).thenReturn(List.of(activityProcDef));
         when(objectMapper.readValue(anyString(), (Class<Object>) any())).thenReturn(Collections.emptyMap());
 
         when(pemActivitiService.startProcessInstanceById(anyString(), anyString(), anyMap())).thenReturn("processInstanceId");
@@ -115,9 +118,9 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
 
         verify(pcptInstRepo).findByPcptActivityInstKey(anyString());
         verify(activityInstRepo).findByActivityInstKey(anyString());
-        verify(activityDefnVersionRepo).findByActivityDefnKeyVersion(anyString());
+        verify(activityDefnVersionRepo).findByActivityDefnVersionKey(anyString());
         verify(activityDefnRepo).findByActivityDefnKey(anyString());
-        verify(activityProcDefRepo).findByresourceName(anyString());
+        verify(activityProcDefRepo).findByResourceName(anyString());
         verify(pcptInstRepo).save(pcptActivityInst);
     }
     @Test
@@ -133,5 +136,24 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
         assertTrue(actualMessage.contains(expectedMessage));
 
         verify(pcptInstRepo, times(1)).findByPcptActivityInstKey(anyString());
+    }
+
+    @Test
+    public void testGetTaskDetails() throws Exception {
+        // Mock dependencies
+        PcptActivityInst pcptActivityInst = new PcptActivityInst();
+        TaskDTO taskDTO = new TaskDTO();
+        ActivityTaskDto activityTaskDto = new ActivityTaskDto();
+        activityTaskDto.setPcptActivityInstTaskKey("testActivityInstKey");
+        when(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(anyString(), anyString())).thenReturn(pcptActivityInst);
+        when(pemActivitiService.getTaskDetails(anyString())).thenReturn(taskDTO);
+        when(mapper.map(taskDTO, ActivityTaskDto.class)).thenReturn(activityTaskDto);
+        ActivityTaskDto result = participantActivityInstServiceImpl.getTaskDetails("sponsorContext", "pcptActivityInstKey", "taskKey");
+        assertEquals("pcptActivityInstKey", result.getPcptActivityInstTaskKey());
+    }
+    @Test
+    public void testSubmitTask() throws Exception {
+        MarkAsFinalActivityDefinitionVersionResp response = participantActivityInstServiceImpl.submitTask("sponsorContext", "pcptActivityInstKey", "taskKey","{\"fields\":[{\"id\":\"1f161396-681a-4ae8-b16f-4f4e4ed282ad\",\"type\":\"textinput\",\"labelText\":\"Email\",\"helperText\":\"Enter email\",\"min\":{\"value\":\"3\",\"message\":\"value should be min 3 char\"},\"max\":{\"value\":\"5\",\"message\":\"value should be max 5 char\"},\"isRequired\":{\"value\":true,\"message\":\"isRequired\"}},{\"id\":\"682127c1-f894-488b-97db-5d06bf8dff89\",\"type\":\"textarea\",\"labelText\":\"TextArea\"},{\"id\":\"1488e97a-975d-4822-b223-f0b0fccf6698\",\"type\":\"select\",\"labelText\":\"Select Filed\"},{\"id\":\"7450017e-e15a-4278-86fa-bb00c40069b5\",\"type\":\"checkbox\",\"labelText\":\"Check Box\"},{\"id\":\"a6bcd0f9-842c-4f6f-88f1-f232c2e59a30\",\"type\":\"radio\",\"labelText\":\"Radio\"},{\"id\":\"9431f756-10c0-4ca5-bab1-3ba27d33c0c3\",\"type\":\"toggle\",\"labelText\":\"Toggler\"},{\"id\":\"3b6ed547-f460-4ed7-9cc9-1c47f64e39e7\",\"type\":\"link\",\"labelText\":\"Link\"},{\"id\":\"ed3f7b49-0265-4fbe-8d4a-6be0a9775922\",\"type\":\"datepicker\",\"labelText\":\"Date Picker\"},{\"id\":\"29e61a98-968d-4303-b777-0959927aefe9\",\"type\":\"tab\",\"children\":[{\"id\":\"43969e1c-1490-47d8-b767-86c89bce91b3\",\"tabTitle\":\"Tab-1\",\"children\":[{\"id\":\"6baf6df7-9a83-4ead-be65-4711f6a4f887\",\"type\":\"radio\",\"labelText\":\"Radio Button\"}]},{\"id\":\"f68f60d9-4538-4047-8343-504a927c8a66\",\"tabTitle\":\"tab-2\",\"children\":[{\"id\":\"43989c6a-1e8c-4e40-b02b-743f6e0d3533\",\"type\":\"textarea\",\"labelText\":\"Text Area\"}]}]},{\"id\":\"6d13daa4-da42-4d16-851d-2df2b00fc8af\",\"type\":\"button\",\"labelText\":\"Submit\"}]}");
+        assertEquals("Success", response.getStatus());
     }
 }

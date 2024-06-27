@@ -1,6 +1,7 @@
 package com.precisely.pem.converter;
 
 import com.precisely.pem.dtos.*;
+import lombok.extern.log4j.Log4j2;
 import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.*;
 
@@ -8,6 +9,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
+@Log4j2
 public class PemNodeFactory {
     private static final Map<Class<? extends FlowElement>, BiFunction<FlowElement,BpmnConverterRequest, Node>> nodeCreators = new HashMap<>();
 
@@ -19,6 +21,7 @@ public class PemNodeFactory {
         nodeCreators.put(ExclusiveGateway.class, PemNodeFactory::createGatewayNode);
         nodeCreators.put(InclusiveGateway.class, PemNodeFactory::createGatewayNode);
         nodeCreators.put(SubProcess.class, PemNodeFactory::createSubProcessNode);
+        nodeCreators.put(CallActivity.class, PemNodeFactory::createActivityNode);
     }
 
     public static Node createNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest) {
@@ -119,10 +122,23 @@ public class PemNodeFactory {
         node.setId(gateway.getId());
         node.setName(gateway.getName());
         node.setDescription(gateway.getDocumentation());
-        String gatewayType = gateway.getExtensionElements().get("activiti:field").get(0).getChildElements().get("activiti:string").get(0).getElementText();
-        node.setGatewayType(gatewayType);
+        node.setGatewayType(getGatewayType(gateway));
         node.setType(NodeTypes.EXCLUSIVE_GATEWAY.getName());
         return node;
+    }
+
+    private static String getGatewayType(Gateway gateway) {
+        try {
+            Map<String,List<ExtensionElement>> extensions = gateway.getExtensionElements();
+            if(!extensions.get("activiti:field").isEmpty()){
+                return gateway.getExtensionElements().get("activiti:field").get(0).getChildElements().get("activiti:string").get(0).getElementText();
+            }else {
+                return gateway.getExtensionElements().get("field").get(0).getChildElements().get("string").get(0).getElementText();
+            }
+        }catch (Exception exception){
+            log.error("Gateway Type read failed {}", gateway.getId());
+        }
+        return null;
     }
 
     private static Node createSubProcessNode(FlowElement subFlowElement,BpmnConverterRequest bpmnConverterRequest){
@@ -184,6 +200,33 @@ public class PemNodeFactory {
             node.setDescription("");
         }
 
+    }
+
+    private static Node createActivityNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest){
+        Node node = new Node();
+        CallActivity callActivity = (CallActivity) flowElement;
+        node.setId(callActivity.getId());
+        node.setName(callActivity.getName());
+        node.setType(NodeTypes.CALL_ACTIVITY.getName());
+        node.setTargetActivity(((CallActivity) flowElement).getCalledElement());
+        List<Variable> inVariables = ((CallActivity) flowElement).getInParameters().stream()
+                .map(data -> Variable.builder()
+                        .target(data.getTarget())
+                        .source(data.getSource())
+                        .build())
+                .collect(Collectors.toList());
+        node.setInVariables(inVariables);
+
+        List<Variable> outVariables = ((CallActivity) flowElement).getOutParameters().stream()
+                .map(data -> Variable.builder()
+                        .target(data.getTarget())
+                        .source(data.getSource())
+                        .build())
+                .collect(Collectors.toList());
+        node.setOutVariables(outVariables);
+
+
+        return node;
     }
 }
 

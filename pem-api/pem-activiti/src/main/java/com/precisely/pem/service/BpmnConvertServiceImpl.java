@@ -11,9 +11,14 @@ import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.*;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialBlob;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
@@ -34,7 +39,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     }
 
     @Override
-    public Blob getBpmnConvertedBlob(InputStream is) throws IOException, SQLException, BpmnConverterException  {
+    public Blob getBpmnConvertedBlob(InputStream is,BpmnConverterRequest bpmnConverterRequest) throws IOException, SQLException, BpmnConverterException  {
         PemBpmnModel pemBpmnModel;
         try(InputStream inputStream = is) {
             pemBpmnModel  = objectMapper.readValue(inputStream, PemBpmnModel.class);
@@ -42,7 +47,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         if(Objects.isNull(pemBpmnModel))
             throw new BpmnConverterException("ConvertToBpmnDefinition", "Reading Json file failed.");
 
-        BpmnModel bpmnModel = convertIntoBpmnDefinition(pemBpmnModel);
+        BpmnModel bpmnModel = convertIntoBpmnDefinition(pemBpmnModel,bpmnConverterRequest);
 
         if(Objects.isNull(bpmnModel))
             throw new BpmnConverterException("ConvertToBpmnDefinition", "Convert To BPMN Definition Failed.");
@@ -61,13 +66,31 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     }
 
     @Override
-    public BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel) {
+    public InputStreamResource getPemBpmnJsonData(Blob activityDefnData) throws SQLException, XMLStreamException, IOException {
+        InputStream inputStream = activityDefnData.getBinaryStream();
+
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream);
+
+        BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+        BpmnModel bpmnModel = bpmnXMLConverter.convertToBpmnModel(xmlStreamReader);
+
+        //This will convert BPMN Model into PemBpmnModel object.
+        PemBpmnModel pemBpmnModel = convertToPemProcess(bpmnModel, BpmnConverterRequest.builder().build());
+
+        String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(pemBpmnModel);
+        InputStream bpmnModelToJsonStream = new ByteArrayInputStream(jsonString.getBytes());
+
+        return new InputStreamResource(bpmnModelToJsonStream);
+    }
+
+    @Override
+    public BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel, BpmnConverterRequest bpmnConverterRequest) {
         List<Node> nodes = pemBpmnModel.getProcess().getNodes();
 
         if (!nodes.isEmpty()) {
             // Create the output JSON structure
             ObjectNode outputJson = objectMapper.createObjectNode();
-            BpmnConverterRequest bpmnConverterRequest = new BpmnConverterRequest();
 
             // Set bounds for Canvas, can be static
             ObjectNode bounds = outputJson.putObject("bounds");
@@ -103,9 +126,8 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             nodes.stream()
                     .filter(node ->
                             NodeTypes.PARTNER_SUB_PROCESS.getName().equalsIgnoreCase(node.getType()) ||
-                                    NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(node.getType())).forEach(node -> {
-                        addDefaultSystemUserTaskForAllSubProcess(node.getNodes(),connectors, bpmnConverterRequest,node.getUserKeys(),node.getRoleKeys());
-            });
+                                    NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(node.getType())).forEach(node ->
+                            addDefaultSystemUserTaskForAllSubProcess(node.getNodes(),connectors, bpmnConverterRequest,node.getUserKeys(),node.getRoleKeys()));
 
             // Process each node through the chain
             for (Node node : nodes) {
@@ -116,7 +138,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 sequenceFlowHandler.handleSequenceFlow(connectorNode,outputJson,objectMapper,bpmnConverterRequest);
             }
             // Set properties for canvas
-            setPropertiesForCanvas(outputJson,pemBpmnModel);
+            setPropertiesForCanvas(outputJson,pemBpmnModel,bpmnConverterRequest);
 
             BpmnModel bpmnModel = new BpmnJsonConverter().convertToBpmnModel(outputJson);
 
@@ -219,6 +241,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         NodeHandler xsltNodeHandler = new XsltNodeHandler();
         NodeHandler gatewayHandler = new GatewayNodeHandler();
         NodeHandler subProcessHandler = new SubProcessHandler();
+        NodeHandler callActivity = new CallActivityNodeHandler();
 
         startEventNodeHandler.setNextHandler(endEventNodeHandler);
         endEventNodeHandler.setNextHandler(formNodeHandler);
@@ -226,10 +249,11 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         apiNodeHandler.setNextHandler(xsltNodeHandler);
         xsltNodeHandler.setNextHandler(gatewayHandler);
         gatewayHandler.setNextHandler(subProcessHandler);
+        subProcessHandler.setNextHandler(callActivity);
         return startEventNodeHandler;
     }
 
-    private void setPropertiesForCanvas(ObjectNode outputJson,PemBpmnModel pemBpmnModel) {
+    private void setPropertiesForCanvas(ObjectNode outputJson,PemBpmnModel pemBpmnModel,BpmnConverterRequest request) {
         ObjectNode propertiesNode = outputJson.putObject("properties");
         propertiesNode.put("author", "");
         propertiesNode.put("creationdate", "");
@@ -240,7 +264,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         propertiesNode.put("name", pemBpmnModel.getName());
         propertiesNode.put("orientation", "horizontal");
         propertiesNode.put("process_author", "");
-        propertiesNode.put("process_id", PEM_PROCESS_ID);
+        propertiesNode.put("process_id", request.getProcessId());
         propertiesNode.put("process_namespace", "http://www.activiti.org/processdef");
         propertiesNode.put("process_version", "");
         propertiesNode.put("targetnamespace", "http://www.activiti.org/processdef");

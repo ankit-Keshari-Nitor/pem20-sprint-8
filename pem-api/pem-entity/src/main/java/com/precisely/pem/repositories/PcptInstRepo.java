@@ -17,14 +17,14 @@ public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
     @Query(value = "SELECT pa FROM PcptActivityInst pa " +
             "WHERE pa.sponsorKey = :sponsorKey " +
             "AND pa.activityInstKey = :activityInstKey " +
-            "AND pa.dueDate > ':currentDate'", nativeQuery = true)
+            "AND pa.dueDate < ':currentDate'", nativeQuery = true)
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndDelayedProgress(@Param("sponsorKey") String sponsorKey,@Param("activityInstKey") String activityInstKey,
                                                                                                  @Param("currentDate") String currentDate,Pageable pageable);
 
     @Query(value = "SELECT pa FROM PcptActivityInst pa " +
             "WHERE pa.sponsorKey = :sponsorKey " +
             "AND pa.activityInstKey = :activityInstKey " +
-            "AND pa.dueDate <= ':currentDate'",nativeQuery = true)
+            "AND pa.dueDate >= ':currentDate'",nativeQuery = true)
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndOnScheduleProgress(@Param("sponsorKey") String sponsorKey,@Param("activityInstKey") String activityInstKey,
                                                                                                     @Param("currentDate") String currentDate,Pageable pageable);
 
@@ -38,7 +38,7 @@ public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
             "WHERE pa.sponsorKey = :sponsorKey " +
             "AND pa.activityInstKey = :activityInstKey " +
             "AND pa.pcptInstStatus = :status " +
-            "AND pa.dueDate > ':currentDate'", nativeQuery = true)
+            "AND pa.dueDate < ':currentDate'", nativeQuery = true)
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndPcptInstStatusAndDelayedProgress(@Param("sponsorKey") String sponsorKey,@Param("activityInstKey") String activityInstKey,
                                                                                                                @Param("status") String status,
                                                                                                                @Param("currentDate") String currentDate,Pageable pageable);
@@ -47,7 +47,7 @@ public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
             "WHERE pa.sponsorKey = :sponsorKey " +
             "AND pa.activityInstKey = :activityInstKey " +
             "AND pa.pcptInstStatus = :status " +
-            "AND pa.dueDate <= ':currentDate'", nativeQuery = true)
+            "AND pa.dueDate >= ':currentDate'", nativeQuery = true)
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndPcptInstStatusAndOnScheduleProgress(@Param("sponsorKey") String sponsorKey,@Param("activityInstKey") String activityInstKey,
                                                                                                                   @Param("status") String status,
                                                                                                                   @Param("currentDate") String currentDate,Pageable pageable);
@@ -68,7 +68,7 @@ public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
             "WHERE pa.sponsorKey = :sponsorKey " +
             "AND pa.activityInstKey = :activityInstKey " +
             "AND pa.pcptInstStatus = :status " +
-            "AND pa.dueDate > ':currentDate' " +
+            "AND pa.dueDate < ':currentDate' " +
             "AND c.companyName LIKE %:partnerName%", nativeQuery = true)
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndPcptInstStatusAndPartnerNameAndDelayedProgress(@Param("sponsorKey") String sponsorKey,@Param("activityInstKey") String activityInstKey,
                                                                                              @Param("status") String status,@Param("partnerName") String partnerName,
@@ -80,7 +80,7 @@ public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
             "WHERE pa.sponsorKey = :sponsorKey " +
             "AND pa.activityInstKey = :activityInstKey " +
             "AND pa.pcptInstStatus = :status " +
-            "AND pa.dueDate <= ':currentDate' " +
+            "AND pa.dueDate >= ':currentDate' " +
             "AND c.companyName LIKE %:partnerName%",nativeQuery = true)
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndPcptInstStatusAndPartnerNameAndOnScheduleProgress(@Param("sponsorKey") String sponsorKey,@Param("activityInstKey") String activityInstKey,
                                                                                              @Param("status") String status,@Param("partnerName") String partnerName,
@@ -92,7 +92,7 @@ public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
             "AND pa.activityInstKey = :activityInstKey " +
             "AND pa.pcptInstStatus = :status " +
             "AND pa.currentTask = :currentTask " +
-            "AND pa.dueDate > ':currentDate'", nativeQuery = true)
+            "AND pa.dueDate < ':currentDate'", nativeQuery = true)
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndPcptInstStatusAndCurrentTaskAndDelayedProgress(@Param("sponsorKey") String sponsorKey, @Param("activityInstKey") String activityInstKey,
                                                                                                                              @Param("status") String status, @Param("currentTask") String currentTask,
                                                                                                                @Param("currentDate") String currentDate, Pageable pageable);
@@ -102,7 +102,7 @@ public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
             "AND pa.activityInstKey = :activityInstKey " +
             "AND pa.pcptInstStatus = :status " +
             "AND pa.currentTask = :currentTask " +
-            "AND pa.dueDate <= ':currentDate'", nativeQuery = true)
+            "AND pa.dueDate >= ':currentDate'", nativeQuery = true)
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndPcptInstStatusAndCurrentTaskAndOnScheduleProgress(@Param("sponsorKey") String sponsorKey, @Param("activityInstKey") String activityInstKey,
                                                                                                                                 @Param("status") String status, @Param("currentTask") String currentTask,
                                                                                                                   @Param("currentDate") String currentDate, Pageable pageable);
@@ -127,7 +127,7 @@ public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
             "AND pa.pcptInstStatus = :status " +
             "AND pa.currentTask = :currentTask " +
             "AND c.companyName LIKE %:partnerName% " +
-            "AND pa.dueDate > ':currentDate'", nativeQuery = true)
+            "AND pa.dueDate < ':currentDate'", nativeQuery = true)
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndPcptInstStatusAndCurrentTaskAndPartnerNameAndDelayedProgress(@Param("sponsorKey") String sponsorKey, @Param("activityInstKey") String activityInstKey,
                                                                                                                              @Param("status") String status, @Param("currentTask") String currentTask,
                                                                                                                              @Param("partnerName") String partnerName, @Param("currentDate") String currentDate, Pageable pageable);
@@ -140,7 +140,7 @@ public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
             "AND pa.pcptInstStatus = :status " +
             "AND pa.currentTask = :currentTask " +
             "AND c.companyName LIKE %:partnerName% " +
-            "AND pa.dueDate <= ':currentDate'",nativeQuery = true)
+            "AND pa.dueDate >= ':currentDate'",nativeQuery = true)
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndPcptInstStatusAndCurrentTaskAndPartnerNameAndOnScheduleProgress(@Param("sponsorKey") String sponsorKey, @Param("activityInstKey") String activityInstKey,
                                                                                                                                 @Param("status") String status, @Param("currentTask") String currentTask,
                                                                                                                                 @Param("partnerName") String partnerName, @Param("currentDate") String currentDate, Pageable pageable);
@@ -152,7 +152,7 @@ public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
             "WHERE pa.sponsorKey = :sponsorKey " +
             "AND pa.activityInstKey = :activityInstKey " +
             "AND c.companyName LIKE %:partnerName% " +
-            "AND pa.dueDate > ':currentDate'", nativeQuery = true)
+            "AND pa.dueDate < ':currentDate'", nativeQuery = true)
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndPartnerNameAndDelayedProgress(@Param("sponsorKey") String sponsorKey, @Param("activityInstKey") String activityInstKey,
                                                                                                                              @Param("partnerName") String partnerName, @Param("currentDate") String currentDate, Pageable pageable);
 
@@ -162,7 +162,7 @@ public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
             "WHERE pa.sponsorKey = :sponsorKey " +
             "AND pa.activityInstKey = :activityInstKey " +
             "AND c.companyName LIKE %:partnerName% " +
-            "AND pa.dueDate <= ':currentDate'", nativeQuery = true)
+            "AND pa.dueDate >= ':currentDate'", nativeQuery = true)
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndPartnerNameAndOnScheduleProgress(@Param("sponsorKey") String sponsorKey, @Param("activityInstKey") String activityInstKey,
                                                                                                                                 @Param("partnerName") String partnerName, @Param("currentDate") String currentDate, Pageable pageable);
     PcptActivityInst findByPcptActivityInstKey(String pcptActivityInstKey);

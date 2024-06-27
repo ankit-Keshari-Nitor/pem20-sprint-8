@@ -79,8 +79,8 @@ public class ActivityInstanceController {
     public ResponseEntity<Object> getActivityInstanceByKey(@PathVariable(value = "sponsorContext")String sponsorContext,
                                                                  @PathVariable(value = "activityInstKey")String activityInstKey) throws Exception {
         ActivityInstListResp activityInstResp = activityInstService.getInstanceByKey(sponsorContext,activityInstKey);
-        activityInstResp.setActivityTasks(null);//We will populate this data when we have the API in place.
-        activityInstResp.setPcptActivityInstances(null);//We will populate this data when we have the API in place.
+//        activityInstResp.setActivityTasks(null);//We will populate this data when we have the API in place.
+//        activityInstResp.setPcptActivityInstances(null);//We will populate this data when we have the API in place.
         return new ResponseEntity<>(activityInstResp, HttpStatus.OK);
     }
 
@@ -96,7 +96,7 @@ public class ActivityInstanceController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
     })
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Object> getActivityInstanceList(@RequestParam(value = "name", defaultValue = "", required = false) String name,
                                                           @RequestParam(value = "description",defaultValue = "", required = false) String description,
                                                           @RequestParam(value = "status") InstStatus status,
@@ -119,21 +119,21 @@ public class ActivityInstanceController {
         activityStatsDto.setSponsorAction(0);
 //        logic will change when API will get introduced to generate these values
 
-        activityDefnPaginationRes.getContent().stream()
-                .map(p ->
-                {
-//                    Link link = null;
-//                    try {
-//                        link = linkTo(methodOn(ActivityInstanceController.class).createActivityInstance(new ActivityInstReq(),sponsorContext)).withSelfRel();
-//                    } catch (Exception e) {
-//                        throw new RuntimeException(e);
+//        activityDefnPaginationRes.getContent().stream()
+//                .map(p ->
+//                {
+////                    Link link = null;
+////                    try {
+////                        link = linkTo(methodOn(ActivityInstanceController.class).createActivityInstance(new ActivityInstReq(),sponsorContext)).withSelfRel();
+////                    } catch (Exception e) {
+////                        throw new RuntimeException(e);
+////                    }
+//                    p.setActivityTasks(null); //We will populate this data when we have the API in place.
+//                    if(activityStats) {
+//                        p.setActivityStats(activityStatsDto);
 //                    }
-                    p.setActivityTasks(null); //We will populate this data when we have the API in place.
-                    if(activityStats) {
-                        p.setActivityStats(activityStatsDto);
-                    }
-                    return p;
-                }).collect(Collectors.toList());
+//                    return p;
+//                }).collect(Collectors.toList());
 
         return new ResponseEntity<>(activityDefnPaginationRes, HttpStatus.OK);
     }

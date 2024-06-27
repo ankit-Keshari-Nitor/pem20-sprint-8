@@ -13,11 +13,12 @@ import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 public interface ActivityDefnService {
     ActivityDefnPaginationRes getAllDefinitionList(String sponsorContext, String name, String description,
-                                                          String application, String status, int pageNo, int pageSize,
-                                                          String sortBy, String sortDir) throws Exception;
+                                                   String application, List<String> status, int pageNo, int pageSize,
+                                                   String sortBy, String sortDir) throws Exception;
     ActivityDefnResp createActivityDefinition(String sponsorContext, ActivityDefnReq activityDefnReq) throws IOException, SQLException, DuplicateEntryException, ResourceNotFoundException, BpmnConverterException;
     ActivityDefnListResp getActivityDefinitionByKey(String sponsorContext, String activityDefnKey) throws Exception;
     MessageResp updateActivityDefinitionByKey(String sponsorContext, String activityDefnKey, UpdateActivityReq updateActivityReq) throws Exception;

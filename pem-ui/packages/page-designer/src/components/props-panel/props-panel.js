@@ -344,9 +344,12 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                               ></Button>
                             </div>
                           </Column>
-                          <span className="delete-icon">
-                            <TrashCan onClick={() => handleDeleteOption(index)} />
-                          </span>
+                          {/* Check if options length is greater than 1 before displaying delete icon */}
+                          {options.length > 1 && (
+                            <span className="delete-icon">
+                              <TrashCan onClick={() => handleDeleteOption(index)} />
+                            </span>
+                          )}
                         </Grid>
                       );
                     })}

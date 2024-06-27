@@ -16,6 +16,7 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.util.io.InputStreamSource;
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,9 +25,12 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +42,9 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
 
     @Autowired
     private RuntimeService runtimeService;
+
+    @Autowired
+    private ModelMapper mapper;
 
     @Autowired
     private TaskService taskService;
@@ -93,7 +100,6 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
 
     @Override
     public void completeUserTask(String taskId, String input) throws Exception {
-        // TODO :
         try {
             // TODO: We have not integrated authentication in application,
             //  Problem : We can not read task details without Auth
@@ -105,24 +111,27 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // Mark task as complete
-            taskService.complete(taskId);
-
             // Read task details
             Task task = (Task) taskRuntime.task(taskId);
 
             ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
                     .processInstanceId(task.getProcessInstanceId())
                     .singleResult();
-
-            Map<String, Object> variables = processInstance.getProcessVariables();
+            Map<String, Object> variables = runtimeService.getVariables(processInstance.getProcessInstanceId());
             if (variables == null) {
                 variables = new HashMap<>();
             }
-            JSONObject contextData = new JSONObject(variables.get("contextData"));
-            contextData.put(taskId,input);
+            Map<String,Object> contextData = (Map<String, Object>) variables.get("contextData");
+            if(contextData ==null){
+               contextData = new HashMap<>();
+            }
+            contextData.put(task.getTaskDefinitionKey(),input);
             variables.put("contextData", contextData);
             runtimeService.setVariables(task.getProcessInstanceId(), variables);
+            
+            variables = runtimeService.getVariables(processInstance.getProcessInstanceId());
+            System.out.println(new JSONObject(variables).toString());
+            taskService.complete(taskId);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -198,54 +207,63 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     @Override
     public TaskDTO getTaskDetails(String taskId) throws Exception {
         TaskDTO task = null;
-        Map<String, Object> variables = new HashMap<>();
-        // TODO: We have not integrated authentication in application,
-        //  Problem : We can not read task details without Auth
-        //  Error: Unauthorized.
-        //  Response if task not found for given user : Unable to find task for the given id: TaskId for user: user1 (with groups: [] & with roles: [USER]),
-
-        // TODO : Temp code to fix above problem
-        UserDetails userDetails = pemUserDetailsService.loadUserByUsername("user1");
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         try {
-            task = (TaskDTO) taskRuntime.task(taskId);
+            Map<String, Object> variables = new HashMap<>();
+            // TODO: We have not integrated authentication in application,
+            //  Problem : We can not read task details without Auth
+            //  Error: Unauthorized.
+            //  Response if task not found for given user : Unable to find task for the given id: TaskId for user: user1 (with groups: [] & with roles: [USER]),
+
+            // TODO : Temp code to fix above problem
+            UserDetails userDetails = pemUserDetailsService.loadUserByUsername("user1");
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
+            task = mapper.map(taskRuntime.task(taskId), TaskDTO.class);
             variables = task.getVariables();
             if (variables == null) {
                 variables = new HashMap<>();
             }
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
 
-        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
-                .processInstanceId(task.getProcessInstanceId())
-                .singleResult();
 
-        if (processInstance != null) {
-            String processDefinitionId = processInstance.getProcessDefinitionId();
-            // Get the BPMN model using the process definition ID
-            InputStream processStream = repositoryService.getProcessModel(processDefinitionId);
-            BpmnModel bpmnModel = new BpmnXMLConverter().convertToBpmnModel(new InputStreamSource(processStream), false, false);
-            for (org.activiti.bpmn.model.Process process : bpmnModel.getProcesses()) {
-                // Iterate over the flow elements in the process
-                for (FlowElement flowElement : process.getFlowElements()) {
-                    if (flowElement instanceof UserTask) {
-                        UserTask userTask = (UserTask) flowElement;
-                        if (userTask.getId().equalsIgnoreCase(taskId)) {
-                            List<FormProperty> formProperty = userTask.getFormProperties();
-                            for (FormProperty item : formProperty) {
-                                if (item.getName().equalsIgnoreCase("form")) {
-                                    variables.put("form", item.getVariable());
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                    .processInstanceId(task.getProcessInstanceId())
+                    .singleResult();
+
+            if (processInstance != null) {
+                String processDefinitionId = processInstance.getProcessDefinitionId();
+                // Get the BPMN model using the process definition ID
+                InputStream processStream = repositoryService.getProcessModel(processDefinitionId);
+                BpmnModel bpmnModel = null;
+
+                String text = new String(processStream.readAllBytes(), StandardCharsets.UTF_8);
+                //TODO need to change
+                String base64String = new String(Base64.getDecoder().decode(text));
+                processStream = new ByteArrayInputStream(base64String.getBytes());
+                bpmnModel = new BpmnXMLConverter().convertToBpmnModel(new InputStreamSource(processStream), false, false);
+
+                for (org.activiti.bpmn.model.Process process : bpmnModel.getProcesses()) {
+                    // Iterate over the flow elements in the process
+                    for (FlowElement flowElement : process.getFlowElements()) {
+                        if (flowElement instanceof UserTask) {
+                            UserTask userTask = (UserTask) flowElement;
+                            if (flowElement.getId().equalsIgnoreCase(task.getTaskDefinitionKey())) {
+                                List<FormProperty> formProperty = userTask.getFormProperties();
+                                for (FormProperty item : formProperty) {
+                                    if (item.getName().equalsIgnoreCase("form")) {
+                                        variables.put("form", item.getVariable());
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+            task.setVariables(variables);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
-        task.setVariables(variables);
         return task;
     }
 

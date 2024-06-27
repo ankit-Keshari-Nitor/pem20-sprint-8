@@ -12,7 +12,7 @@ public enum NodeTypes {
     PARTNER_SUB_PROCESS("PartnerTask","SubProcess"),
     SYSTEM_SUB_PROCESS("SystemTask","SubProcess"),
     SPONSOR_SUB_PROCESS("SponsorTask","SubProcess"),
-    CALL_ACTIVITY("CallActivity","CallActivity");
+    CALL_ACTIVITY("linkActivity","CallActivity");
 
     private String name;
     private String bpmnName;

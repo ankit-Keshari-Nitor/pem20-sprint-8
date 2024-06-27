@@ -1,6 +1,7 @@
 package com.precisely.pem.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.precisely.pem.commonUtil.PcptInstStatus;
 import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.PcptActivityInstDto;
 import com.precisely.pem.dtos.shared.TenantContext;
@@ -90,8 +91,9 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
         when(blob.getBytes(1, 10)).thenReturn("{\r\n  \"activityDefnVersionKey\": \"f532a80a-19fb-4e02-acbe-2a1d1958a90b\",\r\n  \"name\": \"Shrirang\",\r\n  \"description\": \"Sample\",\r\n  \"alertStartDate\": \"2024-05-19T04:17:51.418Z\",\r\n  \"alertInterval\": 2,\r\n  \"dueDate\": \"2024-05-19T04:17:51.418Z\",\r\n  \"partners\": [\r\n    {\r\n      \"partnerKey\": \"041fba37-ee7a-433a-b0bc-91ad45de6c39\",\r\n      \"contextDataNodes\": [\r\n        {\r\n          \"nodeRef\": \"$.applications.SponsorConfigurations.CustomProtocols.protocol[0]._value\",\r\n          \"nodeValue\": \"HTTPS\"\r\n        },\r\n\t\t{\r\n          \"nodeRef\": \"$.applications.SponsorConfigurations.CustomProtocols.protocol[1]._value\",\r\n          \"nodeValue\": \"HTTPS\"\r\n        },\r\n\t\t{\r\n          \"nodeRef\": \"$.applications.PR._type\",\r\n          \"nodeValue\": \"Shrirang\"\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n\"contextData\":\"\",\r\n  \"rolloutInternally\": false,\r\n  \"attributeValues\": [\r\n    {\r\n      \"attributeValueKey\": \"string\"\r\n    }\r\n  ],\r\n  \"attributeGroups\": [\r\n    {\r\n      \"attributeGroupKey\": \"string\"\r\n    }\r\n  ]\r\n}"
                 .getBytes());
         pcptActivityInst.setPcptContextData(blob);
+        pcptActivityInst.setPcptInstStatus("");
         ActivityInst activityInst = new ActivityInst();
-        activityInst.setActivityDefnKeyVersion("activityDefnKeyVersion");
+        activityInst.setActivityDefnVersionKey("activityDefnVersionKey");
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
         activityDefnVersion.setActivityDefnKey("activityDefnKey");
         ActivityDefn activityDefn = new ActivityDefn();
@@ -101,9 +103,9 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
 
         when(pcptInstRepo.findByPcptActivityInstKey(anyString())).thenReturn(pcptActivityInst);
         when(activityInstRepo.findByActivityInstKey(anyString())).thenReturn(activityInst);
-        when(activityDefnVersionRepo.findByActivityDefnKeyVersion(anyString())).thenReturn(activityDefnVersion);
+        when(activityDefnVersionRepo.findByActivityDefnVersionKey(anyString())).thenReturn(activityDefnVersion);
         when(activityDefnRepo.findByActivityDefnKey(anyString())).thenReturn(activityDefn);
-        when(activityProcDefRepo.findByresourceName(anyString())).thenReturn(List.of(activityProcDef));
+        when(activityProcDefRepo.findByResourceName(anyString())).thenReturn(List.of(activityProcDef));
         when(objectMapper.readValue(anyString(), (Class<Object>) any())).thenReturn(Collections.emptyMap());
 
         when(pemActivitiService.startProcessInstanceById(anyString(), anyString(), anyMap())).thenReturn("processInstanceId");
@@ -115,9 +117,9 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
 
         verify(pcptInstRepo).findByPcptActivityInstKey(anyString());
         verify(activityInstRepo).findByActivityInstKey(anyString());
-        verify(activityDefnVersionRepo).findByActivityDefnKeyVersion(anyString());
+        verify(activityDefnVersionRepo).findByActivityDefnVersionKey(anyString());
         verify(activityDefnRepo).findByActivityDefnKey(anyString());
-        verify(activityProcDefRepo).findByresourceName(anyString());
+        verify(activityProcDefRepo).findByResourceName(anyString());
         verify(pcptInstRepo).save(pcptActivityInst);
     }
     @Test

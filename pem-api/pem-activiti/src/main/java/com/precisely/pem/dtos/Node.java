@@ -28,5 +28,10 @@ public class Node {
     //gateway
     private String gatewayType;
     //Sub Process
-    List<Node> nodes;
+    private List<Node> nodes;
+    //Call Activiti
+    private String targetActivity;
+    private List<Variable> inVariables;
+    private List<Variable> outVariables;
+
 }

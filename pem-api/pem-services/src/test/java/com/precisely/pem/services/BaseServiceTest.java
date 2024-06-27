@@ -50,7 +50,7 @@ public class BaseServiceTest {
     public static final String TEST_PARTNER_KEY = "test_partner_key";
     public static final String TEST_PARTNER_NAME = "test_partner_name";
     public static final String TEST_CURRENT_TASK_NAME = "test_current_task_name";
-
+    public static final String TEST_BPMN_PROCESS_ID = "test_bomn_process_id";
 
     //Response Messages
     public static final String ACTIVITY_DEFINITION_NOT_FOUND = "Activity Definition with key '"+TEST_ACTIVITY_DEFN_KEY+"' not found. Kindly check the activityDefnKey.";
@@ -72,6 +72,8 @@ public class BaseServiceTest {
     protected ActivityDefnDataRepo activityDefnDataRepo;
     @Mock
     protected ActivityDefnVersionRepo activityDefnVersionRepo;
+    @Mock
+    protected ActivityDefnDeploymentCustomRepo activityDefnDeploymentCustomRepo;
     @Mock
     protected PartnerRepo partnerRepo;
     @Mock
@@ -232,7 +234,7 @@ public class BaseServiceTest {
 
     protected ActivityDefnVersion getVCHActivityDefnVersionObj(){
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
-        activityDefnVersion.setActivityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY);
+        activityDefnVersion.setActivityDefnVersionKey(TEST_ACTIVITY_DEFN_VERSION_KEY);
         activityDefnVersion.setActivityDefnKey(TEST_ACTIVITY_DEFN_KEY);
         activityDefnVersion.setVersion(0.0);
         activityDefnVersion.setActivityDefnDataKey("test");
@@ -249,7 +251,7 @@ public class BaseServiceTest {
 
     protected ActivityDefnVersion getDraftVCHActivityDefnVersionObj(){
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
-        activityDefnVersion.setActivityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY);
+        activityDefnVersion.setActivityDefnVersionKey(TEST_ACTIVITY_DEFN_VERSION_KEY);
         activityDefnVersion.setActivityDefnKey(TEST_ACTIVITY_DEFN_KEY);
         activityDefnVersion.setVersion(0.0);
         activityDefnVersion.setActivityDefnDataKey(TEST_ACTIVITY_DEFN_VERSION_DATA_KEY);
@@ -266,7 +268,7 @@ public class BaseServiceTest {
 
     protected ActivityDefnVersion getDeletedVCHActivityDefnVersionObj(){
         ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
-        activityDefnVersion.setActivityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY);
+        activityDefnVersion.setActivityDefnVersionKey(TEST_ACTIVITY_DEFN_VERSION_KEY);
         activityDefnVersion.setActivityDefnKey(TEST_ACTIVITY_DEFN_KEY);
         activityDefnVersion.setVersion(0.0);
         activityDefnVersion.setActivityDefnDataKey("test");
@@ -345,7 +347,7 @@ public class BaseServiceTest {
                 .isDeleted(false)
                 .emailPref(null)
                 .name(TEST_APPLICATION_NAME)
-                .activityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY)
+                .activityDefnVersionKey(TEST_ACTIVITY_DEFN_VERSION_KEY)
                 .sponsorKey("test")
                 .status(InstStatus.STARTED.getInstStatus())
                 .alertFrequency(1)
@@ -410,7 +412,7 @@ public class BaseServiceTest {
                 .isDeleted(false)
                 .emailPref(null)
                 .name(TEST_APPLICATION_NAME)
-                .activityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY)
+                .activityDefnVersionKey(TEST_ACTIVITY_DEFN_VERSION_KEY)
                 .sponsorKey("test")
                 .status(InstStatus.STARTED.getInstStatus())
                 .alertFrequency(1)
@@ -429,7 +431,7 @@ public class BaseServiceTest {
                 .isDeleted(false)
                 .emailPref(null)
                 .name(TEST_APPLICATION_NAME)
-                .activityDefnKeyVersion(TEST_ACTIVITY_DEFN_VERSION_KEY)
+                .activityDefnVersionKey(TEST_ACTIVITY_DEFN_VERSION_KEY)
                 .sponsorKey("test")
                 .status(InstStatus.STARTED.getInstStatus())
                 .alertFrequency(1)

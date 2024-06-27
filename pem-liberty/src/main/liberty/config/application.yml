@@ -16,6 +16,8 @@ spring:
     password: 
     driver-class-name: 
     initialization-mode: 
+  main:
+    allow-circular-references: true
 
 server:
   port:

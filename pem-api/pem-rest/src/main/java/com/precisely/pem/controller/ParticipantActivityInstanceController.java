@@ -8,6 +8,7 @@ import com.precisely.pem.dtos.responses.MessageResp;
 import com.precisely.pem.dtos.responses.ParticipantActivityInstPaginationResp;
 import com.precisely.pem.dtos.responses.ParticipantActivityInstResp;
 import com.precisely.pem.exceptionhandler.ErrorResponseDto;
+import com.precisely.pem.exceptionhandler.InvalidStatusException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.services.ParticipantActivityInstService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -114,7 +115,7 @@ public class ParticipantActivityInstanceController {
     })
     @GetMapping(value = "/{pcptActivityInstKey}/action/start",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> startActivity(@PathVariable(value = "sponsorContext")String sponsorContext,
-                                                @PathVariable(value = "pcptActivityInstKey")String pcptActivityInstKey ) throws ResourceNotFoundException {
+                                                @PathVariable(value = "pcptActivityInstKey")String pcptActivityInstKey ) throws ResourceNotFoundException, InvalidStatusException {
         MessageResp messageResp = participantActivityInstService.startActivity(sponsorContext,pcptActivityInstKey);
         return new ResponseEntity<>(messageResp, HttpStatus.OK);
     }

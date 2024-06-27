@@ -13,7 +13,7 @@ const RadioButton = ({ field, id, previewMode }) => {
 
 export default RadioButton;
 
-// Config of Accordion for Left Palette & Right Palette
+// Config of Radio Button for Left Palette & Right Palette
 RadioButton.config = {
   type,
   label: FORM_FIELD_LABEL.RADIO,

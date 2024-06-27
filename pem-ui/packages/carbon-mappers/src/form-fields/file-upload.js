@@ -30,7 +30,7 @@ const FileUploader = ({ field, id }) => {
 
 export default FileUploader;
 
-// Config of Accordion for Left Palette & Right Palette
+// Config of File Uploader for Left Palette & Right Palette
 FileUploader.config = {
   type,
   label: FORM_FIELD_LABEL.FILE_UPLOADER,

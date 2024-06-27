@@ -20,7 +20,7 @@ const RadioButtonGroup = ({ field, id, previewMode }) => {
 
 export default RadioButtonGroup;
 
-// Config of Accordion for Left Palette & Right Palette
+// Config of Radio Button Group for Left Palette & Right Palette
 RadioButtonGroup.config = {
   type,
   label: FORM_FIELD_LABEL.RADIOGROUP,

@@ -28,7 +28,7 @@ const CheckboxGroup = ({ field, id, currentPath, onChangeHandle, previewMode }) 
 
 export default CheckboxGroup;
 
-// Config of Accordion for Left Palette & Right Palette
+// Config of Checkbox Group for Left Palette & Right Palette
 CheckboxGroup.config = {
   type,
   label: FORM_FIELD_LABEL.CHECKBOXGROUP,

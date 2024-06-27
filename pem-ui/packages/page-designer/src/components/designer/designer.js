@@ -108,7 +108,6 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
         }
 
         // 2.b. OR move different parent
-        // TODO FIX columns. item includes children
         setLayout(handleMoveToDifferentParent(layout, splitDropZonePath, splitItemPath, newItem));
         return;
       }

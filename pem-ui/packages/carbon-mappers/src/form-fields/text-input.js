@@ -52,7 +52,7 @@ const TextInput = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
 
 export default TextInput;
 
-// Config of Accordion for Left Palette & Right Palette
+// Config of Text Input for Left Palette & Right Palette
 TextInput.config = {
   type,
   label: FORM_FIELD_LABEL.TEXT_INPUT,

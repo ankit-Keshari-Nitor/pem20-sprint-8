@@ -34,7 +34,7 @@ const DatePicker = ({ field, id, currentPath, onChangeHandle, previewMode }) => 
 
 export default DatePicker;
 
-// Config of Accordion for Left Palette & Right Palette
+// Config of Date Picker for Left Palette & Right Palette
 DatePicker.config = {
   type,
   label: FORM_FIELD_LABEL.DATEPICKER,

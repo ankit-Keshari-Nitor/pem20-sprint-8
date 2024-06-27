@@ -23,7 +23,7 @@ const Select = ({ field, id }) => {
 
 export default Select;
 
-// Config of Accordion for Left Palette & Right Palette
+// Config of Select for Left Palette & Right Palette
 Select.config = {
   type,
   label: FORM_FIELD_LABEL.SELECT,

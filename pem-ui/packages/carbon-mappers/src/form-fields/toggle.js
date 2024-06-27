@@ -15,7 +15,7 @@ const Toggle = ({ field, id }) => {
 
 export default Toggle;
 
-// Config of Button for Left Palette & Right Palette
+// Config of Toggle for Left Palette & Right Palette
 Toggle.config = {
   type,
   label: FORM_FIELD_LABEL.TOGGLE,

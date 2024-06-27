@@ -20,7 +20,7 @@ const Tooltip = ({ field, id }) => {
 
 export default Tooltip;
 
-// Config of Button for Left Palette & Right Palette
+// Config of Tooltip for Left Palette & Right Palette
 Tooltip.config = {
   type,
   label: FORM_FIELD_LABEL.INFO,

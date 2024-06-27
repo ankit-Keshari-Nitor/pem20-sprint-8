@@ -4,13 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.precisely.pem.models.ApiConfig;
-import com.precisely.pem.repositories.ApiConfigRepo;
+import lombok.extern.log4j.Log4j2;
+import org.activiti.engine.delegate.BpmnError;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.Expression;
 import org.activiti.engine.delegate.JavaDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.MalformedURLException;
@@ -19,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service("RestTemplateApiService")
+@Log4j2
 public class RestTemplateApiService implements JavaDelegate {
 
     private Expression apiConfiguration;
@@ -34,86 +38,85 @@ public class RestTemplateApiService implements JavaDelegate {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    /*@Autowired
-    private ApiConfigRepo apiConfigRepo;*/
-
     @Override
-    public void execute(DelegateExecution execution) {
-        // Get the activity ID
+    public void execute(DelegateExecution execution) throws Exception {
         String serviceTaskId = (String) execution.getCurrentActivityId();
 
-        String url1 = (String) url.getValue(execution);
-        String method1 = (String) method.getValue(execution);
-        String requestBody1 = (String) requestBody.getValue(execution);
-        String header = (String) headers.getValue(execution);
-        String requestContent = (String) requestContentType.getValue(execution);
-        String responseContent = (String) requestContentType.getValue(execution);
-        String apiConfig = (String) apiConfiguration.getValue(execution);
-        String apiUrl = "";
-        HttpHeaders headers1 = new HttpHeaders();
-
-        ApiConfig apiConfig1 = null;
-        if (!isValidUrl(url1)) {
-            if (!apiConfig.isEmpty()) {
-                //apiUrl = constructValidUrl(apiConfig,url1);
-                //ApiConfig apiConfig1 = apiConfigRepo.findByApiConfigKey(apiConfig);
-                apiConfig1 = createDummyApiConfig();
-                String protocol = apiConfig1.getProtocol();
-                String host = apiConfig1.getHost();
-                String port = apiConfig1.getPort();
-
-                StringBuilder apiUrl1 = new StringBuilder();
-                apiUrl1.append(protocol).append("://").append(host).append(":").append(port).append(url1);
-                apiUrl = apiUrl1.toString();
-                byte[] base64AuthBytes = Base64.getEncoder().encode(apiConfig1.getUserName().getBytes());
-                String base64Auth = new String(base64AuthBytes);
-                headers1.setBasicAuth(base64Auth);
-            }
-        } else {
-            apiUrl = url1;
-        }
-
-        headers1.setContentType(MediaType.valueOf(requestContent));
-        headers1.setAccept(List.of(MediaType.valueOf(responseContent)));
-
-
-        // Convert JSON string to List<Map<String, String>> using ObjectMapper
-        List<Map<String, String>> headerList = null;
         try {
-            headerList = objectMapper.readValue(header, new TypeReference<List<Map<String, String>>>() {
-            });
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+            String apiURL = (String) url.getValue(execution);
+            String apiMethod = (String) method.getValue(execution);
+            String apiReqBody = (String) requestBody.getValue(execution);
+            String header = (String) headers.getValue(execution);
+            String requestContent = (String) requestContentType.getValue(execution);
+            String responseContent = (String) responseContentType.getValue(execution);
+            String sampleApiResponse = (String) sampleResponse.getValue(execution);
+            String apiConfKey = (String) apiConfiguration.getValue(execution);
+            String apiUrl = "";
+            HttpHeaders apiHeaders = new HttpHeaders();
 
-        // Adding each key-value pair from headerList to HttpHeaders object
-        for (Map<String, String> header2 : headerList) {
-            for (Map.Entry<String, String> entry : header2.entrySet()) {
-                headers1.add(entry.getKey(), entry.getValue());
+            ApiConfig apiConfig = null;
+            if (!isValidUrl(apiURL)) {
+                if (!apiConfKey.isEmpty()) {
+                    apiConfig = createDummyApiConfig();
+                    String protocol = apiConfig.getProtocol();
+                    String host = apiConfig.getHost();
+                    String port = apiConfig.getPort();
+
+                    StringBuilder aPiURL = new StringBuilder();
+                    aPiURL.append(protocol).append("://").append(host).append(":").append(port).append(apiURL);
+                    apiUrl = aPiURL.toString();
+                    if(!apiConfig.getUserName().isEmpty()){
+                        byte[] base64AuthBytes = Base64.getEncoder().encode(apiConfig.getUserName().getBytes());
+                        String base64Auth = new String(base64AuthBytes);
+                        apiHeaders.setBasicAuth(base64Auth);
+                    }
+                }
+            } else {
+                apiUrl = apiURL;
             }
-        }
+            apiHeaders = constructHttpHeaders(apiHeaders, header, requestContent, responseContent);
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(requestBody1, headers1);
+            HttpEntity<String> httpEntity = new HttpEntity<>(apiReqBody, apiHeaders);
 
-        ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.valueOf(method1.toUpperCase()), httpEntity, String.class);
+            ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.valueOf(apiMethod.toUpperCase()), httpEntity, String.class);
 
-        if (response != null && response.getBody() != null) {
-            Map<String, Object> fullContextData = execution.getVariables();
-            //System.out.println(fullContextData);
-            Map<String, Object> contextData = (Map<String, Object>) fullContextData.getOrDefault("contextData", new HashMap<>());
-            // from execution get the id of the Node and pass that as the key here instead of apiDialog123
-            fullContextData.put("contextData", contextData);
-            contextData.put(serviceTaskId, response.getBody());
-            execution.setVariables(fullContextData);
-            Map<String, Object> fullContextData1 = execution.getVariables();
-            System.out.println(fullContextData1);
+            if (response != null && response.getBody() != null) {
+                Map<String, Object> fullContextData = execution.getVariables();
+                Map<String, Object> nodeResultData = new HashMap<>();
+                nodeResultData.put("sampleResponse", sampleApiResponse);
+                nodeResultData.put("responseBody", response.getBody());
+                Map<String, Object> contextData = (Map<String, Object>) fullContextData.getOrDefault("contextData", new HashMap<>());
+                fullContextData.put("contextData", contextData);
+                contextData.put(serviceTaskId, nodeResultData);
+                execution.setVariables(fullContextData);
+            }
+        } catch (IllegalArgumentException | HttpClientErrorException | HttpServerErrorException e) {
+            handleHttpException(e);
+        } catch (RestClientException | JsonProcessingException e) {
+            handleGeneralException(e);
+        } catch (Exception e) {
+            handleUnexpectedException(e);
         }
     }
 
-    public boolean isValidUrl(String urlString) {
+    private HttpHeaders constructHttpHeaders(HttpHeaders headers,String header, String requestContent, String responseContent) throws JsonProcessingException {
+        List<Map<String, String>> headerList = objectMapper.readValue(header, new TypeReference<List<Map<String, String>>>() {});
+
+        for (Map<String, String> headerMap : headerList) {
+            for (Map.Entry<String, String> entry : headerMap.entrySet()) {
+                headers.add(entry.getKey(), entry.getValue());
+            }
+        }
+
+        headers.setContentType(MediaType.valueOf(requestContent));
+        headers.setAccept(List.of(MediaType.valueOf(responseContent)));
+
+        return headers;
+    }
+
+    private boolean isValidUrl(String urlString) {
         try {
             URL url = new URL(urlString);
-            // Check if URL is well-formed and has a protocol, host, and path
             return url.getProtocol() != null &&
                     (url.getHost() != null || url.getAuthority() != null) &&
                     url.getPath() != null && !url.getPath().isEmpty();
@@ -122,7 +125,7 @@ public class RestTemplateApiService implements JavaDelegate {
         }
     }
 
-    public ApiConfig createDummyApiConfig() {
+    private ApiConfig createDummyApiConfig() {
         ApiConfig apiConfig = new ApiConfig();
         apiConfig.setApiConfigKey("apiConfigKey");
         apiConfig.setHost("10.15.106.209");
@@ -139,6 +142,21 @@ public class RestTemplateApiService implements JavaDelegate {
         apiConfig.setVerifyHost("true");
 
         return apiConfig;
+    }
+
+    private void handleHttpException(RuntimeException e) {
+        log.info("HTTP_ERROR: " + e.getMessage());
+        throw new BpmnError("HTTP_ERROR", "HTTP Error occurred: " + e.getMessage());
+    }
+
+    private void handleGeneralException(Exception e) throws Exception {
+        log.info("GENERAL_ERROR: " + e.getMessage());
+        throw new BpmnError("GENERAL_ERROR", "Error occurred: " + e.getMessage());
+    }
+
+    private void handleUnexpectedException(Exception e) {
+        log.info("UNEXPECTED_ERROR: " + e.getMessage());
+        throw new BpmnError("UNEXPECTED_ERROR", "Unexpected Error occurred: " + e.getMessage());
     }
 
 }

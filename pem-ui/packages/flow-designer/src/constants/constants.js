@@ -362,7 +362,7 @@ export const QUERY_FIELDS = [
   },
   {
     name: 'numeric',
-    label: 'Numeric',
+    label: 'Number',
     operators: DEFAULT_OPERATORS.filter((op) =>
       [
         'Equals (=)',
@@ -405,10 +405,7 @@ export const QUERY_FIELDS = [
 
 export const INITIAL_QUERY = {
   combinator: 'and',
-  rules: [
-    //{ field: 'string', operator: ['', 'beginsWith'], value: '' },
-    // { field: 'numeric', operator: ['', 'in'], value: '' }
-  ]
+  rules: []
 };
 
 export const QUERY_COMBINATOR = [

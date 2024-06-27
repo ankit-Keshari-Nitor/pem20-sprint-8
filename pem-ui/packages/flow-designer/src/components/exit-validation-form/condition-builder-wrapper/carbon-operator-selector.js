@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { toOptions, useValueEditor } from 'react-querybuilder';
-import { Button, Modal, Select, TextInput, TreeView, TreeNode } from '@carbon/react';
+import { Button, Select, TextInput, TreeView, TreeNode } from '@carbon/react';
 import { ElippsisIcon } from '../../../icons';
 import { useState } from 'react';
 import WrapperModal from '../../helpers';
@@ -58,13 +58,14 @@ const CarbonOperatorSelector = ({
 
   return (
     <>
+      {/* Left Operand  */}
       <TextInput
         id="txt-input"
         type="text"
         value={valueAsArray.length > 1 ? valueAsArray[0] : ''}
         title={title}
         className={className}
-        placeholder={'Operand'}
+        placeholder={'Left Operand'}
         labelText={''}
         onChange={(e) => multiValueHandler(e.target.value, 0)}
         style={{ marginTop: '1.5rem' }}
@@ -74,6 +75,7 @@ const CarbonOperatorSelector = ({
       <WrapperModal openCancelDialog={openCancelDialog} setOpenCancelDialog={setOpenCancelDialog}>
         {Temp}
       </WrapperModal>
+      {/* Relational Operator Dropdown */}
       <Select
         id="selector-label"
         className={className}

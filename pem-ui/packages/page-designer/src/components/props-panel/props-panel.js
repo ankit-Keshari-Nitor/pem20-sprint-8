@@ -368,7 +368,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                 {advanceProps && advanceProps.length > 0 && (
                   <>
                     {advanceProps.map((advncProps, idx) => {
-                      console.log('advanceProps', advanceProps);
                       return (
                         <>
                           {/* Min - Max validation */}
@@ -553,8 +552,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
 }
 
 function getValidationMessage(label, propertiesName, value) {
-  console.log('value', value);
-  console.log('props', propertiesName);
   switch (propertiesName) {
     case 'isRequired':
       return 'This is a required field';

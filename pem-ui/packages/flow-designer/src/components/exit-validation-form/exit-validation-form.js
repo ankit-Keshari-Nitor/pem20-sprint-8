@@ -43,7 +43,7 @@ export default function ExitValidationFrom({ onSubmitExitValidationForm, setOpen
           </Button>
         </Column>
         <Column lg={8}>
-          <Button data-testid="save" color="primary" variant="contained" type="submit" style={{ width: '100%' }} onClick={() => onSubmitExitValidationForm(query)}>
+          <Button data-testid="save" color="primary" variant="contained" type="submit" style={{ width: '100%' }} onClick={() => onSubmitExitValidationForm(validationQuery(query))}>
             Save
           </Button>
         </Column>

@@ -75,7 +75,6 @@ export default function ActivityList() {
   const fetchAndSetData = useCallback(() => {
     ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status)
       .then((data) => {
-        console.log('data>>>>', data);
         if (data.content != null) {
           setRows(data.content);
           setTotalRows(data.pageContent.totalElements);
@@ -394,7 +393,6 @@ export default function ActivityList() {
 
   // Function to handle the Next/rollout Button Click
   const handleSubmitClick = (data) => {
-    console.log('data', data);
     // TODO -> Rollout API will call here
   };
 

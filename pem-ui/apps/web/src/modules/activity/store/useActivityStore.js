@@ -1,11 +1,18 @@
 import { create } from 'zustand';
 import { ACTIVITY_DEFINITION_DATA } from '../constants';
 
+
 const activityStore = (set, get) => ({
-  activities: {
+  selectedActivity: {
+    actDefName: '',
+    activityDefKey: '',
+    actDefVerKey: '',
+    operation: ''
+  },
+  activityData: {
     definition: {},
-    schema: {},
-    version: [],
+    schema: {},//node+edges+ each node's data(def,exit validation,form design)
+    versions: [],
     operation: ''
   },
   // Activity Flow State
@@ -18,21 +25,36 @@ const activityStore = (set, get) => ({
         }
         return copyNodes;
       });
-      return { activities: { definition: copyNodes, schema: state.activities.schema, version: [], operation: operation } };
+
+      return {
+        activityData: {
+          definition: copyNodes,
+          schema: state.activityData.schema,
+          versions: [],
+          operation: operation
+        }
+      };
     });
   },
-  editSchemaProps: (task,operation) => {
+  //this changes during - 
+  editSchemaProps: (task, operation) => {
     set((state) => {
-      console.log('updating>>>', { activities: { definition: state.activities.definition, schema: { ...task }, version: [], operation: operation } });
-      return { activities: { definition: state.activities.definition, schema: { ...task }, version: [], operation: operation } };
+      console.log('updating>>>', { activityData: { definition: state.activityData.definition, schema: { ...task }, versions: [], operation: operation } });
+      return { activityData: { definition: state.activityData.definition, schema: { ...task }, versions: [], operation: operation } };
+    });
+  },
+  setSelectedActivity: ({activityDefKey, actDefName, actDefVerKey, operation}) => {
+    set((state) => {
+      const selectedActivity = { actDefName, activityDefKey, actDefVerKey, operation };
+      return { ...state.activityData, ...selectedActivity };
     });
   },
   reset: () => {
     set({
-      activities: {
+      activityData: {
         definition: {},
         schema: {},
-        version: [],
+        versions: [],
         operation: ''
       }
     });

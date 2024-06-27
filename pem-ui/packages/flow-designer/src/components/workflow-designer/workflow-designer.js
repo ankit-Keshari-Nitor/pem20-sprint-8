@@ -114,6 +114,7 @@ const WorkFlowDesigner = forwardRef(({
       setDialogNodes(dialogNodeData?.data?.dialogNodes);
       setDialogEdges(dialogNodeData?.data?.dialogEdges);
     }
+    //this is sending the new schema to web page  - activity-definition.js
     editSchemaProp(storeData, activityOperation);
   }, [setTaskNodes, setTaskEdges, setDialogEdges, storeData, selectedTaskNode, editSchemaProp, setDialogNodes]);
 

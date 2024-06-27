@@ -19,7 +19,15 @@ import {
 import './block-properties-tray.scss';
 
 
-export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, setOpenPropertiesBlock, editDefinitionProp, activityOperation, activityDefinitionData, readOnly }) {
+export default function BlockPropertiesTray(props) {
+
+    const  {
+      selectedNode, //partner,approval,attribute,sponsor,system,custom
+      selectedTaskNode, //dialog,xslt,api
+     setOpenPropertiesBlock,
+     readOnly } = props;
+
+     console.log('block tray -',props)
   const [openExpandMode, setOpenExpandMode] = useState(false);
 
   const getForm = (selectedNode) => {

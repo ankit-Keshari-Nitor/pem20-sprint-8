@@ -7,16 +7,20 @@ import useActivityStore from '../../store';
 import { OPERATIONS, ROUTES } from '../../constants';
 
 export default function ActivityDefinition() {
-  const activityStore = useActivityStore((state) => state.activities);
+  const activityStore = useActivityStore((state) => state.activityData);
   const activityReset = useActivityStore((state) => state.reset);
+
   const editDefinitionProp = useActivityStore((state) => state.editDefinitionProps);
   const editSchemaProp = useActivityStore((state) => state.editSchemaProps);
+  
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
   const [activityDefinitionData, setActivityDefinitionData] = useState();
+
   const activityOperation = activityStore.operation;
   console.log(activityOperation);
   const readOnly = activityStore.operation === OPERATIONS.VIEW ? true : false;
   const ref = useRef();
+
   useEffect(() => {
     if (activityDefinitionData?.id !== '' || activityDefinitionData?.name === '' || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
       setShowActivityDefineDrawer(true);
@@ -39,9 +43,13 @@ export default function ActivityDefinition() {
   },[])
 
   const handleActivityReset = () => {
-    ref.current?.handleRest();
+    //ref.current?.handleRest();
     activityReset();
   };
+
+  const saveActivity = () => {
+    handleActivityReset()
+  }
 
   return (
     <>
@@ -62,7 +70,7 @@ export default function ActivityDefinition() {
           <HistoryIcon />
         </Column>
         <Column>
-          <Button id="saveactivity" href={ROUTES.ACTIVITY_LIST} disabled={readOnly} onClick={() => handleActivityReset()}>
+          <Button id="saveactivity" onClick={saveActivity} disabled={readOnly}>
             Save Activity
           </Button>
         </Column>

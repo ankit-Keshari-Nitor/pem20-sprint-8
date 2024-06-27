@@ -230,9 +230,6 @@ export const TEST_DIALOG_DATA = [
 ];
 
 export const ACTIVITY_DEFINITION_DATA = {
-  id: '',
-  versions: [],
-  selectedVersion: '',
   name: '',
   description: '',
   contextData: '',
@@ -243,5 +240,7 @@ export const OPERATIONS = {
   VIEW: 'view',
   EDIT: 'edit',
   EXPORT: 'export',
-  DELETE: 'delete'
+  DELETE: 'delete',
+  CREATE_NEW_VERSION:'create_new_version',
+  TEST:'test'
 };

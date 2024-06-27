@@ -17,7 +17,7 @@ export default function ActivityDefinitionForm(props) {
             <Column lg={2} md={2} sm={1} className="activity-active">
               Active
             </Column>
-            {versionData.length > 0 && <ActivityVersions {...props} />}
+           <ActivityVersions {...props} />
           </Grid>
         </span>
         <div className="icon">

@@ -7,20 +7,15 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
     if (searchKey !== '') {
       url += `&name=${searchKey}`;
     }
-
     if (status !== '') {
       url += `&status=${status}`;
     }
-
     const response = await fetch(url);
-
     if (!response.ok) {
       console.error(`HTTP error! status: ${response.status}`);
       return { content: [], pageContent: {} };
     }
-
     const jsonData = await response.json();
-
     const customizedData = jsonData.content.map((e) => ({
       id: e.activityDefnKey,
       ...e
@@ -36,7 +31,7 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
   }
 };
 
-export const deleteActivityList = async (activityDefnKey) => {
+export const deleteActivity = async (activityDefnKey) => {
   try {
     let url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}`;
     const response = await fetch(url, {

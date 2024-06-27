@@ -35,12 +35,13 @@ import RolloutDetails from '../../components/rollout-wizard/rollout-details.js';
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
   // State hooks for managing various states
+  const store = useActivityStore();
   const editDefinition = useActivityStore((state) => state.editDefinitionProps);
   const [totalRows, setTotalRows] = useState(0);
   const [searchKey, setSearchKey] = useState('');
   const [sortDir, setSortDir] = useState('ASC'); // Sorting direction state
   const [pageNo, setPageNo] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(1);
   const [rows, setRows] = useState([]);
   const [status, setStatus] = useState('DRAFT');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,8 +50,9 @@ export default function ActivityList() {
   const [onPrimaryButtonClick, setOnPrimaryButtonClick] = useState(null); // Renamed state
   const [notificationProps, setNotificationProps] = useState(null);
   const [tempSelectedItem, setTempSelectedItem] = useState({}); // Temporarily store selected item
+ 
   const [activityDefnKey, setActivityDefnKey] = useState('');
-  const [activityDetails, setActivityDetails] = useState(null);
+  //const [activityDetails, setActivityDetails] = useState(null);
 
   // Test operation states
   const [openTestModal, setOpenTestModal] = useState(false);
@@ -129,7 +131,7 @@ export default function ActivityList() {
         setIsModalOpen(true);
         break;
       case ACTION_COLUMN_KEYS.ROLLOUT:
-        handleRolloutOperation(id);
+        setOpenRolloutModal(true);;//(id);
         break;
       case ACTION_COLUMN_KEYS.TEST:
         handleTestOperation(id);
@@ -207,15 +209,23 @@ export default function ActivityList() {
     setIsModalOpen(true);
   };
 
+  //ellipse options menu click
   const handleClick = (id, operation) => {
     const editRow = rows.filter((row) => row.id === id)[0];
     editDefinition(editRow, operation);
+
+    store.setSelectedActivity({
+      activityDefKey:id, 
+      actDefName:editRow.name, 
+      actDefVerKey: 'editRow.defaultVersionKey', 
+      operation
+    });
   };
 
   // Handler for actual delete API call
   const handleDeleteActivity = async (id) => {
     try {
-      const responseMsg = await ActivityService.deleteActivityList(id);
+      const responseMsg = await ActivityService.deleteActivity(id);
       if (responseMsg) {
         fetchAndSetData();
         setNotificationProps({
@@ -254,20 +264,21 @@ export default function ActivityList() {
   };
 
   // Generate the ellipsis menu for each row
-  const getEllipsis = (id) => {
+  const getEllipsis = (id,row) => {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
         <OverflowMenuItem itemText="View" onClick={() => handleClick(id, OPERATIONS.VIEW)} href={ROUTES.ACTIVITY_EDIT + id}/>
         <OverflowMenuItem itemText="Edit" onClick={() => handleClick(id, OPERATIONS.EDIT)} href={ROUTES.ACTIVITY_EDIT + id} />
-        <OverflowMenuItem itemText="Export" />
-        <OverflowMenuItem itemText="Create Version" />
+        <OverflowMenuItem itemText="Export" onClick={() => handleClick(id, OPERATIONS.EXPORT)}/>
+        <OverflowMenuItem itemText="Create Version" onClick={() => handleClick(id, OPERATIONS.CREATE_NEW_VERSION)} />
         <OverflowMenuItem itemText="Delete" onClick={() => handleDelete(id)} />
       </OverflowMenu>
     );
   };
 
   // Generate action items based on the activity status
-  const getActionItem = (status, id) => {
+  const getActionItem = (status, id,row) => {
+    console.log(row);
     if (status === 'DRAFT' || status === '') {
       return (
         <ActivityDropdown
@@ -294,13 +305,12 @@ export default function ActivityList() {
   // -------------------------------------Test operation Start-------------------------------------------------
   // Function to handle the Test operation
   const handleTestOperation = async (id) => {
-    const activityDetailsResponse = await getActivityDetails(id);
-    if (activityDetailsResponse) {
-      setActivityDetails(activityDetailsResponse);
+    //const activityDetailsResponse = await getActivityDetails(id);
+   // if (activityDetailsResponse) {
+      //setActivityDetails(activityDetailsResponse);
       getTestData();
-    }
+    //}
   };
-
   const getTestData = () => {
     RolloutService.getTestList().then((data) => {
       setTestDialogData(data);
@@ -309,7 +319,6 @@ export default function ActivityList() {
       setOpenTestModal(true);
     });
   };
-
   // Function to handle the Next/rollout Button Click
   const handelTestFinishClick = () => {
     let schema = JSON.parse(JSON.stringify(formRenderSchema));
@@ -324,7 +333,6 @@ export default function ActivityList() {
       // TODO -> Test API will call here
     }
   };
-
   // Function to handle the Cancel/Previous Button Click
   const handelTestCloseClick = () => {
     if (currentTestStep === 0) {
@@ -334,60 +342,14 @@ export default function ActivityList() {
       setCurrentTestStep(currentTestStep - 1);
     }
   };
-
   // -------------------------------------Test operation End-------------------------------------------------
 
   // -------------------------------------Rollout operation Start-------------------------------------------------
 
   // Rollout operation states
   const [openRolloutModal, setOpenRolloutModal] = useState(false);
-  const [openAddModal, setOpenAddModal] = useState(false);
-  const [rolloutGapData, setRolloutGapData] = useState({ selectedGroupsData: [], selectedAttributesData: [], selectedPartnersData: [] });
-
-  // Function to handle the Rollout operation
-  const handleRolloutOperation = async (id) => {
-    const activityDetailsResponse = await getActivityDetails(id);
-    if (activityDetailsResponse) {
-      setActivityDetails(activityDetailsResponse);
-      setOpenRolloutModal(true);
-    }
-  };
-
-  // Handler for actual delete API call
-  const getActivityDetails = async (id) => {
-    try {
-      const responseMsg = await ActivityService.getActivityDetails(id);
-      if (responseMsg) {
-        return responseMsg;
-      } else {
-        return null;
-      }
-    } catch (error) {
-      console.error('Failed to get activity details:', error);
-      return null;
-    }
-  };
-
   // Function to handle the Next/rollout Button Click
-  const handleBackToDetails = () => {
-    setOpenAddModal(false);
-    setOpenRolloutModal(true);
-  };
-
-  const handleAddGroups = (selectedGroupsData) => {
-    setRolloutGapData((prev) => ({ ...prev, selectedGroupsData: [...selectedGroupsData] }));
-  };
-
-  const handleAddAttributes = (selectedAttributesData) => {
-    setRolloutGapData((prev) => ({ ...prev, selectedAttributesData: [...selectedAttributesData] }));
-  };
-
-  const handleAddPartners = (selectedPartnersData) => {
-    setRolloutGapData((prev) => ({ ...prev, selectedPartnersData: [...selectedPartnersData] }));
-  };
-
-  // Function to handle the Next/rollout Button Click
-  const handleSubmitClick = (data) => {
+  const handleActivityRollout = (data) => {
     console.log('data', data);
     // TODO -> Rollout API will call here
   };
@@ -400,35 +362,22 @@ export default function ActivityList() {
       {openRolloutModal && (
         <WrapperModal
           isOpen={openRolloutModal}
-          modalHeading={activityDetails?.name}
+          modalHeading={"activity name"}
           secondaryButtonText={'Cancel'}
           primaryButtonText={'Rollout'}
-          onPrimaryButtonClick={handleSubmitClick}
+          onPrimaryButtonClick={handleActivityRollout}
           onSecondaryButtonClick={() => setOpenRolloutModal(false)}
           onRequestClose={() => setOpenRolloutModal(false)}
         >
           <RolloutDetails
             handleAddClick={() => {
-              setOpenAddModal(true);
+              //setOpenAddModal(true);
               setOpenRolloutModal(false);
             }}
           />
         </WrapperModal>
       )}
-      {/* Modal for Add Partners and Groups, Attributes */}
-      {openAddModal && (
-        <WrapperModal
-          isOpen={openAddModal}
-          modalHeading={activityDetails?.name}
-          secondaryButtonText={'Back to Details'}
-          primaryButtonText={'Save'}
-          onPrimaryButtonClick={handleSubmitClick}
-          onSecondaryButtonClick={handleBackToDetails}
-          onRequestClose={() => setOpenAddModal(false)}
-        >
-          <RolloutTest handleAddGroups={handleAddGroups} handleAddAttributes={handleAddAttributes} handleAddPartners={handleAddPartners} rolloutGapData={rolloutGapData} />
-        </WrapperModal>
-      )}
+      
       <Shell.Page type="LIST" className="sfg--page--partner-list">
         <Shell.PageHeader title={pageUtil.t('mod-activity-definition:list.title')} description={pageUtil.t('mod-activity-definition:list.pageDescription')}></Shell.PageHeader>
         <Section className="page-notification-container">
@@ -487,7 +436,7 @@ export default function ActivityList() {
                         <TableRow {...getRowProps({ row })} key={row.id}>
                           {row.cells.map((cell) => (
                             <TableCell key={cell.id}>
-                              {cell.info.header === 'action' ? getActionItem(status, row.id) : cell.info.header === 'ellipsis' ? getEllipsis(row.id) : cell.value}
+                              {cell.info.header === 'action' ? getActionItem(status, row.id,row) : cell.info.header === 'ellipsis' ? getEllipsis(row.id,row) : cell.value}
                             </TableCell>
                           ))}
                         </TableRow>
@@ -534,7 +483,7 @@ export default function ActivityList() {
           <WrapperModal
             isOpen={openTestModal}
             setIsOpen={setOpenTestModal}
-            modalHeading={'Activity Test - ' + activityDetails?.name}
+            modalHeading={'Activity Test - ' + "activityDetails.name"}
             secondaryButtonText={currentTestStep === 0 ? 'Cancel' : 'Previous'}
             primaryButtonText={currentTestStep < testDialogData.length - 1 ? 'Next' : 'Finish'}
             onPrimaryButtonClick={handelTestFinishClick}

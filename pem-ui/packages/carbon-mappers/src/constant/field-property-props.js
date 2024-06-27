@@ -40,7 +40,9 @@ export const readOnly = {
   propsName: 'readOnly',
   label: 'Read-only',
   value: false,
-  type: 'Toggle'
+  type: 'Toggle',
+  labelA: 'Yes',
+  labelB: 'No'
 };
 
 export const minProps = {
@@ -166,8 +168,11 @@ export const mapping = {
 export const orientation = {
   propsName: 'orientation',
   label: 'Orientation',
-  value: false,
-  type: 'Toggle'
+  options: [
+    { label: 'Vertical', value: 'vertical' },
+    { label: 'Horizontal', value: 'horizontal' }
+  ],
+  type: 'radio'
 }
 
 export const height = {
@@ -181,6 +186,5 @@ export const id = {
   propsName: 'id',
   label: 'ID',
   value: '',
-  type: 'TextInput',
-  readOnly: true,
+  type: 'text',
 };

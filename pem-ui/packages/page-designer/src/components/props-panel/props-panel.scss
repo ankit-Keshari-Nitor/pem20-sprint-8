@@ -65,3 +65,13 @@
   min-width: 70% !important;
   display: inline-block;
 }
+
+.component-type-id {
+  display: grid;
+}
+
+.component-type-id-label {
+  margin-bottom: 0.25rem;
+  font-size: 14px;
+  font-weight: 600;
+}

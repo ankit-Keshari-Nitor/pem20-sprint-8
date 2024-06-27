@@ -27,7 +27,11 @@ export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode
   };
 
   const onSubmitExitValidationForm = (query) => {
-    edit(selectedNode, 'exitValidationData', query);
+    if (selectedNode.type === NODE_TYPE.API || selectedNode.type === NODE_TYPE.DIALOG || selectedNode.type === NODE_TYPE.XSLT) {
+      editDialog(selectedNode, selectedTaskNode, 'exitValidationData', values);
+    } else {
+      editTask(selectedNode, 'exitValidationData', values);
+    }
   };
 
   return (

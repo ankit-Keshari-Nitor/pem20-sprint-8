@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Designer from '@b2bi/flow-designer';
-import { Button, Column, Grid } from '@carbon/react';
 import './activity-definition.css';
-import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
 import useActivityStore from '../../store';
-import { OPERATIONS, ROUTES } from '../../constants';
+import { OPERATIONS } from '../../constants';
 
 export default function ActivityDefinition() {
+  const currentActivity = useActivityStore((state) => state.selectedActivity);
   const activityStore = useActivityStore((state) => state.activityData);
   const activityReset = useActivityStore((state) => state.reset);
 
@@ -16,9 +15,7 @@ export default function ActivityDefinition() {
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
   const [activityDefinitionData, setActivityDefinitionData] = useState();
 
-  const activityOperation = activityStore.operation;
-  console.log(activityOperation);
-  const readOnly = activityStore.operation === OPERATIONS.VIEW ? true : false;
+  const readOnly = currentActivity.operation === OPERATIONS.VIEW ? true : false;
   const ref = useRef();
 
   useEffect(() => {
@@ -82,7 +79,7 @@ export default function ActivityDefinition() {
         editDefinitionProp={editDefinitionProp}
         editSchemaProp={editSchemaProp}
         activityDefinitionData={activityDefinitionData}
-        activityOperation={activityOperation}
+        activityOperation={currentActivity.operation}
         readOnly={readOnly}
         onVersionSelection={(selectedVersion)=> console.log(selectedVersion)}
         versionData={[]}//todo -- this data will be based on version api response 

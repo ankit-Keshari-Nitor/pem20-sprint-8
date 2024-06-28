@@ -1,15 +1,13 @@
 
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import RolloutDetails from './rollout-details';
 import RolloutGapDetails from './rollout-gap-details';
 import * as ActivityService from '../../services/activity-service';
 import GenericModal from '../../helpers/wrapper-modal';
 
 const ActivityRolloutModal = (props) => {
-
     const { showModal, setShowModal, activityName, activityDefKey, activityVerKey } = props;
     const [rolloutGapData, setRolloutGapData] = useState({ selectedGroupsData: [], selectedAttributesData: [], selectedPartnersData: [] });
-
     const [rolloutDetails, setRolloutDetails] = useState({
         dueDate: new Date(),
         description: '',
@@ -17,11 +15,10 @@ const ActivityRolloutModal = (props) => {
         alertInterval: 0,
         rollingOutTo: 'partners'
     })
-
     const [openAddModal, setOpenAddModal] = useState(false);
 
     const handleActivityRollout = () => {
-
+//todo - get all data and call rollout/create instance api from here -- close dialog once done
     }
 
     // Function to handle the Next/rollout Button Click
@@ -45,7 +42,7 @@ const ActivityRolloutModal = (props) => {
         <>
             <GenericModal
                 isOpen={showModal}
-                modalHeading={"activity name"}
+                modalHeading={activityName}
                 secondaryButtonText={'Cancel'}
                 primaryButtonText={'Rollout'}
                 onPrimaryButtonClick={handleActivityRollout}
@@ -56,6 +53,7 @@ const ActivityRolloutModal = (props) => {
                     {...props}
                     rolloutDetails={rolloutDetails}
                     setRolloutDetails={setRolloutDetails}
+                    handleAddClick={() => setOpenAddModal(true)}
                 />
             </GenericModal>
             {openAddModal && (
@@ -76,8 +74,6 @@ const ActivityRolloutModal = (props) => {
                 </GenericModal>
             )}
         </>
-
-
     )
 }
 

@@ -44,9 +44,8 @@ export const deleteActivity = async (activityDefnKey) => {
         success:false
       };
     }
-    let responseMsg = await response.json();
     return {
-      success:false,
+      success:true,
       data:response.json()
     };
   } catch (error) {

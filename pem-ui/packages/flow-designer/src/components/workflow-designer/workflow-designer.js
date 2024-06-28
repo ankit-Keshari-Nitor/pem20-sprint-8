@@ -37,6 +37,7 @@ const WorkFlowDesigner = forwardRef(({
   activityDefinitionData, activityOperation, readOnly,
   onVersionSelection,versionData,selectedVersion
 }, ref) => {
+
   //-------------------------------- State Management -------------------------------------
   const storeData = useTaskStore((state) => state.tasks);
   const addTaskNode = useTaskStore((state) => state.addTaskNodes);
@@ -110,7 +111,6 @@ const WorkFlowDesigner = forwardRef(({
   useEffect(() => {
     setTaskNodes(storeData.taskNodes);
     setTaskEdges(storeData.taskEdges);
-    console.log('store>>>', storeData);
     if (selectedTaskNode) {
       const dialogNodeData = storeData.taskNodes.filter((node) => node.id === selectedTaskNode.id)[0];
       setDialogNodes(dialogNodeData?.data?.dialogNodes);

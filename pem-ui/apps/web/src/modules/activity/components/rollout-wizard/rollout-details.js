@@ -128,16 +128,23 @@ export default function RolloutDetails(props) {
         </Column>
         {/*   Rolling out to */}
         <Column className="col-margin" lg={16}>
-          <RadioButtonGroup legendText="Rolling out to"
-            data-testid="rolling-out" name="rolling-out"
-            onChange={(e) => setRolloutDetails((prev) => ({ ...prev, rollingOutTo: e.target.value }))}
-            value={rolloutDetails.rollingOutTo} defaultChecked={true}>
-            <RadioButton labelText="Partners" value="partners" id="partners" />
+          <RadioButtonGroup 
+          legendText="Rolling out to"
+            data-testid="rolling-out" 
+            name="rolling-out"
+            onChange={(value) => {
+             
+              setRolloutDetails((prev) => ({ ...prev, rollingOutTo: value}))
+            }
+             }
+            value={rolloutDetails.rollingOutTo} 
+            defaultChecked={true}>
+            <RadioButton labelText="Partners" value="partners" id="partners"  defaultChecked />
             <RadioButton labelText="Internal Users" value="internal_users" id="internal_users" />
           </RadioButtonGroup>
         </Column>
         {/*  Partner, Groups and Attributes */}
-        {rolloutDetails.rollingOut === 'partners' && (
+        {rolloutDetails.rollingOutTo === 'partners' && (
           <Column className="partners_rollout-container" lg={16}>
             <TextArea
               id="partners_rollout"

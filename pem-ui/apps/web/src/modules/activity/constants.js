@@ -235,7 +235,7 @@ export const ACTIVITY_DEFINITION_DATA = {
 };
 
 export const OPERATIONS = {
-  VIEW: 'view',
+  VIEW: 'View',
   EDIT: 'edit',
   EXPORT: 'export',
   DELETE: 'delete',

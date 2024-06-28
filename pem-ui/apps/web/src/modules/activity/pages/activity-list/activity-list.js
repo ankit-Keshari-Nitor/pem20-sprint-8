@@ -26,8 +26,6 @@ export default function ActivityList() {
   // State hooks for managing various states
   const store = useActivityStore();
 
-  const editDefinition = useActivityStore((state) => state.editDefinitionProps);
-
   const [totalRows, setTotalRows] = useState(0);
   const [searchKey, setSearchKey] = useState('');
   const [sortDir, setSortDir] = useState('ASC'); // Sorting direction state
@@ -36,16 +34,17 @@ export default function ActivityList() {
   const [rows, setRows] = useState([]);
   const [status, setStatus] = useState('');
 
-  const [showGeneralActionModal, setShowGeneralActionModal] = useState(false);
+
   const [showRolloutModal, setShowRolloutModal] = useState(false);
   const [showTestModal, setShowTestModal] = useState(false);
 
+  const [showGeneralActionModal, setShowGeneralActionModal] = useState(false);
   const [actionText, setActionText] = useState('');
   const [message, setMessage] = useState('');
   const [onPrimaryButtonClick, setOnPrimaryButtonClick] = useState(null); // Renamed state
+  
   const [notificationProps, setNotificationProps] = useState(null);
 
-  const [activityDefnKey, setActivityDefnKey] = useState('');
   const [selectedActivity, setSelectedActivity] = useState(null);
 
   // Test operation states
@@ -115,14 +114,22 @@ export default function ActivityList() {
 
 
   // Handler for action clicks
-  const onCellActionClick = (action, activityDefKey, actVersionKey = '', activityName = '') => {
-    setActivityDefnKey(activityDefKey);
+  const onCellActionClick = (action, activityDefKey, actVersionKey = '') => {
+   const record = rows.filter((x)=>x.id===activityDefKey)[0];
+   store.setSelectedActivity({
+    activityDefKey:record.activityDefnKey,
+    actDefName:record.name,
+    actDefVerKey:record.activityDefnVersionKey,
+    operation:action
+  });
+   setSelectedActivity(record);
     switch (action) {
       case ACTION_COLUMN_KEYS.MARK_AS_FINAL:
         setActionText('Mark as final');
         setMessage('The Activity can not be modified once you Mark as final. Do you want to Mark as final?');
         setOnPrimaryButtonClick(() => () => handleMarkAsFinal(activityDefKey, actVersionKey)); // Updated
         setShowGeneralActionModal(true);
+       
         break;
       case ACTION_COLUMN_KEYS.DELETE:
         setActionText('Delete');
@@ -139,6 +146,9 @@ export default function ActivityList() {
       case ACTION_COLUMN_KEYS.EDIT:
         handleEdit(activityDefKey);
         break;
+      case ACTION_COLUMN_KEYS.VIEW:
+          handleView(activityDefKey);
+          break;
       case ACTION_COLUMN_KEYS.EXPORT_ACTIVITY:
         console.log('Export Activity');
         break;
@@ -167,46 +177,33 @@ export default function ActivityList() {
       kind: success ? 'success' : 'error',
       onCloseButtonClick: () => setNotificationProps(null)
     });
-
     setShowGeneralActionModal(false);
   };
 
   // Handler for actual delete API call
   const handleDeleteActivity = async (id) => {
-    try {
-      const responseMsg = await ActivityService.deleteActivity(id);
-      if (responseMsg) {
-        fetchAndSetData();
-        setNotificationProps({
-          open: true,
-          title: 'Success - ',
-          subtitle: 'Action completed successfully!',
-          kind: 'success',
-          onCloseButtonClick: () => setNotificationProps(null)
-        });
-      } else {
-        setNotificationProps({
-          open: true,
-          title: 'Error - ',
-          subtitle: 'Action not completed successfully!',
-          kind: 'error',
-          onCloseButtonClick: () => setNotificationProps(null)
-        });
-      }
-    } catch (error) {
-      console.error('Failed to delete activity:', error);
-      setNotificationProps({
-        open: true,
-        title: 'Error - ',
-        subtitle: 'Failed to delete activity',
-        kind: 'error',
-        onCloseButtonClick: () => setNotificationProps(null)
-      });
+    const response = await ActivityService.deleteActivity(id);
+    if (response.success) {
+      fetchAndSetData();
     }
+    setNotificationProps({
+      open: response.success,
+      title: response.success ? 'Success - ' : 'Error - ',
+      subtitle: response.success ? 'Action completed successfully!' : 'Action not completed successfully!',
+      kind: response.success ? 'success' : 'error',
+      onCloseButtonClick: () => setNotificationProps(null)
+    });
     setShowGeneralActionModal(false);
-  };
+  }
 
   const handleEdit = (id) => {
+    pageUtil.navigate(`${id}`, {});
+  }
+
+  const handleView = (id) => {
+    pageUtil.navigate(`${id}`, {});
+  }
+  const handleClone = (id) => {
 
   }
 
@@ -251,12 +248,6 @@ export default function ActivityList() {
     }
   };
   // -------------------------------------Test operation End-------------------------------------------------
-
-  // -------------------------------------Rollout operation Start-------------------------------------------------
-
-
-
-  // -------------------------------------Rollout operation End-------------------------------------------------
 
   return (
     <>
@@ -327,18 +318,21 @@ export default function ActivityList() {
           onSecondaryButtonClick={handelTestCloseClick}
           onRequestClose={() => setShowTestModal(false)}
         >
-          <ActivityTestModal currentTestData={currentTestData} formRenderSchema={formRenderSchema} />
+          <ActivityTestModal 
+          currentTestData={currentTestData} 
+          formRenderSchema={formRenderSchema} />
+
         </WrapperModal>)}
       {/* Notification toast */}
       {notificationProps && notificationProps.open && <WrapperNotification {...notificationProps} />}
       {/* Modal for Rollout operation */}
-      <ActivityRolloutModal
+      { showRolloutModal && <ActivityRolloutModal
         showModal={showRolloutModal}
         setShowModal={() => setShowRolloutModal(false)}
         activityDefKey={selectedActivity ? selectedActivity.activityDefnKey : ''}
         activityVerKey={selectedActivity ? selectedActivity.activityDefnVersionKey : ''}
         activityName={selectedActivity ? selectedActivity.name : ''}
-      />
+      /> }
     </>
   );
 }

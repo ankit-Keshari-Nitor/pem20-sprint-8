@@ -32,21 +32,29 @@ const activityStore = (set, get) => ({
           schema: state.activityData.schema,
           versions: [],
           operation: operation
-        }
+        },
+        selectedActivity: state.selectedActivity
       };
     });
   },
   //this changes during - 
   editSchemaProps: (task, operation) => {
     set((state) => {
-      console.log('updating>>>', { activityData: { definition: state.activityData.definition, schema: { ...task }, versions: [], operation: operation } });
-      return { activityData: { definition: state.activityData.definition, schema: { ...task }, versions: [], operation: operation } };
+      return {
+        activityData:{ 
+          definition: state.activityData.definition, 
+          schema: { ...task }, 
+          versions: [], 
+          operation: operation 
+        },
+        selectedActivity: state.selectedActivity
+      };
     });
   },
-  setSelectedActivity: ({activityDefKey, actDefName, actDefVerKey, operation}) => {
+  setSelectedActivity: ({ activityDefKey, actDefName, actDefVerKey, operation }) => {
     set((state) => {
       const selectedActivity = { actDefName, activityDefKey, actDefVerKey, operation };
-      return { ...state.activityData, ...selectedActivity };
+      return { ...state.activityData,  selectedActivity: selectedActivity };
     });
   },
   reset: () => {
@@ -56,7 +64,8 @@ const activityStore = (set, get) => ({
         schema: {},
         versions: [],
         operation: ''
-      }
+      },
+      selectedActivity: null
     });
   }
 });

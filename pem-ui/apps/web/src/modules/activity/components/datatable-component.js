@@ -117,9 +117,9 @@ const DataTableComponent = ({
           <Information className='information-icon' />
           <span className='information-text'>{`Ver. ${value}`}</span>
         </div>
-        : <div className='recently-view-wrapper'>
+        : <div className='recently-view-wrapper' onClick={() => handleVersion(id, activityName, status)}>
           <span className='recently-view-text'>{`Ver. ${value}`}</span>
-          <RecentlyViewed onClick={() => handleVersion(id, activityName, status)} />
+          <RecentlyViewed />
         </div>
       }
     </div>

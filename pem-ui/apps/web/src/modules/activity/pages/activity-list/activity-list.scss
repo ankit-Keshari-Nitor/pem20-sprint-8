@@ -154,6 +154,11 @@ tbody tr:nth-child {
   display: inline-flex !important;
 }
 
+.recently-view-wrapper,
+.header-button-left-drawer {
+  cursor: pointer;
+}
+
 .close-filled-encrypted {
   color: red !important
 }

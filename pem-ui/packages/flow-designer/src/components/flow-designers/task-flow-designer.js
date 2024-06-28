@@ -9,6 +9,7 @@ import './style.scss';
 import BlocksTray from '../blocks-tray';
 import { CATEGORY_TYPES } from '../../constants';
 import BlockPropertiesTray from '../block-properties-tray';
+import ActivityDefinitionForm from '../activity-definition-form';
 
 const TaskFlowDesigner = ({
   connectionLineStyle,
@@ -31,7 +32,14 @@ const TaskFlowDesigner = ({
   selectedTaskNode,
   setOpenTaskPropertiesBlock,
   editDefinitionProp,
-  activityDefinitionData
+  activityDefinitionData,
+  activityOperation,
+  readOnly,
+  showActivityDefineDrawer,
+  setShowActivityDefineDrawer,
+  onVersionSelection,
+  versionData,
+  selectedVersion
 }) => {
   return (
     <div className="dnd-flow">
@@ -40,7 +48,7 @@ const TaskFlowDesigner = ({
           <div className="dnd-flow">
             {/* Tasks Block */}
             <div className="task-tray-container">
-              <BlocksTray category={CATEGORY_TYPES.TASK} />
+              <BlocksTray category={CATEGORY_TYPES.TASK} readOnly={readOnly} />
             </div>
             {/* Flow Designer Block  */}
             <ReactFlowProvider>
@@ -74,18 +82,42 @@ const TaskFlowDesigner = ({
             <PanelResizeHandle />
             <Panel defaultSize={35} minSize={20} maxSize={70}>
               <div className="dnd-flow">
-                <div className="task-properties-container">
+                <div className="task-activity-container">
                   <BlockPropertiesTray
                     selectedNode={selectedTaskNode}
                     setOpenPropertiesBlock={setOpenTaskPropertiesBlock}
                     editDefinitionProp={editDefinitionProp}
+                    activityOperation={activityOperation}
                     activityDefinitionData={activityDefinitionData}
+                    readOnly={readOnly}
                   />
                 </div>
               </div>
             </Panel>
           </>
         )}
+        {showActivityDefineDrawer  && (
+          <>
+          <PanelResizeHandle />
+          <Panel defaultSize={40} minSize={20} maxSize={70}>
+            <div className="dnd-flow">
+              <div className="task-activity-container">
+                <ActivityDefinitionForm
+                  //selectedNode={selectedTaskNode}
+                  setOpenPropertiesBlock={setShowActivityDefineDrawer}
+                  onVersionSelection={onVersionSelection}
+                  editDefinitionProp={editDefinitionProp}
+                  activityOperation={activityOperation}
+                  activityDefinitionData={activityDefinitionData}
+                  readOnly={readOnly}
+                  versionData={versionData}
+                  selectedVersion={selectedVersion}
+                />
+              </div>
+            </div>
+          </Panel>
+        </>)
+        }
       </PanelGroup>
     </div>
   );

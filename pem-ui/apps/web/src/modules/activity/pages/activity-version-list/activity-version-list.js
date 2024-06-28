@@ -5,7 +5,7 @@ import DataTableComponent from '../../components/datatable-component';
 import { ACTIVITY_VERSION_COLUMNS } from '../../constants'
 import * as ActivityService from '../../services/activity-service.js';
 
-const ActivityVersionList = ({ drawerVersionActivityName, activityDefnKey, status, onClose, openVersionDrawer }) => {
+const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, showDrawer }) => {
 
     // Version Side drawer
     const [totalRows, setTotalRows] = useState(0);
@@ -50,7 +50,7 @@ const ActivityVersionList = ({ drawerVersionActivityName, activityDefnKey, statu
             <div className="headers-drawer">
                 <div className="header-button-right-drawer">
                     {/* Header Title */}
-                    {drawerVersionActivityName} (Version History)
+                    {activityName} (Version History)
                 </div>
                 <div className="header-button-left-drawer" onClick={onClose}>
                     <CrossIcon labelText="close" placeholder="Close Side Drawer" />
@@ -66,7 +66,8 @@ const ActivityVersionList = ({ drawerVersionActivityName, activityDefnKey, statu
                     pageSize={pageSize}
                     handlePaginationChange={handlePaginationChange}
                     handleHeaderClick={handleHeaderClick}
-                    versionDrawer={openVersionDrawer}
+                    showDrawer={showDrawer}
+
                 />
             </TableContainer>
         </>

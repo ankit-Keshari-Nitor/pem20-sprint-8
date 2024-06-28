@@ -3,7 +3,7 @@ import classes from './activity-sidedrawer.module.scss';
 import { changeAnchor } from './change-anchor';
 
 const ActivityVersionsSideDrawer = ({
-  open,
+  showDrawer,
   anchor,
   onClose,
   children
@@ -14,8 +14,8 @@ const ActivityVersionsSideDrawer = ({
 
   return (
     <>
-      <div className={`${overlay} ${!open && overlayHidden} ${open && overlayOpen}`} onClick={onClose} aria-hidden="true" data-testid="overlay" />
-      <div tabIndex="-1" className={`${drawer} ${actionItem} ${open && animate} ${!open && hidden}  ${changeAnchor(anchor, classes)}`} data-testid="drawer">
+      <div className={`${overlay} ${!showDrawer && overlayHidden} ${showDrawer && overlayOpen}`} onClick={onClose} aria-hidden="true" data-testid="overlay" />
+      <div tabIndex="-1" className={`${drawer} ${actionItem} ${showDrawer && animate} ${!showDrawer && hidden}  ${changeAnchor(anchor, classes)}`} data-testid="drawer">
         {children}
       </div>
     </>

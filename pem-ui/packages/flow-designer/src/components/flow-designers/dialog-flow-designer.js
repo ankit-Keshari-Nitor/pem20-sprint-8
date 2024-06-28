@@ -30,7 +30,8 @@ const DialogFlowDesigner = ({
   openDialogPropertiesBlock,
   selectedTaskNode,
   selectedDialogNode,
-  setOpenDialogPropertiesBlock
+  setOpenDialogPropertiesBlock,
+  readOnly
 }) => {
   return (
     <div className="dnd-flow">

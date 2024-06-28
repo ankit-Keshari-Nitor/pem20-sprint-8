@@ -10,7 +10,7 @@ import { INITIAL_QUERY, QUERY_COMBINATOR, QUERY_FIELDS } from '../../constants';
 
 import './exit-validation-form.scss';
 
-export default function ExitValidationFrom({ onSubmitExitValidationForm, setOpenCancelDialog }) {
+export default function ExitValidationFrom({ onSubmitExitValidationForm, setOpenCancelDialog, readOnly={readOnly} }) {
   const [query, setQuery] = useState(INITIAL_QUERY);
   return (
     <>
@@ -24,6 +24,7 @@ export default function ExitValidationFrom({ onSubmitExitValidationForm, setOpen
                 onQueryChange={setQuery}
                 combinators={QUERY_COMBINATOR}
                 controlClassnames={{ queryBuilder: 'queryBuilder-branches', body: 'inline-indycomb-left' }}
+                disabled={readOnly}
               />
             </QueryBuilderDnD>
           </CarbonWrapper>

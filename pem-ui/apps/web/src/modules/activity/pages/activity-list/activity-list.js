@@ -16,7 +16,7 @@ import DataTableComponent from '../../components/datatable-component.js';
 import RolloutTest from '../../components/rollout-wizard/rollout-gap-details.js';
 import RolloutDetails from '../../components/rollout-wizard/rollout-details.js';
 import ActivityVersionsSideDrawer from '../../components/activity-sidedrawer/activity-sidedrawer.js';
-import { CrossIcon } from './../../icons';
+import ActivityVersionList from '../activity-version-list/activity-version-list.js';
 
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
@@ -243,12 +243,6 @@ export default function ActivityList() {
 
   const handleClose = () => { setOpenVersionDrawer(false); };
 
-  //  Handler for version pagination changes
-  const handleVersionPagination = (page, pageSize) => {
-    setversionPageNo(page);
-    setversionPageSize(pageSize);
-  };
-
 
   // -------------------------------------Test operation Start-------------------------------------------------
   // Function to handle the Test operation
@@ -436,40 +430,14 @@ export default function ActivityList() {
           anchor="right"
           open={openVersionDrawer}
           onClose={handleClose}
-          drawerVersionId={drawerVersionId}
-          setVersionData={setVersionData}
-          setTotalVersionRows={setTotalVersionRows}
-          versionPageNo={versionPageNo}
-          versionPageSize={versionPageSize}
-          sortDir={sortDir}
-          status={drawerVersionStatus}
         >
-          <div className="headers-drawer">
-            <div className="header-button-right-drawer">
-              {/* Header Title */}
-              {drawerVersionActivityName} (Version History)
-            </div>
-            <div className="header-button-left-drawer" onClick={handleClose}>
-              <CrossIcon labelText="close" placeholder="Close Side Drawer" />
-            </div>
-          </div>
-          <TableContainer>
-            <DataTableComponent
-              headers={ACTIVITY_VERSION_COLUMNS}
-              rows={versionData}
-              sortDir={sortDir}
-              totalRows={totalVersionRows}
-              pageNo={versionPageNo}
-              pageSize={versionPageSize}
-              handlePaginationChange={handleVersionPagination}
-              handleDelete={handleDelete}
-              handleEdit={handleEdit}
-              handleActionChange={handleActionChange}
-              handleHeaderClick={handleHeaderClick}
-              handleVersion={handleVersion}
-              versionDrawer={openVersionDrawer}
-            />
-          </TableContainer>
+          <ActivityVersionList
+            drawerVersionActivityName={drawerVersionActivityName}
+            onClose={handleClose}
+            activityDefnKey={drawerVersionId}
+            status={drawerVersionStatus}
+            openVersionDrawer={openVersionDrawer}
+          />
         </ActivityVersionsSideDrawer>
       )}
       {/*  </Section> */}

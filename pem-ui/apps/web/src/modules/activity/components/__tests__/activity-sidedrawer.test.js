@@ -1,11 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ActivityVersionsSideDrawer from '../activity-sidedrawer/activity-sidedrawer';
-import * as ActivityService from '../../services/activity-service';
-
-// Mock the ActivityService
-jest.mock('../../services/activity-service');
 
 describe('ActivityVersionsSideDrawer', () => {
     const defaultProps = {
@@ -13,14 +9,6 @@ describe('ActivityVersionsSideDrawer', () => {
         anchor: 'left',
         onClose: jest.fn(),
         children: <div>Test Children</div>,
-        drawerVersionId: 1,
-        setVersionData: jest.fn(),
-        setTotalVersionRows: jest.fn(),
-        handleVersionPagination: jest.fn(),
-        versionPageNo: 1,
-        versionPageSize: 10,
-        sortDir: 'asc',
-        status: 'active',
         classes: {
             drawer: 'drawer',
             animate: 'animate',
@@ -58,33 +46,4 @@ describe('ActivityVersionsSideDrawer', () => {
         expect(screen.getByTestId('overlay')).toHaveClass(defaultProps.classes.overlayOpen);
     });
 
-    it('fetches data when drawerVersionId changes', async () => {
-        const newProps = { ...defaultProps, open: true, drawerVersionId: 2 };
-        const mockData = {
-            content: [],
-            pageContent: { totalElements: 0 }
-        };
-
-        ActivityService.getActivityVersionkey.mockResolvedValueOnce(mockData);
-        const { rerender } = render(<ActivityVersionsSideDrawer {...newProps} />);
-
-        await waitFor(() => expect(ActivityService.getActivityVersionkey).toHaveBeenCalledWith(
-            newProps.versionPageNo - 1,
-            newProps.versionPageSize,
-            newProps.sortDir,
-            newProps.status,
-            true,
-            newProps.drawerVersionId
-        ));
-
-        await rerender(<ActivityVersionsSideDrawer {...newProps} drawerVersionId={2} />);
-        await waitFor(() => expect(ActivityService.getActivityVersionkey).toHaveBeenCalledWith(
-            newProps.versionPageNo - 1,
-            newProps.versionPageSize,
-            newProps.sortDir,
-            newProps.status,
-            true,
-            2
-        ));
-    });
 });

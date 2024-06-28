@@ -1,43 +1,16 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React from 'react';
 import classes from './activity-sidedrawer.module.scss';
 import { changeAnchor } from './change-anchor';
-import * as ActivityService from '../../services/activity-service';
 
 const ActivityVersionsSideDrawer = ({
   open,
   anchor,
   onClose,
-  children,
-  drawerVersionId,
-  setVersionData,
-  setTotalVersionRows,
-  handleVersionPagination,
-  versionPageNo,
-  versionPageSize,
-  sortDir,
-  status
+  children
+
 }) => {
   const { drawer, animate, hidden, overlay, overlayOpen, overlayHidden, header, actionItem } = classes;
 
-  // Function to fetch and set data from the API
-  const getVersionDrawerData = useCallback(
-    (drawerVersionId) => {
-      ActivityService.getActivityVersionkey(versionPageNo - 1, versionPageSize, sortDir, status, true, drawerVersionId)
-        .then((data) => {
-          setVersionData(data.content);
-          setTotalVersionRows(data.pageContent.totalElements);
-        })
-        .catch((error) => {
-          console.error('Failed to fetch data:', error);
-        });
-    },
-    [versionPageNo, versionPageSize, sortDir, status]
-  );
-
-  // useEffect to trigger fetchAndSetData whenever dependencies change
-  useEffect(() => {
-    getVersionDrawerData(drawerVersionId);
-  }, [getVersionDrawerData]);
 
   return (
     <>

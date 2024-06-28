@@ -12,7 +12,8 @@ import {
   Pagination,
   OverflowMenuItem,
   OverflowMenu,
-  Tag
+  Tag,
+  Tooltip
 } from '@carbon/react';
 import { Information, RecentlyViewed, CheckmarkFilled, Delete, CloseFilled } from '@carbon/icons-react';
 
@@ -89,9 +90,11 @@ const DataTableComponent = ({
   );
 
   // Render information icon and text
-  const renderInformation = (value) => (
+  const renderInformation = (value, description = "") => (
     <div className='information-wrapper'>
-      <Information className='information-icon' />
+      {description !== '' ? <Tooltip align="bottom" label={description}>
+        <Information className='information-icon' />
+      </Tooltip> : null}
       <span className='information-text'>{value}</span>
     </div>
   );
@@ -110,11 +113,13 @@ const DataTableComponent = ({
   };
 
   // Render recently viewed icon and text
-  const renderRecentlyViewed = (value = "", id, activityName = "", status = '') => (
+  const renderRecentlyViewed = (value = '""', id, activityName = '', status = '', description = '') => (
     <div>
       {versionDrawer ?
         <div className='information-wrapper'>
-          <Information className='information-icon' />
+          {description !== '' ? <Tooltip align="bottom" label={description}>
+            <Information className='information-icon' />
+          </Tooltip> : null}
           <span className='information-text'>{`Ver. ${value}`}</span>
         </div>
         : <div className='recently-view-wrapper' onClick={() => handleVersion(id, activityName, status)}>
@@ -154,7 +159,7 @@ const DataTableComponent = ({
                   <TableHeader
                     key={header.key}
                     {...getHeaderProps({ header })}
-                    isSortable={header.key !== 'ellipsis' && header.key !== 'action' && header.key !== 'activityDefnVersionKey'}
+                    isSortable={header.key !== 'ellipsis' && header.key !== 'description' && header.key !== 'action' && header.key !== 'activityDefnVersionKey'}
                     sortDirection={sortDirection}
                     onClick={() => handleHeaderClick(header.key)}
                   >
@@ -169,6 +174,7 @@ const DataTableComponent = ({
                   const versionKeyCell = row.cells.find(cell => cell.id === `${row.id}:activityDefnVersionKey`);
                   const statusCell = row.cells.find(cell => cell.id === `${row.id}:status`);
                   const activityName = row.cells.find(cell => cell.id === `${row.id}:name`)
+                  const description = row.cells.find(cell => cell.id === `${row.id}:description`)
                   return (
                     <TableRow {...getRowProps({ row })} key={row.id}>
                       {row.cells.map((cell) => (
@@ -176,8 +182,8 @@ const DataTableComponent = ({
                           {cell.info.header === 'action' ? renderActionItem(statusCell.value, row.id, versionKeyCell.value) :
                             cell.info.header === 'ellipsis' ? renderEllipsisMenu(row.id) :
                               cell.info.header === 'status' ? renderTag(cell.value.toLowerCase()) :
-                                cell.info.header === 'name' ? renderInformation(cell.value) :
-                                  cell.info.header === 'version' ? renderRecentlyViewed(cell.value, row.id, activityName?.value, statusCell?.value) :
+                                cell.info.header === 'name' ? renderInformation(cell.value, description?.value) :
+                                  cell.info.header === 'version' ? renderRecentlyViewed(cell.value, row.id, activityName?.value, statusCell?.value, description?.value) :
                                     cell.info.header === 'isEncrypted' ? renderCheckmarkFilled(cell.value) :
                                       null}
                         </TableCell>

@@ -4,7 +4,8 @@ import './../style.scss';
 import { Information } from '@carbon/icons-react';
 
 export default function RolloutDetails(props) {
-  const { rolloutDetails, setRolloutDetails,handleAddClick } = props;
+  const { rolloutDetails, setRolloutDetails, handleAddClick } = props;
+
   return (
     <>
       <Grid className="define-grid">
@@ -128,18 +129,17 @@ export default function RolloutDetails(props) {
         </Column>
         {/*   Rolling out to */}
         <Column className="col-margin" lg={16}>
-          <RadioButtonGroup 
-          legendText="Rolling out to"
-            data-testid="rolling-out" 
+          <RadioButtonGroup
+            legendText="Rolling out to"
+            data-testid="rolling-out"
             name="rolling-out"
             onChange={(value) => {
-             
-              setRolloutDetails((prev) => ({ ...prev, rollingOutTo: value}))
-            }
-             }
-            value={rolloutDetails.rollingOutTo} 
-            defaultChecked={true}>
-            <RadioButton labelText="Partners" value="partners" id="partners"  defaultChecked />
+              setRolloutDetails((prev) => ({ ...prev, rollingOutTo: value }))
+            }}
+            value={rolloutDetails.rollingOutTo}
+          //defaultChecked={true}
+          >
+            <RadioButton labelText="Partners" value="partners" id="partners" checked />
             <RadioButton labelText="Internal Users" value="internal_users" id="internal_users" />
           </RadioButtonGroup>
         </Column>

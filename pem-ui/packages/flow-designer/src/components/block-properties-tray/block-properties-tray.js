@@ -1,25 +1,6 @@
 import React, { useState } from 'react';
-import { Column, Grid, Modal, Select, SelectItem } from '@carbon/react';
-
-import { NODE_TYPE } from '../../constants';
-import { CrossIcon, ExpandIcon } from './../../icons';
-import BlockDefinitionForm from '../block-definition-form';
-import ActivityTaskDefinition from '../activity-task-definition';
-import {
-  PARTNER_FORM_SCHEMA,
-  APPROVAL_FORM_SCHEMA,
-  ATTRIBUTE_FORM_SCHEMA,
-  CUSTOM_FORM_SCHEMA,
-  DIALOG_FORM_SCHEMA,
-  SPONSOR_FORM_SCHEMA,
-  SYSTEM_FORM_SCHEMA,
-  XSLT_FROM_SCHEMA,
-  API_FORM_SCHEMA
-} from './../../constants/define-form-renderer.schema';
-
-import './block-properties-tray.scss';
-
-import { NODE_TYPE } from '../../constants';
+import { Modal} from '@carbon/react';
+import { TASK_NODE_TYPES } from '../../constants';
 import { CrossIcon, ExpandIcon } from './../../icons';
 import BlockDefinitionForm from '../block-definition-form';
 import {
@@ -50,25 +31,25 @@ export default function BlockPropertiesTray(props) {
 
   const getForm = (selectedNode) => {
     switch (selectedNode && selectedNode.type) {
-      case NODE_TYPE.PARTNER:
+      case TASK_TASK_NODE_TYPESS.PARTNER:
         return <BlockDefinitionForm id={'partner-define-form'} schema={PARTNER_FORM_SCHEMA} selectedNode={selectedNode} readOnly={readOnly} />;
-      case NODE_TYPE.APPROVAL:
+      case TASK_NODE_TYPES.APPROVAL:
         return <BlockDefinitionForm id={'approval-define-form'} schema={APPROVAL_FORM_SCHEMA} selectedNode={selectedNode} readOnly={readOnly} />;
-      case NODE_TYPE.ATTRIBUTE:
+      case TASK_NODE_TYPES.ATTRIBUTE:
         return <BlockDefinitionForm id={'attribute-define-form'} schema={ATTRIBUTE_FORM_SCHEMA} selectedNode={selectedNode} readOnly={readOnly} />;
-      case NODE_TYPE.SPONSOR:
+      case TASK_NODE_TYPES.SPONSOR:
         return <BlockDefinitionForm id={'sponsor-define-form'} schema={SPONSOR_FORM_SCHEMA} selectedNode={selectedNode} readOnly={readOnly} />;
-      case NODE_TYPE.CUSTOM:
+      case TASK_NODE_TYPES.CUSTOM:
         return <BlockDefinitionForm id={'custom-define-form'} schema={CUSTOM_FORM_SCHEMA} selectedNode={selectedNode} readOnly={readOnly} />;
-      case NODE_TYPE.SYSTEM:
+      case TASK_NODE_TYPES.SYSTEM:
         return <BlockDefinitionForm id={'system-define-form'} schema={SYSTEM_FORM_SCHEMA} selectedNode={selectedNode} readOnly={readOnly} />;
-      case NODE_TYPE.DIALOG:
+      case TASK_NODE_TYPES.DIALOG:
         return <BlockDefinitionForm id={'dialog-define-form'} schema={DIALOG_FORM_SCHEMA} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />;
-      case NODE_TYPE.XSLT:
+      case TASK_NODE_TYPES.XSLT:
         return <BlockDefinitionForm id={'xslt-define-form'} schema={XSLT_FROM_SCHEMA} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />;
-      case NODE_TYPE.API:
+      case TASK_NODE_TYPES.API:
         return <BlockDefinitionForm id={'api-define-form'} schema={API_FORM_SCHEMA} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />;
-      case NODE_TYPE.GATEWAY:
+      case TASK_NODE_TYPES.GATEWAY:
         return null;
       default:
         return null;

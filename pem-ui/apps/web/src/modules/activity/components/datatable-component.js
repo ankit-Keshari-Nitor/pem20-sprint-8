@@ -12,11 +12,11 @@ import {
   Pagination,
   OverflowMenuItem,
   OverflowMenu,
-  Tag
+  Tag,TableContainer
 } from '@carbon/react';
 import { Information, RecentlyViewed, CheckmarkFilled, Delete, CloseFilled } from '@carbon/icons-react';
 
-const DataTableComponent = ({
+const ActivityDataTableComponent = ({
   rows = [],
   headers,
   sortDirection,
@@ -24,9 +24,7 @@ const DataTableComponent = ({
   pageNumber,
   pageSize,
   handlePaginationChange,
-  handleEdit,
-  handleDelete,
-  handleActionChange,
+  onCellActionClick,
   handleHeaderClick
 }) => {
 
@@ -35,13 +33,13 @@ const DataTableComponent = ({
     switch (status) {
       case 'DRAFT':
         return (
-          <Button kind="tertiary" size='sm' className='action-item' onClick={() => handleActionChange(ACTION_COLUMN_KEYS.MARK_AS_FINAL, id, versionKey)}>
+          <Button kind="tertiary" size='sm' className='action-item' onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_FINAL, id, versionKey)}>
             {ACTION_COLUMN_KEYS.MARK_AS_FINAL}
           </Button>
         );
       case 'FINAL':
         return (
-          <Button kind="tertiary" size='sm' className='action-item' onClick={() => handleActionChange(ACTION_COLUMN_KEYS.ROLLOUT, id)}>
+          <Button kind="tertiary" size='sm' className='action-item' onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.ROLLOUT, id)}>
             {ACTION_COLUMN_KEYS.ROLLOUT}
           </Button>
         );
@@ -59,18 +57,18 @@ const DataTableComponent = ({
   // Generate the ellipsis menu for each row
   const renderEllipsisMenu = (id) => (
     <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
-      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.VIEW} />
-      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EDIT} onClick={() => handleEdit(id)} href={ROUTES.ACTIVITY_EDIT + id} />
-      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_ACTIVITY} />
-      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_ACTIVITY} onClick={() => handleActionChange(ACTION_COLUMN_KEYS.TEST, id)} />
-      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_ACTIVITY} />
-      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.SHARE_UNSHARE} />
+      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.VIEW} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.VIEW, id)}/>
+      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EDIT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EDIT, id)} />
+      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_ACTIVITY, id)}/>
+      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST, id)} />
+      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_ACTIVITY, id)}/>
+      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.SHARE_UNSHARE} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.SHARE_UNSHARE, id)} />
       <OverflowMenuItem hasDivider itemText={
         <>
           <span>{ACTION_COLUMN_KEYS.DELETE} </span>
           <Delete className='overflow-menu-icon' />
         </>
-      } className='overflow-option-delete' onClick={() => handleDelete(id)} />
+      } className='overflow-option-delete' onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.DELETE, id)} />
     </OverflowMenu>
   );
 
@@ -123,6 +121,7 @@ const DataTableComponent = ({
   return (
     <>
       {/* Data Table */}
+      <TableContainer>
       <DataTable rows={rows} headers={headers} isSortable>
         {({ rows, headers, getHeaderProps, getRowProps, getTableProps }) => (
           <Table {...getTableProps()}>
@@ -184,8 +183,9 @@ const DataTableComponent = ({
         page={pageNumber}
         onChange={({ page, pageSize }) => handlePaginationChange(page, pageSize)}
       />
+      </TableContainer>
     </>
   );
 }
 
-export default DataTableComponent;
+export default ActivityDataTableComponent;

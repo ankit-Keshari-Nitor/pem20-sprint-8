@@ -38,17 +38,22 @@ export const deleteActivity = async (activityDefnKey) => {
     const response = await fetch(url, {
       method: 'DELETE'
     });
-
     if (!response.ok) {
       console.error(`HTTP error! status: ${response.status}`);
-      return undefined;
+      return {
+        success:false
+      };
     }
-
     let responseMsg = await response.json();
-    return responseMsg.response;
+    return {
+      success:false,
+      data:response.json()
+    };
   } catch (error) {
     console.error('Failed to fetch data:', error);
-    return [];
+    return {
+      success:false
+    };
   }
 };
 
@@ -85,7 +90,6 @@ export const getActivityVersionkey = async (pageNo, pageSize, sortDir = 'ASC', s
 export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDefnKeyVersion) => {
   try {
     let url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}/versions/${activityDefnKeyVersion}/actions/markAsFinal`;
-
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -93,23 +97,21 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
       },
       body: ''
     });
-
     if (!response.ok) {
       console.error(`HTTP error! status: ${response.status}`);
-      return undefined;
+      return "Internal Error";
     }
-
     const responseBody = await response.text();
     try {
       const responseStatus = JSON.parse(responseBody);
       return responseStatus.status;
     } catch (jsonError) {
       console.error('Error parsing JSON:', jsonError);
-      return [];
+      return "Internal Error";
     }
   } catch (error) {
     console.error('Failed to fetch data:', error);
-    return [];
+    return "Internal Error";
   }
 };
 

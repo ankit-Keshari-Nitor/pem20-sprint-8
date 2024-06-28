@@ -46,6 +46,15 @@ export const ACTIVITY_LIST_COLUMNS = [
 
 ];
 
+export const ACTIVITY_VERSION_COLUMNS = [
+  { key: ACTION_COLUMN_KEYS.VERSION, header: 'Version' },
+  { key: ACTION_COLUMN_KEYS.ENCRYPTED, header: 'Encrypted' },
+  { key: ACTION_COLUMN_KEYS.STATUS, header: 'Status' },
+  { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
+  { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' },
+  { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' },
+];
+
 export const ROLLOUT_STEPS = [
   {
     id: 'step1',

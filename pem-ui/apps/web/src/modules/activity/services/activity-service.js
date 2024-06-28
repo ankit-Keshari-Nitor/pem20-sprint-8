@@ -69,13 +69,21 @@ export const getActivityVersionkey = async (pageNo, pageSize, sortDir = 'ASC', s
 
     if (!response.ok) {
       console.error(`HTTP error! status: ${response.status}`);
-      return undefined;
+      return { content: [], page: {} };
     }
 
     const responseBody = await response.text();
     try {
       const jsonData = JSON.parse(responseBody);
-      return jsonData.content;
+      const customizedData = jsonData.content !== null && jsonData.content.map((e) => ({
+        id: e.activityDefnVersionKey,
+        ...e
+      }));
+      return {
+        content: customizedData || [],
+        pageContent: jsonData.page || []
+      };
+
     } catch (jsonError) {
       console.error('Error parsing JSON:', jsonError);
       return [];

@@ -4,13 +4,8 @@ import Shell from '@b2bi/shell';
 import '@b2bi/styles/pages/list-page.scss';
 import * as ActivityService from '../../services/activity-service.js';
 import * as RolloutService from '../../services/rollout-service';
-import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
-import {
-  ExpandableSearch,
-  MultiSelect,
-  Button,
-  TableContainer
-} from '@carbon/react';
+import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS, ACTIVITY_VERSION_COLUMNS, TEST_DIALOG_DATA } from '../../constants';
+import { ExpandableSearch, MultiSelect, Button, TableContainer } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
 import WrapperModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
@@ -20,6 +15,8 @@ import PageDesigner from '@b2bi/page-designer';
 import DataTableComponent from '../../components/datatable-component.js';
 import RolloutTest from '../../components/rollout-wizard/rollout-gap-details.js';
 import RolloutDetails from '../../components/rollout-wizard/rollout-details.js';
+import ActivityVersionsSideDrawer from '../../components/activity-sidedrawer/activity-sidedrawer.js';
+import { CrossIcon } from './../../icons';
 
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
@@ -51,6 +48,16 @@ export default function ActivityList() {
   const [openRolloutModal, setOpenRolloutModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [rolloutGapData, setRolloutGapData] = useState({ selectedGroupsData: [], selectedAttributesData: [], selectedPartnersData: [] });
+
+  // Version Side drawer
+  const [totalVersionRows, setTotalVersionRows] = useState(0);
+  const [openVersionDrawer, setOpenVersionDrawer] = useState(false);
+  const [drawerVersionId, setDrawerVersionId] = useState('');
+  const [drawerVersionActivityName, setDrawerVersionActivityName] = useState('');
+  const [drawerVersionStatus, setDrawerVersionStatus] = useState('');
+  const [versionData, setVersionData] = useState([]);
+  const [versionPageNo, setversionPageNo] = useState(1);
+  const [versionPageSize, setversionPageSize] = useState(10);
 
   useEffect(() => {
     if (testDialogData) {
@@ -225,6 +232,21 @@ export default function ActivityList() {
   // Handler for modal close/cancel
   const handleModalClose = () => {
     setIsModalOpen(false);
+  };
+
+  const handleVersion = (id, activityName, status) => {
+    setDrawerVersionId(id);
+    setDrawerVersionActivityName(activityName);
+    setDrawerVersionStatus(status)
+    setOpenVersionDrawer(true);
+  };
+
+  const handleClose = () => { setOpenVersionDrawer(false); };
+
+  //  Handler for version pagination changes
+  const handleVersionPagination = (page, pageSize) => {
+    setversionPageNo(page);
+    setversionPageSize(pageSize);
   };
 
 
@@ -404,9 +426,52 @@ export default function ActivityList() {
           handleEdit={handleEdit}
           handleActionChange={handleActionChange}
           handleHeaderClick={handleHeaderClick}
+          handleVersion={handleVersion}
         />
 
       </TableContainer>
+
+      {drawerVersionId !== '' && (
+        <ActivityVersionsSideDrawer
+          anchor="right"
+          open={openVersionDrawer}
+          onClose={handleClose}
+          drawerVersionId={drawerVersionId}
+          setVersionData={setVersionData}
+          setTotalVersionRows={setTotalVersionRows}
+          versionPageNo={versionPageNo}
+          versionPageSize={versionPageSize}
+          sortDir={sortDir}
+          status={drawerVersionStatus}
+        >
+          <div className="headers-drawer">
+            <div className="header-button-right-drawer">
+              {/* Header Title */}
+              {drawerVersionActivityName} (Version History)
+            </div>
+            <div className="header-button-left-drawer" onClick={handleClose}>
+              <CrossIcon labelText="close" placeholder="Close Side Drawer" />
+            </div>
+          </div>
+          <TableContainer>
+            <DataTableComponent
+              headers={ACTIVITY_VERSION_COLUMNS}
+              rows={versionData}
+              sortDir={sortDir}
+              totalRows={totalVersionRows}
+              pageNo={versionPageNo}
+              pageSize={versionPageSize}
+              handlePaginationChange={handleVersionPagination}
+              handleDelete={handleDelete}
+              handleEdit={handleEdit}
+              handleActionChange={handleActionChange}
+              handleHeaderClick={handleHeaderClick}
+              handleVersion={handleVersion}
+              versionDrawer={openVersionDrawer}
+            />
+          </TableContainer>
+        </ActivityVersionsSideDrawer>
+      )}
       {/*  </Section> */}
       {/* Modal for action confirmation */}
       <WrapperModal

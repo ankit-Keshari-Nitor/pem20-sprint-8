@@ -27,7 +27,9 @@ const DataTableComponent = ({
   handleEdit,
   handleDelete,
   handleActionChange,
-  handleHeaderClick
+  handleHeaderClick,
+  handleVersion,
+  versionDrawer = false
 }) => {
 
   // Generate action items based on the activity status
@@ -35,19 +37,19 @@ const DataTableComponent = ({
     switch (status) {
       case 'DRAFT':
         return (
-          <Button kind="tertiary" size='sm' className='action-item' onClick={() => handleActionChange(ACTION_COLUMN_KEYS.MARK_AS_FINAL, id, versionKey)}>
+          <Button kind="tertiary" size='sm' className={versionDrawer ? 'action-item-drawer' : 'action-item'} onClick={() => handleActionChange(ACTION_COLUMN_KEYS.MARK_AS_FINAL, id, versionKey)}>
             {ACTION_COLUMN_KEYS.MARK_AS_FINAL}
-          </Button>
+          </Button >
         );
       case 'FINAL':
         return (
-          <Button kind="tertiary" size='sm' className='action-item' onClick={() => handleActionChange(ACTION_COLUMN_KEYS.ROLLOUT, id)}>
+          <Button kind="tertiary" size='sm' className={versionDrawer ? 'action-item-drawer' : 'action-item'} onClick={() => handleActionChange(ACTION_COLUMN_KEYS.ROLLOUT, id)}>
             {ACTION_COLUMN_KEYS.ROLLOUT}
           </Button>
         );
       case 'DELETE':
         return (
-          <Button kind="tertiary" size='sm' className='action-item action-item-delete'>
+          <Button kind="tertiary" size='sm' className={`${versionDrawer ? 'action-item-drawer' : 'action-item'} action-item-delete`} >
             {ACTION_COLUMN_KEYS.RESTORE}
           </Button>
         );
@@ -61,9 +63,21 @@ const DataTableComponent = ({
     <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
       <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.VIEW} />
       <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EDIT} onClick={() => handleEdit(id)} href={ROUTES.ACTIVITY_EDIT + id} />
-      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_ACTIVITY} />
-      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_ACTIVITY} onClick={() => handleActionChange(ACTION_COLUMN_KEYS.TEST, id)} />
-      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_ACTIVITY} />
+      {!versionDrawer ? (
+        <>
+          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_ACTIVITY} />
+          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_ACTIVITY} onClick={() => handleActionChange(ACTION_COLUMN_KEYS.TEST, id)} />
+          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_ACTIVITY} />
+        </>
+      ) : (
+        <>
+          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_VERSION} />
+          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} />
+          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_VERSION} />
+          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_VERSION} />
+        </>
+      )}
+
       <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.SHARE_UNSHARE} />
       <OverflowMenuItem hasDivider itemText={
         <>
@@ -96,10 +110,18 @@ const DataTableComponent = ({
   };
 
   // Render recently viewed icon and text
-  const renderRecentlyViewed = (value = "") => (
-    <div className='recently-view-wrapper'>
-      <span className='recently-view-text'>{`Ver. ${value}`}</span>
-      <RecentlyViewed />
+  const renderRecentlyViewed = (value = "", id, activityName = "", status = '') => (
+    <div>
+      {versionDrawer ?
+        <div className='information-wrapper'>
+          <Information className='information-icon' />
+          <span className='information-text'>{`Ver. ${value}`}</span>
+        </div>
+        : <div className='recently-view-wrapper'>
+          <span className='recently-view-text'>{`Ver. ${value}`}</span>
+          <RecentlyViewed onClick={() => handleVersion(id, activityName, status)} />
+        </div>
+      }
     </div>
   );
 
@@ -146,6 +168,7 @@ const DataTableComponent = ({
                 rows.map((row) => {
                   const versionKeyCell = row.cells.find(cell => cell.id === `${row.id}:activityDefnVersionKey`);
                   const statusCell = row.cells.find(cell => cell.id === `${row.id}:status`);
+                  const activityName = row.cells.find(cell => cell.id === `${row.id}:name`)
                   return (
                     <TableRow {...getRowProps({ row })} key={row.id}>
                       {row.cells.map((cell) => (
@@ -154,7 +177,7 @@ const DataTableComponent = ({
                             cell.info.header === 'ellipsis' ? renderEllipsisMenu(row.id) :
                               cell.info.header === 'status' ? renderTag(cell.value.toLowerCase()) :
                                 cell.info.header === 'name' ? renderInformation(cell.value) :
-                                  cell.info.header === 'version' ? renderRecentlyViewed(cell.value) :
+                                  cell.info.header === 'version' ? renderRecentlyViewed(cell.value, row.id, activityName?.value, statusCell?.value) :
                                     cell.info.header === 'isEncrypted' ? renderCheckmarkFilled(cell.value) :
                                       null}
                         </TableCell>

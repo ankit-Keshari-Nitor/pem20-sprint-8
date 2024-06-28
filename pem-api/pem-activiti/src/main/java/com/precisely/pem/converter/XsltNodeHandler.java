@@ -45,7 +45,7 @@ public class XsltNodeHandler extends AbstractNodeHandler{
             properties.put("looptype", "None");
             properties.put("name", "");
             properties.put("prioritydefinition", "");
-            properties.put("servicetaskclass", "org.test.TestClass");
+            properties.put("servicetaskclass", "com.precisely.pem.services.XsltTransformationDelegate");
             properties.put("servicetaskdelegateexpression", "");
             properties.put("servicetaskexpression", "");
 

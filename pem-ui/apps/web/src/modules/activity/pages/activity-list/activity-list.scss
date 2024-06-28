@@ -124,6 +124,12 @@ tbody tr:nth-child {
   color: #525252 !important
 }
 
+.action-item-delete:focus,
+.action-item-delete:hover {
+  background-color: #525252 !important;
+  color: #ffffff !important
+}
+
 .overflow-option-delete {
   background: #D1D1D1 !important;
 }

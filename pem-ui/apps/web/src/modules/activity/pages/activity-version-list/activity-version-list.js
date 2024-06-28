@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { CrossIcon } from '../../icons';
 import { TableContainer } from '@carbon/react';
+
 import DataTableComponent from '../../components/datatable-component';
+
 import { ACTIVITY_VERSION_COLUMNS } from '../../constants'
+
 import * as ActivityService from '../../services/activity-service.js';
 
 const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, showDrawer }) => {
@@ -44,7 +47,6 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
         }
     };
 
-
     return (
         <>
             <div className="headers-drawer">
@@ -67,7 +69,6 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
                     handlePaginationChange={handlePaginationChange}
                     handleHeaderClick={handleHeaderClick}
                     showDrawer={showDrawer}
-
                 />
             </TableContainer>
         </>

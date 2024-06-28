@@ -41,17 +41,17 @@ export const deleteActivity = async (activityDefnKey) => {
     if (!response.ok) {
       console.error(`HTTP error! status: ${response.status}`);
       return {
-        success:false
+        success: false
       };
     }
     return {
-      success:true,
-      data:response.json()
+      success: true,
+      data: response.json()
     };
   } catch (error) {
     console.error('Failed to fetch data:', error);
     return {
-      success:false
+      success: false
     };
   }
 };

@@ -112,7 +112,7 @@ tbody tr:nth-child {
 
 .action-item {
   padding-right: 1rem !important;
-  width: 50%;
+  width: 55%;
 }
 
 .action-item-drawer {
@@ -216,4 +216,8 @@ tbody tr:nth-child {
 .headers-drawer {
   padding-left: 0.75rem !important;
   padding-bottom: 0.5rem !important;
+}
+
+.cds--popover--bottom:not(.cds--popover--auto-align)>.cds--popover>.cds--popover-content {
+  transform: translate(-12%, calc(100% + var(--cds-popover-offset, 0rem))) !important;
 }

@@ -148,7 +148,7 @@ export default function ActivityList() {
       case ACTION_COLUMN_KEYS.ROLLOUT:
         setShowRolloutModal(true);;//(id);
         break;
-      case ACTION_COLUMN_KEYS.TEST:
+      case ACTION_COLUMN_KEYS.TEST_ACTIVITY:
         handleTestOperation(activityDefKey);
         break;
       case ACTION_COLUMN_KEYS.EDIT:

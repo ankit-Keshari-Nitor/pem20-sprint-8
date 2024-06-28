@@ -54,7 +54,7 @@ export const ACTIVITY_VERSION_COLUMNS = [
   { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
   { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' },
   { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' },
-  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' },
+  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' }
 ];
 
 export const ROLLOUT_STEPS = [
@@ -250,6 +250,6 @@ export const OPERATIONS = {
   EDIT: 'edit',
   EXPORT: 'export',
   DELETE: 'delete',
-  CREATE_NEW_VERSION:'create_new_version',
-  TEST:'test'
+  CREATE_NEW_VERSION: 'create_new_version',
+  TEST: 'test'
 };

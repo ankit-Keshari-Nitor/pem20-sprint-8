@@ -350,6 +350,7 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
             log.info(e);
         }
         log.info("contextData Map content: " + contextData);
+        log.info("Resource Name : " + activityName+".bpmn");
         List<ActivityProcDef> activityProcDefList = activityProcDefRepo.findByResourceName(activityName+".bpmn");
         if(Objects.isNull(activityProcDefList) || activityProcDefList.isEmpty()){
             throw new ResourceNotFoundException("ActivityProcDefListEmpty", "The activity process definition not found.");

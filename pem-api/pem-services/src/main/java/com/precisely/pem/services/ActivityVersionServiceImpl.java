@@ -300,6 +300,7 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             Blob blobData = activityDeploymentDto.getDefData();
             int blobLength = (int) blobData.length();
             byte[] byteArr = blobData.getBytes(1l, blobLength);
+            log.info("Activity Name : " + activityDeploymentDto.getActivityName());
             String deploymentKey = pemActivitiService.deployProcessDefinition(activityDeploymentDto.getActivityName(), byteArr);
             log.info("deploymentKey : " + deploymentKey);
         }

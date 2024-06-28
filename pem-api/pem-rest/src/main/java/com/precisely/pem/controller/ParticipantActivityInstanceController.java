@@ -110,7 +110,7 @@ public class ParticipantActivityInstanceController {
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
                     @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
     })
-    @GetMapping(value = "/{pcptActivityInstKey}/action/start",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{pcptActivityInstKey}/actions/start",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> startActivity(@PathVariable(value = "sponsorContext")String sponsorContext,
                                                 @PathVariable(value = "pcptActivityInstKey")String pcptActivityInstKey ) throws ResourceNotFoundException, InvalidStatusException {
         MessageResp messageResp = participantActivityInstService.startActivity(sponsorContext,pcptActivityInstKey);

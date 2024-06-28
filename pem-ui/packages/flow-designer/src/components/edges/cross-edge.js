@@ -18,8 +18,8 @@ function CrossEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, tar
 
   const onEdgeClick = () => {
     setEdges((edges) => edges.filter((edge) => edge.id !== id));
-    if (data) {
-      deleteDialogEdge(data, id);
+    if (data.id) {
+      deleteDialogEdge(data.id, id);
     } else {
       deleteTaskEdge(id);
     }
@@ -38,7 +38,7 @@ function CrossEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, tar
           }}
           className="nodrag nopan"
         >
-          <button className="edge-button" onClick={onEdgeClick}>
+          <button className="edge-button" disabled={data?.readOnly} onClick={onEdgeClick}>
             ×
           </button>
         </div>

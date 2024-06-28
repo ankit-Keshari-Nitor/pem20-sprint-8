@@ -284,6 +284,7 @@ export const COMPONENT_MAPPER = {
 
 export const FORM_TEMPLATE = ({ formFields, schema }) => {
   const { handleSubmit, onCancel } = useFormApi();
+  const readOnly = schema?.fields[0]?.isReadOnly;
   return (
     <form onSubmit={handleSubmit}>
       {formFields.map((formField, idx) => (
@@ -296,12 +297,12 @@ export const FORM_TEMPLATE = ({ formFields, schema }) => {
           <div>
             <Grid>
               <Column lg={8}>
-                <Button data-testid="cancel" name="cancel" kind="secondary" type="button" className="cancel-button" onClick={onCancel}>
+                <Button data-testid="cancel" name="cancel" kind="secondary" type="button" className="cancel-button" disabled={readOnly} onClick={onCancel}>
                   Cancel
                 </Button>
               </Column>
               <Column lg={8}>
-                <Button data-testid="save" color="primary" variant="contained" type="submit" style={{ width: '100%' }}>
+                <Button data-testid="save" color="primary" variant="contained" type="submit" disabled={readOnly} style={{ width: '100%' }}>
                   Save
                 </Button>
               </Column>

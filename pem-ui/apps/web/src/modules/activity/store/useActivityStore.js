@@ -1,13 +1,22 @@
 import { create } from 'zustand';
 import { ACTIVITY_DEFINITION_DATA } from '../constants';
 
+
 const activityStore = (set, get) => ({
-  activities: {
+  selectedActivity: {
+    actDefName: '',
+    activityDefKey: '',
+    actDefVerKey: '',
+    operation: ''
+  },
+  activityData: {
     definition: {},
-    schema: {}
+    schema: {},//node+edges+ each node's data(def,exit validation,form design)
+    versions: [],
+    operation: ''
   },
   // Activity Flow State
-  editDefinitionProps: (activity) => {
+  editDefinitionProps: (activity, operation) => {
     set((state) => {
       const copyNodes = ACTIVITY_DEFINITION_DATA;
       Object.keys(copyNodes).map((key) => {
@@ -16,21 +25,47 @@ const activityStore = (set, get) => ({
         }
         return copyNodes;
       });
-      return { activities: { definition: copyNodes, schema: state.activities.schema } };
+
+      return {
+        activityData: {
+          definition: copyNodes,
+          schema: state.activityData.schema,
+          versions: [],
+          operation: operation
+        },
+        selectedActivity: state.selectedActivity
+      };
     });
   },
-  editSchemaProps: (task) => {
+  //this changes during - 
+  editSchemaProps: (task, operation) => {
     set((state) => {
-      console.log('updating>>>', { activities: { definition: state.activities.definition, schema: { task } } });
-      return { activities: { definition: state.activities.definition, schema: { ...task } } };
+      return {
+        activityData:{ 
+          definition: state.activityData.definition, 
+          schema: { ...task }, 
+          versions: [], 
+          operation: operation 
+        },
+        selectedActivity: state.selectedActivity
+      };
+    });
+  },
+  setSelectedActivity: ({ activityDefKey, actDefName, actDefVerKey, operation }) => {
+    set((state) => {
+      const selectedActivity = { actDefName, activityDefKey, actDefVerKey, operation };
+      return { ...state.activityData,  selectedActivity: selectedActivity };
     });
   },
   reset: () => {
     set({
-      activities: {
+      activityData: {
         definition: {},
-        schema: []
-      }
+        schema: {},
+        versions: [],
+        operation: ''
+      },
+      selectedActivity: null
     });
   }
 });

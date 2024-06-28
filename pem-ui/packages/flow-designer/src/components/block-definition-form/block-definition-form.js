@@ -7,7 +7,8 @@ import useTaskStore from '../../store';
 import ExitValidationFrom from '../exit-validation-form';
 import { COMPONENT_MAPPER, FORM_TEMPLATE, NODE_TYPE } from '../../constants';
 
-export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode = null, schema }) {
+export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode = null, schema, readOnly }) {
+  schema.fields = schema.fields.map((item) => ({ ...item, isReadOnly: readOnly }));
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const editTask = useTaskStore((state) => state.editTaskNodePros);
   const editDialog = useTaskStore((state) => state.editDialogNodePros);
@@ -68,7 +69,7 @@ export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>
-            <ExitValidationFrom setOpenCancelDialog={onCancelDefinitionForm} onSubmitExitValidationForm={onSubmitExitValidationForm} />
+            <ExitValidationFrom setOpenCancelDialog={onCancelDefinitionForm} onSubmitExitValidationForm={onSubmitExitValidationForm} readOnly={readOnly} />
           </TabPanel>
         </TabPanels>
       </Tabs>

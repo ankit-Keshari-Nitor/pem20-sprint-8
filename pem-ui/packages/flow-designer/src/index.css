@@ -10,8 +10,7 @@ body,
 }
 
 .form-field {
-  padding: 0.5rem !important;
-  margin: 0.5rem !important
+  margin: 1rem !important;
 }
 
 .cds--modal-content,

@@ -1,8 +1,5 @@
 package com.precisely.pem.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.extern.log4j.Log4j2;
 import org.activiti.engine.delegate.BpmnError;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -39,11 +36,10 @@ public class XsltTransformationDelegate implements JavaDelegate {
 
         try {
             String transformedOutput = transformXmlWithXslt(inputXml, xsltTemplate);
-            String jsonOutput = convertXmlToJson(transformedOutput);
 
             Map<String, Object> nodeResultsMap = new HashMap<>();
             nodeResultsMap.put("sampleOutput",xsltSampleOutput);
-            nodeResultsMap.put("output",jsonOutput);
+            nodeResultsMap.put("output",transformedOutput);
             Map<String, Object> fullContextData = execution.getVariables();
             Map<String, Object> contextData = (Map<String, Object>) fullContextData.getOrDefault("contextData", new HashMap<>());
             contextData.put(serviceTaskId, nodeResultsMap);
@@ -53,23 +49,6 @@ public class XsltTransformationDelegate implements JavaDelegate {
             handleException("Error during XSLT transformation", e);
         } catch (Exception e) {
             handleException("Unexpected error during XSLT transformation", e);
-        }
-    }
-
-    public static String convertXmlToJson(String transformedOutput) {
-        try {
-            XmlMapper xmlMapper = new XmlMapper();
-            xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
-
-            StringReader reader = new StringReader(transformedOutput);
-            Object xmlAsObject = xmlMapper.readValue(reader, Object.class);
-            ObjectMapper jsonMapper = new ObjectMapper();
-
-            String jsonOutput = jsonMapper.writeValueAsString(xmlAsObject);
-            return jsonOutput;
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error converting XML to JSON", e);
         }
     }
 

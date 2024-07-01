@@ -73,14 +73,7 @@ export default function ActivityList() {
   const fetchAndSetData = useCallback(() => {
     ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status)
       .then((data) => {
-        const updatedRows = data.content.map(row => ({
-          ...row,
-          activityDefnVersionKey: row.defaultVersion.activityDefnVersionKey,
-          version: row.defaultVersion.version,
-          isEncrypted: row.defaultVersion.isEncrypted,
-          status: row.defaultVersion.status,
-        }));
-        setRows(updatedRows);
+        setRows(data.content);
         setTotalRows(data.pageContent.totalElements);
       })
       .catch((error) => {

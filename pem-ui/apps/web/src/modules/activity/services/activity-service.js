@@ -19,6 +19,10 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
 
     const customizedData = jsonData.content !== null && jsonData.content.map((e) => ({
       id: e.activityDefnKey,
+      activityDefnVersionKey: e.defaultVersion.activityDefnVersionKey,
+      version: e.defaultVersion.version,
+      isEncrypted: e.defaultVersion.isEncrypted,
+      status: e.defaultVersion.status,
       ...e
     }));
 

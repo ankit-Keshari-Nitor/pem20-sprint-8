@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import Designer from '@b2bi/flow-designer';
 import './activity-definition.css';
 import useActivityStore from '../../store';
-import { getActivityDetails } from '../../services/activity-service';
+//import { getActivityDetails } from '../../services/activity-service';
 import { OPERATIONS } from '../../constants';
 
 export default function ActivityDefinition() {
   const currentActivity = useActivityStore((state) => state.selectedActivity);
   const activityStore = useActivityStore((state) => state.activityData);
-  const activityReset = useActivityStore((state) => state.reset);
+  //const activityReset = useActivityStore((state) => state.reset);
 
   const editDefinitionProp = useActivityStore((state) => state.editDefinitionProps);
   const editSchemaProp = useActivityStore((state) => state.editSchemaProps);
@@ -31,30 +31,6 @@ export default function ActivityDefinition() {
     setActivityDefinitionData(activityStore.definition);
   }, [activityStore]);
 
-  const getActivityData = async () => {
-    const response = await getActivityDetails(currentActivity.actDefVerKey);
-
-  }
-
-  useEffect(() => {
-    if (currentActivity && currentActivity.actDefVerKey) {
-      getActivityData();
-    }
-    return (() => {
-      //clear the current activity from the store
-      console.log('clear the current activity from the store')
-    })
-    // TODO if we get activityDefinitionVersion Key and activityDefinition Key then make api call to load data
-  }, [])
-
-  const handleActivityReset = () => {
-    //ref.current?.handleRest();
-    activityReset();
-  };
-
-  const saveActivity = () => {
-    handleActivityReset()
-  }
 
   return (
     <>

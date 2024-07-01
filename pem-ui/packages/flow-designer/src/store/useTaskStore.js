@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { TASK_INITIAL_NODES } from '../constants';
+import { TASK_INITIAL_NODES } from '../constants/store-constants';
 
 const taskStore = (set, get) => ({
   tasks: {

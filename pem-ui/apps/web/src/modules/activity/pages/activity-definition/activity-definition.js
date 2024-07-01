@@ -31,22 +31,6 @@ export default function ActivityDefinition() {
     setActivityDefinitionData(activityStore.definition);
   }, [activityStore]);
 
-  const getActivityData = async () => {
-   // const response = await getActivityDetails(currentActivity.actDefVerKey);
-
-  }
-
-  useEffect(() => {
-    if (currentActivity && currentActivity.actDefVerKey) {
-      getActivityData();
-    }
-    return (() => {
-      //clear the current activity from the store
-      console.log('clear the current activity from the store')
-    })
-    // TODO if we get activityDefinitionVersion Key and activityDefinition Key then make api call to load data
-  }, [currentActivity,getActivityData])
-
 
   return (
     <>

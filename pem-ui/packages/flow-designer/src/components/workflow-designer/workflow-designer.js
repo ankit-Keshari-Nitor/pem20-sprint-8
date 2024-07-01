@@ -35,17 +35,21 @@ const getNewTaskId = () => `Task_Name_${taskId++}`;
 const WorkFlowDesigner = forwardRef(({ 
   showActivityDefineDrawer, 
   setShowActivityDefineDrawer, 
+  
   onVersionSelection,
   versionData,
   selectedVersion,
 
   updateActivityDetails, 
   updateActivitySchema, 
+
   activityDefinitionData, 
   activityOperation, 
   readOnly
   }, ref) => {
 
+    console.log('activityOperation',activityOperation);
+    
   //-------------------------------- State Management -------------------------------------
   const storeData = useTaskStore((state) => state.tasks);
   const addTaskNode = useTaskStore((state) => state.addTaskNodes);
@@ -59,8 +63,10 @@ const WorkFlowDesigner = forwardRef(({
   // --------------------------------- Task Flow States -----------------------------------
   const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState();
   const taskFlowWrapper = useRef(null);
+
   const [taskNodes, setTaskNodes, onTaskNodesChange] = useNodesState(storeData.taskNodes);
   const [taskEdges, setTaskEdges, onTaskEdgesChange] = useEdgesState([]);
+
   const [taskFlowInstance, setTaskFlowInstance] = useState(null);
   const [selectedTaskNode, setSelectedTaskNode] = useState(null);
 
@@ -277,7 +283,10 @@ const WorkFlowDesigner = forwardRef(({
     <>
       {isPageDesignerActive ? (
         <DndProvider debugMode={true} backend={HTML5Backend}>
-          <PageDesigner.Designer componentMapper={componentMapper} onClickPageDesignerBack={onClickPageDesignerBack} activityDefinitionData={activityDefinitionData} />
+          <PageDesigner.Designer 
+          componentMapper={componentMapper} 
+          onClickPageDesignerBack={onClickPageDesignerBack} 
+          activityDefinitionData={activityDefinitionData} />
         </DndProvider>
       ) : (
         <>
@@ -321,8 +330,10 @@ const WorkFlowDesigner = forwardRef(({
                 defaultViewport={defaultViewport}
                 snapGrid={snapGrid}
                 taskFlowWrapper={taskFlowWrapper}
+
                 taskNodes={taskNodes}
                 taskEdges={taskEdges}
+
                 onTaskNodesChange={onTaskNodesChange}
                 onTaskEdgesChange={onTaskEdgesChange}
                 taskFlowInstance={taskFlowInstance}
@@ -331,17 +342,22 @@ const WorkFlowDesigner = forwardRef(({
                 onTaskNodeDrop={onTaskNodeDrop}
                 onTaskNodeDragOver={onTaskNodeDragOver}
                 onTaskNodeClick={onTaskNodeClick}
+
                 TASK_NODE_TYPES={TASK_NODE_TYPES}
                 TASK_EDGE_TYPES={TASK_EDGE_TYPES}
+
                 selectedTaskNode={selectedTaskNode}
                 openTaskPropertiesBlock={openTaskPropertiesBlock}
                 setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
                 showActivityDefineDrawer={showActivityDefineDrawer}
                 setShowActivityDefineDrawer={setShowActivityDefineDrawer}
+
                 updateActivityDetails={updateActivityDetails}
                 activityDefinitionData={activityDefinitionData}
                 activityOperation={activityOperation}
+
                 readOnly={readOnly}
+
                 onVersionSelection={onVersionSelection}
                 versionData={versionData}
                 selectedVersion={selectedVersion}

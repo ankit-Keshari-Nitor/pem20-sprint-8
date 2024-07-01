@@ -3,21 +3,21 @@ import Designer from '@b2bi/flow-designer';
 import './activity-definition.css';
 import useActivityStore from '../../store';
 import { getActivityDetails } from '../../services/activity-service';
-import { getActivityVersions } from '../../services/actvity-version-service';
-import { OPERATIONS, ROUTES } from '../../constants';
+import { OPERATIONS } from '../../constants';
 import { Button, Column, Grid } from '@carbon/react';
 import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
 
 export default function ActivityDefinition() {
+ 
+  const store = useActivityStore();
+  const activityObj = useActivityStore((state)=> state.activityData);
   const currentActivity = useActivityStore((state) => state.selectedActivity);
-  const activityReset = useActivityStore((state) => state.reset);
-  const setSelectedActivity = useActivityStore((state) => state.setSelectedActivity);
-  const updateActivityDetails = useActivityStore((state) => state.updateActivityDetails);
   const updateActivitySchema = useActivityStore((state) => state.updateActivitySchema);
+  const updateActivityDetails = useActivityStore((state) => state.updateActivityDetails);
 
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
-  const [activityDefinitionData, setActivityDefinitionData] = useState();
 
+  const [activityDefinitionData, setActivityDefinitionData] = useState();
   const [activityVersions, setActivityVersions] = useState([]);
 
   const readOnly = currentActivity?.operation === OPERATIONS.VIEW ? true : false;
@@ -35,11 +35,9 @@ export default function ActivityDefinition() {
   const getActivityData = useCallback(() => async (activityDefKey) => {
     const response = await getActivityDetails(activityDefKey);
     if (response.success) {
-      setActivityDefinitionData(response.data);
-    }
-    const activityVersionsResponse = await getActivityVersions(activityDefKey);
-    if (activityVersionsResponse.success) {
-      setActivityVersions(activityVersionsResponse.data);
+      setActivityDefinitionData(response.definition);
+      setActivityVersions(response.versions | []);
+      
     }
   }, []);
 
@@ -48,17 +46,17 @@ export default function ActivityDefinition() {
       getActivityData(currentActivity.activityDefKey);
     }
     return (() => {
-      setSelectedActivity(null);
-      activityReset();
+      store.reset();
     })
-  }, [currentActivity, getActivityData,activityReset,setSelectedActivity])
+  }, [currentActivity, getActivityData,store])
 
 
   const saveActivity = () => {
+    console.log('activityObj',activityObj);
     //todo - make api call to save the activity
     //prepare a file json data of activity and schema
     //post api call to save data
-    activityReset();
+   // activityReset();
   }
 
   return (
@@ -80,7 +78,9 @@ export default function ActivityDefinition() {
           <HistoryIcon />
         </Column>
         <Column>
-          <Button id="saveactivity" href={ROUTES.ACTIVITY_LIST} onClick={() => saveActivity()}>
+          <Button id="saveactivity" onClick={() => saveActivity()}
+            disabled={activityObj.definition.name.trim().length===0}
+            >
             Save Activity
           </Button>
         </Column>
@@ -90,9 +90,12 @@ export default function ActivityDefinition() {
         showActivityDefineDrawer={showActivityDefineDrawer}
         setShowActivityDefineDrawer={setShowActivityDefineDrawer}
         updateActivityDetails={updateActivityDetails}
+
         updateActivitySchema={updateActivitySchema}
+
         activityDefinitionData={activityDefinitionData}
         activityOperation={currentActivity?currentActivity.operation:'New'}
+        
         readOnly={readOnly}
         onVersionSelection={(selectedVersion) => console.log(selectedVersion)}
         versionData={activityVersions}//todo -- this data will be based on version api response 

@@ -85,12 +85,43 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
   }
 };
 
-export const getActivityDetails = async (activityDefnKey) => {
-    const config = {
-      url:`${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}`,
-      method:'GET'
+export const getActivityDetails = async (activityKey, activityVersoinKey) => {
+  const url = { url: `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityKey}` };
+  const activitydata = await new RestApiService().call({ url }, null);
+  if (activitydata.success) {
+
+    const activityVersions = await new RestApiService.call({ url: `${url}versions?&pageNo=0&pageSize=100` }, null);
+    const activityCurrentVersionDetails = await new RestApiService().call({ url: `${url}versions/${activityVersoinKey}` }, null);
+    const activityCurrentVersionData = await new RestApiService().call({ url: `${url}versions/${activityVersoinKey}/data` }, null);
+
+
+    return {
+      success: true,
+      definition: {
+        name: activitydata.data.name,
+        description: activitydata.data.description,
+        definationKey: activitydata.data.key
+      },
+      versions: activityVersions.data.content,
+      version: {
+        key: activityCurrentVersionDetails.data.key,
+        encrypted: activityCurrentVersionDetails.data.isEncrypted,//false,
+        contextData: activityCurrentVersionDetails.data.contextData,
+        status: activityCurrentVersionDetails.data.status,
+        number: activityCurrentVersionDetails.data.version
+      },
+      schema: {
+        nodes: activityCurrentVersionData.data.nodes,
+        edges: activityCurrentVersionData.data.edges
+      }
     }
-    return await new RestApiService().call(config,null);
+  } else {
+    return {
+      success: false, data: null
+    }
+  }
+
+
 };
 
 /* ----------------------------- Get the version data of activity -------------------------------------------- */

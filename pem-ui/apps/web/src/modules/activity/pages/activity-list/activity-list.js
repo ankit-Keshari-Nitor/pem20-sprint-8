@@ -5,7 +5,7 @@ import '@b2bi/styles/pages/list-page.scss';
 import * as ActivityService from '../../services/activity-service.js';
 import * as RolloutService from '../../services/rollout-service';
 
-import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
+import { ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
 import { ExpandableSearch, MultiSelect, Button } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
 
@@ -28,6 +28,7 @@ export default function ActivityList() {
 
   // State hooks for managing various states
   const store = useActivityStore();
+ 
 
   const [totalRows, setTotalRows] = useState(0);
   const [searchKey, setSearchKey] = useState('');
@@ -129,8 +130,8 @@ export default function ActivityList() {
       actDefName: record.name,
       actDefVerKey: record.activityDefnVersionKey,
       operation: action,
-      status:record.status,
-version:record.version
+      status: record.status,
+      version: record.version
     });
     setSelectedActivity(record);
     switch (action) {
@@ -214,6 +215,11 @@ version:record.version
     pageUtil.navigate(`${id}`, {});
   }
 
+  const onNewClick = () => {
+    store.reset();
+    pageUtil.navigate('new', {});
+  }
+
   const handleVersion = (id, activityName, status) => {
     setActivityDefnKey(id);
     setActivityName(activityName);
@@ -275,7 +281,7 @@ version:record.version
         <div className="header-button-left">
           {/* Search, New, Import buttons */}
           <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
-          <Button size="sm" className="new-button" renderIcon={NewTab} href={ROUTES.NEW_ACTIVITY}>
+          <Button size="sm" className="new-button" renderIcon={NewTab} onClick={onNewClick}>
             New
           </Button>
           <Button size="sm" kind="tertiary" className="import-button" renderIcon={Add}>
@@ -352,14 +358,14 @@ version:record.version
           onSecondaryButtonClick={handelTestCloseClick}
           onRequestClose={() => setShowTestModal(false)}
         >
-          <ActivityTestModal 
-          currentTestData={currentTestData} 
-          formRenderSchema={formRenderSchema} />
+          <ActivityTestModal
+            currentTestData={currentTestData}
+            formRenderSchema={formRenderSchema} />
         </GeneralModal>)}
-      
+
       {/* Notification toast */}
       {notificationProps && notificationProps.open && <WrapperNotification {...notificationProps} />}
-      
+
       {/* Modal for Rollout operation */}
       {showRolloutModal && <ActivityRolloutModal
         showModal={showRolloutModal}
@@ -367,7 +373,7 @@ version:record.version
         activityDefKey={selectedActivity ? selectedActivity.activityDefnKey : ''}
         activityVerKey={selectedActivity ? selectedActivity.activityDefnVersionKey : ''}
         activityName={selectedActivity ? selectedActivity.name : ''}
-      /> }
+      />}
 
     </>
   );

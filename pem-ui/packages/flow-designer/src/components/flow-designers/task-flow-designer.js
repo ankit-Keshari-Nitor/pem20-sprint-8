@@ -26,14 +26,18 @@ const TaskFlowDesigner = ({
   onTaskNodeDragOver,
   onTaskNodeClick,
   onTaskNodeDoubleClick,
+
   TASK_NODE_TYPES,
   TASK_EDGE_TYPES,
+
   openTaskPropertiesBlock,
   selectedTaskNode,
+
   setOpenTaskPropertiesBlock,
   updateActivityDetails,
   activityDefinitionData,
   activityOperation,
+
   readOnly,
   showActivityDefineDrawer,
   setShowActivityDefineDrawer,
@@ -86,9 +90,8 @@ const TaskFlowDesigner = ({
                   <BlockPropertiesTray
                     selectedNode={selectedTaskNode}
                     setOpenPropertiesBlock={setOpenTaskPropertiesBlock}
-                    updateActivityDetails={updateActivityDetails}
-                    activityOperation={activityOperation}
-                    activityDefinitionData={activityDefinitionData}
+                   //activityOperation={activityOperation}
+                   // activityDefinitionData={activityDefinitionData}
                     readOnly={readOnly}
                   />
                 </div>
@@ -104,14 +107,16 @@ const TaskFlowDesigner = ({
               <div className="task-activity-container">
                 <ActivityDefinitionForm
                   //selectedNode={selectedTaskNode}
-                  setOpenPropertiesBlock={setShowActivityDefineDrawer}
-                  onVersionSelection={onVersionSelection}
-                  updateActivityDetails={updateActivityDetails}
+                  setShowActivityDefineDrawer={setShowActivityDefineDrawer}
+                 
+                  onActivityDetailsSave={updateActivityDetails}
                   activityOperation={activityOperation}
                   activityDefinitionData={activityDefinitionData}
+
                   readOnly={readOnly}
                   versionData={versionData}
                   selectedVersion={selectedVersion}
+                  onVersionSelection={onVersionSelection}
                 />
               </div>
             </div>

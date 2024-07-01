@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ActivityProcDefRepo extends JpaRepository<ActivityProcDef,String> {
-    List<ActivityProcDef> findByresourceName(String resourceName);
+    List<ActivityProcDef> findByResourceName(String resourceName);
 }

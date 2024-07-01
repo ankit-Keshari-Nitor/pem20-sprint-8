@@ -97,7 +97,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     @Test
     void testGetAllVersionDefinitionById() throws Exception {
-        when(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(anyString(), anyString(), anyString()))
+        when(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnVersionKeyAndActivityDefnSponsorKey(anyString(), anyString(), anyString()))
                 .thenReturn(getVersion());
         ActivityDefnVersionListResp dto = activityVersionService.getVersionDefinitionById("test", "test", "test");
         assertNotNull(dto);
@@ -127,7 +127,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
         ActivityDefnVersionResp resp = activityVersionService.createActivityDefnVersion("cashbank", "test1", activityVersionReq);
         assertNotNull(resp);
-        assertEquals(activityDefnVersion.getActivityDefnKeyVersion(), resp.getActivityDefnVersionKey());
+        assertEquals(activityDefnVersion.getActivityDefnVersionKey(), resp.getActivityDefnVersionKey());
     }
 
     @Test

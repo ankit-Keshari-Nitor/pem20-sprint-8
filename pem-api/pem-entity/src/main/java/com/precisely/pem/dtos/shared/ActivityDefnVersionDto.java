@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActivityDefnVersionDto {
-    public String activityDefnKeyVersion;
+    public String activityDefnVersionKey;
     public String activityDefnKey;
     public String activityDefnDataKey;
     public Double version;

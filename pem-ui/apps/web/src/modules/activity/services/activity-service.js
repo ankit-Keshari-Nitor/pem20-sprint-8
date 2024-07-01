@@ -5,7 +5,7 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
     let url = `${API_URL.ACTIVITY_DEFINITION}?application=PEM&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}`;
 
     if (searchKey !== '') {
-      url += `&name=${searchKey}`;
+      url += `&name=con:${searchKey}`;
     }
     if (status !== '') {
       url += `&status=${status}`;

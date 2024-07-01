@@ -24,7 +24,7 @@ import {
 } from '@carbon/react';
 
 import './props-panel.scss';
-import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLE_COLUMNS, TABLE_ROWS, TABLE_HEADER } from '../../constants/constants';
+import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLE_COLUMNS, TABLE_ROWS } from '../../constants/constants';
 import { collectPaletteEntries } from '../../utils/helpers';
 import { ElippsisIcon } from '../../icon';
 import { TrashCan } from '@carbon/icons-react';

@@ -5,6 +5,7 @@
   flex-direction: column;
   flex: 1;
   padding: 0px;
+  background-color: #E2E2E2;
 }
 
 .block-properties-container .title-bar {
@@ -65,11 +66,11 @@
 }
 
 .activity-active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: inherit;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
   background: #add8e6;
   color: #0043ce;
   border-radius: 1rem;
-  padding-right: 3rem;
 }

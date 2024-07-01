@@ -30,24 +30,32 @@ export default function ExitValidationFrom({ onSubmitExitValidationForm, setOpen
           </CarbonWrapper>
         </Column>
         <Column className="form-field" lg={16}>
-          <TextArea placeholder="Enter Text" labelText="Error Message" rows={4} id="text-area-1" />
+          <TextArea placeholder="Enter Text" labelText="Error Message" rows={4} id="text-area-1" disabled={readOnly}/>
         </Column>
-        <Column className="form-field" lg={16}>
+        {/* <Column className="form-field" lg={16}>
           <h4>Query</h4>
           <pre>
             <code>{formatQuery(validationQuery(query), 'json')}</code>
           </pre>
-        </Column>
-        <Column lg={8}>
-          <Button data-testid="cancel" name="cancel" kind="secondary" type="button" className="cancel-button" onClick={setOpenCancelDialog}>
-            Cancel
-          </Button>
-        </Column>
-        <Column lg={8}>
-          <Button data-testid="save" color="primary" variant="contained" type="submit" style={{ width: '100%' }} onClick={() => onSubmitExitValidationForm(validationQuery(query))}>
-            Save
-          </Button>
-        </Column>
+        </Column> */}
+        <Grid fullWidth className="button-container-container">
+          <Column lg={16} className="buttons-container">
+            <Button data-testid="cancel" name="cancel" kind="secondary" type="button" className="button" onClick={setOpenCancelDialog} disabled={readOnly}>
+              Cancel
+            </Button>
+            <Button
+              data-testid="save"
+              color="primary"
+              variant="contained"
+              type="submit"
+              style={{ width: '100%' }}
+              onClick={() => onSubmitExitValidationForm(validationQuery(query))}
+              disabled={readOnly}
+            >
+              Save
+            </Button>
+          </Column>
+        </Grid>
       </Grid>
     </>
   );

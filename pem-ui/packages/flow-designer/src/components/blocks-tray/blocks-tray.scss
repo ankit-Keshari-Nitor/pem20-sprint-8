@@ -1,5 +1,5 @@
 .task-tray-aside {
-  background: #EEEEEE;
+  background-color: #e2e2e2;
   border-radius: 0px 9px 9px 0px;
   padding-top: 16px;
 }
@@ -13,6 +13,7 @@
   border-radius: 2px;
   cursor: grab;
   margin-bottom: 16px;
+  background-color: #e2e2e2;
 }
 
 .block-tray.input {
@@ -36,7 +37,7 @@
   outline-offset: 0px;
   transition: all ease-in-out 0.05s;
   cursor: grab;
-  background-color: #eeeeee;
+  background-color: #e2e2e2;
   padding: 0px;
 }
 

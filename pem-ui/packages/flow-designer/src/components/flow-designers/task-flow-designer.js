@@ -80,15 +80,15 @@ const TaskFlowDesigner = ({
         {openTaskPropertiesBlock && (
           <>
             <PanelResizeHandle />
-            <Panel defaultSize={35} minSize={20} maxSize={70}>
+            <Panel defaultSize={34} minSize={34} maxSize={80}>
               <div className="dnd-flow">
-                <div className="task-activity-container">
+                <div className="task-properties-container">
                   <BlockPropertiesTray
                     selectedNode={selectedTaskNode}
                     setOpenPropertiesBlock={setOpenTaskPropertiesBlock}
                     editDefinitionProp={editDefinitionProp}
-                    activityOperation={activityOperation}
                     activityDefinitionData={activityDefinitionData}
+                    activityOperation={activityOperation}
                     readOnly={readOnly}
                   />
                 </div>
@@ -96,28 +96,28 @@ const TaskFlowDesigner = ({
             </Panel>
           </>
         )}
-        {showActivityDefineDrawer  && (
+        {showActivityDefineDrawer && (
           <>
-          <PanelResizeHandle />
-          <Panel defaultSize={40} minSize={20} maxSize={70}>
-            <div className="dnd-flow">
-              <div className="task-activity-container">
-                <ActivityDefinitionForm
-                  //selectedNode={selectedTaskNode}
-                  setOpenPropertiesBlock={setShowActivityDefineDrawer}
-                  onVersionSelection={onVersionSelection}
-                  editDefinitionProp={editDefinitionProp}
-                  activityOperation={activityOperation}
-                  activityDefinitionData={activityDefinitionData}
-                  readOnly={readOnly}
-                  versionData={versionData}
-                  selectedVersion={selectedVersion}
-                />
+            <PanelResizeHandle />
+            <Panel defaultSize={34} minSize={34} maxSize={80}>
+              <div className="dnd-flow">
+                <div className="task-properties-container">
+                  <ActivityDefinitionForm
+                    //selectedNode={selectedTaskNode}
+                    setOpenPropertiesBlock={setShowActivityDefineDrawer}
+                    onVersionSelection={onVersionSelection}
+                    editDefinitionProp={editDefinitionProp}
+                    activityOperation={activityOperation}
+                    activityDefinitionData={activityDefinitionData}
+                    readOnly={readOnly}
+                    versionData={versionData}
+                    selectedVersion={selectedVersion}
+                  />
+                </div>
               </div>
-            </div>
-          </Panel>
-        </>)
-        }
+            </Panel>
+          </>
+        )}
       </PanelGroup>
     </div>
   );

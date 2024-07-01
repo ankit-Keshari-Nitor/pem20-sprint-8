@@ -19,6 +19,7 @@ export const FORM_FIELD_TYPE = {
   RADIO: 'radio',
   NUMBER: 'numberinput',
   SWITCH: 'switch',
+  DATATABLE: 'data-table'
 };
 
 export const FORM_FIELD_LABEL = {
@@ -41,7 +42,8 @@ export const FORM_FIELD_LABEL = {
   NUMBER: 'Number',
   BUTTON: 'Button',
   CHECKBOX: 'Checkbox',
-  RADIO: 'Radio'
+  RADIO: 'Radio',
+  DATATABLE: 'Data Table'
 };
 
 export const FORM_FIELD_GROUPS = {

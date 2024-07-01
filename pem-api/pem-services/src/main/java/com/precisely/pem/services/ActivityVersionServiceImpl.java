@@ -284,10 +284,14 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
                 .build();
     }
 
-    public void deployDefaultADVersion(String activityDefnVersionKey) throws SQLException {
+    public void deployDefaultADVersion(String activityDefnVersionKey) throws SQLException, ResourceNotFoundException {
+        log.info("Starting the deployment process for {}",activityDefnVersionKey);
         List<Object[]> dtoList = activityDefnDeploymentCustomRepo.findActivitiesByActivityDefnVersionKey(activityDefnVersionKey);
+        if(Objects.isNull(dtoList) || dtoList.isEmpty()){
+            throw new ResourceNotFoundException("ActivitiesNotFound", "Could not find the activities for version key " + activityDefnVersionKey);
+        }
         ActivityDeploymentDto activityDeploymentDto = null;
-        if(dtoList != null && !dtoList.isEmpty()) {
+        if(dtoList != null) {
             log.info(dtoList.toString());
             for (Object[] dto : dtoList){
                 activityDeploymentDto = new ActivityDeploymentDto((String)dto[0],(String)dto[1],(String)dto[2],(String)dto[3],(String)dto[4],(String)dto[5],(Double)dto[6],(Blob)dto[7]);
@@ -296,9 +300,11 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
             Blob blobData = activityDeploymentDto.getDefData();
             int blobLength = (int) blobData.length();
             byte[] byteArr = blobData.getBytes(1l, blobLength);
+            log.info("Activity Name : " + activityDeploymentDto.getActivityName());
             String deploymentKey = pemActivitiService.deployProcessDefinition(activityDeploymentDto.getActivityName(), byteArr);
             log.info("deploymentKey : " + deploymentKey);
         }
+        log.info("Deployment process completed for {}",activityDefnVersionKey);
     }
 
     private static void validateUpdateActivityDefnReq(UpdateActivityVersionReq updateActivityVersionReq) throws Exception {

@@ -18,7 +18,7 @@ import textField from '@data-driven-forms/carbon-component-mapper/text-field';
 import textarea from '@data-driven-forms/carbon-component-mapper/textarea';
 import select from '@data-driven-forms/carbon-component-mapper/select';
 import checkbox from '@data-driven-forms/carbon-component-mapper/checkbox';
-import { ButtonSet, Button, Column, Grid } from '@carbon/react';
+import { Button, Column, Grid } from '@carbon/react';
 import CrossEdge from './../components/edges/cross-edge';
 import './style.scss';
 

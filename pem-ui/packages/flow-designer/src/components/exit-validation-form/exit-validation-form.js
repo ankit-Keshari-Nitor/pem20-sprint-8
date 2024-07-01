@@ -4,7 +4,7 @@ import { TextArea, Grid, Column, Button } from '@carbon/react';
 import { QueryBuilderDnD } from '@react-querybuilder/dnd';
 import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
 import CarbonWrapper from './condition-builder-wrapper/carbon-wrapper';
-import QueryBuilder, { formatQuery } from 'react-querybuilder';
+import QueryBuilder  from 'react-querybuilder';
 import { validationQuery } from '../helpers/generate-validation-query';
 import { INITIAL_QUERY, QUERY_COMBINATOR, QUERY_FIELDS } from '../../constants';
 

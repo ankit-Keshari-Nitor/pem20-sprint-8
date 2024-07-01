@@ -32,12 +32,12 @@ export default function ActivityDefinition() {
   }, [activityStore]);
 
   const getActivityData = async () => {
-    const response = await getActivityDetails(currentActivity.actDefVerKey);
-
+    const response = await getActivityDetails(currentActivity.activityDefKey);
+console.log(response);
   }
 
   useEffect(() => {
-    if (currentActivity && currentActivity.actDefVerKey) {
+    if (currentActivity && currentActivity.activityDefKey) {
       getActivityData();
     }
     return (() => {

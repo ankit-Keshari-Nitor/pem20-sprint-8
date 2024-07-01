@@ -5,11 +5,11 @@ import '@b2bi/styles/pages/list-page.scss';
 import * as ActivityService from '../../services/activity-service.js';
 import * as RolloutService from '../../services/rollout-service';
 
-import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA, OPERATIONS } from '../../constants';
+import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
 import { ExpandableSearch, MultiSelect, Button } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
 
-import WrapperModal from '../../helpers/wrapper-modal';
+import GeneralModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
 
 import useActivityStore from '../../store';
@@ -329,7 +329,7 @@ export default function ActivityList() {
       {/* For Version Drawer */}
       {/*  </Section> */}
       {/* Modal for action confirmation */}
-      <WrapperModal
+      <GeneralModal
         isOpen={showGeneralActionModal}
         setIsOpen={setShowGeneralActionModal}
         modalHeading="Confirmation"
@@ -340,10 +340,10 @@ export default function ActivityList() {
         onRequestClose={() => setShowGeneralActionModal(false)}
       >
         {message}
-      </WrapperModal>
+      </GeneralModal>
       {/* Modal for Test operation */}
       {showTestModal && (
-        <WrapperModal
+        <GeneralModal
           isOpen={showTestModal}
           setIsOpen={setShowTestModal}
           modalHeading={selectedActivity ? selectedActivity.name : ''}
@@ -353,13 +353,14 @@ export default function ActivityList() {
           onSecondaryButtonClick={handelTestCloseClick}
           onRequestClose={() => setShowTestModal(false)}
         >
-          <ActivityTestModal
-            currentTestData={currentTestData}
-            formRenderSchema={formRenderSchema} />
-
-        </WrapperModal>)}
+          <ActivityTestModal 
+          currentTestData={currentTestData} 
+          formRenderSchema={formRenderSchema} />
+        </GeneralModal>)}
+      
       {/* Notification toast */}
       {notificationProps && notificationProps.open && <WrapperNotification {...notificationProps} />}
+      
       {/* Modal for Rollout operation */}
       {showRolloutModal && <ActivityRolloutModal
         showModal={showRolloutModal}
@@ -367,7 +368,8 @@ export default function ActivityList() {
         activityDefKey={selectedActivity ? selectedActivity.activityDefnKey : ''}
         activityVerKey={selectedActivity ? selectedActivity.activityDefnVersionKey : ''}
         activityName={selectedActivity ? selectedActivity.name : ''}
-      />}
+      /> }
+
     </>
   );
 }

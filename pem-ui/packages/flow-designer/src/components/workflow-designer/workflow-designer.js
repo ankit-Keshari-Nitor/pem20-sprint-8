@@ -33,10 +33,18 @@ let taskId = 0;
 const getNewTaskId = () => `Task_Name_${taskId++}`;
 
 const WorkFlowDesigner = forwardRef(({ 
-  showActivityDefineDrawer, setShowActivityDefineDrawer, editDefinitionProp, editSchemaProp, 
-  activityDefinitionData, activityOperation, readOnly,
-  onVersionSelection,versionData,selectedVersion
-}, ref) => {
+  showActivityDefineDrawer, 
+  setShowActivityDefineDrawer, 
+  onVersionSelection,
+  versionData,
+  selectedVersion,
+
+  editDefinitionProp, 
+  editSchemaProp, 
+  activityDefinitionData, 
+  activityOperation, 
+  readOnly
+  }, ref) => {
 
   //-------------------------------- State Management -------------------------------------
   const storeData = useTaskStore((state) => state.tasks);

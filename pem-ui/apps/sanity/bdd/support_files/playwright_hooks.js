@@ -29,7 +29,7 @@ Before(async function ({ pickle }) {
   });
   /*this.server = await request.newContext({
       // All requests we send go to this API endpoint.
-      baseURL: config.BASE_API_URL,
+      baseURL: config.BASE_API_END_POINTS,
     });*/
 
   //await this.context.tracing.start({ screenshots: true, snapshots: true });

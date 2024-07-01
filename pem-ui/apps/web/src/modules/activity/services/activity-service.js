@@ -1,8 +1,8 @@
-import { API_URL } from './../constants';
+import { API_END_POINTS } from './../constants';
 
 export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchKey = '', status = '') => {
   try {
-    let url = `${API_URL.ACTIVITY_DEFINITION}?application=PEM&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}`;
+    let url = `${API_END_POINTS.ACTIVITY_DEFINITION}?application=PEM&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}`;
 
     if (searchKey !== '') {
       url += `&name=${searchKey}`;
@@ -34,7 +34,7 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
 
 export const deleteActivity = async (activityDefnKey) => {
   try {
-    let url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}`;
+    let url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}`;
     const response = await fetch(url, {
       method: 'DELETE'
     });
@@ -58,7 +58,7 @@ export const deleteActivity = async (activityDefnKey) => {
 
 export const getActivityVersionkey = async (pageNo, pageSize, sortDir = 'ASC', status = '', isDefault = '', activityDefnKey) => {
   try {
-    let url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}/versions?isDefault=${isDefault}&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}&status=${status}`;
+    let url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}/versions?isDefault=${isDefault}&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}&status=${status}`;
 
     const response = await fetch(url, {
       method: 'GET',
@@ -96,7 +96,7 @@ export const getActivityVersionkey = async (pageNo, pageSize, sortDir = 'ASC', s
 
 export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDefnKeyVersion) => {
   try {
-    let url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}/versions/${activityDefnKeyVersion}/actions/markAsFinal`;
+    let url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}/versions/${activityDefnKeyVersion}/actions/markAsFinal`;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -124,7 +124,7 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
 
 export const getActivityDetails = async (activityDefnKey) => {
   try {
-    const url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}`;
+    const url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}`;
     const response = await fetch(url, {
       method: 'GET'
     });
@@ -145,7 +145,7 @@ export const getActivityDetails = async (activityDefnKey) => {
 
 export const getActivityVersionData = async (activityDefnKey, activityDefnVersionKey) => {
   try {
-    const url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}/versions/${activityDefnVersionKey}`;
+    const url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}/versions/${activityDefnVersionKey}`;
     const response = await fetch(url, {
       method: 'GET'
     });
@@ -166,7 +166,7 @@ export const getActivityVersionData = async (activityDefnKey, activityDefnVersio
 
 export const getActivityVersionList = async (activityDefnKey) => {
   try {
-    const url = `${API_URL.ACTIVITY_DEFINITION}/${activityDefnKey}/versions`;
+    const url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}/versions`;
     const response = await fetch(url, {
       method: 'GET'
     });

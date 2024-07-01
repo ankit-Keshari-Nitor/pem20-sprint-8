@@ -1,4 +1,4 @@
-package com.precisely.pem.services;
+package com.precisely.pem.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.activiti.engine.delegate.BpmnError;
@@ -27,7 +27,7 @@ public class XsltTransformationDelegate implements JavaDelegate {
 
 
     @Override
-    public void execute(DelegateExecution execution) throws Exception {
+    public void execute(DelegateExecution execution) throws Error {
         String serviceTaskId = (String) execution.getCurrentActivityId();
 
         String inputXml = (String) input.getValue(execution);
@@ -66,7 +66,7 @@ public class XsltTransformationDelegate implements JavaDelegate {
         return writer.toString();
     }
 
-    private void handleException(String errorMessage, Exception e) throws Exception {
+    private void handleException(String errorMessage, Exception e) throws Error {
         log.info("TRANSFORMATION_ERROR: " + errorMessage + e.getMessage());
         throw new BpmnError("TRANSFORMATION_ERROR", errorMessage);
     }

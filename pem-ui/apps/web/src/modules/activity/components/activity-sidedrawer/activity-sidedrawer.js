@@ -9,7 +9,7 @@ const ActivityVersionsSideDrawer = ({
   children
 
 }) => {
-  const { drawer, animate, hidden, overlay, overlayOpen, overlayHidden, header, actionItem } = classes;
+  const { drawer, animate, hidden, overlay, overlayOpen, overlayHidden, actionItem } = classes;
 
 
   return (

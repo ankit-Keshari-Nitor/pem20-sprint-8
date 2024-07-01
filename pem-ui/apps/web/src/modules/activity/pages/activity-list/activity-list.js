@@ -211,9 +211,6 @@ export default function ActivityList() {
   const handleView = (id) => {
     pageUtil.navigate(`${id}`, {});
   }
-  const handleClone = (id) => {
-
-  }
 
   const handleVersion = (id, activityName, status) => {
     setActivityDefnKey(id);

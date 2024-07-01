@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import Designer from '@b2bi/flow-designer';
 import './activity-definition.css';
 import useActivityStore from '../../store';
-import { getActivityDetails } from '../../services/activity-service';
+//import { getActivityDetails } from '../../services/activity-service';
 import { OPERATIONS } from '../../constants';
 
 export default function ActivityDefinition() {
   const currentActivity = useActivityStore((state) => state.selectedActivity);
   const activityStore = useActivityStore((state) => state.activityData);
-  const activityReset = useActivityStore((state) => state.reset);
+  //const activityReset = useActivityStore((state) => state.reset);
 
   const editDefinitionProp = useActivityStore((state) => state.editDefinitionProps);
   const editSchemaProp = useActivityStore((state) => state.editSchemaProps);

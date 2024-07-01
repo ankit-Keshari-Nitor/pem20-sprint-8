@@ -5,7 +5,7 @@ import RolloutGapDetails from './rollout-gap-details';
 import GenericModal from '../../helpers/wrapper-modal';
 
 const ActivityRolloutModal = (props) => {
-    const { showModal, setShowModal, activityName, activityDefKey, activityVerKey } = props;
+    const { showModal, setShowModal, activityName } = props;
     const [rolloutGapData, setRolloutGapData] = useState({ selectedGroupsData: [], selectedAttributesData: [], selectedPartnersData: [] });
     const [rolloutDetails, setRolloutDetails] = useState({
         dueDate: new Date(),

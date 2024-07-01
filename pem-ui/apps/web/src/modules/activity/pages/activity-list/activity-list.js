@@ -5,7 +5,7 @@ import '@b2bi/styles/pages/list-page.scss';
 import * as ActivityService from '../../services/activity-service.js';
 import * as RolloutService from '../../services/rollout-service';
 
-import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA, OPERATIONS } from '../../constants';
+import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
 import { ExpandableSearch, MultiSelect, Button } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
 

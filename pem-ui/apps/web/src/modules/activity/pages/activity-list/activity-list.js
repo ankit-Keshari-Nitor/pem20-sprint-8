@@ -20,6 +20,9 @@ import ActivityDataTableComponent from '../../components/datatable-component.js'
 import ActivityRolloutModal from '../../components/rollout-wizard';
 import ActivityTestModal from '../../components/test-wizard/test-wizard.js';
 
+import ActivityVersionList from '../activity-version-list/activity-version-list.js';
+import ActivityVersionsSideDrawer from '../../components/activity-sidedrawer/activity-sidedrawer.js';
+
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
 
@@ -42,7 +45,7 @@ export default function ActivityList() {
   const [actionText, setActionText] = useState('');
   const [message, setMessage] = useState('');
   const [onPrimaryButtonClick, setOnPrimaryButtonClick] = useState(null); // Renamed state
-  
+
   const [notificationProps, setNotificationProps] = useState(null);
 
   const [selectedActivity, setSelectedActivity] = useState(null);
@@ -52,6 +55,11 @@ export default function ActivityList() {
   const [testDialogData, setTestDialogData] = useState(TEST_DIALOG_DATA);
   const [currentTestData, setCurrentTestData] = useState(null);
   const [formRenderSchema, setFormRenderSchema] = useState();
+
+  const [activityName, setActivityName] = useState('');
+  const [activityDefnKey, setActivityDefnKey] = useState('');
+  const [activityStatus, setActivityStatus] = useState('');
+  const [showDrawer, setShowDrawer] = useState(false);
 
   useEffect(() => {
     if (testDialogData) {
@@ -115,21 +123,21 @@ export default function ActivityList() {
 
   // Handler for action clicks
   const onCellActionClick = (action, activityDefKey, actVersionKey = '') => {
-   const record = rows.filter((x)=>x.id===activityDefKey)[0];
-   store.setSelectedActivity({
-    activityDefKey:record.activityDefnKey,
-    actDefName:record.name,
-    actDefVerKey:record.activityDefnVersionKey,
-    operation:action
-  });
-   setSelectedActivity(record);
+    const record = rows.filter((x) => x.id === activityDefKey)[0];
+    store.setSelectedActivity({
+      activityDefKey: record.activityDefnKey,
+      actDefName: record.name,
+      actDefVerKey: record.activityDefnVersionKey,
+      operation: action
+    });
+    setSelectedActivity(record);
     switch (action) {
       case ACTION_COLUMN_KEYS.MARK_AS_FINAL:
         setActionText('Mark as final');
         setMessage('The Activity can not be modified once you Mark as final. Do you want to Mark as final?');
         setOnPrimaryButtonClick(() => () => handleMarkAsFinal(activityDefKey, actVersionKey)); // Updated
         setShowGeneralActionModal(true);
-       
+
         break;
       case ACTION_COLUMN_KEYS.DELETE:
         setActionText('Delete');
@@ -140,15 +148,15 @@ export default function ActivityList() {
       case ACTION_COLUMN_KEYS.ROLLOUT:
         setShowRolloutModal(true);;//(id);
         break;
-      case ACTION_COLUMN_KEYS.TEST:
+      case ACTION_COLUMN_KEYS.TEST_ACTIVITY:
         handleTestOperation(activityDefKey);
         break;
       case ACTION_COLUMN_KEYS.EDIT:
         handleEdit(activityDefKey);
         break;
       case ACTION_COLUMN_KEYS.VIEW:
-          handleView(activityDefKey);
-          break;
+        handleView(activityDefKey);
+        break;
       case ACTION_COLUMN_KEYS.EXPORT_ACTIVITY:
         console.log('Export Activity');
         break;
@@ -206,6 +214,15 @@ export default function ActivityList() {
   const handleClone = (id) => {
 
   }
+
+  const handleVersion = (id, activityName, status) => {
+    setActivityDefnKey(id);
+    setActivityName(activityName);
+    setActivityStatus(status)
+    setShowDrawer(true);
+  };
+
+  const handleClose = () => { setShowDrawer(false); };
 
   // -------------------------------------Test operation Start-------------------------------------------------
   // Function to handle the Test operation
@@ -291,7 +308,25 @@ export default function ActivityList() {
         handlePaginationChange={handlePaginationChange}
         onCellActionClick={onCellActionClick}
         handleHeaderClick={handleHeaderClick}
+        handleVersion={handleVersion}
       />
+      {/* For Version Drawer */}
+      {activityDefnKey !== '' && (
+        <ActivityVersionsSideDrawer
+          anchor="right"
+          showDrawer={showDrawer}
+          onClose={handleClose}
+        >
+          <ActivityVersionList
+            activityName={activityName}
+            onClose={handleClose}
+            activityDefnKey={activityDefnKey}
+            status={activityStatus}
+            showDrawer={showDrawer}
+          />
+        </ActivityVersionsSideDrawer>
+      )}
+      {/* For Version Drawer */}
       {/*  </Section> */}
       {/* Modal for action confirmation */}
       <WrapperModal
@@ -318,21 +353,21 @@ export default function ActivityList() {
           onSecondaryButtonClick={handelTestCloseClick}
           onRequestClose={() => setShowTestModal(false)}
         >
-          <ActivityTestModal 
-          currentTestData={currentTestData} 
-          formRenderSchema={formRenderSchema} />
+          <ActivityTestModal
+            currentTestData={currentTestData}
+            formRenderSchema={formRenderSchema} />
 
         </WrapperModal>)}
       {/* Notification toast */}
       {notificationProps && notificationProps.open && <WrapperNotification {...notificationProps} />}
       {/* Modal for Rollout operation */}
-      { showRolloutModal && <ActivityRolloutModal
+      {showRolloutModal && <ActivityRolloutModal
         showModal={showRolloutModal}
         setShowModal={() => setShowRolloutModal(false)}
         activityDefKey={selectedActivity ? selectedActivity.activityDefnKey : ''}
         activityVerKey={selectedActivity ? selectedActivity.activityDefnVersionKey : ''}
         activityName={selectedActivity ? selectedActivity.name : ''}
-      /> }
+      />}
     </>
   );
 }

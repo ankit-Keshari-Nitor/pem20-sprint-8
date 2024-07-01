@@ -32,7 +32,8 @@ export const ACTION_COLUMN_KEYS = {
   CLONE_VERSION: 'Clone Version',
   MARK_AS_DEFAULT: 'Mark As Default',
   ACTIVITYDEFVERSIONKEY: 'activityDefnVersionKey',
-  RESTORE: 'Restore'
+  RESTORE: 'Restore',
+  DESCRCIPTION: 'description'
 };
 
 export const ACTIVITY_LIST_COLUMNS = [
@@ -43,7 +44,17 @@ export const ACTIVITY_LIST_COLUMNS = [
   { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
   { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' },
   { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' },
+  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' },
+];
 
+export const ACTIVITY_VERSION_COLUMNS = [
+  { key: ACTION_COLUMN_KEYS.VERSION, header: 'Version' },
+  { key: ACTION_COLUMN_KEYS.ENCRYPTED, header: 'Encrypted' },
+  { key: ACTION_COLUMN_KEYS.STATUS, header: 'Status' },
+  { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
+  { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' },
+  { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' },
+  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' }
 ];
 
 export const ROLLOUT_STEPS = [
@@ -239,6 +250,6 @@ export const OPERATIONS = {
   EDIT: 'edit',
   EXPORT: 'export',
   DELETE: 'delete',
-  CREATE_NEW_VERSION:'create_new_version',
-  TEST:'test'
+  CREATE_NEW_VERSION: 'create_new_version',
+  TEST: 'test'
 };

@@ -45,6 +45,7 @@ public class XsltTransformationDelegate implements JavaDelegate {
             contextData.put(serviceTaskId, nodeResultsMap);
             fullContextData.put("contextData", contextData);
             execution.setVariables(fullContextData);
+            log.info(fullContextData);
         } catch (TransformerException e) {
             handleException("Error during XSLT transformation", e);
         } catch (Exception e) {

@@ -1,4 +1,4 @@
-package com.precisely.pem.services;
+package com.precisely.pem.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -39,7 +39,7 @@ public class RestTemplateApiService implements JavaDelegate {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void execute(DelegateExecution execution) throws Exception {
+    public void execute(DelegateExecution execution) throws Error {
         String serviceTaskId = (String) execution.getCurrentActivityId();
 
         try {
@@ -89,6 +89,7 @@ public class RestTemplateApiService implements JavaDelegate {
                 contextData.put(serviceTaskId, nodeResultData);
                 fullContextData.put("contextData", contextData);
                 execution.setVariables(fullContextData);
+                log.info(fullContextData);
             }
         } catch (IllegalArgumentException | HttpClientErrorException | HttpServerErrorException e) {
             handleHttpException(e);
@@ -149,12 +150,12 @@ public class RestTemplateApiService implements JavaDelegate {
         throw new BpmnError("HTTP_ERROR", "HTTP Error occurred: " + e.getMessage());
     }
 
-    private void handleGeneralException(Exception e) throws Exception {
+    private void handleGeneralException(Exception e) throws Error {
         log.info("GENERAL_ERROR: " + e.getMessage());
         throw new BpmnError("GENERAL_ERROR", "Error occurred: " + e.getMessage());
     }
 
-    private void handleUnexpectedException(Exception e) {
+    private void handleUnexpectedException(Exception e) throws Error {
         log.info("UNEXPECTED_ERROR: " + e.getMessage());
         throw new BpmnError("UNEXPECTED_ERROR", "Unexpected Error occurred: " + e.getMessage());
     }

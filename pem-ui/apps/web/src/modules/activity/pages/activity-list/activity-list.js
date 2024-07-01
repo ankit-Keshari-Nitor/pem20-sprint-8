@@ -37,7 +37,6 @@ export default function ActivityList() {
   const [rows, setRows] = useState([]);
   const [status, setStatus] = useState('');
 
-
   const [showRolloutModal, setShowRolloutModal] = useState(false);
   const [showTestModal, setShowTestModal] = useState(false);
 
@@ -60,6 +59,8 @@ export default function ActivityList() {
   const [activityDefnKey, setActivityDefnKey] = useState('');
   const [activityStatus, setActivityStatus] = useState('');
   const [showDrawer, setShowDrawer] = useState(false);
+
+  const [searchTimeout, setSearchTimeout] = useState(null);
 
   useEffect(() => {
     if (testDialogData) {
@@ -99,6 +100,16 @@ export default function ActivityList() {
     fetchAndSetData();
   }, [fetchAndSetData]);
 
+  useEffect(() => {
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+    const timeout = setTimeout(() => {
+      fetchAndSetData();
+    }, 3000);
+    setSearchTimeout(timeout);
+  }, [searchKey, fetchAndSetData]);
+
   // Handler for sorting table columns
   const handleHeaderClick = (headerKey) => {
     if (headerKey !== 'ellipsis' && headerKey !== 'action') {
@@ -119,7 +130,6 @@ export default function ActivityList() {
     setPageNo(page);
     setPageSize(pageSize);
   };
-
 
   // Handler for action clicks
   const onCellActionClick = (action, activityDefKey, actVersionKey = '') => {

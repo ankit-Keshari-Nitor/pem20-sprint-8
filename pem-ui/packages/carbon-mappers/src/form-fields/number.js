@@ -38,7 +38,7 @@ const NumberInput = ({ field, id, currentPath, onChangeHandle, previewMode }) =>
         label={labelText === undefined ? label : labelText}
         helperText={helperText}
         disabled={disabled}
-        defaultValue={1}
+        defaultValue={0}
         value={fieldValue}
         onChange={(e) => {
           previewMode && onChangeHandle(currentPath, e.target.value);

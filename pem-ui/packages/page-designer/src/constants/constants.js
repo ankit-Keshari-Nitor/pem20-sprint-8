@@ -15,6 +15,10 @@ export const NAME = 'name';
 export const REGEXVALIDATION = 'regexValidation';
 export const OPTIONS = 'Options';
 export const CUSTOMREGEX = 'customRegex';
+export const DATATABLE = 'data-table';
+export const TABLE_COLUMNS = 'tableColumns';
+export const TABLE_ROWS = 'tableRows';
+export const LABEL_TEXT = 'labelText';
 
 export const PALETTE_GROUPS = [
   {
@@ -43,3 +47,30 @@ export const INITIAL_DATA = {
   layout: [],
   components: {}
 };
+
+export const TABLE_HEADER = [
+  {
+    key: 'column0',
+    header: 'column0',
+    colSpan: '6',
+    searchable: false,
+    sortable: false,
+    required: false
+  },
+  {
+    key: 'column1',
+    header: 'column1',
+    colSpan: '6',
+    Searchable: false,
+    Sortable: false,
+    Required: false
+  }
+];
+
+export const OPTION = [
+  {
+    label: '',
+    id: '',
+    value: ''
+  }
+];

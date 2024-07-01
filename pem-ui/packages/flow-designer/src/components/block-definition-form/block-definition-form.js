@@ -36,7 +36,7 @@ export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode
   };
 
   return (
-    <div className="activity-form">
+    <div>
       <Tabs>
         <TabList aria-label="List of tabs" contained>
           <Tab>Define</Tab>

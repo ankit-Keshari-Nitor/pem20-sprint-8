@@ -283,6 +283,7 @@ $rqb-branch-style: $rqb-border-style !default;
   background: #8d8d8d1f;
   padding-inline-end: 0.5rem;
   padding-inline-start: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .opt-btn {
@@ -319,16 +320,14 @@ $rqb-branch-style: $rqb-border-style !default;
 }
 
 .cancel-button {
-  width: 99%;
   display: flex;
   justify-content: center;
 }
 
 .save-button {
-  background-color: #393939 !important;
-  width: 99%;
   display: flex;
   justify-content: center;
+  background-color: #393939 !important;
 }
 
 .save-button:hover,
@@ -411,4 +410,24 @@ $rqb-branch-style: $rqb-border-style !default;
 
 .btn-add {
   margin-right: 0.5rem;
+}
+
+.button-container-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  bottom: 0;
+}
+
+.buttons-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  margin: 0px;
+}
+
+.button {
+  width: 100%;
 }

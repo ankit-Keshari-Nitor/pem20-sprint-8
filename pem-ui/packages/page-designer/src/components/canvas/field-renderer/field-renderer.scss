@@ -37,11 +37,12 @@
 }
 
 .canvas-form-fields {
-  width: 100%;
+  width: 85%;
 }
 
 .custom-field-grid {
   --cds-grid-gutter-start: none;
   padding-inline: unset;
   align-items: center;
+  margin: 0px;
 }

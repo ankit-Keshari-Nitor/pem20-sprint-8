@@ -188,3 +188,31 @@ export const id = {
   value: '',
   type: 'text',
 };
+
+export const tableColumn = {
+  propsName: 'tableColumns',
+  label: 'Column Header',
+  value: [],
+  type: 'TextInput'
+};
+
+export const tableRows = {
+  propsName: 'tableRows',
+  label: 'Table Rows',
+  value: [],
+  type: 'TextInput'
+};
+
+export const selectRow = {
+  propsName: 'selectablerows',
+  label: 'Selectable Rows',
+  value: false,
+  type: 'Toggle'
+};
+
+export const pageSize = {
+  propsName: 'pagesize',
+  label: 'Page Size',
+  value: '',
+  type: 'TextInput'
+};

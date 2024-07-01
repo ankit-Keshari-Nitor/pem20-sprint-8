@@ -30,14 +30,22 @@ import {
   DEFAULTTITLE,
   TAB,
   NAME,
-  REGEXVALIDATION
+  REGEXVALIDATION,
+  OPTIONS,
+  TABLE_COLUMNS,
+  TABLE_HEADER,
+  OPTION,
+  DATATABLE,
+  TABLE_ROWS,
+  LABEL_TEXT
 } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Grid, Modal, Column } from '@carbon/react';
 import FormPreview from '../preview-mode';
 import { CrossIcon } from '../../icon';
+import { View } from '@carbon/icons-react';
 
-export default function Designer({ componentMapper, onClickPageDesignerBack, activityDefinitionData }) {
+export default function Designer({ componentMapper, onClickPageDesignerBack, activityDefinitionData, saveFormDesignerData }) {
   const initialLayout = INITIAL_DATA.layout;
   const initialComponents = INITIAL_DATA.components;
   const [layout, setLayout] = useState(initialLayout);
@@ -61,6 +69,10 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
         newItem.children = item.children;
       }
 
+      if (item.component.type === DATATABLE) {
+        item = { id: item.id, type: item.type, component: { ...item.component, [TABLE_COLUMNS]: TABLE_HEADER } };
+      }
+
       // sidebar into
       if (item.type === SIDEBAR_ITEM) {
         // 1. Move sidebar item into page
@@ -75,9 +87,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
 
         // Condition for add options property
         if (item.component.type === 'checkbox-group' || item.component.type === 'radio-group' || item.component.type === 'select') {
-          item.component.options = [
-            { label: 'Label-0', id: '', value: 'Value-0' }
-          ];
+          item.component.options = [{ label: 'Label-0', id: '', value: 'Value-0' }];
         }
 
         //Condition for Textarea row Property
@@ -88,7 +98,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
-          component: { ...item.component, id: newComponent.id, name: 'form-control-' + newComponent.id.substring(0, 2) }
+          component: { ...item.component, id: newComponent.id, name: 'form-control-' + newComponent.id.substring(0, 2), labelText: item.component.label }
         };
         setComponentsName((preState) => [...preState, { id: newItem.id, name: newItem.id }]);
         setLayout(handleMoveSidebarComponentIntoParent(layout, splitDropZonePath, newItem));
@@ -133,16 +143,12 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           return (basicEditPops.value = fieldData.component[basicEditPops?.propsName]);
         } else {
           // Initialize options for checkbox-group and radio-group
-          if (basicEditPops?.propsName === 'options') {
-            return (basicEditPops.value = [
-              {
-                label: '',
-                id: '',
-                value: ''
-              }
-            ]);
-          } else if (basicEditPops?.propsName === 'labelText') {
-            return (basicEditPops.value = componentDetail.component.label);
+          if (basicEditPops?.propsName === OPTIONS) {
+            return (basicEditPops.value = OPTION);
+          } else if (basicEditPops?.propsName === TABLE_COLUMNS) {
+            return (basicEditPops.value = TABLE_HEADER);
+          } else if (basicEditPops?.propsName === TABLE_ROWS) {
+            return (basicEditPops.value = []);
           } else {
             return (basicEditPops.value = '');
           }
@@ -280,30 +286,25 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
   return (
     <>
       <div className="page-designer">
-        <div className="header-container">
-          <Grid className="inner-header">
-            <Column sm={4} className="title-container">
-              <span className="header-title">{activityDefinitionData && Object.keys(activityDefinitionData).length > 0 ? activityDefinitionData.name : 'New Form'}</span>
-            </Column>
-            <div className="header-button-wrapper">
-              {/* <Column>
-                <Button kind="secondary" size="sm" onClick={() => setOpen(true)}>
-                  View Schema
-                </Button>
-              </Column>
-              <Column>
-                <Button kind="secondary" size="sm" onClick={() => setOpenPreview(true)}>
-                  Preview
-                </Button>
-              </Column> */}
-              <Column>
-                <span onClick={onClickPageDesignerBack} className="icon">
-                  <CrossIcon />
-                </span>
-              </Column>
-            </div>
-          </Grid>
-        </div>
+        <Grid fullWidth>
+          <Column lg={4} className="title-container">
+            <span className="header-title">{activityDefinitionData && Object.keys(activityDefinitionData).length > 0 ? activityDefinitionData.name : 'New Form Builder'}</span>
+          </Column>
+          <Column lg={12} className="buttons-container">
+            {/* <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
+              View Schema
+            </Button>
+            <Button kind="secondary" className="cancelButton" onClick={() => setOpenPreview(true)}>
+              Preview
+            </Button> */}
+            <span onClick={() => setOpenPreview(true)} className="cross-icon" style={{ marginRight: '16px' }}>
+              <View size={30} />
+            </span>
+            <span onClick={onClickPageDesignerBack} className="cross-icon">
+              <CrossIcon />
+            </span>
+          </Column>
+        </Grid>
         <div className="layout-container">
           <div className="layout-container-wrapper">
             <div className="components-tray">
@@ -327,23 +328,23 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             </div>
           )}
         </div>
-        <Grid className="property-panel-button ">
-          <Column className="column-button-wrapper">
-            <Button kind="secondary" className="cancelButton" size="sm">
+        <Grid fullWidth className="buttons-container-bottom">
+          <Column lg={16} className="buttons-container">
+            <Button kind="secondary" className="cancelButton">
               Cancel
             </Button>
-          </Column>
-          <Column className="column-button-wrapper">
-            <Button kind="primary" className="saveButton" size="sm">
+            <Button kind="primary" className="saveButton" onClick={() => saveFormDesignerData(layout)}>
               Save
             </Button>
           </Column>
         </Grid>
       </div>
 
+      {/* View Schema Modal */}
       <Modal open={open} onRequestClose={() => setOpen(false)} passiveModal modalLabel="Schema" primaryButtonText="Close" secondaryButtonText="Cancel">
         <ViewSchema layout={layout} />
       </Modal>
+      {/* Form Preview Modal */}
       <Modal
         open={openPreview}
         onRequestClose={() => setOpenPreview(false)}

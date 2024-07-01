@@ -1,4 +1,5 @@
 import { API_END_POINTS } from './../constants';
+import { RestApiService } from '../../../common/api-handler/rest-api-service';
 
 export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchKey = '', status = '') => {
   try {
@@ -56,44 +57,6 @@ export const deleteActivity = async (activityDefnKey) => {
   }
 };
 
-export const getActivityVersionkey = async (pageNo, pageSize, sortDir = 'ASC', status = '', isDefault = '', activityDefnKey) => {
-  try {
-    let url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}/versions?isDefault=${isDefault}&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}&status=${status}`;
-
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      console.error(`HTTP error! status: ${response.status}`);
-      return { content: [], page: {} };
-    }
-
-    const responseBody = await response.text();
-    try {
-      const jsonData = JSON.parse(responseBody);
-      const customizedData = jsonData.content !== null && jsonData.content.map((e) => ({
-        id: e.activityDefnVersionKey,
-        ...e
-      }));
-      return {
-        content: customizedData || [],
-        pageContent: jsonData.page || []
-      };
-
-    } catch (jsonError) {
-      console.error('Error parsing JSON:', jsonError);
-      return [];
-    }
-  } catch (error) {
-    console.error('Failed to fetch data:', error);
-    return [];
-  }
-};
-
 export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDefnKeyVersion) => {
   try {
     let url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}/versions/${activityDefnKeyVersion}/actions/markAsFinal`;
@@ -123,26 +86,14 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
 };
 
 export const getActivityDetails = async (activityDefnKey) => {
-  try {
-    const url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}`;
-    const response = await fetch(url, {
-      method: 'GET'
-    });
-
-    if (!response.ok) {
-      console.error(`HTTP error! status: ${response.status}`);
-      return undefined;
+    const config = {
+      url:`${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}`,
+      method:'GET'
     }
-    let responseJson = await response.json();
-    return responseJson;
-  } catch (error) {
-    console.error('Failed to fetch data:', error);
-    return [];
-  }
+    return await new RestApiService().call(config,null);
 };
 
 /* ----------------------------- Get the version data of activity -------------------------------------------- */
-
 export const getActivityVersionData = async (activityDefnKey, activityDefnVersionKey) => {
   try {
     const url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}/versions/${activityDefnVersionKey}`;
@@ -161,9 +112,7 @@ export const getActivityVersionData = async (activityDefnKey, activityDefnVersio
     return [];
   }
 };
-
 /* ----------------------------- Get the version list of activity -------------------------------------------- */
-
 export const getActivityVersionList = async (activityDefnKey) => {
   try {
     const url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}/versions`;
@@ -177,6 +126,45 @@ export const getActivityVersionList = async (activityDefnKey) => {
     }
     let responseJson = await response.json();
     return responseJson;
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+    return [];
+  }
+};
+export const getActivityVersionkey = async (pageNo, pageSize, sortDir = 'ASC', status = '', isDefault = '', activityDefnKey) => {
+  try {
+    let url = `${API_END_POINTS.ACTIVITY_DEFINITION}/
+    ${activityDefnKey}/versions?isDefault=${isDefault}
+    &sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}&status=${status}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`);
+      return { content: [], page: {} };
+    }
+
+    const responseBody = await response.text();
+    try {
+      const jsonData = JSON.parse(responseBody);
+      const customizedData = jsonData.content !== null && jsonData.content.map((e) => ({
+        id: e.activityDefnVersionKey,
+        ...e
+      }));
+      return {
+        content: customizedData || [],
+        pageContent: jsonData.page || []
+      };
+
+    } catch (jsonError) {
+      console.error('Error parsing JSON:', jsonError);
+      return [];
+    }
   } catch (error) {
     console.error('Failed to fetch data:', error);
     return [];

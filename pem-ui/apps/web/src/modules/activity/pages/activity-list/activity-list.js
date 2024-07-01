@@ -128,7 +128,9 @@ export default function ActivityList() {
       activityDefKey: record.activityDefnKey,
       actDefName: record.name,
       actDefVerKey: record.activityDefnVersionKey,
-      operation: action
+      operation: action,
+      status:record.status,
+version:record.version
     });
     setSelectedActivity(record);
     switch (action) {

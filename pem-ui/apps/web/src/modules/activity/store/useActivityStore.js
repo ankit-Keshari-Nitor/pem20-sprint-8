@@ -1,60 +1,48 @@
 import { create } from 'zustand';
-import { ACTIVITY_DEFINITION_DATA } from '../constants';
-
 
 const activityStore = (set, get) => ({
   selectedActivity: {
     actDefName: '',
     activityDefKey: '',
     actDefVerKey: '',
-    operation: ''
+    actDefStatus:'',
+    operation: '',
+    status:'',
+    version:''
   },
   activityData: {
     definition: {},
-    schema: {},//node+edges+ each node's data(def,exit validation,form design)
-    versions: [],
-    operation: ''
+    schema: {},//node+edges+ each node's data(def,exit validation,form design
   },
   // Activity Flow State
-  editDefinitionProps: (activity, operation) => {
+  updateActivityDetails: (activity,) => {
     set((state) => {
-      const copyNodes = ACTIVITY_DEFINITION_DATA;
-      Object.keys(copyNodes).map((key) => {
-        if (activity[key]) {
-          copyNodes[key] = activity[key];
-        }
-        return copyNodes;
-      });
-
       return {
         activityData: {
-          definition: copyNodes,
-          schema: state.activityData.schema,
-          versions: [],
-          operation: operation
+          definition: activity,
+          schema: state.activityData.schema
         },
         selectedActivity: state.selectedActivity
       };
     });
   },
   //this changes during - 
-  editSchemaProps: (task, operation) => {
+  updateActivitySchema: (task) => {
     set((state) => {
       return {
         activityData:{ 
           definition: state.activityData.definition, 
-          schema: { ...task }, 
-          versions: [], 
-          operation: operation 
+          schema: { ...task }
         },
         selectedActivity: state.selectedActivity
       };
     });
   },
-  setSelectedActivity: ({ activityDefKey, actDefName, actDefVerKey, operation }) => {
+  setSelectedActivity: (currentActivity) => {
+   
     set((state) => {
-      const selectedActivity = { actDefName, activityDefKey, actDefVerKey, operation };
-      return { ...state.activityData,  selectedActivity: selectedActivity };
+      //const selectedActivity = { actDefName, activityDefKey, actDefVerKey, operation,status,version:`Ver.${version}` };
+      return { ...state.activityData,  selectedActivity: currentActivity };
     });
   },
   reset: () => {

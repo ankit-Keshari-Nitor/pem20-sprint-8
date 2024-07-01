@@ -1,22 +1,26 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef,useCallback } from 'react';
 import Designer from '@b2bi/flow-designer';
 import './activity-definition.css';
 import useActivityStore from '../../store';
-//import { getActivityDetails } from '../../services/activity-service';
-import { OPERATIONS } from '../../constants';
+import { getActivityDetails } from '../../services/activity-service';
+import { getActivityVersions } from '../../services/actvity-version-service';
+import { OPERATIONS, ROUTES } from '../../constants';
+import { Button, Column, Grid } from '@carbon/react';
+import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
 
 export default function ActivityDefinition() {
   const currentActivity = useActivityStore((state) => state.selectedActivity);
-  const activityStore = useActivityStore((state) => state.activityData);
-  //const activityReset = useActivityStore((state) => state.reset);
-
-  const editDefinitionProp = useActivityStore((state) => state.editDefinitionProps);
-  const editSchemaProp = useActivityStore((state) => state.editSchemaProps);
+  const activityReset = useActivityStore((state) => state.reset);
+  const setSelectedActivity = useActivityStore((state) => state.setSelectedActivity);
+  const updateActivityDetails = useActivityStore((state) => state.updateActivityDetails);
+  const updateActivitySchema = useActivityStore((state) => state.updateActivitySchema);
 
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
   const [activityDefinitionData, setActivityDefinitionData] = useState();
 
-  const readOnly = currentActivity.operation === OPERATIONS.VIEW ? true : false;
+  const [activityVersions, setActivityVersions] = useState([]);
+
+  const readOnly = currentActivity?.operation === OPERATIONS.VIEW ? true : false;
   const ref = useRef();
 
   useEffect(() => {
@@ -27,49 +31,72 @@ export default function ActivityDefinition() {
     }
   }, [activityDefinitionData]);
 
-  useEffect(() => {
-    setActivityDefinitionData(activityStore.definition);
-  }, [activityStore]);
 
-  const getActivityData = async () => {
-    const response = await getActivityDetails(currentActivity.activityDefKey);
-console.log(response);
-  }
+  const getActivityData = useCallback(() => async (activityDefKey) => {
+    const response = await getActivityDetails(activityDefKey);
+    if (response.success) {
+      setActivityDefinitionData(response.data);
+    }
+    const activityVersionsResponse = await getActivityVersions(activityDefKey);
+    if (activityVersionsResponse.success) {
+      setActivityVersions(activityVersionsResponse.data);
+    }
+  }, []);
 
   useEffect(() => {
     if (currentActivity && currentActivity.activityDefKey) {
-      getActivityData();
+      getActivityData(currentActivity.activityDefKey);
     }
     return (() => {
-      //clear the current activity from the store
-      console.log('clear the current activity from the store')
+      setSelectedActivity(null);
+      activityReset();
     })
-    // TODO if we get activityDefinitionVersion Key and activityDefinition Key then make api call to load data
-  }, [])
+  }, [currentActivity, getActivityData,activityReset,setSelectedActivity])
 
-  const handleActivityReset = () => {
-    //ref.current?.handleRest();
-    activityReset();
-  };
 
   const saveActivity = () => {
-    handleActivityReset()
+    //todo - make api call to save the activity
+    //prepare a file json data of activity and schema
+    //post api call to save data
+    activityReset();
   }
 
   return (
     <>
+      <Grid className="activity-actions" fullWidth>
+        <Column>
+          <CloneIcon />
+        </Column>
+        <Column>
+          <PlayIcon />
+        </Column>
+        <Column>
+          <DeleteIcon />
+        </Column>
+        <Column>
+          <CopyIcon />
+        </Column>
+        <Column>
+          <HistoryIcon />
+        </Column>
+        <Column>
+          <Button id="saveactivity" href={ROUTES.ACTIVITY_LIST} onClick={() => saveActivity()}>
+            Save Activity
+          </Button>
+        </Column>
+      </Grid>
       <Designer.WorkFlowDesigner
         ref={ref}
         showActivityDefineDrawer={showActivityDefineDrawer}
         setShowActivityDefineDrawer={setShowActivityDefineDrawer}
-        editDefinitionProp={editDefinitionProp}
-        editSchemaProp={editSchemaProp}
+        updateActivityDetails={updateActivityDetails}
+        updateActivitySchema={updateActivitySchema}
         activityDefinitionData={activityDefinitionData}
-        activityOperation={currentActivity.operation}
+        activityOperation={currentActivity?currentActivity.operation:'New'}
         readOnly={readOnly}
         onVersionSelection={(selectedVersion) => console.log(selectedVersion)}
-        versionData={[]}//todo -- this data will be based on version api response 
-        selectedVersion={"1"}//todo - pass current version id being loaded
+        versionData={activityVersions}//todo -- this data will be based on version api response 
+        selectedVersion={currentActivity? currentActivity.version:'Ver.1'}//todo - pass current version id being loaded
       />
     </>
   );

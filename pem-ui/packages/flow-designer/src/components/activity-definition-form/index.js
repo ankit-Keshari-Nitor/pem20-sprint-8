@@ -3,9 +3,11 @@ import { Column, Grid, Modal } from '@carbon/react';
 import ActivityTaskDefinition from '../activity-task-definition';
 import { CrossIcon, ExpandIcon } from './../../icons';
 import ActivityVersions from './activity-versions-dropdown';
+
 export default function ActivityDefinitionForm(props) {
   const { readOnly, versionData = [], setOpenPropertiesBlock, editDefinitionProp, activityOperation, activityDefinitionData } = props;
   const [openExpandMode, setOpenExpandMode] = useState(false);
+ 
   return (
     <div className="block-properties-container">
       <div className="title-bar">
@@ -15,9 +17,9 @@ export default function ActivityDefinitionForm(props) {
               <b>Define Activity</b>
             </Column>
             <Column lg={2} md={2} sm={1} className="activity-active">
-              Active
+           { versionData.length > 0 ? 'Active' : 'Draft'}
             </Column>
-           <ActivityVersions {...props} />
+           {versionData.length > 0 && <ActivityVersions {...props} />}
           </Grid>
         </span>
         <div className="icon">

@@ -39,8 +39,8 @@ const WorkFlowDesigner = forwardRef(({
   versionData,
   selectedVersion,
 
-  editDefinitionProp, 
-  editSchemaProp, 
+  updateActivityDetails, 
+  updateActivitySchema, 
   activityDefinitionData, 
   activityOperation, 
   readOnly
@@ -125,8 +125,8 @@ const WorkFlowDesigner = forwardRef(({
       setDialogEdges(dialogNodeData?.data?.dialogEdges);
     }
     //this is sending the new schema to web page  - activity-definition.js
-    editSchemaProp(storeData, activityOperation);
-  }, [setTaskNodes, setTaskEdges, setDialogEdges, storeData, selectedTaskNode, editSchemaProp, setDialogNodes]);
+    updateActivitySchema(storeData, activityOperation);
+  }, [setTaskNodes, setTaskEdges, setDialogEdges, storeData, selectedTaskNode, updateActivitySchema, setDialogNodes]);
 
   const onDialogNodeDrop = useCallback(
     (event) => {
@@ -338,7 +338,7 @@ const WorkFlowDesigner = forwardRef(({
                 setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
                 showActivityDefineDrawer={showActivityDefineDrawer}
                 setShowActivityDefineDrawer={setShowActivityDefineDrawer}
-                editDefinitionProp={editDefinitionProp}
+                updateActivityDetails={updateActivityDetails}
                 activityDefinitionData={activityDefinitionData}
                 activityOperation={activityOperation}
                 readOnly={readOnly}

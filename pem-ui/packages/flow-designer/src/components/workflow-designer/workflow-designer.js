@@ -48,7 +48,6 @@ const WorkFlowDesigner = forwardRef(({
   readOnly
   }, ref) => {
 
-    console.log('activityOperation',activityOperation);
     
   //-------------------------------- State Management -------------------------------------
   const storeData = useTaskStore((state) => state.tasks);

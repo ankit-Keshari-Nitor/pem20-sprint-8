@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef,useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Designer from '@b2bi/flow-designer';
 import './activity-definition.css';
 import useActivityStore from '../../store';
@@ -8,9 +8,8 @@ import { Button, Column, Grid } from '@carbon/react';
 import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
 
 export default function ActivityDefinition() {
- 
-  const store = useActivityStore();
-  const activityObj = useActivityStore((state)=> state.activityData);
+  //const store = useActivityStore();
+  const activityObj = useActivityStore((state) => state.activityData);
   const currentActivity = useActivityStore((state) => state.selectedActivity);
   const updateActivitySchema = useActivityStore((state) => state.updateActivitySchema);
   const updateActivityDetails = useActivityStore((state) => state.updateActivityDetails);
@@ -32,31 +31,34 @@ export default function ActivityDefinition() {
   }, [activityDefinitionData]);
 
 
-  const getActivityData = useCallback(() => async (activityDefKey) => {
-    const response = await getActivityDetails(activityDefKey);
-    if (response.success) {
-      setActivityDefinitionData(response.definition);
-      setActivityVersions(response.versions | []);
-      
-    }
-  }, []);
+  const getActivityData = (activityDefKey, versionKey) => {
+    getActivityDetails(activityDefKey, versionKey).then((response) => {
+      if (response.success) {
+        setActivityDefinitionData(response.definition);
+        setActivityVersions(response.versions | []);
+      } else {
+        console.log('error in api call');
+      }
+    });
+  }
+
 
   useEffect(() => {
     if (currentActivity && currentActivity.activityDefKey) {
-      getActivityData(currentActivity.activityDefKey);
+      getActivityData(currentActivity.activityDefKey, currentActivity.actDefVerKey);
     }
     return (() => {
-      store.reset();
+      //store.reset();
     })
-  }, [currentActivity, getActivityData,store])
+  }, [currentActivity, getActivityData])
 
 
   const saveActivity = () => {
-    console.log('activityObj',activityObj);
+    console.log('activityObj', activityObj);
     //todo - make api call to save the activity
     //prepare a file json data of activity and schema
     //post api call to save data
-   // activityReset();
+    // activityReset();
   }
 
   return (
@@ -79,8 +81,8 @@ export default function ActivityDefinition() {
         </Column>
         <Column>
           <Button id="saveactivity" onClick={() => saveActivity()}
-            disabled={activityObj.definition.name.trim().length===0}
-            >
+            disabled={activityObj.definition.name.trim().length === 0}
+          >
             Save Activity
           </Button>
         </Column>
@@ -94,12 +96,12 @@ export default function ActivityDefinition() {
         updateActivitySchema={updateActivitySchema}
 
         activityDefinitionData={activityDefinitionData}
-        activityOperation={currentActivity?currentActivity.operation:'New'}
-        
+        activityOperation={currentActivity ? currentActivity.operation : 'New'}
+
         readOnly={readOnly}
         onVersionSelection={(selectedVersion) => console.log(selectedVersion)}
         versionData={activityVersions}//todo -- this data will be based on version api response 
-        selectedVersion={currentActivity? currentActivity.version:'Ver.1'}//todo - pass current version id being loaded
+        selectedVersion={currentActivity ? currentActivity.version : 'Ver.1'}//todo - pass current version id being loaded
       />
     </>
   );

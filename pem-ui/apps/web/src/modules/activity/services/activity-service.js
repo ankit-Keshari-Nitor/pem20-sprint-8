@@ -86,15 +86,12 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
 };
 
 export const getActivityDetails = async (activityKey, activityVersoinKey) => {
-  const url = { url: `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityKey}` };
+  const url =  `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityKey}` ;
   const activitydata = await new RestApiService().call({ url }, null);
   if (activitydata.success) {
-
     const activityVersions = await new RestApiService.call({ url: `${url}versions?&pageNo=0&pageSize=100` }, null);
     const activityCurrentVersionDetails = await new RestApiService().call({ url: `${url}versions/${activityVersoinKey}` }, null);
     const activityCurrentVersionData = await new RestApiService().call({ url: `${url}versions/${activityVersoinKey}/data` }, null);
-
-
     return {
       success: true,
       definition: {
@@ -120,8 +117,6 @@ export const getActivityDetails = async (activityKey, activityVersoinKey) => {
       success: false, data: null
     }
   }
-
-
 };
 
 /* ----------------------------- Get the version data of activity -------------------------------------------- */

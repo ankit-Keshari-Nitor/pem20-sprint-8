@@ -23,6 +23,8 @@ import ActivityTestModal from '../../components/test-wizard/test-wizard.js';
 import ActivityVersionList from '../activity-version-list/activity-version-list.js';
 import ActivityVersionsSideDrawer from '../../components/activity-sidedrawer/activity-sidedrawer.js';
 
+import useDebounce from '../../hooks/useDebounce.js';
+
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
 
@@ -60,7 +62,7 @@ export default function ActivityList() {
   const [activityStatus, setActivityStatus] = useState('');
   const [showDrawer, setShowDrawer] = useState(false);
 
-  const [searchTimeout, setSearchTimeout] = useState(null);
+ const debouncedOnChange = useDebounce(searchKey, 3000);
 
   useEffect(() => {
     if (testDialogData) {
@@ -86,22 +88,13 @@ export default function ActivityList() {
           onCloseButtonClick: () => setNotificationProps(null)
         });
       });
-  }, [pageNo, pageSize, sortDir, searchKey, status]);
+  }, [pageNo, pageSize, sortDir, debouncedOnChange, status]);
 
   // useEffect to trigger fetchAndSetData whenever dependencies change
   useEffect(() => {
     fetchAndSetData();
   }, [fetchAndSetData]);
 
-  useEffect(() => {
-    if (searchTimeout) {
-      clearTimeout(searchTimeout);
-    }
-    const timeout = setTimeout(() => {
-      fetchAndSetData();
-    }, 3000);
-    setSearchTimeout(timeout);
-  }, [searchKey, fetchAndSetData, searchTimeout]);
 
   // Handler for sorting table columns
   const handleHeaderClick = (headerKey) => {

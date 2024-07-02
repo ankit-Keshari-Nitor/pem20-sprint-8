@@ -162,6 +162,10 @@
   height: 20% !important;
 }
 
+.dropZone.active.isLast {
+  height: 100% !important;
+}
+
 .column-zone {
   border: 1px solid #8d8d8d;
   margin: 0.5rem;

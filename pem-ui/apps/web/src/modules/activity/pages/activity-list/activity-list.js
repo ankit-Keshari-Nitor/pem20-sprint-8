@@ -23,8 +23,6 @@ import ActivityTestModal from '../../components/test-wizard/test-wizard.js';
 import ActivityVersionList from '../activity-version-list/activity-version-list.js';
 import ActivityVersionsSideDrawer from '../../components/activity-sidedrawer/activity-sidedrawer.js';
 
-import useDebounce from '../../hooks/useDebounce.js';
-
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
 
@@ -62,8 +60,6 @@ export default function ActivityList() {
   const [activityStatus, setActivityStatus] = useState('');
   const [showDrawer, setShowDrawer] = useState(false);
 
- const debouncedOnChange = useDebounce(searchKey, 3000);
-
   useEffect(() => {
     if (testDialogData) {
       let data = testDialogData[currentTestStep].schema.fields;
@@ -88,13 +84,12 @@ export default function ActivityList() {
           onCloseButtonClick: () => setNotificationProps(null)
         });
       });
-  }, [pageNo, pageSize, sortDir, debouncedOnChange, status, searchKey]);
+  }, [pageNo, pageSize, sortDir, status, searchKey]);
 
   // useEffect to trigger fetchAndSetData whenever dependencies change
   useEffect(() => {
     fetchAndSetData();
   }, [fetchAndSetData]);
-
 
   // Handler for sorting table columns
   const handleHeaderClick = (headerKey) => {
@@ -142,7 +137,7 @@ export default function ActivityList() {
         setShowGeneralActionModal(true);
         break;
       case ACTION_COLUMN_KEYS.ROLLOUT:
-        setShowRolloutModal(true);;//(id);
+        setShowRolloutModal(true); //(id);
         break;
       case ACTION_COLUMN_KEYS.TEST_ACTIVITY:
         handleTestOperation(activityDefKey);
@@ -198,24 +193,26 @@ export default function ActivityList() {
       onCloseButtonClick: () => setNotificationProps(null)
     });
     setShowGeneralActionModal(false);
-  }
+  };
 
   const handleEdit = (id) => {
     pageUtil.navigate(`${id}`, {});
-  }
+  };
 
   const handleView = (id) => {
     pageUtil.navigate(`${id}`, {});
-  }
+  };
 
   const handleVersion = (id, activityName, status) => {
     setActivityDefnKey(id);
     setActivityName(activityName);
-    setActivityStatus(status)
+    setActivityStatus(status);
     setShowDrawer(true);
   };
 
-  const handleClose = () => { setShowDrawer(false); };
+  const handleClose = () => {
+    setShowDrawer(false);
+  };
 
   // -------------------------------------Test operation Start-------------------------------------------------
   // Function to handle the Test operation
@@ -305,18 +302,8 @@ export default function ActivityList() {
       />
       {/* For Version Drawer */}
       {activityDefnKey !== '' && (
-        <ActivityVersionsSideDrawer
-          anchor="right"
-          showDrawer={showDrawer}
-          onClose={handleClose}
-        >
-          <ActivityVersionList
-            activityName={activityName}
-            onClose={handleClose}
-            activityDefnKey={activityDefnKey}
-            status={activityStatus}
-            showDrawer={showDrawer}
-          />
+        <ActivityVersionsSideDrawer anchor="right" showDrawer={showDrawer} onClose={handleClose}>
+          <ActivityVersionList activityName={activityName} onClose={handleClose} activityDefnKey={activityDefnKey} status={activityStatus} showDrawer={showDrawer} />
         </ActivityVersionsSideDrawer>
       )}
       {/* For Version Drawer */}
@@ -346,21 +333,21 @@ export default function ActivityList() {
           onSecondaryButtonClick={handelTestCloseClick}
           onRequestClose={() => setShowTestModal(false)}
         >
-          <ActivityTestModal
-            currentTestData={currentTestData}
-            formRenderSchema={formRenderSchema} />
-
-        </WrapperModal>)}
+          <ActivityTestModal currentTestData={currentTestData} formRenderSchema={formRenderSchema} />
+        </WrapperModal>
+      )}
       {/* Notification toast */}
       {notificationProps && notificationProps.open && <WrapperNotification {...notificationProps} />}
       {/* Modal for Rollout operation */}
-      {showRolloutModal && <ActivityRolloutModal
-        showModal={showRolloutModal}
-        setShowModal={() => setShowRolloutModal(false)}
-        activityDefKey={selectedActivity ? selectedActivity.activityDefnKey : ''}
-        activityVerKey={selectedActivity ? selectedActivity.activityDefnVersionKey : ''}
-        activityName={selectedActivity ? selectedActivity.name : ''}
-      />}
+      {showRolloutModal && (
+        <ActivityRolloutModal
+          showModal={showRolloutModal}
+          setShowModal={() => setShowRolloutModal(false)}
+          activityDefKey={selectedActivity ? selectedActivity.activityDefnKey : ''}
+          activityVerKey={selectedActivity ? selectedActivity.activityDefnVersionKey : ''}
+          activityName={selectedActivity ? selectedActivity.name : ''}
+        />
+      )}
     </>
   );
 }

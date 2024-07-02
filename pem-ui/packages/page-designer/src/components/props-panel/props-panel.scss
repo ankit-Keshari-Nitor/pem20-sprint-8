@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow-x: hidden;
   overflow-y: scroll;
 }
 
@@ -20,7 +21,6 @@
   max-width: 90% !important;
   display: inline-block;
 }
-
 
 .mapping-button {
   background-color: #e8e8e8;
@@ -89,10 +89,9 @@
   font-weight: 600;
 }
 
-.regex-types{
+.regex-types {
   margin-bottom: 16px;
 }
-
 
 .add-header {
   padding-right: 1rem;
@@ -102,4 +101,8 @@
 
 .delete-table-column {
   margin-top: 0.5rem;
+}
+
+.cds--tabs.cds--tabs--contained {
+  margin: 0px !important;
 }

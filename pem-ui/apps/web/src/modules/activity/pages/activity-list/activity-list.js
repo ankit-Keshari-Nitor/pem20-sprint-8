@@ -101,7 +101,7 @@ export default function ActivityList() {
       fetchAndSetData();
     }, 3000);
     setSearchTimeout(timeout);
-  }, [searchKey, fetchAndSetData]);
+  }, [searchKey, fetchAndSetData, searchTimeout]);
 
   // Handler for sorting table columns
   const handleHeaderClick = (headerKey) => {

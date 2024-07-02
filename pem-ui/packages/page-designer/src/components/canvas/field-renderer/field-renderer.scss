@@ -2,7 +2,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding: 0.5rem;
   box-shadow: 0px 0px 5px -2px;
 }
 
@@ -37,11 +37,12 @@
 }
 
 .canvas-form-fields {
-  width: 70%;
+  width: 85%;
 }
 
 .custom-field-grid {
   --cds-grid-gutter-start: none;
   padding-inline: unset;
   align-items: center;
+  margin: 0px;
 }

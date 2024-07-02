@@ -33,7 +33,7 @@ const Checkbox = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
 
 export default Checkbox;
 
-// Config of Accordion for Left Palette & Right Palette
+// Config of Checkbox for Left Palette & Right Palette
 Checkbox.config = {
   type,
   label: FORM_FIELD_LABEL.CHECKBOX,

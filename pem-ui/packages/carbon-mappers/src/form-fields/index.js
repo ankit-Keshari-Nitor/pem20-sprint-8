@@ -14,6 +14,7 @@ import RadioButtonGroup from './radio-group';
 import Tooltip from './tooltip';
 import Password from './password';
 import NumberInput from './number';
+import DataTable from './data-table';
 
 export const formFields = [
   Group,
@@ -26,10 +27,11 @@ export const formFields = [
   CheckboxGroup,
   RadioButtonGroup,
   Toggle,
-  DatePicker,
-  FileUploader,
   Link,
   Tooltip,
+  DataTable,
+  DatePicker,
+  FileUploader,
   Accordion,
   Tab
 ];

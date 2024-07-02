@@ -26,9 +26,7 @@ body {
 .cds--search-magnifier {
   justify-content: flex-end;
   display: flex;
-  /* width: 100%; */
   border: none;
-  /* Ensure the container stretches full width */
 }
 
 .cds--search-close {
@@ -43,7 +41,7 @@ body {
 }
 
 tbody tr:nth-child {
-  background-color: #f4f4f4 !important; // Light grey for odd rows
+  background-color: #F1F1F1 !important; // Light grey for odd rows
 }
 
 .cds--overflow-menu-options__btn {
@@ -63,18 +61,20 @@ tbody tr:nth-child {
 }
 
 
-.header-buttons {
+.header-button-left {
   position: relative !important;
   display: flex !important;
   flex-direction: row !important;
   justify-content: flex-end !important;
   background-color: #ffffff;
   width: 45% !important;
-  left: 55% !important;
+  left: 40% !important;
 }
 
-.headers {
+.headers,
+.headers-drawer {
   background: #ffffff !important;
+  padding-top: 0.5rem !important;
 }
 
 .filter-dropdown,
@@ -108,4 +108,116 @@ tbody tr:nth-child {
 
 .cds--btn__icon {
   inset-block-start: 14px !important
+}
+
+.action-item {
+  padding-right: 1rem !important;
+  width: 55%;
+}
+
+.action-item-drawer {
+  padding-right: 1rem !important;
+}
+
+.action-item-delete {
+  border-color: #525252 !important;
+  color: #525252 !important
+}
+
+.action-item-delete:focus,
+.action-item-delete:hover {
+  background-color: #525252 !important;
+  color: #ffffff !important
+}
+
+.overflow-option-delete {
+  background: #D1D1D1 !important;
+}
+
+.information-icon {
+  padding-top: 3px !important;
+}
+
+.checkmark-filled-encrypted {
+  color: #0F62FE !important;
+}
+
+.information-wrapper {
+  display: flex !important;
+}
+
+.encrypted-wrapper-text,
+.information-text {
+  padding-inline-start: 0.25rem !important;
+}
+
+.recently-view-text {
+  padding-inline-end: 0.5rem !important;
+}
+
+.encrypted-wrapper,
+.recently-view-wrapper {
+  display: inline-flex !important;
+}
+
+.recently-view-wrapper,
+.header-button-left-drawer {
+  cursor: pointer !important;
+}
+
+.close-filled-encrypted {
+  color: red !important
+}
+
+.cds--overflow-menu-options__btn:focus {
+  outline: none !important
+}
+
+.overflow-menu-icon {
+  margin-left: 70px !important;
+}
+
+.header-button-right {
+  display: flex !important;
+  background-color: #ffffff;
+  width: 15% !important;
+  justify-content: flex-start !important;
+  float: left !important;
+  color: #525252 !important;
+  font-weight: 500 !important;
+  font-size: 18px !important;
+  padding-top: 1rem !important;
+  padding-left: 0.75rem !important;
+}
+
+.header-button-right-drawer {
+  display: contents;
+  background-color: #ffffff;
+  justify-content: flex-start !important;
+  float: left !important;
+  color: #525252 !important;
+  font-weight: 500 !important;
+  font-size: 18px !important;
+  padding-top: 1rem !important;
+  padding-left: 0.75rem !important;
+}
+
+.header-button-left-drawer {
+  position: fixed !important;
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  background-color: #ffffff;
+  float: right;
+  right: 0%;
+  /* left: 18%; */
+}
+
+.headers-drawer {
+  padding-left: 0.75rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.cds--popover--bottom:not(.cds--popover--auto-align)>.cds--popover>.cds--popover-content {
+  transform: translate(-12%, calc(100% + var(--cds-popover-offset, 0rem))) !important;
 }

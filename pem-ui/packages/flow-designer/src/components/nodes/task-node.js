@@ -5,7 +5,7 @@ import { OverflowMenuVertical } from '@carbon/icons-react';
 import { Popover, PopoverContent } from '@carbon/react';
 
 export default function TaskNode(nodeConfig) {
-  const { borderColor, contextMenu, editableProps, taskName, onDoubleClick, type } = nodeConfig?.data;
+  const { borderColor, contextMenu, editableProps, taskName, type } = nodeConfig?.data;
   const [openContextMenu, setOpenContextMenu] = useState(false);
 
   return (
@@ -13,11 +13,10 @@ export default function TaskNode(nodeConfig) {
       onClick={() => {
         setOpenContextMenu(!openContextMenu);
       }}
-      onDoubleClick={() => onDoubleClick(type)}
       className="task-node-container"
-      style={{ borderColor: borderColor, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+      style={{ borderColor: borderColor }}
     >
-      <Handle id="left" type="target" position={Position.Left} style={{ background: '#ed3e32', width: '10px', height: '10px' }} isConnectable={nodeConfig?.isConnectable} />
+      <Handle id="left" type="target" position={Position.Left} isConnectable={nodeConfig?.isConnectable} />
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <label style={{ color: borderColor }}>{editableProps?.name}</label>
         <label>{taskName}</label>
@@ -43,7 +42,7 @@ export default function TaskNode(nodeConfig) {
           </PopoverContent>
         </Popover>
       </div>
-      <Handle id="right" type="source" position={Position.Right} style={{ background: '#61e897', width: '10px', height: '10px' }} isConnectable={nodeConfig?.isConnectable} />
+      <Handle id="right" type="source" position={Position.Right} isConnectable={nodeConfig?.isConnectable} />
     </div>
   );
 }

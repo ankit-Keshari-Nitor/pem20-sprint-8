@@ -3,17 +3,29 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .right-palette-container .tab-panel {
-  padding: 8px;
+  padding: 8px !important;
 }
 
 .right-palette-form-item {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.right-palette-form-item-mapping {
+  margin-bottom: 16px;
+  max-width: 90% !important;
+  display: inline-block;
+}
+
+
+.mapping-button {
+  background-color: #e8e8e8;
+  padding-inline-end: unset;
+  border-color: #0f62fe;
 }
 
 .component-types {
@@ -26,4 +38,68 @@
 
 .option-input {
   padding-bottom: 0.25rem;
+}
+
+.options-row-input {
+  display: flex !important;
+}
+
+.opt-btn {
+  background-color: #e8e8e8;
+  padding-inline-end: unset;
+  border-color: #0f62fe;
+  margin-top: 1.5rem;
+}
+
+.opt-btn > svg {
+  margin-right: 1rem;
+}
+
+.right-palette-form-item-mapping {
+  margin-bottom: 8px;
+  max-width: 90% !important;
+  display: inline-block;
+}
+
+.mapping-button {
+  background-color: #e8e8e8;
+  padding-inline-end: unset;
+  border-color: #0f62fe;
+}
+
+.mapping-button > svg {
+  margin-right: 1rem;
+}
+
+.mapping-text-field {
+  margin-bottom: 16px;
+  max-width: 70% !important;
+  min-width: 70% !important;
+  display: inline-block;
+}
+
+.component-type-id {
+  display: grid;
+  margin-bottom: 16px;
+}
+
+.component-type-id-label {
+  margin-bottom: 0.25rem;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.regex-types{
+  margin-bottom: 16px;
+}
+
+
+.add-header {
+  padding-right: 1rem;
+  margin-left: 2.9rem;
+  margin-bottom: 1rem;
+}
+
+.delete-table-column {
+  margin-top: 0.5rem;
 }

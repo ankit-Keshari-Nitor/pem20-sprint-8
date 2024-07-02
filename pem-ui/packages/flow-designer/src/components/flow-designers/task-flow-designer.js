@@ -8,7 +8,8 @@ import './style.scss';
 
 import BlocksTray from '../blocks-tray';
 import { CATEGORY_TYPES } from '../../constants';
-import BlockPropertiesTray from '../block-properties-tray/block-properties-tray';
+import BlockPropertiesTray from '../block-properties-tray';
+import ActivityDefinitionForm from '../activity-definition-form';
 
 const TaskFlowDesigner = ({
   connectionLineStyle,
@@ -24,6 +25,7 @@ const TaskFlowDesigner = ({
   onTaskNodeDrop,
   onTaskNodeDragOver,
   onTaskNodeClick,
+  onTaskNodeDoubleClick,
   TASK_NODE_TYPES,
   TASK_EDGE_TYPES,
   openTaskPropertiesBlock,
@@ -31,6 +33,13 @@ const TaskFlowDesigner = ({
   setOpenTaskPropertiesBlock,
   editDefinitionProp,
   activityDefinitionData,
+  activityOperation,
+  readOnly,
+  showActivityDefineDrawer,
+  setShowActivityDefineDrawer,
+  onVersionSelection,
+  versionData,
+  selectedVersion
 }) => {
   return (
     <div className="dnd-flow">
@@ -39,7 +48,7 @@ const TaskFlowDesigner = ({
           <div className="dnd-flow">
             {/* Tasks Block */}
             <div className="task-tray-container">
-              <BlocksTray category={CATEGORY_TYPES.TASK} />
+              <BlocksTray category={CATEGORY_TYPES.TASK} readOnly={readOnly} />
             </div>
             {/* Flow Designer Block  */}
             <ReactFlowProvider>
@@ -54,13 +63,14 @@ const TaskFlowDesigner = ({
                   onDrop={onTaskNodeDrop}
                   onDragOver={onTaskNodeDragOver}
                   onNodeClick={onTaskNodeClick}
+                  onNodeDoubleClick={onTaskNodeDoubleClick}
                   nodeTypes={TASK_NODE_TYPES}
                   edgeTypes={TASK_EDGE_TYPES}
                   connectionLineStyle={connectionLineStyle}
                   defaultViewport={defaultViewport}
                   snapGrid={snapGrid}
                 >
-                  <Background color="#ccc" variant="dots" />
+                  <Background color="#ffffff" variant="dots" />
                   <Controls position="bottom-right" />
                 </ReactFlow>
               </div>
@@ -70,10 +80,39 @@ const TaskFlowDesigner = ({
         {openTaskPropertiesBlock && (
           <>
             <PanelResizeHandle />
-            <Panel defaultSize={40} minSize={20} maxSize={70}>
+            <Panel defaultSize={34} minSize={34} maxSize={80}>
               <div className="dnd-flow">
-                <div className="task-activity-container">
-                  <BlockPropertiesTray selectedNode={selectedTaskNode} setOpenPropertiesBlock={setOpenTaskPropertiesBlock} editDefinitionProp={editDefinitionProp} activityDefinitionData={  activityDefinitionData}/>
+                <div className="task-properties-container">
+                  <BlockPropertiesTray
+                    selectedNode={selectedTaskNode}
+                    setOpenPropertiesBlock={setOpenTaskPropertiesBlock}
+                    editDefinitionProp={editDefinitionProp}
+                    activityDefinitionData={activityDefinitionData}
+                    activityOperation={activityOperation}
+                    readOnly={readOnly}
+                  />
+                </div>
+              </div>
+            </Panel>
+          </>
+        )}
+        {showActivityDefineDrawer && (
+          <>
+            <PanelResizeHandle />
+            <Panel defaultSize={34} minSize={34} maxSize={80}>
+              <div className="dnd-flow">
+                <div className="task-properties-container">
+                  <ActivityDefinitionForm
+                    //selectedNode={selectedTaskNode}
+                    setOpenPropertiesBlock={setShowActivityDefineDrawer}
+                    onVersionSelection={onVersionSelection}
+                    editDefinitionProp={editDefinitionProp}
+                    activityOperation={activityOperation}
+                    activityDefinitionData={activityDefinitionData}
+                    readOnly={readOnly}
+                    versionData={versionData}
+                    selectedVersion={selectedVersion}
+                  />
                 </div>
               </div>
             </Panel>

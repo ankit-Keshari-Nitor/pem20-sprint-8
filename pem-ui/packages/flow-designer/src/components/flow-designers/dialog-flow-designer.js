@@ -8,7 +8,7 @@ import './style.scss';
 
 import BlocksTray from '../blocks-tray';
 import { CATEGORY_TYPES } from '../../constants';
-import BlockPropertiesTray from '../block-properties-tray/block-properties-tray';
+import BlockPropertiesTray from '../block-properties-tray';
 
 const DialogFlowDesigner = ({
   connectionLineStyle,
@@ -24,12 +24,14 @@ const DialogFlowDesigner = ({
   onDialogNodeDrop,
   onDialogNodeDragOver,
   onDialogNodeClick,
+  onDialogNodeDoubleClick,
   DIALOG_NODE_TYPES,
   DIALOG_EDGE_TYPES,
   openDialogPropertiesBlock,
   selectedTaskNode,
   selectedDialogNode,
-  setOpenDialogPropertiesBlock
+  setOpenDialogPropertiesBlock,
+  readOnly
 }) => {
   return (
     <div className="dnd-flow">
@@ -38,7 +40,7 @@ const DialogFlowDesigner = ({
           <div className="dnd-flow">
             {/* Tasks Block */}
             <div className="task-tray-container">
-              <BlocksTray category={CATEGORY_TYPES.DIALOG} />
+              <BlocksTray category={CATEGORY_TYPES.DIALOG} readOnly={readOnly} />
             </div>
             {/* Flow Designer Block  */}
             <ReactFlowProvider>
@@ -52,6 +54,7 @@ const DialogFlowDesigner = ({
                   onDrop={onDialogNodeDrop}
                   onDragOver={onDialogNodeDragOver}
                   onNodeClick={onDialogNodeClick}
+                  onNodeDoubleClick={onDialogNodeDoubleClick}
                   nodeTypes={DIALOG_NODE_TYPES}
                   edgeTypes={DIALOG_EDGE_TYPES}
                   onInit={setDialogFlowInstance}
@@ -69,10 +72,10 @@ const DialogFlowDesigner = ({
         {openDialogPropertiesBlock && (
           <>
             <PanelResizeHandle />
-            <Panel defaultSize={40} minSize={20} maxSize={70}>
+            <Panel defaultSize={34} minSize={34} maxSize={80}>
               <div className="dnd-flow">
-                <div className="task-activity-container">
-                  <BlockPropertiesTray selectedNode={selectedDialogNode} setOpenPropertiesBlock={setOpenDialogPropertiesBlock} selectedTaskNode={selectedTaskNode} />
+                <div className="task-properties-container">
+                  <BlockPropertiesTray selectedNode={selectedDialogNode} setOpenPropertiesBlock={setOpenDialogPropertiesBlock} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />
                 </div>
               </div>
             </Panel>

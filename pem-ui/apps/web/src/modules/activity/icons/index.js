@@ -70,3 +70,19 @@ export const CloneIcon = () => {
     </svg>
   );
 };
+
+export const RightArrow = () => {
+  return (
+    <svg width="6" height="11" viewBox="0 0 6 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6.00078 5.5L1.00078 10.5L0.300781 9.8L4.60078 5.5L0.300781 1.2L1.00078 0.5L6.00078 5.5Z" fill="#161616" />
+    </svg>
+  );
+};
+
+export const CrossIcon = () => {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15.625 4.375L4.375 15.625M15.625 15.625L4.375 4.375" stroke="#393939" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  );
+};

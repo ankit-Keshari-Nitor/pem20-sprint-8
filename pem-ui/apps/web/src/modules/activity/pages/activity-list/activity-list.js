@@ -88,7 +88,7 @@ export default function ActivityList() {
           onCloseButtonClick: () => setNotificationProps(null)
         });
       });
-  }, [pageNo, pageSize, sortDir, debouncedOnChange, status]);
+  }, [pageNo, pageSize, sortDir, debouncedOnChange, status, searchKey]);
 
   // useEffect to trigger fetchAndSetData whenever dependencies change
   useEffect(() => {

@@ -59,34 +59,37 @@ const ActivityDataTableComponent = ({
   };
 
   // Generate the ellipsis menu for each row
-  const renderEllipsisMenu = (id) => (
-    <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
-      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.VIEW} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.VIEW, id)} />
-      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EDIT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EDIT, id)} />
-      {!showDrawer ? (
-        <>
-          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_ACTIVITY, id)} />
-          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_ACTIVITY, id)} />
-          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_ACTIVITY, id)} />
-        </>
-      ) : (
-        <>
-          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_VERSION} />
-          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} />
-          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_VERSION} />
-          <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_VERSION} />
-        </>
-      )}
-
-      <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.SHARE_UNSHARE} />
-      <OverflowMenuItem hasDivider itemText={
-        <>
-          <span>{ACTION_COLUMN_KEYS.DELETE} </span>
-          <Delete className='overflow-menu-icon' />
-        </>
-      } className='overflow-option-delete' onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.DELETE, id)} />
-    </OverflowMenu>
-  );
+  const renderEllipsisMenu = (id, status = "") => {
+    return (
+      <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
+        <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.VIEW} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.VIEW, id)} />
+        <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EDIT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EDIT, id)} />
+        {!showDrawer ? (
+          <>
+            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_ACTIVITY, id)} />
+            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_ACTIVITY, id)} />
+            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_ACTIVITY, id)} />
+          </>
+        ) : (
+          <>
+            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_VERSION, id)} />
+            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_DEFAULT, id)} />
+            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_VERSION, id)} />
+            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_VERSION, id)} />
+          </>
+        )}
+        <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.SHARE_UNSHARE} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.SHARE_UNSHARE, id)} />
+        {status !== 'DELETE' && (
+          <OverflowMenuItem hasDivider itemText={
+            <>
+              <span>{ACTION_COLUMN_KEYS.DELETE} </span>
+              <Delete className='overflow-menu-icon' />
+            </>
+          } className='overflow-option-delete' onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.DELETE, id)} />
+        )}
+      </OverflowMenu>
+    );
+  }
 
   // Render information icon and text
   const renderInformation = (value, description = "") => (
@@ -180,7 +183,7 @@ const ActivityDataTableComponent = ({
                         {row.cells.map((cell) => (
                           <TableCell key={cell.id}>
                             {cell.info.header === 'action' ? renderActionItem(statusCell.value, row.id, versionKeyCell.value) :
-                              cell.info.header === 'ellipsis' ? renderEllipsisMenu(row.id) :
+                              cell.info.header === 'ellipsis' ? renderEllipsisMenu(row.id, statusCell.value) :
                                 cell.info.header === 'status' ? renderTag(cell.value.toLowerCase()) :
                                   cell.info.header === 'name' ? renderInformation(cell.value, description?.value) :
                                     cell.info.header === 'version' ? renderRecentlyViewed(cell.value, row.id, activityName?.value, statusCell?.value, description?.value) :

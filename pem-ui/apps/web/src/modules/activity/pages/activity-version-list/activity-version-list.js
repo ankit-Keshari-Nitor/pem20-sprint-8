@@ -54,7 +54,7 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
                     {/* Header Title */}
                     {activityName} (Version History)
                 </div>
-                <div className="header-button-left-drawer" onClick={onClose}>
+                <div className="header-button-left-drawer" aria-label="close" onClick={onClose}>
                     <CrossIcon labelText="close" placeholder="Close Side Drawer" />
                 </div>
             </div>

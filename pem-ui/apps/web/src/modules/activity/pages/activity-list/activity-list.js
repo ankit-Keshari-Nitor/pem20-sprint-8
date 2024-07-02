@@ -37,7 +37,6 @@ export default function ActivityList() {
   const [rows, setRows] = useState([]);
   const [status, setStatus] = useState('');
 
-
   const [showRolloutModal, setShowRolloutModal] = useState(false);
   const [showTestModal, setShowTestModal] = useState(false);
 
@@ -61,6 +60,8 @@ export default function ActivityList() {
   const [activityStatus, setActivityStatus] = useState('');
   const [showDrawer, setShowDrawer] = useState(false);
 
+  const [searchTimeout, setSearchTimeout] = useState(null);
+
   useEffect(() => {
     if (testDialogData) {
       let data = testDialogData[currentTestStep].schema.fields;
@@ -72,14 +73,7 @@ export default function ActivityList() {
   const fetchAndSetData = useCallback(() => {
     ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status)
       .then((data) => {
-        const updatedRows = data.content.map(row => ({
-          ...row,
-          activityDefnVersionKey: row.defaultVersion.activityDefnVersionKey,
-          version: row.defaultVersion.version,
-          isEncrypted: row.defaultVersion.isEncrypted,
-          status: row.defaultVersion.status,
-        }));
-        setRows(updatedRows);
+        setRows(data.content);
         setTotalRows(data.pageContent.totalElements);
       })
       .catch((error) => {
@@ -98,6 +92,16 @@ export default function ActivityList() {
   useEffect(() => {
     fetchAndSetData();
   }, [fetchAndSetData]);
+
+  useEffect(() => {
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+    const timeout = setTimeout(() => {
+      fetchAndSetData();
+    }, 3000);
+    setSearchTimeout(timeout);
+  }, [searchKey, fetchAndSetData]);
 
   // Handler for sorting table columns
   const handleHeaderClick = (headerKey) => {
@@ -119,7 +123,6 @@ export default function ActivityList() {
     setPageNo(page);
     setPageSize(pageSize);
   };
-
 
   // Handler for action clicks
   const onCellActionClick = (action, activityDefKey, actVersionKey = '') => {

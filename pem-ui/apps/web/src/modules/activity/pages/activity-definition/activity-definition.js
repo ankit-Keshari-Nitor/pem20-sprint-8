@@ -30,25 +30,26 @@ export default function ActivityDefinition() {
     }
   }, [activityDefinitionData]);
 
-  const getActivityData = (activityDefKey, versionKey) => {
-    getActivityDetails(activityDefKey, versionKey).then((response) => {
-      if (response.success) {
-        setActivityDefinitionData(response.definition);
-        setActivityVersions(response.versions | []);
-      } else {
-        console.log('error in api call');
-      }
-    });
-  };
+ 
 
   useEffect(() => {
+    const getActivityData = (activityDefKey, versionKey) => {
+      getActivityDetails(activityDefKey, versionKey).then((response) => {
+        if (response.success) {
+          setActivityDefinitionData(response.definition);
+          setActivityVersions(response.versions | []);
+        } else {
+          console.log('error in api call');
+        }
+      });
+    };
     if (currentActivity && currentActivity.activityDefKey) {
       getActivityData(currentActivity.activityDefKey, currentActivity.actDefVerKey);
     }
     return () => {
       //store.reset();
     };
-  }, [currentActivity, getActivityData]);
+  }, [currentActivity]);
 
   const saveActivity = async () => {
     console.log('activityObj', activityObj);

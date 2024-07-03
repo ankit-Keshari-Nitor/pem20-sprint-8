@@ -3,10 +3,9 @@ package com.precisely.pem.dtos.responses;
 import lombok.Data;
 
 @Data
-public class ActivityDefnVersionListResp {
+public class ActivityVersionResp {
     public String activityDefnVersionKey;
     public Boolean isEncrypted;
-    public Boolean isDefault;
     public long version;
     public String status;
 }

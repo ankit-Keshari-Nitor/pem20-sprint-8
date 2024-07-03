@@ -5,8 +5,7 @@ import { RestApiService } from '../../../common/api-handler/rest-api-service';
 
 export const getActivityVersions = async (activityDefnKey) => {
     const config = {
-        url: `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}/versions?&pageNo=0&pageSize=100`,
-        method: 'GET'
+        url: `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}/versions?&pageNo=0&pageSize=100`
     }
     const response = await new RestApiService().call(config, null);
     return { success: response.success, data: response.status ? response.data.content : [] };

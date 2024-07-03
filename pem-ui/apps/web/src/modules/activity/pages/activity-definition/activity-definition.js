@@ -53,8 +53,19 @@ export default function ActivityDefinition() {
   }, [currentActivity, getActivityData])
 
 
-  const saveActivity = () => {
+  const saveActivity = async () => {
     console.log('activityObj', activityObj);
+    const newObj = {
+      name:activityObj.definition.name,
+      description:activityObj.definition.description,
+      schemaVersion: currentActivity ? currentActivity.version : 1,
+      process:{
+        nodes:activityObj.schema.nodes,
+        connectors:activityObj.schema.edges
+      }
+    }
+   
+
     //todo - make api call to save the activity
     //prepare a file json data of activity and schema
     //post api call to save data

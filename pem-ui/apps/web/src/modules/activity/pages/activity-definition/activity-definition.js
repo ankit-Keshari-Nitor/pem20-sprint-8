@@ -2,21 +2,25 @@ import React, { useState, useEffect, useRef } from 'react';
 import Designer from '@b2bi/flow-designer';
 import './activity-definition.css';
 import useActivityStore from '../../store';
-import { getActivityDetails } from '../../services/activity-service';
+import { getActivityDetails, saveActivityData } from '../../services/activity-service';
 import { OPERATIONS } from '../../constants';
 import { Button, Column, Grid } from '@carbon/react';
 import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
+//import { saveAs } from 'file-saver';
+import Notification from '../../helpers/wrapper-notification-toast';
+import Shell from '@b2bi/shell';
 
 export default function ActivityDefinition() {
-  //const store = useActivityStore();
+  const store = useActivityStore();
+  const pageUtil = Shell.PageUtil();
   const activityObj = useActivityStore((state) => state.activityData);
   const currentActivity = useActivityStore((state) => state.selectedActivity);
   const updateActivitySchema = useActivityStore((state) => state.updateActivitySchema);
   const updateActivityDetails = useActivityStore((state) => state.updateActivityDetails);
-
+  const [notificationProps, setNotificationProps] = useState(null);
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
 
-  const [activityDefinitionData, setActivityDefinitionData] = useState();
+  const [activityDefinitionData, setActivityDefinitionData] = useState(store.activityData);
   const [activityVersions, setActivityVersions] = useState([]);
 
   const readOnly = currentActivity?.operation === OPERATIONS.VIEW ? true : false;
@@ -29,8 +33,6 @@ export default function ActivityDefinition() {
       setShowActivityDefineDrawer(false);
     }
   }, [activityDefinitionData]);
-
- 
 
   useEffect(() => {
     const getActivityData = (activityDefKey, versionKey) => {
@@ -51,43 +53,80 @@ export default function ActivityDefinition() {
     };
   }, [currentActivity]);
 
+  useEffect(() => {
+    setActivityDefinitionData(store.activityData);
+  }, [store.activityData]);
+
   const saveActivity = async () => {
-    console.log('activityObj', activityObj);
+    const nodes = activityObj.schema.nodes.map((x, index) => {
+      return {
+        id: x.id ? x.id : `${x.type}-${index}`,
+        name: x.data.label,
+        type: x.type,
+        diagram: {
+          x: x.position.x,
+          y: x.position.y
+        }
+      };
+    });
+    const edges = activityObj.schema.edges.map((x) => {
+      return {
+        id: x.id, //`${x.type}-${index}`,
+        source: x.source,
+        target: x.target,
+        condition: null,
+        diagram: []
+      };
+    });
+
     const newObj = {
       name: activityObj.definition.name,
       description: activityObj.definition.description,
-      schemaVersion: currentActivity ? currentActivity.version : 1,
+      schemaVersion: 1.0,
       process: {
-        nodes: activityObj.schema.nodes,
-        connectors: activityObj.schema.edges
+        nodes: nodes,
+        connectors: edges
       }
     };
-    const file = new Blob([newObj], { type: 'text/json' });
-    console.log(file);
-    //todo - make api call to save the activity
-    //prepare a file json data of activity and schema
-    //post api call to save data
-    // activityReset();
+
+    const saveResponse = await saveActivityData(newObj);
+    setNotificationProps({
+      open: saveResponse.success,
+      title: saveResponse.success ? 'Success - ' : 'Error - ',
+      subtitle: saveResponse.success ? 'Actvity Created successfully!' : `Actvity creation failed`,
+      kind: saveResponse.success ? 'success' : 'error',
+      onCloseButtonClick: () => setNotificationProps(null)
+    });
+    if (saveResponse.success) {
+      store.reset();
+      setTimeout(() => {
+        pageUtil.navigate('/activities', {});
+      }, 2000);
+    }
   };
 
   return (
     <>
       <Grid className="activity-actions" fullWidth>
-        <Column>
-          <CloneIcon />
-        </Column>
-        <Column>
-          <PlayIcon />
-        </Column>
-        <Column>
-          <DeleteIcon />
-        </Column>
-        <Column>
-          <CopyIcon />
-        </Column>
-        <Column>
-          <HistoryIcon />
-        </Column>
+        {currentActivity && currentActivity.activityDefKey !== '' && (
+          <>
+            <Column>
+              <CloneIcon />
+            </Column>
+            <Column>
+              <PlayIcon />
+            </Column>
+            <Column>
+              <DeleteIcon />
+            </Column>
+            <Column>
+              <CopyIcon />
+            </Column>
+            <Column>
+              <HistoryIcon />
+            </Column>
+          </>
+        )}
         <Column>
           <Button id="saveactivity" onClick={() => saveActivity()} disabled={activityObj.definition.name.trim().length === 0}>
             Save Activity
@@ -107,6 +146,7 @@ export default function ActivityDefinition() {
         versionData={activityVersions} //todo -- this data will be based on version api response
         selectedVersion={currentActivity ? currentActivity.version : 'Ver.1'} //todo - pass current version id being loaded
       />
+      {notificationProps && notificationProps.open && <Notification {...notificationProps} />}
     </>
   );
 }

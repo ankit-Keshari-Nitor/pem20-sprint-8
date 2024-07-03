@@ -1,9 +1,9 @@
 import { API_END_POINTS } from './../constants';
 import { RestApiService } from '../../../common/api-handler/rest-api-service';
 
-export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchKey = '', status = '') => {
+export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchKey = '', status = '', sortBy = 'modifyts') => {
   try {
-    let url = `${API_END_POINTS.ACTIVITY_DEFINITION}?application=PEM&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}`;
+    let url = `${API_END_POINTS.ACTIVITY_DEFINITION}?application=PEM&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}`;
 
     if (searchKey !== '') {
       url += `&name=con:${searchKey}`;
@@ -124,6 +124,21 @@ export const getActivityDetails = async (activityKey, activityVersoinKey) => {
       data: null
     };
   }
+};
+
+export const saveActivityData = async (activityData) => {
+  const url = `${API_END_POINTS.ACTIVITY_DEFINITION}`;
+  const file = new Blob([JSON.stringify(activityData)], { type: 'text/json' });
+  const config = {
+    url,
+    data: {
+      name: activityData.name,
+      description: activityData.description,
+      application: 'PEM',
+      file: file
+    }
+  };
+  return await new RestApiService().callWithFile(config, null);
 };
 
 /* ----------------------------- Get the version data of activity -------------------------------------------- */

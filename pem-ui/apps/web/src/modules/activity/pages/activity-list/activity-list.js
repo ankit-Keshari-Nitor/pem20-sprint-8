@@ -31,7 +31,8 @@ export default function ActivityList() {
 
   const [totalRows, setTotalRows] = useState(0);
   const [searchKey, setSearchKey] = useState('');
-  const [sortDir, setSortDir] = useState('ASC'); // Sorting direction state
+  const [sortDir, setSortDir] = useState('DESC'); // Sorting direction state
+  const [sortBy, setSortBy] = useState('modifyTs'); // Sorting direction state
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [rows, setRows] = useState([]);
@@ -69,7 +70,7 @@ export default function ActivityList() {
 
   // Function to fetch and set data from the API
   const fetchAndSetData = useCallback(() => {
-    ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status)
+    ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status, sortBy)
       .then((data) => {
         setRows(data.content);
         setTotalRows(data.pageContent.totalElements);
@@ -84,7 +85,7 @@ export default function ActivityList() {
           onCloseButtonClick: () => setNotificationProps(null)
         });
       });
-  }, [pageNo, pageSize, sortDir, status, searchKey]);
+  }, [pageNo, pageSize, sortDir, status, searchKey, sortBy]);
 
   // useEffect to trigger fetchAndSetData whenever dependencies change
   useEffect(() => {
@@ -93,7 +94,8 @@ export default function ActivityList() {
 
   // Handler for sorting table columns
   const handleHeaderClick = (headerKey) => {
-    if (headerKey !== 'ellipsis' && headerKey !== 'action') {
+    if (headerKey === 'name') {
+      setSortBy('activityName');
       setSortDir((prevSortDir) => (prevSortDir === 'ASC' ? 'DESC' : 'ASC'));
     }
   };

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 const Activity_Initial_State = {
   definition: {
-    name: '',
+    name: 'New Activity',
     description: '',
     definationKey: ''
   },

@@ -59,8 +59,8 @@ const WorkFlowDesigner = forwardRef(
     // --------------------------------- Task Flow States -----------------------------------
     const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState();
     const taskFlowWrapper = useRef(null);
-    const [taskNodes, setTaskNodes, onTaskNodesChange] = useNodesState(storeData.taskNodes);
-    const [taskEdges, setTaskEdges, onTaskEdgesChange] = useEdgesState([]);
+    const [nodes, setTaskNodes, onTaskNodesChange] = useNodesState(storeData.nodes);
+    const [edges, setTaskEdges, onTaskEdgesChange] = useEdgesState([]);
     const [taskFlowInstance, setTaskFlowInstance] = useState(null);
     const [selectedTaskNode, setSelectedTaskNode] = useState(null);
 
@@ -111,16 +111,16 @@ const WorkFlowDesigner = forwardRef(
   }, [showActivityDefineDrawer]);*/
 
     useEffect(() => {
-      if (storeData.taskNodes.length === 0) {
+      if (storeData.nodes.length === 0) {
         restStore();
       }
     }, [restStore, storeData]);
 
     useEffect(() => {
-      setTaskNodes(storeData.taskNodes);
-      setTaskEdges(storeData.taskEdges);
+      setTaskNodes(storeData.nodes);
+      setTaskEdges(storeData.edges);
       if (selectedTaskNode) {
-        const dialogNodeData = storeData.taskNodes.filter((node) => node.id === selectedTaskNode.id)[0];
+        const dialogNodeData = storeData.nodes.filter((node) => node.id === selectedTaskNode.id)[0];
         setDialogNodes(dialogNodeData?.data?.dialogNodes);
         setDialogEdges(dialogNodeData?.data?.dialogEdges);
       }
@@ -199,9 +199,9 @@ const WorkFlowDesigner = forwardRef(
         newParam.type = 'crossEdge';
         newParam.markerEnd = endMarks;
         newParam.data = { readOnly: readOnly };
-        !readOnly && addTaskEdge(addEdge({ ...newParam, style: { stroke: '#000' } }, storeData.taskEdges));
+        !readOnly && addTaskEdge(addEdge({ ...newParam, style: { stroke: '#000' } }, storeData.edges));
       },
-      [addTaskEdge, storeData.taskEdges]
+      [addTaskEdge, storeData.edges]
     );
 
     const onTaskNodeDragOver = useCallback((event) => {
@@ -246,7 +246,7 @@ const WorkFlowDesigner = forwardRef(
         node.type === NODE_TYPE.CUSTOM ||
         node.type === NODE_TYPE.SYSTEM
       ) {
-        let copyNodes = taskNodes;
+        let copyNodes = nodes;
         copyNodes.map((copyNode) => {
           if (node.id === copyNode.id) {
             copyNode.data.borderColor = '#023FB2';
@@ -305,8 +305,14 @@ const WorkFlowDesigner = forwardRef(
             <div className="work-flow-designer">
               <Grid fullWidth>
                 <Column lg={4} className="title-container">
-                  <span className="header-title" onClick={() => setShowActivityDefineDrawer(true)}>
-                    {activityDefinitionData && Object.keys(activityDefinitionData).length > 0 ? activityDefinitionData.name : 'New Activity'}
+                  <span
+                    className="header-title"
+                    onClick={() => {
+                      setOpenTaskPropertiesBlock(false);
+                      setShowActivityDefineDrawer(true);
+                    }}
+                  >
+                    {activityDefinitionData && activityDefinitionData.definition?.name}
                   </span>
                 </Column>
                 {isDialogFlowActive && (
@@ -348,8 +354,8 @@ const WorkFlowDesigner = forwardRef(
                   defaultViewport={defaultViewport}
                   snapGrid={snapGrid}
                   taskFlowWrapper={taskFlowWrapper}
-                  taskNodes={taskNodes}
-                  taskEdges={taskEdges}
+                  nodes={nodes}
+                  edges={edges}
                   onTaskNodesChange={onTaskNodesChange}
                   onTaskEdgesChange={onTaskEdgesChange}
                   taskFlowInstance={taskFlowInstance}

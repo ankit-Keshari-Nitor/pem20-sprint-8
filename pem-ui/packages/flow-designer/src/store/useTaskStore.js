@@ -3,44 +3,44 @@ import { TASK_INITIAL_NODES } from '../constants/store-constants';
 
 const taskStore = (set, get) => ({
   tasks: {
-    taskNodes: [],
-    taskEdges: []
+    nodes: [],
+    edges: []
   },
   // Task Flow States
   addTaskNodes: (activity) => {
     set((state) => ({
-      tasks: { taskNodes: state.tasks.taskNodes.concat(activity), taskEdges: state.tasks.taskEdges }
+      tasks: { nodes: state.tasks.nodes.concat(activity), edges: state.tasks.edges }
     }));
   },
   editTaskNodePros: (activity, props, value) => {
     set((state) => {
-      const copyNodes = state.tasks.taskNodes;
+      const copyNodes = state.tasks.nodes;
       copyNodes.map((copyNode) => {
         if (activity.id === copyNode.id) {
           copyNode.data[props] = value;
         }
         return copyNode;
       });
-      return { tasks: { taskNodes: copyNodes, taskEdges: state.tasks.taskEdges } };
+      return { tasks: { nodes: copyNodes, edges: state.tasks.edges } };
     });
   },
 
   addTaskEdges: (activity) => {
     set((state) => ({
-      tasks: { taskNodes: state.tasks.taskNodes, taskEdges: activity }
+      tasks: { nodes: state.tasks.nodes, edges: activity }
     }));
   },
 
   deleteTaskEdge: (id) => {
     set((state) => ({
-      tasks: { taskNodes: state.tasks.taskNodes, taskEdges: state.tasks.taskEdges.filter((edge) => edge.id !== id) }
+      tasks: { nodes: state.tasks.nodes, edges: state.tasks.edges.filter((edge) => edge.id !== id) }
     }));
   },
 
   // Dialog Flow States
   addDialogNodes: (taskNode, dialogNode) => {
     set((state) => {
-      const taskNodeData = state.tasks.taskNodes.map((node) => {
+      const taskNodeData = state.tasks.nodes.map((node) => {
         if (node.id === taskNode.id) {
           const {
             data: { dialogNodes, ...restdata },
@@ -52,12 +52,12 @@ const taskStore = (set, get) => ({
           return node;
         }
       });
-      return { tasks: { taskNodes: taskNodeData, taskEdges: state.tasks.taskEdges } };
+      return { tasks: { nodes: taskNodeData, edges: state.tasks.edges } };
     });
   },
   editDialogNodePros: (activity, taskNode, props, value) => {
     set((state) => {
-      const copyNodes = state.tasks.taskNodes;
+      const copyNodes = state.tasks.nodes;
       copyNodes.map((copyNode) => {
         if (taskNode.id === copyNode.id) {
           const {
@@ -73,13 +73,13 @@ const taskStore = (set, get) => ({
         }
         return copyNode;
       });
-      return { tasks: { taskNodes: copyNodes, taskEdges: state.tasks.taskEdges } };
+      return { tasks: { nodes: copyNodes, edges: state.tasks.edges } };
     });
   },
 
   addDialogEdges: (taskNode, dialogEdge) => {
     set((state) => {
-      const taskNodeData = state.tasks.taskNodes.map((node) => {
+      const taskNodeData = state.tasks.nodes.map((node) => {
         if (node.id === taskNode.id) {
           const {
             data: { dialogEdges, ...restdata },
@@ -91,13 +91,13 @@ const taskStore = (set, get) => ({
           return node;
         }
       });
-      return { tasks: { taskNodes: taskNodeData, taskEdges: state.tasks.taskEdges } };
+      return { tasks: { nodes: taskNodeData, edges: state.tasks.edges } };
     });
   },
 
   deleteDialogEdge: (taskid, edgeid) => {
     set((state) => {
-      const taskNodeData = state.tasks.taskNodes.map((node) => {
+      const taskNodeData = state.tasks.nodes.map((node) => {
         if (node.id === taskid) {
           const {
             data: { dialogEdges, ...restdata },
@@ -109,15 +109,15 @@ const taskStore = (set, get) => ({
           return node;
         }
       });
-      return { tasks: { taskNodes: taskNodeData, taskEdges: state.tasks.taskEdges } };
+      return { tasks: { nodes: taskNodeData, edges: state.tasks.edges } };
     });
   },
 
   reset: () => {
     set({
       tasks: {
-        taskNodes: TASK_INITIAL_NODES,
-        taskEdges: []
+        nodes: TASK_INITIAL_NODES,
+        edges: []
       }
     });
   }

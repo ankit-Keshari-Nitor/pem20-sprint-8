@@ -24,6 +24,7 @@ export default function ActivityDefinitionForm(props) {
       key: ''
     };
     onActivityDetailsSave({ definition, version });
+    setShowActivityDefineDrawer(false);
   };
 
   return (
@@ -55,6 +56,7 @@ export default function ActivityDefinitionForm(props) {
         activityOperation={activityOperation}
         activityDefinitionData={activityDefinitionData}
         readOnly={readOnly}
+        setShowActivityDefineDrawer={setShowActivityDefineDrawer}
       />
       <Modal
         open={openExpandMode}
@@ -83,6 +85,7 @@ export default function ActivityDefinitionForm(props) {
               activityOperation={activityOperation}
               activityDefinitionData={activityDefinitionData}
               readOnly={readOnly}
+              setShowActivityDefineDrawer={setShowActivityDefineDrawer}
             />
           }
         </div>

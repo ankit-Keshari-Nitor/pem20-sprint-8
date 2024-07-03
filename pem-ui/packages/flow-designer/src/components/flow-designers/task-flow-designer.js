@@ -16,8 +16,8 @@ const TaskFlowDesigner = ({
   defaultViewport,
   snapGrid,
   taskFlowWrapper,
-  taskNodes,
-  taskEdges,
+  nodes,
+  edges,
   onTaskNodesChange,
   onTaskEdgesChange,
   setTaskFlowInstance,
@@ -58,8 +58,8 @@ const TaskFlowDesigner = ({
             <ReactFlowProvider>
               <div className="reactflow-wrapper" ref={taskFlowWrapper}>
                 <ReactFlow
-                  nodes={taskNodes}
-                  edges={taskEdges}
+                  nodes={nodes}
+                  edges={edges}
                   onNodesChange={onTaskNodesChange}
                   onEdgesChange={onTaskEdgesChange}
                   onInit={setTaskFlowInstance}

@@ -16,6 +16,7 @@ import {
 } from './../../constants/define-form-renderer.schema';
 
 import './block-properties-tray.scss';
+import GatewayValidation from '../gateway-validation';
 
 export default function BlockPropertiesTray(props) {
   const {
@@ -48,7 +49,7 @@ export default function BlockPropertiesTray(props) {
       case NODE_TYPE.API:
         return <BlockDefinitionForm id={'api-define-form'} schema={API_FORM_SCHEMA} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />;
       case NODE_TYPE.GATEWAY:
-        return null;
+        return <GatewayValidation id={'gateway-validation-form'} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />;
       default:
         return null;
     }

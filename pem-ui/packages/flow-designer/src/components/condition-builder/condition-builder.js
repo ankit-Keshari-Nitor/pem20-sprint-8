@@ -4,59 +4,57 @@ import { TextArea, Grid, Column, Button } from '@carbon/react';
 import { QueryBuilderDnD } from '@react-querybuilder/dnd';
 import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
 import CarbonWrapper from './condition-builder-wrapper/carbon-wrapper';
-import QueryBuilder  from 'react-querybuilder';
+import QueryBuilder from 'react-querybuilder';
 import { validationQuery } from '../helpers/generate-validation-query';
 import { INITIAL_QUERY, QUERY_COMBINATOR, QUERY_FIELDS } from '../../constants';
 
 import './condition-builder.scss';
 
-export default function ConditionalBuilder({ onSubmitExitValidationForm, setOpenCancelDialog, readOnly={readOnly} }) {
+export default function ConditionalBuilder({ onSubmitExitValidationForm, setOpenCancelDialog, readOnly = { readOnly } }) {
   const [query, setQuery] = useState(INITIAL_QUERY);
   return (
-    <>
-      <Grid>
-        <Column className="form-field" lg={16}>
-          <CarbonWrapper>
-            <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
-              <QueryBuilder
-                fields={QUERY_FIELDS}
-                query={query}
-                onQueryChange={setQuery}
-                combinators={QUERY_COMBINATOR}
-                controlClassnames={{ queryBuilder: 'queryBuilder-branches', body: 'inline-indycomb-left' }}
-                disabled={readOnly}
-              />
-            </QueryBuilderDnD>
-          </CarbonWrapper>
-        </Column>
-        <Column className="form-field" lg={16}>
-          <TextArea placeholder="Enter Text" labelText="Error Message" rows={4} id="text-area-1" disabled={readOnly}/>
-        </Column>
-        {/* <Column className="form-field" lg={16}>
+    <Grid>
+      <Column className="form-field" lg={16}>
+        <CarbonWrapper>
+          <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
+            <QueryBuilder
+              fields={QUERY_FIELDS}
+              query={query}
+              onQueryChange={setQuery}
+              combinators={QUERY_COMBINATOR}
+              controlClassnames={{ queryBuilder: 'queryBuilder-branches', body: 'inline-indycomb-left' }}
+              disabled={readOnly}
+            />
+          </QueryBuilderDnD>
+        </CarbonWrapper>
+      </Column>
+      <Column className="form-field" lg={16}>
+        <TextArea placeholder="Enter Text" labelText="Error Message" rows={4} id="text-area-1" disabled={readOnly} />
+      </Column>
+      {/* <Column className="form-field" lg={16}>
           <h4>Query</h4>
           <pre>
             <code>{formatQuery(validationQuery(query), 'json')}</code>
           </pre>
         </Column> */}
-        <Grid fullWidth className="button-container-container">
-          <Column lg={16} className="buttons-container">
-            <Button data-testid="cancel" name="cancel" kind="secondary" type="button" className="button" onClick={setOpenCancelDialog} disabled={readOnly}>
-              Cancel
-            </Button>
-            <Button
-              data-testid="save"
-              color="primary"
-              variant="contained"
-              type="submit"
-              style={{ width: '100%' }}
-              onClick={() => onSubmitExitValidationForm(validationQuery(query))}
-              disabled={readOnly}
-            >
-              Save
-            </Button>
-          </Column>
-        </Grid>
+      <Grid fullWidth className="button-container-container">
+        <Column lg={16} className="buttons-container">
+          <Button data-testid="cancel" name="cancel" kind="secondary" type="button" className="button" onClick={setOpenCancelDialog} disabled={readOnly}>
+            Cancel
+          </Button>
+          <Button
+            data-testid="save"
+            color="primary"
+            variant="contained"
+            type="submit"
+            style={{ width: '100%' }}
+            onClick={() => onSubmitExitValidationForm(validationQuery(query))}
+            disabled={readOnly}
+          >
+            Save
+          </Button>
+        </Column>
       </Grid>
-    </>
+    </Grid>
   );
 }

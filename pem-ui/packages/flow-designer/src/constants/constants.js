@@ -218,14 +218,14 @@ export const TASK_INITIAL_NODES = [
     id: 'start',
     type: NODE_TYPE.START,
     data: { label: 'Start' },
-    position: { x: 350, y: 500 },
+    // position: { x: 350, y: 500 },
     sourcePosition: 'right'
   },
   {
     id: 'end',
     type: NODE_TYPE.END,
     data: { label: 'End' },
-    position: { x: 950, y: 500 },
+    // position: { x: 950, y: 500 },
     targetPosition: 'left'
   }
 ];

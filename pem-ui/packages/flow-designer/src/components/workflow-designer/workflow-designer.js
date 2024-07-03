@@ -160,7 +160,7 @@ const WorkFlowDesigner = forwardRef(
     );
 
     const onDialogNodeClick = (event, node) => {
-      if (node.type === NODE_TYPE.DIALOG || node.type === NODE_TYPE.XSLT || node.type === NODE_TYPE.API) {
+      if (node.type === NODE_TYPE.DIALOG || node.type === NODE_TYPE.XSLT || node.type === NODE_TYPE.API || node.type === NODE_TYPE.GATEWAY) {
         let copyNodes = dialogNodes;
         copyNodes.map((copyNode) => {
           if (node.id === copyNode.id) {
@@ -246,7 +246,8 @@ const WorkFlowDesigner = forwardRef(
         node.type === NODE_TYPE.ATTRIBUTE ||
         node.type === NODE_TYPE.SPONSOR ||
         node.type === NODE_TYPE.CUSTOM ||
-        node.type === NODE_TYPE.SYSTEM
+        node.type === NODE_TYPE.SYSTEM ||
+        node.type === NODE_TYPE.GATEWAY
       ) {
         let copyNodes = taskNodes;
         copyNodes.map((copyNode) => {

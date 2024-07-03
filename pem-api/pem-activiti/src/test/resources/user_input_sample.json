@@ -379,6 +379,9 @@
           }
         ]
       }
-    ]
+    ],
+    "processData":{
+      "contextData":"{\"name\":\"activiti\",\"application\":\"pem\"}"
+    }
   }
 }

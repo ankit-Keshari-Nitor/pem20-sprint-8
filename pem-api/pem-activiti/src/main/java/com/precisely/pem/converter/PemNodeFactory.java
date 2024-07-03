@@ -130,7 +130,7 @@ public class PemNodeFactory {
     private static String getGatewayType(Gateway gateway) {
         try {
             Map<String,List<ExtensionElement>> extensions = gateway.getExtensionElements();
-            if(!extensions.get("activiti:field").isEmpty()){
+            if(Objects.nonNull(extensions.get("activiti:field")) && !extensions.get("activiti:field").isEmpty()){
                 return gateway.getExtensionElements().get("activiti:field").get(0).getChildElements().get("activiti:string").get(0).getElementText();
             }else {
                 return gateway.getExtensionElements().get("field").get(0).getChildElements().get("string").get(0).getElementText();

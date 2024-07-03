@@ -144,10 +144,24 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
 
             //Add custom fields in BpmnModel, fields for which we don't have BPMN JSON variable we have to manually add that in bpmn model.
             addCustomFieldsInBpmnModel(bpmnModel, nodeMap);
+            addContextData(bpmnModel,pemBpmnModel);
 
             return bpmnModel;
         }
         return null;
+    }
+
+    private void addContextData(BpmnModel bpmnModel, PemBpmnModel pemBpmnModel) {
+        Process process = bpmnModel.getProcesses().get(0);
+        process.addExtensionElement(getStringExtensionElement("contextData",pemBpmnModel.getProcess().getProcessData().getContextData()));
+
+        pemBpmnModel.getProcess().getNodes().forEach(node -> {
+            if(NodeTypes.API_NODE.getName().equalsIgnoreCase(node.getType())){
+                process.addExtensionElement(getStringExtensionElement(node.getId(),node.getApi().getSampleResponse()));
+            }else if(NodeTypes.XSLT_NODE.getName().equalsIgnoreCase(node.getType())){
+                process.addExtensionElement(getStringExtensionElement(node.getId(),node.getXslt().getSampleOutput()));
+            }
+        });
     }
 
     /* This will add UserTask from System Side into each subprocess. There should be Start Node in subprocess.*/
@@ -323,11 +337,29 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             for (FlowElement sequeunceFlowElement : sequenceFlowElements){
                 connectors.add(createConnector((SequenceFlow) sequeunceFlowElement, bpmnModel));
             }
+
+            addContextData(process, pemProcess);
+
             pemProcess.setNodes(nodes);
             pemProcess.setConnectors(connectors);
             response.setProcess(pemProcess);
         }
         return response;
+    }
+
+    private void addContextData(Process process, PemProcess pemProcess) {
+        String prefix = "";
+        if(Objects.nonNull(process.getExtensionElements().get("activiti:field")) && !process.getExtensionElements().get("activiti:field").isEmpty()){
+            prefix = "activiti:";
+        }
+
+        for (ExtensionElement element : process.getExtensionElements().get(prefix+"field")) {
+            String name = element.getAttributes().get("name").get(0).getValue();
+            if("contextData".equalsIgnoreCase(name)){
+                String contextData = element.getChildElements().get(prefix+"string").get(0).getElementText();
+                pemProcess.setProcessData(ProcessData.builder().contextData(contextData).build());
+            }
+        }
     }
 
     private static void appendSubProcessesSequenceFlow(SubProcess subprocess, List<FlowElement> sequenceFlowElements) {

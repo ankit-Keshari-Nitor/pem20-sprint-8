@@ -148,7 +148,7 @@ const CarbonOperatorSelector = ({
         id="selector-label"
         className={className}
         title={title}
-        labelText="Select Relational Operator"
+        labelText="Select Operator"
         value={valueAsArray.length > 1 ? valueAsArray[1] : valueAsArray[0]}
         disabled={disabled}
         onChange={(e) => multiValueHandler(e.target.value, 1)}

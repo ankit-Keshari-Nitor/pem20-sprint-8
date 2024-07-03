@@ -735,6 +735,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                               labelText={advncProps.label}
                               defaultToggled={Boolean(advncProps.value.value)}
                               toggled={Boolean(advncProps.value.value)}
+                              labelA={advncProps?.labelA}
+                              labelB={advncProps?.labelB}
                               onClick={(e) =>
                                 handleSchemaChanges(
                                   selectedFiledProps?.id,
@@ -747,7 +749,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                   selectedFiledProps?.currentPathDetail
                                 )
                               }
-                              hideLabel
                             />
                           )}
                         </>

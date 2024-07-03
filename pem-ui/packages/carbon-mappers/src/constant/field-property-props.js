@@ -19,7 +19,9 @@ export const isRequired = {
     value: false,
     message: ''
   },
-  type: 'Toggle'
+  type: 'Toggle',
+  labelA: 'No',
+  labelB: 'Yes'
 };
 
 export const helperText = {
@@ -41,8 +43,8 @@ export const readOnly = {
   label: 'Read-only',
   value: false,
   type: 'Toggle',
-  labelA: 'Yes',
-  labelB: 'No'
+  labelA: 'No',
+  labelB: 'Yes'
 };
 
 export const minProps = {
@@ -173,20 +175,20 @@ export const orientation = {
     { label: 'Horizontal', value: 'horizontal' }
   ],
   type: 'radio'
-}
+};
 
 export const height = {
   propsName: 'height',
   label: 'Height',
   value: '1',
   type: 'TextInput'
-}
+};
 
 export const id = {
   propsName: 'id',
   label: 'ID',
   value: '',
-  type: 'text',
+  type: 'text'
 };
 
 export const tableColumn = {

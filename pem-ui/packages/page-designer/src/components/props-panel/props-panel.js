@@ -20,7 +20,8 @@ import {
   Column,
   Accordion,
   AccordionItem,
-  Checkbox
+  Checkbox,
+  FileUploader
 } from '@carbon/react';
 
 import './props-panel.scss';
@@ -338,6 +339,12 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                         {item?.options.length > 0 &&
                                           item?.options.map((option, idx) => (option?.value ? <RadioButton key={idx} labelText={option.label} value={option.value} /> : null))}
                                       </RadioButtonGroup>
+                                    </div>
+                                  )}
+                                  {/* File Uploader */}
+                                  {key === 'Basic' && item.type === 'FileUpload' && (
+                                    <div className="right-palette-form-item">
+                                      <FileUploader labelTitle="File Attachment" labelDescription="" buttonLabel="Select" buttonKind="primary" size="sm" filenameStatus="edit" multiple={false} iconDescription="Delete file" name="" onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target?.files[0]?.name, selectedFiledProps?.currentPathDetail)} />
                                     </div>
                                   )}
                                   {/* Table Column */}

@@ -291,12 +291,12 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             <span className="header-title">{activityDefinitionData && Object.keys(activityDefinitionData).length > 0 ? activityDefinitionData.name : 'New Form Builder'}</span>
           </Column>
           <Column lg={12} className="buttons-container">
-            {/* <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
+            <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
               View Schema
             </Button>
             <Button kind="secondary" className="cancelButton" onClick={() => setOpenPreview(true)}>
               Preview
-            </Button> */}
+            </Button>
             <span onClick={() => setOpenPreview(true)} className="cross-icon" style={{ marginRight: '16px' }}>
               <View size={30} />
             </span>

@@ -218,3 +218,17 @@ export const pageSize = {
   value: '',
   type: 'TextInput'
 };
+
+export const buttonLabel = {
+  propsName: 'buttonLabel',
+  label: 'Button Label',
+  value: '',
+  type: 'TextInput'
+};
+
+export const fileUploader = {
+  propsName: 'fileUploader',
+  label: 'File Upload',
+  value: '',
+  type: 'FileUpload'
+}

@@ -15,8 +15,10 @@ import Tooltip from './tooltip';
 import Password from './password';
 import NumberInput from './number';
 import DataTable from './data-table';
+import FileDownload from './file-download';
 
 export const formFields = [
+  FileDownload,
   Group,
   TextInput,
   Textarea,

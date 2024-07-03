@@ -178,9 +178,9 @@ $rqb-branch-style: $rqb-border-style !default;
 
 // Default styles
 .ruleGroup {
-  border-color: $rqb-border-color;
-  border-style: $rqb-border-style;
-  border-radius: $rqb-border-radius;
+  // border-color: $rqb-border-color;
+  // border-style: $rqb-border-style;
+  // border-radius: $rqb-border-radius;
   .shiftActions {
     & > * {
       background-color: transparent;

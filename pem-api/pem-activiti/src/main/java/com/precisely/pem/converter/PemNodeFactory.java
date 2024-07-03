@@ -9,6 +9,8 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
+import static com.precisely.pem.dtos.Constants.*;
+
 @Log4j2
 public class PemNodeFactory {
     private static final Map<Class<? extends FlowElement>, BiFunction<FlowElement,BpmnConverterRequest, Node>> nodeCreators = new HashMap<>();
@@ -21,7 +23,7 @@ public class PemNodeFactory {
         nodeCreators.put(ExclusiveGateway.class, PemNodeFactory::createGatewayNode);
         nodeCreators.put(InclusiveGateway.class, PemNodeFactory::createGatewayNode);
         nodeCreators.put(SubProcess.class, PemNodeFactory::createSubProcessNode);
-        nodeCreators.put(CallActivity.class, PemNodeFactory::createActivityNode);
+        nodeCreators.put(CallActivity.class, PemNodeFactory::createCallActivityNode);
     }
 
     public static Node createNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest) {
@@ -73,7 +75,7 @@ public class PemNodeFactory {
          * */
         Map<String, String> fieldValueMap = serviceTask.getFieldExtensions().stream()
                 .collect(Collectors.toMap(FieldExtension::getFieldName, FieldExtension::getStringValue));
-        String nodeType = fieldValueMap.get("type");
+        String nodeType = fieldValueMap.get(API_FIELD_TYPE);
 
         if (nodeType.equalsIgnoreCase(NodeTypes.API_NODE.getName())) {
             Node node = new Node();
@@ -83,16 +85,16 @@ public class PemNodeFactory {
             node.setType(nodeType);
 
             ApiConfiguration apiConfiguration = new ApiConfiguration();
-            apiConfiguration.setUrl(fieldValueMap.get("url"));
-            apiConfiguration.setApiConfiguration(fieldValueMap.get("apiConfiguration"));
-            apiConfiguration.setMethod(fieldValueMap.get("method"));
-            apiConfiguration.setRequestContentType(fieldValueMap.get("requestContentType"));
-            apiConfiguration.setResponseContentType(fieldValueMap.get("responseContentType"));
+            apiConfiguration.setUrl(fieldValueMap.get(API_FIELD_URL));
+            apiConfiguration.setApiConfiguration(fieldValueMap.get(API_FIELD_API_CONFIGURATION));
+            apiConfiguration.setMethod(fieldValueMap.get(API_FIELD_METHOD));
+            apiConfiguration.setRequestContentType(fieldValueMap.get(API_FIELD_REQUEST_CONTENT_TYPE));
+            apiConfiguration.setResponseContentType(fieldValueMap.get(API_FIELD_RESPONSE_CONTENT_TYPE));
             apiConfiguration.setFile(fieldValueMap.get("file"));
-            apiConfiguration.setHeaders(fieldValueMap.get("headers"));
-            apiConfiguration.setRequestBody(fieldValueMap.get("requestBody"));
-            apiConfiguration.setSampleResponse(fieldValueMap.get("sampleResponse"));
-            apiConfiguration.setResponseBody(fieldValueMap.get("responseBody"));
+            apiConfiguration.setHeaders(fieldValueMap.get(API_FIELD_HEADERS));
+            apiConfiguration.setRequestBody(fieldValueMap.get(API_FIELD_REQUEST_BODY));
+            apiConfiguration.setSampleResponse(fieldValueMap.get(API_FIELD_SAMPLE_RESPONSE));
+            apiConfiguration.setResponseBody(fieldValueMap.get(API_FIELD_RESPONSE_BODY));
 
             node.setApi(apiConfiguration);
             return node;
@@ -104,10 +106,10 @@ public class PemNodeFactory {
             node.setType(nodeType);
 
             XsltConfiguration xsltConfiguration = new XsltConfiguration();
-            xsltConfiguration.setXslt(fieldValueMap.get("xslt"));
-            xsltConfiguration.setOutput(fieldValueMap.get("output"));
-            xsltConfiguration.setSampleOutput(fieldValueMap.get("sampleOutput"));
-            xsltConfiguration.setInput(fieldValueMap.get("input"));
+            xsltConfiguration.setXslt(fieldValueMap.get(XSLT_FIELD_XSLT));
+            xsltConfiguration.setOutput(fieldValueMap.get(XSLT_FIELD_OUTPUT));
+            xsltConfiguration.setSampleOutput(fieldValueMap.get(XSLT_FIELD_OUTPUT));
+            xsltConfiguration.setInput(fieldValueMap.get(XSLT_FIELD_INPUT));
 
             node.setXslt(xsltConfiguration);
             return node;
@@ -130,7 +132,7 @@ public class PemNodeFactory {
     private static String getGatewayType(Gateway gateway) {
         try {
             Map<String,List<ExtensionElement>> extensions = gateway.getExtensionElements();
-            if(!extensions.get("activiti:field").isEmpty()){
+            if(Objects.nonNull(extensions.get("activiti:field")) && !extensions.get("activiti:field").isEmpty()){
                 return gateway.getExtensionElements().get("activiti:field").get(0).getChildElements().get("activiti:string").get(0).getElementText();
             }else {
                 return gateway.getExtensionElements().get("field").get(0).getChildElements().get("string").get(0).getElementText();
@@ -202,7 +204,7 @@ public class PemNodeFactory {
 
     }
 
-    private static Node createActivityNode(FlowElement flowElement,BpmnConverterRequest bpmnConverterRequest){
+    private static Node createCallActivityNode(FlowElement flowElement, BpmnConverterRequest bpmnConverterRequest){
         Node node = new Node();
         CallActivity callActivity = (CallActivity) flowElement;
         node.setId(callActivity.getId());

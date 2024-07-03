@@ -81,25 +81,17 @@ public class RestTemplateApiService implements JavaDelegate {
             ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.valueOf(apiMethod.toUpperCase()), httpEntity, String.class);
 
             if (response != null && response.getBody() != null) {
-                Map<String, Object> fullContextData = new HashMap<>();
-                if (!execution.getVariables().containsKey("contextData")) {
-                    fullContextData.put("contextData", execution.getVariables());
-                } else {
-                    fullContextData = execution.getVariables();
-                    if(execution.getVariables().containsKey("applications")){
-                        fullContextData.remove("applications");
-                    }
+                Map<String, Object> processVariables = execution.getVariables();
+                if (processVariables.isEmpty()) {
+                    processVariables = new HashMap<>();
                 }
-
                 Map<String, Object> nodeResultData = new HashMap<>();
                 nodeResultData.put("sampleResponse", sampleApiResponse);
                 nodeResultData.put("responseBody", response.getBody());
 
-                Map<String, Object> contextData = (Map<String, Object>) fullContextData.getOrDefault("contextData", new HashMap<>());
-                fullContextData.put(serviceTaskId, nodeResultData);
-                fullContextData.put("contextData", contextData);
-                execution.setVariables(fullContextData);
-                log.info(fullContextData);
+                processVariables.put(serviceTaskId, nodeResultData);
+                execution.setVariables(processVariables);
+                log.info(processVariables);
             }
         } catch (IllegalArgumentException | HttpClientErrorException | HttpServerErrorException e) {
             handleHttpException(e);

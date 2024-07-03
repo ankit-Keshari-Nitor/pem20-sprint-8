@@ -5,7 +5,7 @@ import ActivityVersionsSideDrawer from '../activity-sidedrawer/activity-sidedraw
 
 describe('ActivityVersionsSideDrawer', () => {
     const defaultProps = {
-        open: false,
+        showDrawer: false,
         anchor: 'left',
         onClose: jest.fn(),
         children: <div>Test Children</div>,
@@ -21,12 +21,7 @@ describe('ActivityVersionsSideDrawer', () => {
         }
     };
 
-    beforeEach(() => {
-        ActivityService.getActivityVersionkey.mockResolvedValue({
-            content: [],
-            pageContent: { totalElements: 0 }
-        });
-    });
+  
 
     it('renders the children correctly', async () => {
         render(<ActivityVersionsSideDrawer {...defaultProps} open={true} />);
@@ -39,10 +34,10 @@ describe('ActivityVersionsSideDrawer', () => {
         expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
     });
 
-    it('applies the correct class names based on open prop', () => {
-        const { rerender } = render(<ActivityVersionsSideDrawer {...defaultProps} open={false} />);
+    it('applies the correct class names based on showDrawer prop', () => {
+        const { rerender } = render(<ActivityVersionsSideDrawer {...defaultProps} showDrawer={false} />);
         expect(screen.getByTestId('overlay')).toHaveClass(defaultProps.classes.overlayHidden);
-        rerender(<ActivityVersionsSideDrawer {...defaultProps} open={true} />);
+        rerender(<ActivityVersionsSideDrawer {...defaultProps} showDrawer={true} />);
         expect(screen.getByTestId('overlay')).toHaveClass(defaultProps.classes.overlayOpen);
     });
 

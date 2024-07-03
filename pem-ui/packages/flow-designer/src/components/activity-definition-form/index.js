@@ -3,6 +3,7 @@ import { Column, Grid, Modal } from '@carbon/react';
 import ActivityTaskDefinition from '../activity-task-definition';
 import { CrossIcon, ExpandIcon } from './../../icons';
 import ActivityVersions from './activity-versions-dropdown';
+import './../block-definition-form/block-definition-form.scss';
 
 export default function ActivityDefinitionForm(props) {
   const { 
@@ -37,7 +38,7 @@ export default function ActivityDefinitionForm(props) {
     <div className="block-properties-container">
       <div className="title-bar">
         <span className="title">
-          <Grid>
+          <Grid fullWidth>
             <Column lg={4} md={3} sm={2}>
               <b>Define Activity</b>
             </Column>

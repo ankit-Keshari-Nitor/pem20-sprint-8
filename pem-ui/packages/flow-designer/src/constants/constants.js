@@ -20,6 +20,7 @@ import select from '@data-driven-forms/carbon-component-mapper/select';
 import checkbox from '@data-driven-forms/carbon-component-mapper/checkbox';
 import { Button, Column, Grid } from '@carbon/react';
 import CrossEdge from './../components/edges/cross-edge';
+import './style.scss';
 
 export const CATEGORY_TYPES = {
   TASK: 'task',
@@ -217,14 +218,14 @@ export const TASK_INITIAL_NODES = [
     id: 'start',
     type: NODE_TYPE.START,
     data: { label: 'Start' },
-    position: { x: 250, y: 300 },
+    position: { x: 350, y: 500 },
     sourcePosition: 'right'
   },
   {
     id: 'end',
     type: NODE_TYPE.END,
     data: { label: 'End' },
-    position: { x: 450, y: 300 },
+    position: { x: 950, y: 500 },
     targetPosition: 'left'
   }
 ];
@@ -250,14 +251,14 @@ export const DIALOG_INITIAL_NODES = [
     id: '1',
     type: 'start',
     data: { label: 'Start' },
-    position: { x: 250, y: 300 },
+    position: { x: 350, y: 500 },
     sourcePosition: 'right'
   },
   {
     id: '2',
     type: 'end',
     data: { label: 'End' },
-    position: { x: 450, y: 300 },
+    position: { x: 950, y: 500 },
     targetPosition: 'left'
   }
 ];
@@ -294,20 +295,16 @@ export const FORM_TEMPLATE = ({ formFields, schema }) => {
       ))}
       <FormSpy>
         {() => (
-          <div>
-            <Grid>
-              <Column lg={8}>
-                <Button data-testid="cancel" name="cancel" kind="secondary" type="button" className="cancel-button" disabled={readOnly} onClick={onCancel}>
-                  Cancel
-                </Button>
-              </Column>
-              <Column lg={8}>
-                <Button data-testid="save" color="primary" variant="contained" type="submit" disabled={readOnly} style={{ width: '100%' }}>
-                  Save
-                </Button>
-              </Column>
-            </Grid>
-          </div>
+          <Grid fullWidth className="button-container-container">
+            <Column lg={16} className="buttons-container">
+              <Button kind="secondary" data-testid="cancel" name="cancel" type="button" onClick={onCancel} className="button"  disabled={readOnly}>
+                Cancel
+              </Button>
+              <Button data-testid="save" color="primary" variant="contained" type="submit" className="button"  disabled={readOnly}>
+                Save
+              </Button>
+            </Column>
+          </Grid>
         )}
       </FormSpy>
     </form>

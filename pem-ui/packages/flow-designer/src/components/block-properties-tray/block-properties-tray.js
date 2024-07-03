@@ -17,14 +17,13 @@ import {
 
 import './block-properties-tray.scss';
 
-
 export default function BlockPropertiesTray(props) {
-
   const {
     selectedNode, //partner,approval,attribute,sponsor,system,custom
     selectedTaskNode, //dialog,xslt,api
     setOpenPropertiesBlock,
-    readOnly } = props;
+    readOnly
+  } = props;
 
   const [openExpandMode, setOpenExpandMode] = useState(false);
 

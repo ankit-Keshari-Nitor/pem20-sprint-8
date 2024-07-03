@@ -40,7 +40,7 @@ const DialogFlowDesigner = ({
           <div className="dnd-flow">
             {/* Tasks Block */}
             <div className="task-tray-container">
-              <BlocksTray category={CATEGORY_TYPES.DIALOG} />
+              <BlocksTray category={CATEGORY_TYPES.DIALOG} readOnly={readOnly} />
             </div>
             {/* Flow Designer Block  */}
             <ReactFlowProvider>
@@ -72,10 +72,10 @@ const DialogFlowDesigner = ({
         {openDialogPropertiesBlock && (
           <>
             <PanelResizeHandle />
-            <Panel defaultSize={35} minSize={20} maxSize={70}>
+            <Panel defaultSize={34} minSize={34} maxSize={80}>
               <div className="dnd-flow">
                 <div className="task-properties-container">
-                  <BlockPropertiesTray selectedNode={selectedDialogNode} setOpenPropertiesBlock={setOpenDialogPropertiesBlock} selectedTaskNode={selectedTaskNode} />
+                  <BlockPropertiesTray selectedNode={selectedDialogNode} setOpenPropertiesBlock={setOpenDialogPropertiesBlock} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />
                 </div>
               </div>
             </Panel>

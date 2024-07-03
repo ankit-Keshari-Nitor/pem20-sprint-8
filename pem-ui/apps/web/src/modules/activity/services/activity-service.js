@@ -6,7 +6,7 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
     let url = `${API_END_POINTS.ACTIVITY_DEFINITION}?application=PEM&sortDir=${sortDir}&pageNo=${pageNo}&pageSize=${pageSize}`;
 
     if (searchKey !== '') {
-      url += `&name=${searchKey}`;
+      url += `&name=con:${searchKey}`;
     }
     if (status !== '') {
       url += `&status=${status}`;
@@ -20,6 +20,10 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
 
     const customizedData = jsonData.content !== null && jsonData.content.map((e) => ({
       id: e.activityDefnKey,
+      activityDefnVersionKey: e.defaultVersion.activityDefnVersionKey,
+      version: e.defaultVersion.version,
+      isEncrypted: e.defaultVersion.isEncrypted,
+      status: e.defaultVersion.status,
       ...e
     }));
 

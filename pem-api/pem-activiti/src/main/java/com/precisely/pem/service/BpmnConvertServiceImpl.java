@@ -169,34 +169,14 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         process.addExtensionElement(getStringExtensionElement(PROCESS_FIELD_CONTEXT_DATA,pemBpmnModel.getProcess().getProcessData().getContextData()));
 
         pemBpmnModel.getProcess().getNodes().forEach(node -> {
-            try {
-                if(NodeTypes.API_NODE.getName().equalsIgnoreCase(node.getType())){
-                    // Convert the sampleResponse JSON string to a JsonNode
-                    JsonNode sampleResponseNode = objectMapper.readTree(node.getApi().getSampleResponse());
-
-                    // Create a new ObjectNode to represent the final JSON
-                    ObjectNode resultNode = objectMapper.createObjectNode();
-                    resultNode.set(API_FIELD_SAMPLE_RESPONSE, sampleResponseNode);
-
-                    // Convert the resultNode to a JSON string
-                    String resultJsonString = objectMapper.writeValueAsString(resultNode);
-
-                    process.addExtensionElement(getStringExtensionElement(node.getId(),resultJsonString));
-
-                }else if(NodeTypes.XSLT_NODE.getName().equalsIgnoreCase(node.getType())){
-                    // Convert the sampleResponse JSON string to a JsonNode, getSampleOutput should be parsable input always.
-                    JsonNode sampleResponseNode = objectMapper.readTree(node.getXslt().getSampleOutput());
-
-                    // Create a new ObjectNode to represent the final JSON
-                    ObjectNode resultNode = objectMapper.createObjectNode();
-                    resultNode.set(XSLT_FIELD_SAMPLE_OUTPUT, sampleResponseNode);
-
-                    // Convert the resultNode to a JSON string
-                    String resultJsonString = objectMapper.writeValueAsString(resultNode);
-                    process.addExtensionElement(getStringExtensionElement(node.getId(),resultJsonString));
-                }
-            } catch (JsonProcessingException e) {
-                log.error("Context Data creation Failed. {}", e.getMessage());
+            if(NodeTypes.API_NODE.getName().equalsIgnoreCase(node.getType())){
+                //generating {"sampleResponse":<sampledata>} JSON string
+                String resultJsonString = "{\""+API_FIELD_SAMPLE_RESPONSE+"\":"+node.getApi().getSampleResponse()+"}";
+                process.addExtensionElement(getStringExtensionElement(node.getId(),resultJsonString));
+            }else if(NodeTypes.XSLT_NODE.getName().equalsIgnoreCase(node.getType())){
+                //generating {"sampleResponse":<sampledata>} JSON string
+                String resultJsonString = "{\""+XSLT_FIELD_SAMPLE_OUTPUT+"\":"+node.getXslt().getSampleOutput()+"}";
+                process.addExtensionElement(getStringExtensionElement(node.getId(),resultJsonString));
             }
         });
     }

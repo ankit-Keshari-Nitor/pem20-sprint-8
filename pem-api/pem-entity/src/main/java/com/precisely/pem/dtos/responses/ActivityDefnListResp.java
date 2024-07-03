@@ -10,4 +10,5 @@ public class ActivityDefnListResp {
     public String application;
     public String activityVersionLink;
     public Boolean isDeleted;
+    public ActivityVersionResp defaultVersion;
 }

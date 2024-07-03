@@ -30,7 +30,6 @@ export default function ActivityDefinition() {
     }
   }, [activityDefinitionData]);
 
-
   const getActivityData = (activityDefKey, versionKey) => {
     getActivityDetails(activityDefKey, versionKey).then((response) => {
       if (response.success) {
@@ -40,37 +39,35 @@ export default function ActivityDefinition() {
         console.log('error in api call');
       }
     });
-  }
-
+  };
 
   useEffect(() => {
     if (currentActivity && currentActivity.activityDefKey) {
       getActivityData(currentActivity.activityDefKey, currentActivity.actDefVerKey);
     }
-    return (() => {
+    return () => {
       //store.reset();
-    })
-  }, [currentActivity, getActivityData])
-
+    };
+  }, [currentActivity, getActivityData]);
 
   const saveActivity = async () => {
     console.log('activityObj', activityObj);
     const newObj = {
-      name:activityObj.definition.name,
-      description:activityObj.definition.description,
+      name: activityObj.definition.name,
+      description: activityObj.definition.description,
       schemaVersion: currentActivity ? currentActivity.version : 1,
-      process:{
-        nodes:activityObj.schema.nodes,
-        connectors:activityObj.schema.edges
+      process: {
+        nodes: activityObj.schema.nodes,
+        connectors: activityObj.schema.edges
       }
-    }
-   
-
+    };
+    const file = new Blob([newObj], { type: 'text/json' });
+    console.log(file);
     //todo - make api call to save the activity
     //prepare a file json data of activity and schema
     //post api call to save data
     // activityReset();
-  }
+  };
 
   return (
     <>
@@ -91,9 +88,7 @@ export default function ActivityDefinition() {
           <HistoryIcon />
         </Column>
         <Column>
-          <Button id="saveactivity" onClick={() => saveActivity()}
-            disabled={activityObj.definition.name.trim().length === 0}
-          >
+          <Button id="saveactivity" onClick={() => saveActivity()} disabled={activityObj.definition.name.trim().length === 0}>
             Save Activity
           </Button>
         </Column>
@@ -103,16 +98,13 @@ export default function ActivityDefinition() {
         showActivityDefineDrawer={showActivityDefineDrawer}
         setShowActivityDefineDrawer={setShowActivityDefineDrawer}
         updateActivityDetails={updateActivityDetails}
-
         updateActivitySchema={updateActivitySchema}
-
         activityDefinitionData={activityDefinitionData}
         activityOperation={currentActivity ? currentActivity.operation : 'New'}
-
         readOnly={readOnly}
         onVersionSelection={(selectedVersion) => console.log(selectedVersion)}
-        versionData={activityVersions}//todo -- this data will be based on version api response 
-        selectedVersion={currentActivity ? currentActivity.version : 'Ver.1'}//todo - pass current version id being loaded
+        versionData={activityVersions} //todo -- this data will be based on version api response
+        selectedVersion={currentActivity ? currentActivity.version : 'Ver.1'} //todo - pass current version id being loaded
       />
     </>
   );

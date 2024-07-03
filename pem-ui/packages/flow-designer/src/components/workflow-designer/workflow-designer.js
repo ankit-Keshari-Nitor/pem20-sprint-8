@@ -305,7 +305,7 @@ const WorkFlowDesigner = forwardRef(
             <div className="work-flow-designer">
               <Grid fullWidth>
                 <Column lg={4} className="title-container">
-                  <span className="header-title" onClick={() => setOpenTaskPropertiesBlock(true)}>
+                  <span className="header-title" onClick={() => setShowActivityDefineDrawer(true)}>
                     {activityDefinitionData && Object.keys(activityDefinitionData).length > 0 ? activityDefinitionData.name : 'New Activity'}
                   </span>
                 </Column>

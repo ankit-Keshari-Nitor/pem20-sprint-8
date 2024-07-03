@@ -283,8 +283,12 @@ const WorkFlowDesigner = forwardRef(
         name: 'Dialog',
         schema: { fields: [...layout] }
       };
-      formDesignerSessionData.unshift(newDialog);
-      sessionStorage.setItem('formDesignerSessionData', JSON.stringify(formDesignerSessionData));
+      if (formDesignerSessionData) {
+        formDesignerSessionData.unshift(newDialog);
+        sessionStorage.setItem('formDesignerSessionData', JSON.stringify(formDesignerSessionData));
+      } else {
+        sessionStorage.setItem('formDesignerSessionData', JSON.stringify([newDialog]));
+      }
     };
 
     return (

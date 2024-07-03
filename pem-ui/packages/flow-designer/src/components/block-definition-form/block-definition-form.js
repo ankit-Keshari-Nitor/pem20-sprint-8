@@ -4,8 +4,8 @@ import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 
 import './block-definition-form.scss';
 import useTaskStore from '../../store';
-import ExitValidationFrom from '../exit-validation-form';
 import { COMPONENT_MAPPER, FORM_TEMPLATE, NODE_TYPE } from '../../constants';
+import ConditionalBuilder from '../condition-builder';
 
 export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode = null, schema, readOnly }) {
   schema.fields = schema.fields.map((item) => ({ ...item, isReadOnly: readOnly }));
@@ -69,7 +69,7 @@ export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>
-            <ExitValidationFrom setOpenCancelDialog={onCancelDefinitionForm} onSubmitExitValidationForm={onSubmitExitValidationForm} readOnly={readOnly} />
+            <ConditionalBuilder setOpenCancelDialog={onCancelDefinitionForm} onSubmitExitValidationForm={onSubmitExitValidationForm} readOnly={readOnly} />
           </TabPanel>
         </TabPanels>
       </Tabs>

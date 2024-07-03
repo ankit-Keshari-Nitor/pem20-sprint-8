@@ -8,9 +8,9 @@ import QueryBuilder  from 'react-querybuilder';
 import { validationQuery } from '../helpers/generate-validation-query';
 import { INITIAL_QUERY, QUERY_COMBINATOR, QUERY_FIELDS } from '../../constants';
 
-import './exit-validation-form.scss';
+import './condition-builder.scss';
 
-export default function ExitValidationFrom({ onSubmitExitValidationForm, setOpenCancelDialog, readOnly={readOnly} }) {
+export default function ConditionalBuilder({ onSubmitExitValidationForm, setOpenCancelDialog, readOnly={readOnly} }) {
   const [query, setQuery] = useState(INITIAL_QUERY);
   return (
     <>

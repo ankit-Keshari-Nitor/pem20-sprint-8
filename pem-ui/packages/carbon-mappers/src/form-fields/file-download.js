@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, id, fileUploader, NameLabel, helperText, buttonLabel, isRequired, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, id, fileUploader, decodeBase64, NameLabel, helperText, buttonLabel, isRequired, labelText } from '../constant';
 import { FileAttachmentIcon } from './../icons';
 import { Button } from '@carbon/react';
 import './../style.scss';
@@ -16,6 +16,7 @@ const FileDownload = ({ field }) => {
                 {buttonLabel === undefined ? 'Download' : buttonLabel}
             </Button>
             <span>{helperText}</span>
+            
         </div>
     );
 };

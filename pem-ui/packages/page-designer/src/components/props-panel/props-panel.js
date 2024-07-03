@@ -86,6 +86,19 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setComponentStyle([{ labelText: 'Column Size', text: e.target.value }]);
   };
 
+  const handleFileChange = (e, key, propsName, selectedFiledProps) => {
+    const file = e.target?.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result.split(',')[1]; // Get the base64 string
+        handleSchemaChanges(selectedFiledProps?.id, key, propsName, file.name + '/' + base64String, selectedFiledProps?.currentPathDetail);
+
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAddOption = () => {
     const index = options.length + 1;
     const newOptions = [...options, { label: `Label-${index - 1}`, value: `Value-${index - 1}` }];
@@ -344,7 +357,20 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                   {/* File Uploader */}
                                   {key === 'Basic' && item.type === 'FileUpload' && (
                                     <div className="right-palette-form-item">
-                                      <FileUploader labelTitle="File Attachment" labelDescription="" buttonLabel="Select" buttonKind="primary" size="sm" filenameStatus="edit" multiple={false} iconDescription="Delete file" name="" onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target?.files[0]?.name, selectedFiledProps?.currentPathDetail)} />
+                                      <FileUploader
+                                        labelTitle="File Attachment"
+                                        labelDescription=""
+                                        buttonLabel="Select"
+                                        buttonKind="primary"
+                                        size="sm"
+                                        filenameStatus="edit"
+                                        multiple={false}
+                                        iconDescription="Delete file"
+                                        name=""
+                                        onChange={(e) => handleFileChange(e, key, item.propsName, selectedFiledProps)}
+                                        onDelete={() => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, '', selectedFiledProps?.currentPathDetail)}
+
+                                      />
                                     </div>
                                   )}
                                   {/* Table Column */}

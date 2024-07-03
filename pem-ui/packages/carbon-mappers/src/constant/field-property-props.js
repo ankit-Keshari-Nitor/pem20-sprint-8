@@ -232,3 +232,21 @@ export const fileUploader = {
   value: '',
   type: 'FileUpload'
 }
+
+export const mulitipleAllow = {
+  propsName: 'mulitipleAllow',
+  label: 'Multiple Allow',
+  value: false,
+  type: 'Toggle',
+  labelA: 'No',
+  labelB: 'Yes'
+};
+
+export const decodeBase64 = {
+  propsName: 'decodeBase64',
+  label: 'Decode Base64',
+  value: false,
+  type: 'Toggle',
+  labelA: 'No',
+  labelB: 'Yes'
+}

@@ -8,8 +8,7 @@ import com.precisely.pem.dtos.Node;
 import com.precisely.pem.dtos.NodeTypes;
 import com.precisely.pem.dtos.XsltConfiguration;
 
-import static com.precisely.pem.dtos.Constants.HEIGHT;
-import static com.precisely.pem.dtos.Constants.WIDTH;
+import static com.precisely.pem.dtos.Constants.*;
 
 public class XsltNodeHandler extends AbstractNodeHandler{
     @Override
@@ -67,23 +66,23 @@ public class XsltNodeHandler extends AbstractNodeHandler{
             servicetaskfields.put("totalCount", 1);
 
             ObjectNode inputField = fields.addObject();
-            inputField.put("name", "input");
+            inputField.put("name", XSLT_FIELD_INPUT);
             inputField.put("stringValue", xslt.getInput());
 
             ObjectNode inputXsltField = fields.addObject();
-            inputXsltField.put("name", "xslt");
+            inputXsltField.put("name", XSLT_FIELD_XSLT);
             inputXsltField.put("stringValue", xslt.getXslt());
 
             ObjectNode outputField = fields.addObject();
-            outputField.put("name", "output");
+            outputField.put("name", XSLT_FIELD_OUTPUT);
             outputField.put("stringValue", xslt.getOutput());
 
             ObjectNode sampleOutputField = fields.addObject();
-            sampleOutputField.put("name", "sampleOutput");
+            sampleOutputField.put("name", XSLT_FIELD_SAMPLE_OUTPUT);
             sampleOutputField.put("stringValue", xslt.getOutput());
 
             ObjectNode typeField = fields.addObject();
-            typeField.put("name", "type");
+            typeField.put("name", XSLT_FIELD_TYPE);
             typeField.put("stringValue", type);
 
             addChildShapes(outputJson,xsltNodeChildShape);

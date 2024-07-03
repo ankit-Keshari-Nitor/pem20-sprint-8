@@ -23,7 +23,7 @@ public class BpmnConvertServiceTest {
 
     public static final String PEM_DEFINITIONS_EXAMPLE = "Pem Definitions 1";
     public static final String PEM_TEST_PROCESS = "PEM_TEST_PROCESS";
-    BpmnConvertService bpmnConvertService = new BpmnConvertServiceImpl();
+    BpmnConvertServiceImpl bpmnConvertService = new BpmnConvertServiceImpl();
 
     public static String INPUT_FILE_NAME = "user_input_sample.json";
     ObjectMapper objectMapper = new ObjectMapper();

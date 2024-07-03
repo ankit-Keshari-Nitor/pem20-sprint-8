@@ -13,7 +13,6 @@ export const NODE_TYPE = {
   API: 'api'
 };
 
-
 export const TASK_INITIAL_NODES = [
   {
     id: 'start',

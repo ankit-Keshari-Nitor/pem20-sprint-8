@@ -18,13 +18,7 @@ export const CopyIcon = () => {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g opacity="0.5">
-        <path
-          d="M20.2487 17.2495V3.74945H6.74802M3.74805 6.74956H17.2486V20.2496H3.74805V6.74956Z"
-          stroke="white"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <path d="M20.2487 17.2495V3.74945H6.74802M3.74805 6.74956H17.2486V20.2496H3.74805V6.74956Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </g>
     </svg>
   );

@@ -1,4 +1,4 @@
-import { getFormFields } from "./utils/form-field-helper";
+import { getFormFields } from './utils/form-field-helper';
 
 const componentMapper = getFormFields();
 

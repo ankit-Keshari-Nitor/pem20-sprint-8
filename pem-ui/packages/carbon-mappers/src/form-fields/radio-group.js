@@ -9,7 +9,14 @@ const RadioButtonGroup = ({ field, id, previewMode }) => {
   const { type, labelText, label, isRequired, readOnly, orientation, options, helperText, ...rest } = field;
 
   return (
-    <CarbonRadioButtonGroup readOnly={readOnly} orientation={orientation} data-testid={`${id}-${previewMode}`} id={`${id}-${previewMode}`} legendText={labelText === undefined ? label : labelText} helperText={helperText}>
+    <CarbonRadioButtonGroup
+      readOnly={readOnly}
+      orientation={orientation}
+      data-testid={`${id}-${previewMode}`}
+      id={`${id}-${previewMode}`}
+      legendText={labelText === undefined ? label : labelText}
+      helperText={helperText}
+    >
       {options &&
         options.map((element) => {
           return <CarbonRadioButton labelText={element?.label} id={`${element?.id}-${previewMode}`} value={element?.value} {...rest} />;

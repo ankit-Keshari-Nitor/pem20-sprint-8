@@ -45,7 +45,7 @@ const activityStore = (set, get) => ({
       };
     });
   },
-  //this changes during - 
+  //this changes during -
   updateActivitySchema: (task) => {
     set((state) => {
       return {

@@ -1,3 +1,3 @@
-import ActivityVersionsSideDrawer from "./activity-sidedrawer";
+import ActivityVersionsSideDrawer from './activity-sidedrawer';
 
-export { ActivityVersionsSideDrawer }
+export { ActivityVersionsSideDrawer };

@@ -18,14 +18,16 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
     }
     const jsonData = await response.json();
 
-    const customizedData = jsonData.content !== null && jsonData.content.map((e) => ({
-      id: e.activityDefnKey,
-      activityDefnVersionKey: e.defaultVersion.activityDefnVersionKey,
-      version: e.defaultVersion.version,
-      isEncrypted: e.defaultVersion.isEncrypted,
-      status: e.defaultVersion.status,
-      ...e
-    }));
+    const customizedData =
+      jsonData.content !== null &&
+      jsonData.content.map((e) => ({
+        id: e.activityDefnKey,
+        activityDefnVersionKey: e.defaultVersion.activityDefnVersionKey,
+        version: e.defaultVersion.version,
+        isEncrypted: e.defaultVersion.isEncrypted,
+        status: e.defaultVersion.status,
+        ...e
+      }));
 
     return {
       content: customizedData || [],
@@ -73,7 +75,7 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
     });
     if (!response.ok) {
       console.error(`HTTP error! status: ${response.status}`);
-      return "Internal Error";
+      return 'Internal Error';
     }
     const responseBody = await response.text();
     try {
@@ -81,16 +83,16 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
       return responseStatus.status;
     } catch (jsonError) {
       console.error('Error parsing JSON:', jsonError);
-      return "Internal Error";
+      return 'Internal Error';
     }
   } catch (error) {
     console.error('Failed to fetch data:', error);
-    return "Internal Error";
+    return 'Internal Error';
   }
 };
 
 export const getActivityDetails = async (activityKey, activityVersoinKey) => {
-  const url =  `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityKey}` ;
+  const url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityKey}`;
   const activitydata = await new RestApiService().call({ url }, null);
   if (activitydata.success) {
     const activityVersions = await new RestApiService.call({ url: `${url}versions?&pageNo=0&pageSize=100` }, null);
@@ -106,7 +108,7 @@ export const getActivityDetails = async (activityKey, activityVersoinKey) => {
       versions: activityVersions.data.content,
       version: {
         key: activityCurrentVersionDetails.data.key,
-        encrypted: activityCurrentVersionDetails.data.isEncrypted,//false,
+        encrypted: activityCurrentVersionDetails.data.isEncrypted, //false,
         contextData: activityCurrentVersionDetails.data.contextData,
         status: activityCurrentVersionDetails.data.status,
         number: activityCurrentVersionDetails.data.version
@@ -115,11 +117,12 @@ export const getActivityDetails = async (activityKey, activityVersoinKey) => {
         nodes: activityCurrentVersionData.data.nodes,
         edges: activityCurrentVersionData.data.edges
       }
-    }
+    };
   } else {
     return {
-      success: false, data: null
-    }
+      success: false,
+      data: null
+    };
   }
 };
 
@@ -182,15 +185,16 @@ export const getActivityVersionkey = async (pageNo, pageSize, sortDir = 'ASC', s
     const responseBody = await response.text();
     try {
       const jsonData = JSON.parse(responseBody);
-      const customizedData = jsonData.content !== null && jsonData.content.map((e) => ({
-        id: e.activityDefnVersionKey,
-        ...e
-      }));
+      const customizedData =
+        jsonData.content !== null &&
+        jsonData.content.map((e) => ({
+          id: e.activityDefnVersionKey,
+          ...e
+        }));
       return {
         content: customizedData || [],
         pageContent: jsonData.page || []
       };
-
     } catch (jsonError) {
       console.error('Error parsing JSON:', jsonError);
       return [];

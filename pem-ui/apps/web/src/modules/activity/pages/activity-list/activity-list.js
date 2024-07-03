@@ -28,7 +28,6 @@ export default function ActivityList() {
 
   // State hooks for managing various states
   const store = useActivityStore();
- 
 
   const [totalRows, setTotalRows] = useState(0);
   const [searchKey, setSearchKey] = useState('');
@@ -209,7 +208,7 @@ export default function ActivityList() {
   const onNewClick = () => {
     store.reset();
     pageUtil.navigate('new', {});
-  }
+  };
 
   const handleVersion = (id, activityName, status) => {
     setActivityDefnKey(id);
@@ -341,10 +340,9 @@ export default function ActivityList() {
           onSecondaryButtonClick={handelTestCloseClick}
           onRequestClose={() => setShowTestModal(false)}
         >
-          <ActivityTestModal
-            currentTestData={currentTestData}
-            formRenderSchema={formRenderSchema} />
-        </GeneralModal>)}
+          <ActivityTestModal currentTestData={currentTestData} formRenderSchema={formRenderSchema} />
+        </GeneralModal>
+      )}
 
       {/* Notification toast */}
       {notificationProps && notificationProps.open && <WrapperNotification {...notificationProps} />}

@@ -45,13 +45,16 @@ export default function RolloutDetails(props) {
         </Column>
         {/*  Due Date */}
         <Column className="col-margin" lg={8}>
-          <DatePicker datePickerType="single"
+          <DatePicker
+            datePickerType="single"
             value={rolloutDetails.dueDate}
             minDate={new Date().setDate(new Date().getDate())}
-            onChange={(e) => setRolloutDetails((prev) => ({
-              ...prev, dueDate
-                : e.target.value
-            }))}
+            onChange={(e) =>
+              setRolloutDetails((prev) => ({
+                ...prev,
+                dueDate: e.target.value
+              }))
+            }
           >
             <DatePickerInput
               id="due_date"
@@ -71,13 +74,16 @@ export default function RolloutDetails(props) {
         </Column>
         {/*  Alert Date */}
         <Column className="col-margin" lg={8}>
-          <DatePicker datePickerType="single"
+          <DatePicker
+            datePickerType="single"
             value={rolloutDetails.alertDate}
             minDate={new Date().setDate(new Date().getDate() + 2)}
-            onChange={(e) => setRolloutDetails((prev) => ({
-              ...prev, alertDate
-                : e.target.value
-            }))}
+            onChange={(e) =>
+              setRolloutDetails((prev) => ({
+                ...prev,
+                alertDate: e.target.value
+              }))
+            }
           >
             <DatePickerInput
               id="alert_date"
@@ -115,10 +121,12 @@ export default function RolloutDetails(props) {
               </>
             }
             placeholder={'Enter days'}
-            onChange={(e) => setRolloutDetails((prev) => ({
-              ...prev, alertInterval
-                : e.target.value
-            }))}
+            onChange={(e) =>
+              setRolloutDetails((prev) => ({
+                ...prev,
+                alertInterval: e.target.value
+              }))
+            }
           />
         </Column>
         {/*   Click to check Context Data Button */}
@@ -134,10 +142,10 @@ export default function RolloutDetails(props) {
             data-testid="rolling-out"
             name="rolling-out"
             onChange={(value) => {
-              setRolloutDetails((prev) => ({ ...prev, rollingOutTo: value }))
+              setRolloutDetails((prev) => ({ ...prev, rollingOutTo: value }));
             }}
             value={rolloutDetails.rollingOutTo}
-          //defaultChecked={true}
+            //defaultChecked={true}
           >
             <RadioButton labelText="Partners" value="partners" id="partners" checked />
             <RadioButton labelText="Internal Users" value="internal_users" id="internal_users" />

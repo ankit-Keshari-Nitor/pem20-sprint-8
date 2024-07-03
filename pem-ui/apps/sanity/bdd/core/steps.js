@@ -31,5 +31,4 @@ const CustomThen = function (...args) {
 };
 
 //export { CustomGiven as Given, CustomWhen as When, CustomThen as Then, callStep };
-export { Given,When, Then, callStep };
-
+export { Given, When, Then, callStep };

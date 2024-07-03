@@ -6,23 +6,15 @@ import ActivityVersions from './activity-versions-dropdown';
 import './../block-definition-form/block-definition-form.scss';
 
 export default function ActivityDefinitionForm(props) {
-  const { 
-    readOnly, 
-    versionData = [],
-    setShowActivityDefineDrawer,
-    onActivityDetailsSave,
-    activityOperation,
-    activityDefinitionData } = props;
+  const { readOnly, versionData = [], setShowActivityDefineDrawer, onActivityDetailsSave, activityOperation, activityDefinitionData } = props;
 
-   
   const [openExpandMode, setOpenExpandMode] = useState(false);
-
 
   const onSubmitDefinitionForm = (values) => {
     const definition = {
       definationKey: '',
       name: values.name,
-      description: values.description,
+      description: values.description
     };
     const version = {
       encrypted: values.encrypted ? values.encrypted : false,
@@ -32,7 +24,7 @@ export default function ActivityDefinitionForm(props) {
       key: ''
     };
     onActivityDetailsSave({ definition, version });
-  }
+  };
 
   return (
     <div className="block-properties-container">

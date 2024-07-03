@@ -208,7 +208,7 @@ const ListPage = () => {
           list: {
             data: [],
             meta: {
-                totalItems: 0
+              totalItems: 0
             }
           }
         },

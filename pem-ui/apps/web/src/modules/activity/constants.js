@@ -7,7 +7,7 @@ export const ROUTES = {
 export const API_END_POINTS = {
   ACTIVITY_DEFINITION: '/sponsors/cashbank/v2/activityDefinitions',
   ACTIVITY_INSTANCE: '/sponsors/{sponsorContext}/v2/activityInstances',
-  ACTIVITY_DEFINITION_VERSION:'/sponsors/{sponsorContext}/v2/activityDefinitions/{activityDefnKey}/version'
+  ACTIVITY_DEFINITION_VERSION: '/sponsors/{sponsorContext}/v2/activityDefinitions/{activityDefnKey}/version'
 };
 
 export const ACTION_COLUMN_KEYS = {
@@ -42,7 +42,7 @@ export const ACTIVITY_LIST_COLUMNS = [
   { key: ACTION_COLUMN_KEYS.VERSION, header: 'Default Version' },
   { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
   { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' },
-  { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' },
+  { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' }
 ];
 
 export const ACTIVITY_VERSION_COLUMNS = [

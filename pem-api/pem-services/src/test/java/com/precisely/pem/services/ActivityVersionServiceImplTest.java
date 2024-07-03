@@ -15,6 +15,7 @@ import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
+import com.precisely.pem.service.PEMActivitiService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -41,8 +42,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ActivityVersionServiceImplTest extends BaseServiceTest{
 
@@ -52,6 +52,8 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
     @Mock
     private Blob mockBlob;
 
+    @Mock
+    PEMActivitiService pemActivitiService;
 
     @BeforeEach
     public void setup(){
@@ -97,7 +99,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     @Test
     void testGetAllVersionDefinitionById() throws Exception {
-        when(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(anyString(), anyString(), anyString()))
+        when(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnVersionKeyAndActivityDefnSponsorKey(anyString(), anyString(), anyString()))
                 .thenReturn(getVersion());
         ActivityDefnVersionListResp dto = activityVersionService.getVersionDefinitionById("test", "test", "test");
         assertNotNull(dto);
@@ -127,25 +129,29 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
         ActivityDefnVersionResp resp = activityVersionService.createActivityDefnVersion("cashbank", "test1", activityVersionReq);
         assertNotNull(resp);
-        assertEquals(activityDefnVersion.getActivityDefnKeyVersion(), resp.getActivityDefnVersionKey());
+        assertEquals(activityDefnVersion.getActivityDefnVersionKey(), resp.getActivityDefnVersionKey());
     }
 
     @Test
-    void updateMarkAsFinal() throws Exception {
-        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
-
-        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
-
-        mockActivityDefnVersionSave(activityDefnVersion).thenReturn(activityDefnVersion);
-
-        MarkAsFinalActivityDefinitionVersionResp dto = new MarkAsFinalActivityDefinitionVersionResp();
-        when(mapper.map(any(ActivityDefnVersion.class),eq(MarkAsFinalActivityDefinitionVersionResp.class)))
-                .thenReturn(dto);
-        MarkAsFinalActivityDefinitionVersionResp resp = activityVersionService.
-                markAsFinalActivityDefinitionVersion(TEST_ACTIVITY_DEFN_VERSION_KEY);
-
-        assertEquals(Status.FINAL.getStatus(),resp.getStatus());
-        assertNotNull(resp.getModifyTs());
+    public void testMarkAsFinalActivityDefinitionVersion_Success() throws Exception {
+        String activityDefnVersionKey = "testKey";
+        ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
+        activityDefnVersion.setStatus("DRAFT");
+        activityDefnVersion.setIsDefault(true);
+        Object[] dto = {"val1", "val2", "val3", "val4", "val5", "val6", 1.0, mockBlob};
+        List<Object[]> dtoList = new ArrayList<>();
+        dtoList.add(dto);
+        when(activityDefnVersionRepo.findById(activityDefnVersionKey)).thenReturn(Optional.of(activityDefnVersion));
+        when(activityDefnVersionRepo.save(any(ActivityDefnVersion.class))).thenReturn(activityDefnVersion);
+        when(activityDefnDeploymentCustomRepo.findActivitiesByActivityDefnVersionKey(activityDefnVersionKey)).thenReturn(dtoList);
+        when(mapper.map(any(ActivityDefnVersion.class), eq(MarkAsFinalActivityDefinitionVersionResp.class)))
+                .thenReturn(new MarkAsFinalActivityDefinitionVersionResp());
+        when(pemActivitiService.deployProcessDefinition(anyString(),any())).thenReturn("anyKey");
+        MarkAsFinalActivityDefinitionVersionResp response = activityVersionService.markAsFinalActivityDefinitionVersion(activityDefnVersionKey);
+        assertNotNull(response);
+        assertEquals(Status.FINAL.getStatus(), activityDefnVersion.getStatus());
+        verify(activityDefnVersionRepo, times(1)).save(activityDefnVersion);
+        verify(activityDefnVersionRepo, times(1)).findById(activityDefnVersionKey);
     }
 
     @Test

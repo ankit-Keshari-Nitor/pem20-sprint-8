@@ -21,7 +21,7 @@ public class PEMUserDetailsService implements UserDetailsService {
         // return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities());
 
         // For now, return a dummy user for illustration
-        return org.springframework.security.core.userdetails.User.withUsername("user")
+        return org.springframework.security.core.userdetails.User.withUsername("user1")
                 .password("{noop}password")
                 .authorities("ROLE_USER")
                 .build();

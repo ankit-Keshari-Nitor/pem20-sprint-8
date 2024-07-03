@@ -44,6 +44,7 @@ public class TenantFilter extends OncePerRequestFilter {
         } finally {
             // Clear MDC context when request completes
             TenantContext.clear();
+            ThreadContext.clearAll();
         }
     }
 

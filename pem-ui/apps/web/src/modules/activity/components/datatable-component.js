@@ -63,11 +63,11 @@ const ActivityDataTableComponent = ({
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
         <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.VIEW} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.VIEW, id)} />
-        <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EDIT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EDIT, id)} />
+        {status !== 'DELETE' && (<OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EDIT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EDIT, id)} />)}
         {!showDrawer ? (
           <>
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_ACTIVITY, id)} />
-            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_ACTIVITY, id)} />
+            {status !== 'DELETE' && (<OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_ACTIVITY, id)} />)}
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_ACTIVITY, id)} />
           </>
         ) : (
@@ -78,7 +78,7 @@ const ActivityDataTableComponent = ({
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_VERSION, id)} />
           </>
         )}
-        <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.SHARE_UNSHARE} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.SHARE_UNSHARE, id)} />
+        {status !== 'DELETE' && (<OverflowMenuItem itemText={ACTION_COLUMN_KEYS.SHARE_UNSHARE} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.SHARE_UNSHARE, id)} />)}
         {status !== 'DELETE' && (
           <OverflowMenuItem hasDivider itemText={
             <>

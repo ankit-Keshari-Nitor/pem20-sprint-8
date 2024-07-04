@@ -37,12 +37,12 @@ public class BpmnConvertServiceTest {
     }
 
     @Test
-    public void readSampleUiJsonRequest(){
+    public void testReadSampleUiJsonRequest(){
         Assertions.assertNotNull(inputJson);
     }
 
     @Test
-    public void convertUiJsonIntoBpmnDefinition() throws JsonProcessingException, BpmnConverterException {
+    public void testConvertUiJsonIntoBpmnDefinition() throws JsonProcessingException, BpmnConverterException {
         PemBpmnModel pemBpmnModel = objectMapper.readValue(inputJson,PemBpmnModel.class);
 
         BpmnModel bpmnModel = bpmnConvertService.convertIntoBpmnDefinition(pemBpmnModel, BpmnConverterRequest.builder().processId(PEM_TEST_PROCESS).build() );
@@ -58,7 +58,7 @@ public class BpmnConvertServiceTest {
     }
 
     @Test
-    public void convertBpmnDefinitionIntoUiJson() throws JsonProcessingException, BpmnConverterException {
+    public void testConvertBpmnDefinitionIntoUiJson() throws JsonProcessingException, BpmnConverterException {
 
         BpmnModel bpmnModel = bpmnConvertService
                 .convertIntoBpmnDefinition(objectMapper.readValue(inputJson,PemBpmnModel.class),BpmnConverterRequest.builder().processId(PEM_TEST_PROCESS).build() );

@@ -1,7 +1,6 @@
 package com.precisely.pem.services;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.BpmnConverterRequest;
@@ -285,7 +284,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     @Test
     void getActivityDataForSpecificVersion_Positive() throws Exception{
-        byte[] mockData = "Sample data".getBytes();
+        byte[] mockData = SAMPLE_DATA.getBytes();
         when(mockBlob.length()).thenReturn((long) mockData.length);
         when(mockBlob.getBytes(1, (int) mockBlob.length())).thenReturn(mockData);
 
@@ -335,7 +334,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     @Test
     void getActivityContextDataForSpecificVersion_Positive() throws Exception{
-        byte[] mockData = "Sample data".getBytes();
+        byte[] mockData = SAMPLE_DATA.getBytes();
         when(mockBlob.length()).thenReturn((long) mockData.length);
         when(mockBlob.getBytes(1, (int) mockBlob.length())).thenReturn(mockData);
 
@@ -346,12 +345,9 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         activityDefnData.setDefData(mockBlob);
         mockActivityDefnDataFindById().thenReturn(Optional.of(activityDefnData));
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        Process process = objectMapper.readValue(getActivityBpmnProcessObject(),Process.class);
-
-        Mockito.when(bpmnModel.getProcessById(ArgumentMatchers.anyString())).thenReturn(process);
+        Mockito.when(bpmnModel.getProcessById(ArgumentMatchers.anyString())).thenReturn(new Process());
         Mockito.when(bpmnConvertService.getBpmnModel(activityDefnData.getDefData())).thenReturn(bpmnModel);
-
+        Mockito.when(bpmnConvertService.getContextDataFromProcess(ArgumentMatchers.any())).thenReturn(TEST_CONTEXT_DATA);
         Object response = activityVersionService.getActivityDefinitionContextData(TEST_ACTIVITY_DEFN_VERSION_KEY);
         assertNotNull(response);
     }

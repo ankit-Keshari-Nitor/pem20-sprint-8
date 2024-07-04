@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 const useMinMaxInput = () => {
-  const [enteredValue, setEnteredValue] = useState("");
+  const [enteredValue, setEnteredValue] = useState('');
   const [inValid, setInvalid] = useState(false);
-  const [invalidText, setInvalidText] = useState("");
+  const [invalidText, setInvalidText] = useState('');
   const [minValue, setMinValue] = useState();
   const [maxValue, setMaxValue] = useState();
 
@@ -35,7 +35,7 @@ const useMinMaxInput = () => {
       }
     } else {
       setInvalid(false);
-      setInvalidText("");
+      setInvalidText('');
     }
   }
 
@@ -45,7 +45,7 @@ const useMinMaxInput = () => {
     invalidText: invalidText,
     valueChangeHandler,
     minChangeHandler,
-    maxChangeHandler,
+    maxChangeHandler
   };
 };
 

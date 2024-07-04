@@ -1,71 +1,73 @@
 import { create } from 'zustand';
-import { ACTIVITY_DEFINITION_DATA } from '../constants';
 
+const Activity_Initial_State = {
+  definition: {
+    name: 'New Activity',
+    description: '',
+    definationKey: ''
+  },
+  version: {
+    key: '',
+    encrypted: false,
+    contextData: '',
+    status: 'Draft',
+    number: 1
+  },
+  schema: {
+    nodes: [],
+    edges: []
+  }
+};
+
+const Selected_Activity_Initial_State = {
+  actDefName: '',
+  activityDefKey: '',
+  actDefVerKey: '',
+  actDefStatus: 'Draft',
+  operation: 'New',
+  status: 'Draft',
+  version: 'Ver 1.'
+};
 
 const activityStore = (set, get) => ({
-  selectedActivity: {
-    actDefName: '',
-    activityDefKey: '',
-    actDefVerKey: '',
-    operation: ''
-  },
-  activityData: {
-    definition: {},
-    schema: {},//node+edges+ each node's data(def,exit validation,form design)
-    versions: [],
-    operation: ''
-  },
+  selectedActivity: Selected_Activity_Initial_State,
+  activityData: Activity_Initial_State,
   // Activity Flow State
-  editDefinitionProps: (activity, operation) => {
+  updateActivityDetails: (activity) => {
     set((state) => {
-      const copyNodes = ACTIVITY_DEFINITION_DATA;
-      Object.keys(copyNodes).map((key) => {
-        if (activity[key]) {
-          copyNodes[key] = activity[key];
-        }
-        return copyNodes;
-      });
-
       return {
         activityData: {
-          definition: copyNodes,
-          schema: state.activityData.schema,
-          versions: [],
-          operation: operation
+          definition: activity.definition,
+          version: activity.version,
+          schema: state?.activityData?.schema
         },
         selectedActivity: state.selectedActivity
       };
     });
   },
-  //this changes during - 
-  editSchemaProps: (task, operation) => {
+  //this changes during -
+  updateActivitySchema: (task) => {
     set((state) => {
       return {
-        activityData:{ 
-          definition: state.activityData.definition, 
-          schema: { ...task }, 
-          versions: [], 
-          operation: operation 
+        activityData: {
+          definition: state?.activityData?.definition,
+          version: state?.activityData?.version,
+          schema: { ...task }
         },
-        selectedActivity: state.selectedActivity
+        selectedActivity: state?.selectedActivity
       };
     });
   },
-  setSelectedActivity: ({ activityDefKey, actDefName, actDefVerKey, operation }) => {
+  setSelectedActivity: (currentActivity) => {
     set((state) => {
-      const selectedActivity = { actDefName, activityDefKey, actDefVerKey, operation };
-      return { ...state.activityData,  selectedActivity: selectedActivity };
+      //const selectedActivity = { actDefName, activityDefKey, actDefVerKey, operation,status,version:`Ver.${version}` };
+      return { ...state.activityData, selectedActivity: currentActivity };
     });
   },
   reset: () => {
     set({
-      activityData: {
-        definition: {},
-        schema: {},
-        versions: [],
-        operation: ''
-      },
-      selectedActivity: null
+      activityData: Activity_Initial_State,
+      selectedActivity: Selected_Activity_Initial_State
     });
   }
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Toggle as CarbonToggle } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE,id, NameLabel, helperText, labelA, labelB, readOnly, labelText, isRequired } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, id, NameLabel, helperText, labelA, labelB, readOnly, labelText, isRequired } from '../constant';
 import { ToggleIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.TOGGLE;
@@ -22,7 +22,7 @@ Toggle.config = {
   group: FORM_FIELD_GROUPS.ACTION,
   icon: <ToggleIcon />,
   editableProps: {
-    Basic: [id,NameLabel, labelText, helperText, labelA, labelB, readOnly],
+    Basic: [id, NameLabel, labelText, helperText, labelA, labelB, readOnly],
     Condition: []
   },
   advanceProps: [isRequired]

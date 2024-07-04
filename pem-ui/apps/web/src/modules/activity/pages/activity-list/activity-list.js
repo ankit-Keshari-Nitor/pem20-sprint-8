@@ -5,11 +5,11 @@ import '@b2bi/styles/pages/list-page.scss';
 import * as ActivityService from '../../services/activity-service.js';
 import * as RolloutService from '../../services/rollout-service';
 
-import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
+import { ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
 import { ExpandableSearch, MultiSelect, Button } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
 
-import WrapperModal from '../../helpers/wrapper-modal';
+import GeneralModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
 
 import useActivityStore from '../../store';
@@ -31,7 +31,8 @@ export default function ActivityList() {
 
   const [totalRows, setTotalRows] = useState(0);
   const [searchKey, setSearchKey] = useState('');
-  const [sortDir, setSortDir] = useState('ASC'); // Sorting direction state
+  const [sortDir, setSortDir] = useState('DESC'); // Sorting direction state
+  const [sortBy, setSortBy] = useState('modifyTs'); // Sorting direction state
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [rows, setRows] = useState([]);
@@ -69,7 +70,7 @@ export default function ActivityList() {
 
   // Function to fetch and set data from the API
   const fetchAndSetData = useCallback(() => {
-    ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status)
+    ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status, sortBy)
       .then((data) => {
         setRows(data.content);
         setTotalRows(data.pageContent.totalElements);
@@ -84,7 +85,7 @@ export default function ActivityList() {
           onCloseButtonClick: () => setNotificationProps(null)
         });
       });
-  }, [pageNo, pageSize, sortDir, status, searchKey]);
+  }, [pageNo, pageSize, sortDir, status, searchKey, sortBy]);
 
   // useEffect to trigger fetchAndSetData whenever dependencies change
   useEffect(() => {
@@ -93,7 +94,8 @@ export default function ActivityList() {
 
   // Handler for sorting table columns
   const handleHeaderClick = (headerKey) => {
-    if (headerKey !== 'ellipsis' && headerKey !== 'action') {
+    if (headerKey === 'name') {
+      setSortBy('activityName');
       setSortDir((prevSortDir) => (prevSortDir === 'ASC' ? 'DESC' : 'ASC'));
     }
   };
@@ -119,7 +121,9 @@ export default function ActivityList() {
       activityDefKey: record.activityDefnKey,
       actDefName: record.name,
       actDefVerKey: record.activityDefnVersionKey,
-      operation: action
+      operation: action,
+      status: record.status,
+      version: record.version
     });
     setSelectedActivity(record);
     switch (action) {
@@ -203,6 +207,11 @@ export default function ActivityList() {
     pageUtil.navigate(`${id}`, {});
   };
 
+  const onNewClick = () => {
+    store.reset();
+    pageUtil.navigate('new', {});
+  };
+
   const handleVersion = (id, activityName, status) => {
     setActivityDefnKey(id);
     setActivityName(activityName);
@@ -266,7 +275,7 @@ export default function ActivityList() {
         <div className="header-button-left">
           {/* Search, New, Import buttons */}
           <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
-          <Button size="sm" className="new-button" renderIcon={NewTab} href={ROUTES.NEW_ACTIVITY}>
+          <Button size="sm" className="new-button" renderIcon={NewTab} onClick={onNewClick}>
             New
           </Button>
           <Button size="sm" kind="tertiary" className="import-button" renderIcon={Add}>
@@ -309,7 +318,7 @@ export default function ActivityList() {
       {/* For Version Drawer */}
       {/*  </Section> */}
       {/* Modal for action confirmation */}
-      <WrapperModal
+      <GeneralModal
         isOpen={showGeneralActionModal}
         setIsOpen={setShowGeneralActionModal}
         modalHeading="Confirmation"
@@ -320,10 +329,10 @@ export default function ActivityList() {
         onRequestClose={() => setShowGeneralActionModal(false)}
       >
         {message}
-      </WrapperModal>
+      </GeneralModal>
       {/* Modal for Test operation */}
       {showTestModal && (
-        <WrapperModal
+        <GeneralModal
           isOpen={showTestModal}
           setIsOpen={setShowTestModal}
           modalHeading={selectedActivity ? selectedActivity.name : ''}
@@ -334,10 +343,12 @@ export default function ActivityList() {
           onRequestClose={() => setShowTestModal(false)}
         >
           <ActivityTestModal currentTestData={currentTestData} formRenderSchema={formRenderSchema} />
-        </WrapperModal>
+        </GeneralModal>
       )}
+
       {/* Notification toast */}
       {notificationProps && notificationProps.open && <WrapperNotification {...notificationProps} />}
+
       {/* Modal for Rollout operation */}
       {showRolloutModal && (
         <ActivityRolloutModal

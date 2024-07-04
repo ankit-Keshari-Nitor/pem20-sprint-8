@@ -29,12 +29,12 @@ Before(async function ({ pickle }) {
   });
   /*this.server = await request.newContext({
       // All requests we send go to this API endpoint.
-      baseURL: config.BASE_API_URL,
+      baseURL: config.BASE_API_END_POINTS,
     });*/
 
   //await this.context.tracing.start({ screenshots: true, snapshots: true });
   this.page = await this.context.newPage();
-  
+
   /*this.page.on('console', async (msg: ConsoleMessage) => {
       if (msg.type() === 'log') {
         await this.attach(msg.text());
@@ -46,15 +46,15 @@ Before(async function ({ pickle }) {
 BeforeStep(async function (scenario) {
   // This hook will be executed before all steps, and take a screenshot on step prestate
   //if (scenario.result.status === Status.FAILED) {
-    //await takeScreenShot.bind(this)(scenario.pickleStep.name);
+  //await takeScreenShot.bind(this)(scenario.pickleStep.name);
   // }
   // await takeScreenShot.bind(this)(scenario.pickleStep.name, "BeforeStep");
 });
 
-AfterStep( async function (scenario) {
+AfterStep(async function (scenario) {
   // This hook will be executed after all steps, and take a screenshot on step failure
   if (scenario.result.status === Status.FAILED) {
-    await takeScreenShot.bind(this)(scenario.pickleStep.name, "AfterStepFailure");
+    await takeScreenShot.bind(this)(scenario.pickleStep.name, 'AfterStepFailure');
   }
   // await takeScreenShot.bind(this)(scenario.pickleStep.name, "AfterStep");
 });
@@ -74,9 +74,9 @@ After(async function (scenario) {
       //await this.context?.tracing.stop({
       //  path: `${tracesDir}/${this.testName}-${timePart}trace.zip`
       //});
-      await takeScreenShot.bind(this)(scenario.pickle.name, "AfterScenario");
+      await takeScreenShot.bind(this)(scenario.pickle.name, 'AfterScenario');
       const path = await this.page.video().path();
-      attachVedio.bind(this)(path, "failureVedio");
+      attachVedio.bind(this)(path, 'failureVedio');
       // this.attach(path,{fileName: "vediopath"})
     }
   }
@@ -95,13 +95,12 @@ const takeScreenShot = async function (fileName, type) {
     path: screenShotPath + fileName + screensShotExtn,
     fullPage: true
   });
-  if (screenShot) await this.attach(screenShot, { mediaType: 'image/png', fileName: type});
+  if (screenShot) await this.attach(screenShot, { mediaType: 'image/png', fileName: type });
 };
 
-
-const attachVedio = async function(vediopath, type) {
+const attachVedio = async function (vediopath, type) {
   const videoEmbedCode = `<video width="640" height="480" controls><source src="${vediopath}" type="video/webm">Your browser does not support the video tag.</video>`;
 
   // Attach the video embed code to the Cucumber report
-  this.attach(videoEmbedCode, { mediaType: 'text/html', fileName: type, url: videoEmbedCode} );
-}
+  this.attach(videoEmbedCode, { mediaType: 'text/html', fileName: type, url: videoEmbedCode });
+};

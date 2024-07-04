@@ -14,7 +14,9 @@ import {
   FORM_FIELD_GROUPS,
   isRequired,
   labelText,
-  regexValidation, height, id,
+  regexValidation,
+  height,
+  id
 } from '../constant';
 import { TextAreaIcon } from '../icons';
 
@@ -34,7 +36,8 @@ const TextArea = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
     <CarbonTextArea
       id={id}
       rows={height}
-      data-testid={id} labelText={labelText === undefined ? label : labelText}
+      data-testid={id}
+      labelText={labelText === undefined ? label : labelText}
       value={fieldValue}
       onChange={(e) => {
         previewMode && onChangeHandle(currentPath, e.target.value);

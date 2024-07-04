@@ -4,13 +4,13 @@ import { TextArea, Grid, Column, Button } from '@carbon/react';
 import { QueryBuilderDnD } from '@react-querybuilder/dnd';
 import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
 import CarbonWrapper from './condition-builder-wrapper/carbon-wrapper';
-import QueryBuilder  from 'react-querybuilder';
+import QueryBuilder from 'react-querybuilder';
 import { validationQuery } from '../helpers/generate-validation-query';
 import { INITIAL_QUERY, QUERY_COMBINATOR, QUERY_FIELDS } from '../../constants';
 
 import './exit-validation-form.scss';
 
-export default function ExitValidationFrom({ onSubmitExitValidationForm, setOpenCancelDialog, readOnly={readOnly} }) {
+export default function ExitValidationFrom({ onSubmitExitValidationForm, setOpenCancelDialog, readOnly = { readOnly } }) {
   const [query, setQuery] = useState(INITIAL_QUERY);
   return (
     <>
@@ -30,7 +30,7 @@ export default function ExitValidationFrom({ onSubmitExitValidationForm, setOpen
           </CarbonWrapper>
         </Column>
         <Column className="form-field" lg={16}>
-          <TextArea placeholder="Enter Text" labelText="Error Message" rows={4} id="text-area-1" disabled={readOnly}/>
+          <TextArea placeholder="Enter Text" labelText="Error Message" rows={4} id="text-area-1" disabled={readOnly} />
         </Column>
         {/* <Column className="form-field" lg={16}>
           <h4>Query</h4>

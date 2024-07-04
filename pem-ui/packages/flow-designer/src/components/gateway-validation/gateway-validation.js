@@ -5,9 +5,15 @@ import useTaskStore from '../../store';
 
 export default function GatewayValidation({ readOnly, selectedNode }) {
   const storeData = useTaskStore((state) => state.tasks);
-  
+
   const onGatewayValidation = (query) => {
     console.log('query', query);
+  };
+
+  const getConnectedNodes = (taskNodes, connectedEdges) => {
+    return taskNodes.filter((o1) => {
+      return connectedEdges.some((o2) => o2.target === o1.id);
+    });
   };
 
   useEffect(() => {
@@ -17,11 +23,10 @@ export default function GatewayValidation({ readOnly, selectedNode }) {
           return edge;
         }
       });
-      let connectedNodes = storeData.taskNodes.filter((o1) => {
-        return connectedEdges.some((o2) => o2.target === o1.id);
-      });
+      console.log('connectedEdges', connectedEdges);
+      // const connectedNodes = getConnectedNodes(storeData.taskNodes, connectedEdges);
 
-      console.log('connectedNodes', connectedNodes);
+      
     }
   }, []);
 

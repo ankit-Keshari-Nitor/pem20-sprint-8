@@ -2,15 +2,8 @@ import React from 'react';
 import classes from './activity-sidedrawer.module.scss';
 import { changeAnchor } from './change-anchor';
 
-const ActivityVersionsSideDrawer = ({
-  showDrawer,
-  anchor,
-  onClose,
-  children
-
-}) => {
+const ActivityVersionsSideDrawer = ({ showDrawer, anchor, onClose, children }) => {
   const { drawer, animate, hidden, overlay, overlayOpen, overlayHidden, actionItem } = classes;
-
 
   return (
     <>

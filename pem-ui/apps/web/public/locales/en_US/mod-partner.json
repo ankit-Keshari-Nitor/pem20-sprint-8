@@ -19,13 +19,13 @@
       "REJECTED": "Rejected"
     },
     "actions": {
-        "search": "Search by Company Name/Unique ID or User ID/Email",
-        "add": "Add",
-        "invite": "Invite",
-        "edit": "Edit",
-        "startActivity": "Start Activity",
-        "resetPassword": "Reset Password",
-        "deactivate": "Deactivate"
+      "search": "Search by Company Name/Unique ID or User ID/Email",
+      "add": "Add",
+      "invite": "Invite",
+      "edit": "Edit",
+      "startActivity": "Start Activity",
+      "resetPassword": "Reset Password",
+      "deactivate": "Deactivate"
     }
   }
 }

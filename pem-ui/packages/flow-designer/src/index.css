@@ -27,7 +27,6 @@ body,
 
 @media (min-width: 82rem) {
   .cds--modal-container {
-      inline-size: 42% !important;
+    inline-size: 42% !important;
   }
 }
-

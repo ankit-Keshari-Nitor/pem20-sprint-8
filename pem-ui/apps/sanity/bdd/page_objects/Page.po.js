@@ -39,7 +39,7 @@ class Page {
     return new DataTable(this.parent, await this._getPage(), datatableName);
   }
 
-  async checkElementStatus (element, status) {
+  async checkElementStatus(element, status) {
     if (status === 'enabled') {
       return await expect(element).toBeEnabled();
     } else if (status === 'disabled') {
@@ -51,7 +51,7 @@ class Page {
     } else if (status === 'readonly') {
       return await expect(element).not.toBeEditable();
     }
-  };
+  }
 }
 
 const getPage = function (parent, pageName) {

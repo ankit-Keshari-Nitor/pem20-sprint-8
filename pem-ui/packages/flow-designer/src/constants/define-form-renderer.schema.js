@@ -450,7 +450,7 @@ export const SPONSOR_FORM_SCHEMA = {
     {
       component: componentTypes.TEXT_FIELD,
       name: 'estimate_days',
-      labelText: 'Estimate (Days)',
+      labelText: 'Estimate (Days)'
     },
     {
       component: componentTypes.SELECT,
@@ -577,7 +577,7 @@ export const XSLT_FROM_SCHEMA = {
           message: 'Description must be no longer then 100 characters'
         }
       ]
-    },
+    }
   ]
 };
 

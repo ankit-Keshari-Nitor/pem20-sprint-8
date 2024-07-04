@@ -4,7 +4,7 @@ import './designer.scss';
 
 import Row from '../../elements/custom-row';
 import Canvas from '../canvas';
-import ComponentsTray from '../components-tray/components-tray';
+import ComponentsTray from '../components-tray';
 import PropsPanel from '../props-panel/props-panel';
 
 import {

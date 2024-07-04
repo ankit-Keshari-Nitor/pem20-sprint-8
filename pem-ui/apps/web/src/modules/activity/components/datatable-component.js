@@ -67,7 +67,7 @@ const ActivityDataTableComponent = ({
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
         <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.VIEW} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.VIEW, id)} />
-        {status !== 'DELETE' && <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EDIT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EDIT, id)} />}
+        {status !== 'DELETE' && status !== 'FINAL' && <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EDIT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EDIT, id)} />}
         {!showDrawer ? (
           <>
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_ACTIVITY, id)} />

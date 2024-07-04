@@ -75,7 +75,12 @@ const DialogFlowDesigner = ({
             <Panel defaultSize={34} minSize={34} maxSize={80}>
               <div className="dnd-flow">
                 <div className="task-properties-container">
-                  <BlockPropertiesTray selectedNode={selectedDialogNode} setOpenPropertiesBlock={setOpenDialogPropertiesBlock} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />
+                  <BlockPropertiesTray
+                    selectedNode={selectedDialogNode}
+                    setOpenPropertiesBlock={setOpenDialogPropertiesBlock}
+                    selectedTaskNode={selectedTaskNode}
+                    readOnly={readOnly}
+                  />
                 </div>
               </div>
             </Panel>

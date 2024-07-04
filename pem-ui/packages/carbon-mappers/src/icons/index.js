@@ -19,9 +19,9 @@ export const TextInputIcon = () => {
       <path
         d="M4.5625 12.75L4.5625 5.25M2.6875 1.5L23.3125 1.5C24.348 1.5 25.1875 2.33947 25.1875 3.375V14.625C25.1875 15.6605 24.348 16.5 23.3125 16.5L2.6875 16.5C1.65197 16.5 0.8125 15.6605 0.8125 14.625L0.8125 3.375C0.8125 2.33947 1.65197 1.5 2.6875 1.5Z"
         stroke="#292929"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -33,9 +33,9 @@ export const TextAreaIcon = () => {
       <path
         d="M5.90625 14.75L12.625 14.75M5.90625 11L15.125 11M5.90625 7.25L18.0938 7.25M1.6875 1.625L22.3125 1.625C22.8303 1.625 23.25 2.04473 23.25 2.5625L23.25 19.4375C23.25 19.9553 22.8303 20.375 22.3125 20.375L1.6875 20.375C1.16973 20.375 0.75 19.9553 0.75 19.4375L0.75 2.5625C0.75 2.04473 1.16973 1.625 1.6875 1.625Z"
         stroke="#161616"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -123,16 +123,16 @@ export const ToggleIcon = () => {
       <path
         d="M20.625 1.5L9.37499 1.5C5.23286 1.5 1.875 4.85788 1.875 9.00001C1.875 13.1421 5.23286 16.5 9.37499 16.5L20.625 16.5C24.7671 16.5 28.125 13.1421 28.125 8.99999C28.125 4.85786 24.7671 1.5 20.625 1.5Z"
         stroke="#292929"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M9.37499 12.75C11.4461 12.75 13.125 11.0711 13.125 9C13.125 6.92893 11.4461 5.25 9.37499 5.25C7.30392 5.25 5.62499 6.92893 5.62499 9C5.62499 11.0711 7.30392 12.75 9.37499 12.75Z"
         stroke="#292929"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

@@ -12,7 +12,8 @@ import {
   FORM_FIELD_LABEL,
   FORM_FIELD_GROUPS,
   isRequired,
-  labelText,id,
+  labelText,
+  id,
   isDisabled
 } from '../constant';
 import { CharacterWholeNumber } from '@carbon/icons-react';
@@ -20,7 +21,7 @@ import { CharacterWholeNumber } from '@carbon/icons-react';
 const type = FORM_FIELD_TYPE.NUMBER;
 
 const NumberInput = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
-  const { labelText, helperText, disabled,label, value, isRequired, min, max, ...rest } = field;
+  const { labelText, helperText, disabled, label, value, isRequired, min, max, ...rest } = field;
   const [fieldValue, setFieldValue] = useState();
 
   useEffect(() => {
@@ -59,7 +60,7 @@ NumberInput.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <CharacterWholeNumber />,
   editableProps: {
-    Basic: [id,NameLabel, labelText, placeHolder, helperText, readOnly],
+    Basic: [id, NameLabel, labelText, placeHolder, helperText, readOnly],
     Condition: []
   },
   advanceProps: [minProps, maxProps, regexValidation, isRequired]

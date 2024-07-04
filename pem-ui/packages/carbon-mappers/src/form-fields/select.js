@@ -1,6 +1,6 @@
 import React from 'react';
 import { Select as CarbonSelect, SelectItem } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, id,options, helperText, NameLabel, placeHolder, labelText, readOnly, isRequired  } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, id, options, helperText, NameLabel, placeHolder, labelText, readOnly, isRequired } from '../constant';
 import { SelectIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.SELECT;
@@ -30,7 +30,7 @@ Select.config = {
   group: FORM_FIELD_GROUPS.SELECTION,
   icon: <SelectIcon />,
   editableProps: {
-    Basic: [id,NameLabel, labelText, placeHolder, helperText, options, readOnly],
+    Basic: [id, NameLabel, labelText, placeHolder, helperText, options, readOnly],
     Condition: []
   },
   advanceProps: [isRequired]

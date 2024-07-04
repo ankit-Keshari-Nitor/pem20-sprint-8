@@ -1,12 +1,12 @@
 package com.precisely.pem.dtos;
 
 public enum NodeTypes {
-    START("startEventNode","StartNoneEvent"),
-    END("endEventNode","EndNoneEvent"),
-    FORM("formNode","UserTask"),
+    START("startEvent","StartNoneEvent"),
+    END("endEvent","EndNoneEvent"),
+    FORM("form","UserTask"),
     SEQUENCE("connectors","SequenceFlow"),
-    API_NODE("apiNode","ServiceTask"),
-    XSLT_NODE("xsltNode","ServiceTask"),
+    API_NODE("api","ServiceTask"),
+    XSLT_NODE("xslt","ServiceTask"),
     EXCLUSIVE_GATEWAY("gateway","ExclusiveGateway"),
     INCLUSIVE_GATEWAY("gateway","InclusiveGateway"),
     PARTNER_SUB_PROCESS("PartnerTask","SubProcess"),

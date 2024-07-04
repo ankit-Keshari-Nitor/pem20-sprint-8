@@ -15,6 +15,7 @@ import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
+import com.precisely.pem.repositories.ActivityDefinitionVersionCustomRepo;
 import com.precisely.pem.service.PEMActivitiService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,10 +24,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,12 +46,12 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     @InjectMocks
     ActivityVersionServiceImpl activityVersionService;
-
     @Mock
     private Blob mockBlob;
-
     @Mock
     PEMActivitiService pemActivitiService;
+    @Mock
+    private ActivityDefinitionVersionCustomRepo activityDefinitionVersionCustomRepo;
 
     @BeforeEach
     public void setup(){
@@ -72,16 +70,15 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         int pageSize = 10;
         String sortBy = "modifyTs";
         String sortDir = "DESC";
-        String status = Status.DRAFT.getStatus();
+        List<String> status = Arrays.asList(Status.DRAFT.getStatus());
         List<ActivityDefnVersion> activityDefnVersionList = new ArrayList<>();
         activityDefnVersionList.add(new ActivityDefnVersion());
         Page<ActivityDefnVersion> defnsPage = new PageImpl<>(activityDefnVersionList, PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending()), 1);
-        when(activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndIsDefaultAndDescriptionContaining(
-                eq(activityDefnKey), eq(status), anyString(), eq(isDefault), eq(description), any(PageRequest.class)))
+        when(activityDefinitionVersionCustomRepo.getAllVersionsList(anyString(),anyList(),anyString(),anyBoolean(),anyString(),any(Pageable.class)))
                 .thenReturn(defnsPage);
         // Act
         ActivityVersionDefnPaginationResp response = activityVersionService.getAllVersionDefinitionList(
-                sponsorContext, activityDefnKey, description, isDefault, pageNo, pageSize, sortBy, sortDir, status);
+                sponsorContext, activityDefnKey, description, isDefault, pageNo, pageSize, sortBy, sortDir, Arrays.asList(Status.DRAFT.getStatus()));
         // Assert
         assertNotNull(response);
         assertEquals(1, response.getPage().getTotalElements());

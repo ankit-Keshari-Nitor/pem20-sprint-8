@@ -1,6 +1,7 @@
 package com.precisely.pem.controller;
 
 import com.precisely.pem.commonUtil.SortBy;
+import com.precisely.pem.commonUtil.SortByModifyTs;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.PemBpmnModel;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -60,15 +62,15 @@ public class ActivityVersionController {
     })
     @GetMapping()
     public ResponseEntity<Object> getActivityVersionDefinitionList(@PathVariable(value = "activityDefnKey") String activityDefnKey,
-                                                                   @RequestParam(value = "isDefault",required = false, defaultValue = "false") Boolean isDefault,
+                                                                   @RequestParam(value = "isDefault",required = false) Boolean isDefault,
                                                                    @RequestParam(value = "description", required = false) @Size(min = 1, max = 255) String description,
-                                                                   @RequestParam(value = "status", defaultValue = "DRAFT", required = true) Status status,
+                                                                   @RequestParam(value = "status", required = false) List<String> status,
                                                                    @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
                                                                    @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                                                   @RequestParam(value = "sortBy", defaultValue = "modifyTs" ,required = false) SortBy sortBy,
+                                                                   @RequestParam(value = "sortBy", defaultValue = "modifyTs" ,required = false) SortByModifyTs sortBy,
                                                                    @RequestParam(value = "sortDir", defaultValue = "DESC", required = false) SortDirection sortDir,
                                                                    @PathVariable(value = "sponsorContext")String sponsorContext) throws Exception {
-        return new ResponseEntity<>(activityVersionService.getAllVersionDefinitionList(sponsorContext,activityDefnKey,description,isDefault,pageNo, pageSize, sortBy ==null? "modifyTs":sortBy.name(), sortDir ==null? "ASC":sortDir.name(),status.getStatus()),HttpStatus.OK);
+        return new ResponseEntity<>(activityVersionService.getAllVersionDefinitionList(sponsorContext,activityDefnKey,description,isDefault,pageNo, pageSize, sortBy.name(), sortDir ==null? "ASC":sortDir.name(), status),HttpStatus.OK);
     }
 
     @Operation(summary = "Get Version of Activity Definition", tags = { "Activity Definition Version" })

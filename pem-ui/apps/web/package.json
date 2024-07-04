@@ -11,6 +11,8 @@
     "@b2bi/shell": "^1.0.13",
     "@b2bi/styles": "^1.0.0",
     "@b2bi/ui-lib": "^1.0.0",
+    "axios": "^1.6.2",
+    "fs": "^0.0.1-security",
     "react-hook-form": "^7.48.2"
   },
   "devDependencies": {

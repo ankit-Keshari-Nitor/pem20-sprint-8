@@ -17,7 +17,14 @@ const CheckboxGroup = ({ field, id, currentPath, onChangeHandle, previewMode }) 
   }, [field, previewMode, value]);
 
   return (
-    <CarbonCheckboxGroup readOnly={readOnly} orientation={orientation} data-testid={`${id}-${previewMode}`} id={`${id}-${previewMode}`} legendText={labelText === undefined ? label : labelText} helperText={helperText}>
+    <CarbonCheckboxGroup
+      readOnly={readOnly}
+      orientation={orientation}
+      data-testid={`${id}-${previewMode}`}
+      id={`${id}-${previewMode}`}
+      legendText={labelText === undefined ? label : labelText}
+      helperText={helperText}
+    >
       {options &&
         options.map((element) => {
           return <CarbonCheckbox labelText={element?.label} id={`${element?.id}-${previewMode}`} value={element?.value} {...rest} />;

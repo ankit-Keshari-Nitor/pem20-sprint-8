@@ -5,7 +5,7 @@ import Tooltip from '../tooltip';
 import { FORM_FIELD_TYPE, FORM_FIELD_LABEL, FORM_FIELD_GROUPS } from '../../constant';
 
 const field = {
-  labelText: 'Info tooltip',
+  labelText: 'Info tooltip'
 };
 
 describe('Tooltip Component ', () => {

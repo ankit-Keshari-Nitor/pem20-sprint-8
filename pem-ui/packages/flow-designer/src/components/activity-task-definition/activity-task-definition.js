@@ -3,24 +3,25 @@ import React from 'react';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import { ACTIVITY_TASK_SCHEMA, COMPONENT_MAPPER, FORM_TEMPLATE } from '../../constants';
 
-const ActivityTaskDefinition = ({ id, editDefinitionProp, activityOperation, activityDefinitionData, readOnly }) => {
+const ActivityTaskDefinition = ({ id, onSubmitDefinitionForm, setShowActivityDefineDrawer, activityDefinitionData, readOnly }) => {
   ACTIVITY_TASK_SCHEMA.fields = ACTIVITY_TASK_SCHEMA.fields.map((item) => ({ ...item, isReadOnly: readOnly }));
-  const onSubmitDefinitionForm = (values) => {
-    editDefinitionProp(values, activityOperation);
+
+  const initialValues = {
+    name: activityDefinitionData.definition?.name,
+    description: activityDefinitionData.definition?.description,
+    encrypted: activityDefinitionData.version.encrypted | false,
+    contextData: activityDefinitionData.version.contextData
   };
 
-  const onCancelDefinitionForm = () => {
-    //setOpenCancelDialog(true);
-  };
   return (
     <FormRenderer
       id={id}
-      initialValues={activityDefinitionData}
+      initialValues={initialValues}
       FormTemplate={FORM_TEMPLATE}
       componentMapper={COMPONENT_MAPPER}
       schema={ACTIVITY_TASK_SCHEMA}
-      onSubmit={onSubmitDefinitionForm}
-      onCancel={() => onCancelDefinitionForm()}
+      onSubmit={(values) => onSubmitDefinitionForm(values)}
+      onCancel={() => setShowActivityDefineDrawer(false)}
     />
   );
 };

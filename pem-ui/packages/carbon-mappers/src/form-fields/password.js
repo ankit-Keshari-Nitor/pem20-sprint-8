@@ -12,7 +12,8 @@ import {
   isRequired,
   labelText,
   placeHolder,
-  valueLabel,id,
+  valueLabel,
+  id,
   regexValidation
 } from '../constant';
 import { Password as PasswordIcon } from '@carbon/icons-react';
@@ -59,7 +60,7 @@ Password.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <PasswordIcon />,
   editableProps: {
-    Basic: [id,NameLabel, labelText, placeHolder, helperText, valueLabel, readOnly],
+    Basic: [id, NameLabel, labelText, placeHolder, helperText, valueLabel, readOnly],
     Condition: []
   },
   advanceProps: [minProps, maxProps, regexValidation, isRequired]

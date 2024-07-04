@@ -297,10 +297,10 @@ export const FORM_TEMPLATE = ({ formFields, schema }) => {
         {() => (
           <Grid fullWidth className="button-container-container">
             <Column lg={16} className="buttons-container">
-              <Button kind="secondary" data-testid="cancel" name="cancel" type="button" onClick={onCancel} className="button"  disabled={readOnly}>
+              <Button kind="secondary" data-testid="cancel" name="cancel" type="button" onClick={onCancel} className="button" disabled={readOnly}>
                 Cancel
               </Button>
-              <Button data-testid="save" color="primary" variant="contained" type="submit" className="button"  disabled={readOnly}>
+              <Button data-testid="save" color="primary" variant="contained" type="submit" className="button" disabled={readOnly}>
                 Save
               </Button>
             </Column>

@@ -1,7 +1,7 @@
 const babel = require('@rollup/plugin-babel');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const postcss = require('rollup-plugin-postcss');
-const path = require("path");
+const path = require('path');
 
 module.exports = {
   input: 'src/index.js', // Entry point of your library
@@ -16,7 +16,7 @@ module.exports = {
     {
       file: 'dist/bundle1.esm.js', // Output ES module file
       format: 'esm', // ES module format
-      exports: "named",
+      exports: 'named'
     }
   ],
   plugins: [

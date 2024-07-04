@@ -1,26 +1,26 @@
 .header-button-right-drawer {
-    display: contents;
-    background-color: #ffffff;
-    justify-content: flex-start !important;
-    float: left !important;
-    color: #525252 !important;
-    font-weight: 500 !important;
-    font-size: 18px !important;
-    padding-top: 1rem !important;
-    padding-left: 0.75rem !important;
+  display: contents;
+  background-color: #ffffff;
+  justify-content: flex-start !important;
+  float: left !important;
+  color: #525252 !important;
+  font-weight: 500 !important;
+  font-size: 18px !important;
+  padding-top: 1rem !important;
+  padding-left: 0.75rem !important;
 }
 
 .header-button-left-drawer {
-    position: fixed !important;
-    display: inline-flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    background-color: #ffffff;
-    float: right;
-    right: 0%;
+  position: fixed !important;
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  background-color: #ffffff;
+  float: right;
+  right: 0%;
 }
 
 .headers-drawer {
-    padding-left: 0.75rem !important;
-    padding-bottom: 0.5rem !important;
+  padding-left: 0.75rem !important;
+  padding-bottom: 0.5rem !important;
 }

@@ -16,11 +16,11 @@ describe('RolloutGapDetails', () => {
         return {
           matches: false,
           addListener: function () {},
-          removeListener: function () {},
+          removeListener: function () {}
         };
       };
   });
-  
+
   afterEach(() => {
     window.matchMedia = undefined;
   });

@@ -8,7 +8,7 @@ jest.mock('../../services/rollout-service');
 
 const mockGroupList = [
   { key: 'group1', value: 'Group 1' },
-  { key: 'group2', value: 'Group 2' },
+  { key: 'group2', value: 'Group 2' }
 ];
 
 describe('RolloutGroupTab', () => {
@@ -18,14 +18,14 @@ describe('RolloutGroupTab', () => {
 
   test('renders the search input', () => {
     render(<RolloutGroupTab />);
-    
+
     const searchInput = screen.getByPlaceholderText('Search by group name');
     expect(searchInput).toBeInTheDocument();
   });
 
   test('renders the group list', async () => {
     render(<RolloutGroupTab />);
-    
+
     const groupListLabel = screen.getByText('Group List');
     expect(groupListLabel).toBeInTheDocument();
 

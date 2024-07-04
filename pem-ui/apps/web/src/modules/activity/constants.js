@@ -1,14 +1,13 @@
-export const NEW_ACTIVITY_URL = '#/activities/new';
-
 export const ROUTES = {
   NEW_ACTIVITY: '#/activities/new',
   ACTIVITY_LIST: '#/activities',
   ACTIVITY_EDIT: '#/activities/'
 };
 
-
-export const API_URL = {
-  ACTIVITY_DEFINITION: '/sponsors/cashbank/v2/activityDefinitions'
+export const API_END_POINTS = {
+  ACTIVITY_DEFINITION: '/sponsors/cashbank/v2/activityDefinitions',
+  ACTIVITY_INSTANCE: '/sponsors/{sponsorContext}/v2/activityInstances',
+  ACTIVITY_DEFINITION_VERSION: '/sponsors/{sponsorContext}/v2/activityDefinitions/{activityDefnKey}/version'
 };
 
 export const ACTION_COLUMN_KEYS = {
@@ -43,8 +42,7 @@ export const ACTIVITY_LIST_COLUMNS = [
   { key: ACTION_COLUMN_KEYS.VERSION, header: 'Default Version' },
   { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
   { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' },
-  { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' },
-  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' },
+  { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' }
 ];
 
 export const ACTIVITY_VERSION_COLUMNS = [

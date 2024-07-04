@@ -8,7 +8,7 @@ const DataLoaderConfig = {
         method: 'GET',
         // url: getEnvironmentValue('USER.PERMISSIONTREE')
         url: '/rest/sponsors/hsbc/partners',
-        handleOutput: (responseData) => {         
+        handleOutput: (responseData) => {
           ListAPIHandler.handleResponse(responseData, 'partnerKey');
         }
       };

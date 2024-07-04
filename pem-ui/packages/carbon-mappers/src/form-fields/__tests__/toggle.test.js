@@ -9,7 +9,7 @@ describe('Toggle Component', () => {
     isRequired: true,
     labelA: 'No',
     labelB: 'Yes',
-    readOnly: false,
+    readOnly: false
   };
 
   it('should render without crashing', () => {
@@ -27,7 +27,7 @@ describe('Toggle Component', () => {
     const fieldWithDefaults = {
       ...mockField,
       labelA: undefined,
-      labelB: undefined,
+      labelB: undefined
     };
     render(<Toggle field={fieldWithDefaults} id="toggle-id" />);
     expect(screen.getByText('No')).toBeInTheDocument();
@@ -36,12 +36,11 @@ describe('Toggle Component', () => {
   it('should pass additional props to the CarbonToggle component', () => {
     const additionalProps = {
       disabled: true,
-      defaultToggled: true,
+      defaultToggled: true
     };
     render(<Toggle field={{ ...mockField, ...additionalProps }} id="toggle-id" />);
     const toggleElement = screen.getByTestId('toggle-id');
     expect(toggleElement).toBeDisabled();
     expect(toggleElement).toHaveAttribute('aria-checked', 'true');
   });
-
 });

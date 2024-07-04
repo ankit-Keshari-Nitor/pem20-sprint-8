@@ -51,8 +51,17 @@ function App() {
           <Shell.ConfigurationProvider
             locales={Shell.SupportedLocales}
             locale={'en_US'}
-            sideNavConfig={[/*...sideNavConfig, ...Shell.sideNavConfig*/]}
-            headerMenuList={[/*...headerMenuList *//*, ...Shell.headerMenuList*/]}
+            sideNavConfig={
+              [
+                /*...sideNavConfig, ...Shell.sideNavConfig*/
+              ]
+            }
+            headerMenuList={
+              [
+                /*...headerMenuList */
+                /*, ...Shell.headerMenuList*/
+              ]
+            }
           >
             <Shell.ResourceProvider resourceMappings={{}}>
               <Shell.ModalProvider modals={{}}>
@@ -69,6 +78,5 @@ function App() {
     </Shell.EnvironmentProvider>
   );
 }
-
 
 export default App;

@@ -16,8 +16,8 @@ const TaskFlowDesigner = ({
   defaultViewport,
   snapGrid,
   taskFlowWrapper,
-  taskNodes,
-  taskEdges,
+  nodes,
+  edges,
   onTaskNodesChange,
   onTaskEdgesChange,
   setTaskFlowInstance,
@@ -26,14 +26,18 @@ const TaskFlowDesigner = ({
   onTaskNodeDragOver,
   onTaskNodeClick,
   onTaskNodeDoubleClick,
+
   TASK_NODE_TYPES,
   TASK_EDGE_TYPES,
+
   openTaskPropertiesBlock,
   selectedTaskNode,
+
   setOpenTaskPropertiesBlock,
-  editDefinitionProp,
+  updateActivityDetails,
   activityDefinitionData,
   activityOperation,
+
   readOnly,
   showActivityDefineDrawer,
   setShowActivityDefineDrawer,
@@ -54,8 +58,8 @@ const TaskFlowDesigner = ({
             <ReactFlowProvider>
               <div className="reactflow-wrapper" ref={taskFlowWrapper}>
                 <ReactFlow
-                  nodes={taskNodes}
-                  edges={taskEdges}
+                  nodes={nodes}
+                  edges={edges}
                   onNodesChange={onTaskNodesChange}
                   onEdgesChange={onTaskEdgesChange}
                   onInit={setTaskFlowInstance}
@@ -86,9 +90,8 @@ const TaskFlowDesigner = ({
                   <BlockPropertiesTray
                     selectedNode={selectedTaskNode}
                     setOpenPropertiesBlock={setOpenTaskPropertiesBlock}
-                    editDefinitionProp={editDefinitionProp}
-                    activityDefinitionData={activityDefinitionData}
-                    activityOperation={activityOperation}
+                    //activityOperation={activityOperation}
+                    // activityDefinitionData={activityDefinitionData}
                     readOnly={readOnly}
                   />
                 </div>
@@ -104,14 +107,14 @@ const TaskFlowDesigner = ({
                 <div className="task-properties-container">
                   <ActivityDefinitionForm
                     //selectedNode={selectedTaskNode}
-                    setOpenPropertiesBlock={setShowActivityDefineDrawer}
-                    onVersionSelection={onVersionSelection}
-                    editDefinitionProp={editDefinitionProp}
+                    setShowActivityDefineDrawer={setShowActivityDefineDrawer}
+                    onActivityDetailsSave={updateActivityDetails}
                     activityOperation={activityOperation}
                     activityDefinitionData={activityDefinitionData}
                     readOnly={readOnly}
                     versionData={versionData}
                     selectedVersion={selectedVersion}
+                    onVersionSelection={onVersionSelection}
                   />
                 </div>
               </div>

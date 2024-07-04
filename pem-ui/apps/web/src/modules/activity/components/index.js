@@ -1,3 +1,3 @@
-import DataTableComponent from "./datatable-component";
+import DataTableComponent from './datatable-component';
 
 export { DataTableComponent };

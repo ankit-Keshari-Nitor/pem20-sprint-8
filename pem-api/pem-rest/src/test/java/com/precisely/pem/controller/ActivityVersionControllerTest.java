@@ -1,6 +1,7 @@
 package com.precisely.pem.controller;
 
 import com.precisely.pem.commonUtil.SortBy;
+import com.precisely.pem.commonUtil.SortByModifyTs;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
@@ -49,7 +50,7 @@ class ActivityVersionControllerTest extends BaseControllerTest{
         ActivityVersionDefnPaginationResp resp = new ActivityVersionDefnPaginationResp();
         Mockito.when(activityVersionService.getAllVersionDefinitionList(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyBoolean(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString(),Mockito.any()))
                 .thenReturn(resp);
-        ResponseEntity<Object> output = activityVersionController.getActivityVersionDefinitionList("test",false,"test", Arrays.asList(Status.DRAFT.getStatus()),0,1, SortBy.modifyTs, SortDirection.ASC,"cashbank");
+        ResponseEntity<Object> output = activityVersionController.getActivityVersionDefinitionList("test",false,"test", Arrays.asList(Status.DRAFT.getStatus()),0,1, SortByModifyTs.modifyTs, SortDirection.ASC,"cashbank");
         assertNotNull(output);
     }
 

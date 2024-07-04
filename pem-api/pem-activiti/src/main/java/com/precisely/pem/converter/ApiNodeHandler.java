@@ -5,7 +5,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.precisely.pem.dtos.*;
 
+import static com.precisely.pem.dtos.Constants.*;
+
 public class ApiNodeHandler extends AbstractNodeHandler{
+
+
     @Override
     public void handleNode(Node node, ObjectNode outputJson, ObjectMapper objectMapper, BpmnConverterRequest request) {
         String type = node.getType();
@@ -56,43 +60,43 @@ public class ApiNodeHandler extends AbstractNodeHandler{
 
             //create field for each API Configuration
             ObjectNode apiConfigurationField = fields.addObject();
-            apiConfigurationField.put("name", "apiConfiguration");
+            apiConfigurationField.put("name", API_FIELD_API_CONFIGURATION);
             apiConfigurationField.put("stringValue", api.getApiConfiguration());
 
             ObjectNode urlField = fields.addObject();
-            urlField.put("name", "url");
+            urlField.put("name", API_FIELD_URL);
             urlField.put("stringValue", api.getUrl());
 
             ObjectNode methodField = fields.addObject();
-            methodField.put("name", "method");
+            methodField.put("name", API_FIELD_METHOD);
             methodField.put("stringValue", api.getMethod());
 
             ObjectNode requestContentTypeField = fields.addObject();
-            requestContentTypeField.put("name", "requestContentType");
+            requestContentTypeField.put("name", API_FIELD_REQUEST_CONTENT_TYPE);
             requestContentTypeField.put("stringValue", api.getRequestContentType());
 
             ObjectNode responseContentTypeField = fields.addObject();
-            responseContentTypeField.put("name", "responseContentType");
+            responseContentTypeField.put("name", API_FIELD_RESPONSE_CONTENT_TYPE);
             responseContentTypeField.put("stringValue", api.getResponseContentType());
 
             ObjectNode headersField = fields.addObject();
-            headersField.put("name", "headers");
+            headersField.put("name", API_FIELD_HEADERS);
             headersField.put("stringValue", api.getHeaders());
 
             ObjectNode requestBodyField = fields.addObject();
-            requestBodyField.put("name", "requestBody");
+            requestBodyField.put("name", API_FIELD_REQUEST_BODY);
             requestBodyField.put("stringValue", api.getRequestBody());
 
             ObjectNode sampleResponseField = fields.addObject();
-            sampleResponseField.put("name", "sampleResponse");
+            sampleResponseField.put("name", API_FIELD_SAMPLE_RESPONSE);
             sampleResponseField.put("stringValue", api.getSampleResponse());
 
             ObjectNode responseBodyField = fields.addObject();
-            responseBodyField.put("name", "responseBody");
+            responseBodyField.put("name", API_FIELD_RESPONSE_BODY);
             responseBodyField.put("stringValue", api.getResponseBody());
 
             ObjectNode typeField = fields.addObject();
-            typeField.put("name", "type");
+            typeField.put("name", API_FIELD_TYPE);
             typeField.put("stringValue", type);
 
             addChildShapes(outputJson,apiNodeChildShape);

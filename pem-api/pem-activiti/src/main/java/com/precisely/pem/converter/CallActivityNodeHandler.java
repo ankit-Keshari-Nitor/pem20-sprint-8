@@ -64,7 +64,6 @@ public class CallActivityNodeHandler extends AbstractNodeHandler {
                 // Adding outParameters objects
                 ObjectNode outParam1 = outParameters.addObject();
                 outParam1.put("source", outParam.getSource());
-                outParam1.put("sourceExpression", "");
                 outParam1.put("target", outParam.getTarget());
             }
 

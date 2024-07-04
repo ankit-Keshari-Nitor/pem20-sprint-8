@@ -3,7 +3,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.PemBpmnModel;
-import com.precisely.pem.service.BpmnConvertService;
+import com.precisely.pem.exceptionhandler.BpmnConverterException;
 import com.precisely.pem.service.BpmnConvertServiceImpl;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.Process;
@@ -23,7 +23,7 @@ public class BpmnConvertServiceTest {
 
     public static final String PEM_DEFINITIONS_EXAMPLE = "Pem Definitions 1";
     public static final String PEM_TEST_PROCESS = "PEM_TEST_PROCESS";
-    BpmnConvertService bpmnConvertService = new BpmnConvertServiceImpl();
+    BpmnConvertServiceImpl bpmnConvertService = new BpmnConvertServiceImpl();
 
     public static String INPUT_FILE_NAME = "user_input_sample.json";
     ObjectMapper objectMapper = new ObjectMapper();
@@ -37,12 +37,12 @@ public class BpmnConvertServiceTest {
     }
 
     @Test
-    public void readSampleUiJsonRequest(){
+    public void testReadSampleUiJsonRequest(){
         Assertions.assertNotNull(inputJson);
     }
 
     @Test
-    public void convertUiJsonIntoBpmnDefinition() throws JsonProcessingException {
+    public void testConvertUiJsonIntoBpmnDefinition() throws JsonProcessingException, BpmnConverterException {
         PemBpmnModel pemBpmnModel = objectMapper.readValue(inputJson,PemBpmnModel.class);
 
         BpmnModel bpmnModel = bpmnConvertService.convertIntoBpmnDefinition(pemBpmnModel, BpmnConverterRequest.builder().processId(PEM_TEST_PROCESS).build() );
@@ -58,7 +58,7 @@ public class BpmnConvertServiceTest {
     }
 
     @Test
-    public void convertBpmnDefinitionIntoUiJson() throws JsonProcessingException {
+    public void testConvertBpmnDefinitionIntoUiJson() throws JsonProcessingException, BpmnConverterException {
 
         BpmnModel bpmnModel = bpmnConvertService
                 .convertIntoBpmnDefinition(objectMapper.readValue(inputJson,PemBpmnModel.class),BpmnConverterRequest.builder().processId(PEM_TEST_PROCESS).build() );

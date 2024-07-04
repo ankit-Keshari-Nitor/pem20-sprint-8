@@ -46,6 +46,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
   const [mappedPropsName, setMappedPropsName] = useState('');
   const [mappedCurrentPathDetail, setMappedCurrentPathDetail] = useState('');
   const [selectedRadioValue, setSelectedRadioValue] = useState('');
+  const [selectedCheckboxValues, setSelectedCheckboxValues] = useState([]);
 
   const [tableHeader, setTableHeader] = React.useState([]);
   const [tableRows, setTableRows] = React.useState([]);
@@ -75,6 +76,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setTabSubTitle(selectedFiledProps?.component?.tabTitle);
     setComponentType(selectedFiledProps.component.type);
     setComponentTypes(collectPaletteEntries(componentMapper));
+    setSelectedCheckboxValues(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.type === 'checkbox')?.value || []);
     setSelectedRadioValue(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.type === 'radio')?.value || '');
     setOptions(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.type === 'Options')?.value || []);
     setTableHeader(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.propsName === TABLE_COLUMNS)?.value || []);
@@ -163,6 +165,18 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     }
     handleSchemaChanges(id, 'advance', propsName, newValue, path);
   };
+
+  const handleCheckboxGroupChange = (e, propsName) => {
+    const value = e.target.value;
+    setSelectedCheckboxValues((prevValues) => {
+      const newValues = prevValues.includes(value)
+        ? prevValues.filter((val) => val !== value)
+        : [...prevValues, value];
+      handleSchemaChanges(selectedFiledProps?.id, 'Basic', propsName, newValues, selectedFiledProps?.currentPathDetail);
+      return newValues;
+    });
+  };
+
 
   const OpenMappingDialog = (id, key, propsName, currentPathDetail) => {
     setOpenMappingDialog(true);
@@ -360,13 +374,10 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       <CheckboxGroup
                                         legendText={item.label}
                                         name={`checkbox-group-${selectedFiledProps?.id}`}
-                                        //valueSelected={selectedRadioValue}
-                                        onChange={(value) => {
-                                          console.log(value, '--------------');
-                                        }}
+                                        onChange={(e) => handleCheckboxGroupChange(e, item.propsName)}
                                       >
                                         {item?.options.length > 0 &&
-                                          item?.options.map((option, idx) => (option?.value ? <Checkbox id={selectedFiledProps?.id + idx} labelText={option.label} value={option.value} /> : null))}
+                                          item?.options.map((option, idx) => (option?.value ? <Checkbox id={selectedFiledProps?.id + idx} labelText={option.label} value={option.value} checked={selectedCheckboxValues.includes(option.value)} /> : null))}
                                       </CheckboxGroup >
                                     </div>
                                   )}

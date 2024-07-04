@@ -255,8 +255,8 @@ export const accept = {
   propsName: 'accept',
   label: 'Accept',
   options: [
-    { label: 'JPG', value: 'jpg' },
-    { label: 'PNG', value: 'png' }
+    { label: 'JPEG', value: 'image/jpeg' },
+    { label: 'PNG', value: 'image/png' }
   ],
   type: 'checkbox'
 };

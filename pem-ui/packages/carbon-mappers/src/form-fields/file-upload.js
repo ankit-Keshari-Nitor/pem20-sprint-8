@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { FileUploaderDropContainer } from '@carbon/react';
+import React, { useState } from 'react';
+import { FileUploaderDropContainer, FileUploaderItem } from '@carbon/react';
 import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, id, maxFileSize, NameLabel, helperText, accept, isRequired, labelText } from '../constant';
 import { FileAttachmentIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.FILE_UPLOADER;
 
-const FileUploader = ({ field, id }) => {
-  const { labelText, label, maxFileSize, ...rest } = field;
+const FileUploader = ({ field, id, }) => {
+  const { labelText, label, maxFileSize, accept, ...rest } = field;
 
-  const [file, setFile] = useState('');
+  const [file, setFile] = useState();
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    console.log('----------------', file)
-  }, [file]);
 
   function convertToBytes(sizeStr = '') {
     // Regular expression to match the size string
@@ -46,7 +42,7 @@ const FileUploader = ({ field, id }) => {
     return bytes;
   }
 
-  const onAddFiles = (event) => {
+  const onAddFiles = (event, files) => {
     const file = event.target.files || files.addedFiles;
 
     const newFile = [
@@ -60,26 +56,60 @@ const FileUploader = ({ field, id }) => {
     ];
     setFile(newFile[0]);
     onUploadFiles(newFile[0]);
+
   }
 
   const onUploadFiles = (fileUpload) => {
     if (fileUpload.filesize <= convertToBytes(maxFileSize)) {
-
+      setError('');
+      const updatedFile = {
+        ...fileUpload,
+        status: 'edit',
+        iconDescription: 'Delete Icon',
+        invalid: true,
+        errorSubject: 'InValid ',
+        errorBody: ('Error', { fileName: fileUpload.name, fileType: accept.join(',') })
+      };
+      setFile(updatedFile);
     } else {
-
+      setError('File size exceeds the maximum limit');
     }
   }
 
+  const onDeleteFile = function (...args) {
+    setFile();
+
+  };
 
   return (
     <div>
-      <FileUploaderDropContainer
-        labelText={labelText === undefined ? label : labelText}
-        name={NameLabel}
-        filenameStatus='edit'
-        onChange={onAddFiles}
-        onAddFiles={onAddFiles}
-      />
+      {file === undefined ?
+        <>
+          <FileUploaderDropContainer
+            labelText={labelText === undefined ? label : labelText}
+            name={NameLabel}
+            filenameStatus='edit'
+            onChange={onAddFiles}
+            onAddFiles={onAddFiles}
+            accept={accept}
+          />
+          {error && <p className="error-text">{error}</p>}
+        </>
+
+        :
+        <div>
+          <p className="cds--label-description">{labelText === undefined ? label : labelText}</p>
+          <FileUploaderItem
+            errorBody="500kb max file size. Select a new file and try again."
+            errorSubject="File size exceeds limit"
+            iconDescription="Delete file"
+            name={file.name}
+            onDelete={onDeleteFile}
+            size="md"
+            status="edit"
+          />
+        </div>
+      }
     </div >
   );
 };

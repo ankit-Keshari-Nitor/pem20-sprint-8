@@ -88,7 +88,7 @@ public class ActivityController {
                                                             @RequestParam(value = "sortBy", defaultValue = "modifyTs" ,required = false) SortBy sortBy,
                                                             @RequestParam(value = "sortDir", defaultValue = "DESC", required = false) SortDirection sortDir,
                                                             @PathVariable(value = "sponsorContext")String sponsorContext) throws Exception {
-        ActivityDefnPaginationRes activityDefnPaginationRes = activityDefnService.getAllDefinitionList(sponsorContext,name,description,application.getApp(),status,pageNo, pageSize, sortBy ==null? "modifyTs":sortBy.name(), sortDir ==null? "ASC":sortDir.name());
+        ActivityDefnPaginationRes activityDefnPaginationRes = activityDefnService.getAllDefinitionList(sponsorContext,name,description,application.getApp(),status,pageNo, pageSize, sortBy ==null? "modifyTs":sortBy.getSort_by(), sortDir ==null? "ASC":sortDir.name());
         if (activityDefnPaginationRes.getContent() == null || activityDefnPaginationRes.getContent().isEmpty()) {
             return new ResponseEntity<>(new ActivityDefnPaginationRes(), HttpStatus.OK);
         } else {

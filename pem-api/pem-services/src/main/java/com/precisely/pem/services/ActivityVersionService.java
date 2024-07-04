@@ -27,5 +27,6 @@ public interface ActivityVersionService {
 
     ActivityDataResponse getActivityDataForSpecificVersion(String sponsorContext, String activityDefnKey,String activityDefnVersionKey)throws Exception;
 
+    Object getActivityDefinitionContextData(String activityDefnVersionKey)throws Exception;
 
 }

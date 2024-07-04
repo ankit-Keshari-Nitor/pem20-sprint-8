@@ -446,4 +446,194 @@ public class BaseServiceTest {
         return activityInstList;
     }
 
+    public static String getActivityBpmnProcessObject(){
+        return "{\n" +
+                "  \"id\": \"ID-PEM_PROCESS\",\n" +
+                "  \"xmlRowNumber\": 0,\n" +
+                "  \"xmlColumnNumber\": 0,\n" +
+                "  \"extensionElements\": {\n" +
+                "    \"activiti:field\": [\n" +
+                "      {\n" +
+                "        \"id\": null,\n" +
+                "        \"xmlRowNumber\": 0,\n" +
+                "        \"xmlColumnNumber\": 0,\n" +
+                "        \"extensionElements\": {\n" +
+                "          \n" +
+                "        },\n" +
+                "        \"attributes\": {\n" +
+                "          \"name\": [\n" +
+                "            {\n" +
+                "              \"name\": \"name\",\n" +
+                "              \"value\": \"contextData\",\n" +
+                "              \"namespacePrefix\": null,\n" +
+                "              \"namespace\": null\n" +
+                "            }\n" +
+                "          ]\n" +
+                "        },\n" +
+                "        \"name\": \"activiti:field\",\n" +
+                "        \"namespacePrefix\": \"activiti\",\n" +
+                "        \"childElements\": {\n" +
+                "          \"activiti:string\": [\n" +
+                "            {\n" +
+                "              \"id\": null,\n" +
+                "              \"xmlRowNumber\": 0,\n" +
+                "              \"xmlColumnNumber\": 0,\n" +
+                "              \"extensionElements\": {\n" +
+                "                \n" +
+                "              },\n" +
+                "              \"attributes\": {\n" +
+                "                \n" +
+                "              },\n" +
+                "              \"name\": \"activiti:string\",\n" +
+                "              \"namespacePrefix\": \"activiti\",\n" +
+                "              \"namespace\": null,\n" +
+                "              \"elementText\": \"contextData={applications={QA_B2BISFG={__text=SAMPLE_QA_B2BISFG,_type=APIConfig},SSP={Policy={FTP_Policy=,HTTPS_Policy=,FTPS_Policy=,HTTP_Policy=,CD_Policy=,SFTP_Policy=},SystemCert=,FTP_Netmap=TEST_FTP_NETMAP,TrustStore=,KeyStore=,SecuritySetting=,SFTP_Netmap=SFTP_TEST,CD_Netmap=CMCD_Netmap,FTPS_Netmap=FTPS_NETMAP,ciphers={cipher=[{name=},{name=}]},Enable=false,HTTP_Netmap=TEST_HTTP_NETMAP,HTTPS_Netmap=HTTPS_NETMAP,ClientAuthentication=},PR={__text=SAMPLE_PR,_type=Harsh},Prod_CM={__text=SAMPLE_PROD_CM,_type=APIConfig},Scripts={FileDrop=,password=,User=,Server=,localFile=false,Port=22,pemKey=false,PGP=,Prod_Server=},Prod_B2BISFG={__text=SAMPLE_PROD_B2BISFG,_type=APIConfig},Prod_B2BISFGHTTP={__text=SAMPLE_PROD_B2BISFGHTTP,_type=APIConfig},PEM={__text=SAMPLE_PEM,_type=APIConfig},QA_CM={__text=SAMPLE_QA_CM,_type=APIConfig},SponsorConfigurations={AS2=,S3=,prod_codelistVersion_pcm=|||1,RCT=,FTP=,codelist=SFG_FileType,CustomProtocols={protocol=[{_name=http-protocol,_value=HTTPS,_bp=AFTRouteViaHTTP},{_name=,_value=HTTPS}]},prod_codelist=SFG_FileType,Inbound_Envelope_EDIFACT={_type=activityfiles},FileRoute=false,codelistVersion=%7C%7C%7C1,codelistVersion_pcm=|||1,Prod_Customer_IPs={Outbound=,Inbound=},CD=,ImplementationGuides={_type=activityfiles},prod_codelistVersion=%7C%7C%7C1,SFTP=,SFG_Community=CM_PEMCommunity,Outbound_Envelope_EDIFACT={_type=activityfiles},Inbound_Envelope_X12={_type=activityfiles},NonProd_Customer_IPs={Outbound=10.0.0.20-10.0.0.30,Inbound=10.0.0.1-10.0.0.10},FTPS=,Filegateway=,PGP=,Outbound_Envelope_X12={_type=activityfiles},NativePGP=false,UserAccount={AuthenticationHost=,AuthenticationType=Local,LDAPProvisioningEnabled=false}},QA_B2BISFGHTTP={__text=SAMPLE_QA_B2BISFGHTTP,_type=APIConfig}},applications={QA_B2BISFG={__text=SAMPLE_QA_B2BISFG,_type=APIConfig},SSP={Policy={FTP_Policy=,HTTPS_Policy=,FTPS_Policy=,HTTP_Policy=,CD_Policy=,SFTP_Policy=},SystemCert=,FTP_Netmap=TEST_FTP_NETMAP,TrustStore=,KeyStore=,SecuritySetting=,SFTP_Netmap=SFTP_TEST,CD_Netmap=CMCD_Netmap,FTPS_Netmap=FTPS_NETMAP,ciphers={cipher=[{name=},{name=}]},Enable=false,HTTP_Netmap=TEST_HTTP_NETMAP,HTTPS_Netmap=HTTPS_NETMAP,ClientAuthentication=},PR={__text=SAMPLE_PR,_type=Harsh},Prod_CM={__text=SAMPLE_PROD_CM,_type=APIConfig},Scripts={FileDrop=,password=,User=,Server=,localFile=false,Port=22,pemKey=false,PGP=,Prod_Server=},Prod_B2BISFG={__text=SAMPLE_PROD_B2BISFG,_type=APIConfig},Prod_B2BISFGHTTP={__text=SAMPLE_PROD_B2BISFGHTTP,_type=APIConfig},PEM={__text=SAMPLE_PEM,_type=APIConfig},QA_CM={__text=SAMPLE_QA_CM,_type=APIConfig},SponsorConfigurations={AS2=,S3=,prod_codelistVersion_pcm=|||1,RCT=,FTP=,codelist=SFG_FileType,CustomProtocols={protocol=[{_name=http-protocol,_value=HTTPS,_bp=AFTRouteViaHTTP},{_name=,_value=HTTPS}]},prod_codelist=SFG_FileType,Inbound_Envelope_EDIFACT={_type=activityfiles},FileRoute=false,codelistVersion=%7C%7C%7C1,codelistVersion_pcm=|||1,Prod_Customer_IPs={Outbound=,Inbound=},CD=,ImplementationGuides={_type=activityfiles},prod_codelistVersion=%7C%7C%7C1,SFTP=,SFG_Community=CM_PEMCommunity,Outbound_Envelope_EDIFACT={_type=activityfiles},Inbound_Envelope_X12={_type=activityfiles},NonProd_Customer_IPs={Outbound=10.0.0.20-10.0.0.30,Inbound=10.0.0.1-10.0.0.10},FTPS=,Filegateway=,PGP=,Outbound_Envelope_X12={_type=activityfiles},NativePGP=false,UserAccount={AuthenticationHost=,AuthenticationType=Local,LDAPProvisioningEnabled=false}},QA_B2BISFGHTTP={__text=SAMPLE_QA_B2BISFGHTTP,_type=APIConfig}}}\",\n" +
+                "              \"childElements\": {\n" +
+                "                \n" +
+                "              }\n" +
+                "            }\n" +
+                "          ]\n" +
+                "        }\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": null,\n" +
+                "        \"xmlRowNumber\": 0,\n" +
+                "        \"xmlColumnNumber\": 0,\n" +
+                "        \"extensionElements\": {\n" +
+                "          \n" +
+                "        },\n" +
+                "        \"attributes\": {\n" +
+                "          \"name\": [\n" +
+                "            {\n" +
+                "              \"name\": \"name\",\n" +
+                "              \"value\": \"apiNode1\",\n" +
+                "              \"namespacePrefix\": null,\n" +
+                "              \"namespace\": null\n" +
+                "            }\n" +
+                "          ]\n" +
+                "        },\n" +
+                "        \"name\": \"activiti:field\",\n" +
+                "        \"namespacePrefix\": \"activiti\",\n" +
+                "        \"namespace\": null,\n" +
+                "        \"elementText\": null,\n" +
+                "        \"childElements\": {\n" +
+                "          \"activiti:string\": [\n" +
+                "            {\n" +
+                "              \"id\": null,\n" +
+                "              \"xmlRowNumber\": 0,\n" +
+                "              \"xmlColumnNumber\": 0,\n" +
+                "              \"extensionElements\": {\n" +
+                "                \n" +
+                "              },\n" +
+                "              \"attributes\": {\n" +
+                "                \n" +
+                "              },\n" +
+                "              \"name\": \"activiti:string\",\n" +
+                "              \"namespacePrefix\": \"activiti\",\n" +
+                "              \"namespace\": null,\n" +
+                "              \"elementText\": \"{\\\"sampleResponse\\\":{\\\"name\\\":\\\"activiti\\\",\\\"application\\\":\\\"pem\\\",\\\"sampleResponse\\\":\\\"sample response object\\\"}}\",\n" +
+                "              \"childElements\": {\n" +
+                "                \n" +
+                "              }\n" +
+                "            }\n" +
+                "          ]\n" +
+                "        }\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": null,\n" +
+                "        \"xmlRowNumber\": 0,\n" +
+                "        \"xmlColumnNumber\": 0,\n" +
+                "        \"extensionElements\": {\n" +
+                "          \n" +
+                "        },\n" +
+                "        \"attributes\": {\n" +
+                "          \"name\": [\n" +
+                "            {\n" +
+                "              \"name\": \"name\",\n" +
+                "              \"value\": \"apiNode2\",\n" +
+                "              \"namespacePrefix\": null,\n" +
+                "              \"namespace\": null\n" +
+                "            }\n" +
+                "          ]\n" +
+                "        },\n" +
+                "        \"name\": \"activiti:field\",\n" +
+                "        \"namespacePrefix\": \"activiti\",\n" +
+                "        \"namespace\": null,\n" +
+                "        \"elementText\": null,\n" +
+                "        \"childElements\": {\n" +
+                "          \"activiti:string\": [\n" +
+                "            {\n" +
+                "              \"id\": null,\n" +
+                "              \"xmlRowNumber\": 0,\n" +
+                "              \"xmlColumnNumber\": 0,\n" +
+                "              \"extensionElements\": {\n" +
+                "                \n" +
+                "              },\n" +
+                "              \"attributes\": {\n" +
+                "                \n" +
+                "              },\n" +
+                "              \"name\": \"activiti:string\",\n" +
+                "              \"namespacePrefix\": \"activiti\",\n" +
+                "              \"namespace\": null,\n" +
+                "              \"elementText\": \"{\\\"sampleResponse\\\":{\\\"name\\\":\\\"activiti\\\",\\\"application\\\":\\\"pem\\\",\\\"sampleResponse\\\":\\\"sample response object\\\"}}\",\n" +
+                "              \"childElements\": {\n" +
+                "                \n" +
+                "              }\n" +
+                "            }\n" +
+                "          ]\n" +
+                "        }\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": null,\n" +
+                "        \"xmlRowNumber\": 0,\n" +
+                "        \"xmlColumnNumber\": 0,\n" +
+                "        \"extensionElements\": {\n" +
+                "          \n" +
+                "        },\n" +
+                "        \"attributes\": {\n" +
+                "          \"name\": [\n" +
+                "            {\n" +
+                "              \"name\": \"name\",\n" +
+                "              \"value\": \"xsltNode1\",\n" +
+                "              \"namespacePrefix\": null,\n" +
+                "              \"namespace\": null\n" +
+                "            }\n" +
+                "          ]\n" +
+                "        },\n" +
+                "        \"name\": \"activiti:field\",\n" +
+                "        \"namespacePrefix\": \"activiti\",\n" +
+                "        \"namespace\": null,\n" +
+                "        \"elementText\": null,\n" +
+                "        \"childElements\": {\n" +
+                "          \"activiti:string\": [\n" +
+                "            {\n" +
+                "              \"id\": null,\n" +
+                "              \"xmlRowNumber\": 0,\n" +
+                "              \"xmlColumnNumber\": 0,\n" +
+                "              \"extensionElements\": {\n" +
+                "                \n" +
+                "              },\n" +
+                "              \"attributes\": {\n" +
+                "                \n" +
+                "              },\n" +
+                "              \"name\": \"activiti:string\",\n" +
+                "              \"namespacePrefix\": \"activiti\",\n" +
+                "              \"namespace\": null,\n" +
+                "              \"elementText\": \"{\\\"sampleOutput\\\":<?xml version=\\\"1.0\\\"?><xsl:stylesheet version=\\\"1.0\\\" xmlns:xsl=\\\"http://www.w3.org/1999/XSL/Transform\\\"><xsl:output method=\\\"text\\\"/><xsl:template match=\\\"/\\\">Article - <xsl:value-of select=\\\"/Article/Title\\\"/>Authors: <xsl:apply-templates select=\\\"/Article/Authors/Author\\\"/></xsl:template><xsl:template match=\\\"Author\\\">- <xsl:value-of select=\\\".\\\" /></xsl:template></xsl:stylesheet>}\",\n" +
+                "              \"childElements\": {\n" +
+                "                \n" +
+                "              }\n" +
+                "            }\n" +
+                "          ]\n" +
+                "        }\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  \"name\": \"Pem Definitions 1\",\n" +
+                "  \"executable\": true,\n" +
+                "  \"documentation\": \"This is definitions 1\"\n" +
+                "}";
+    }
+
+
 }

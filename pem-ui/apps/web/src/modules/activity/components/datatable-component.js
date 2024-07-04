@@ -173,7 +173,7 @@ const ActivityDataTableComponent = ({
                     <TableHeader
                       key={header.key}
                       {...getHeaderProps({ header })}
-                      isSortable={header.key !== 'ellipsis' && header.key !== 'description' && header.key !== 'action' && header.key !== 'activityDefnVersionKey'}
+                      isSortable={header.key === 'name' ? true : false}
                       sortDirection={sortDirection}
                       onClick={() => handleHeaderClick(header.key)}
                     >

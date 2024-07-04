@@ -66,13 +66,8 @@ public class ActivityDefinitionVersionCustomRepoImpl implements ActivityDefiniti
         CriteriaQuery<ActivityDefnVersion> query = criteriaBuilder.createQuery(ActivityDefnVersion.class);
         Root<ActivityDefnVersion> root = query.from(ActivityDefnVersion.class);
         Join<ActivityDefnVersion, ActivityDefn> defnJoin = root.join("activityDefn");
-        List<Predicate> predicates = buildPredicates(description, status, sponsorKey, isDefault, criteriaBuilder, root, defnJoin);
+        List<Predicate> predicates = buildPredicates(activityDefnKey, description, status, sponsorKey, isDefault, criteriaBuilder, root, defnJoin);
         query.select(root).where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
-        // Pagination
-        TypedQuery<ActivityDefnVersion> typedQuery = entityManager.createQuery(query);
-        typedQuery.setFirstResult((int) pageable.getOffset());
-        typedQuery.setMaxResults(pageable.getPageSize());
-        List<ActivityDefnVersion> activityDefnList = typedQuery.getResultList();
 
         if(pageable.getSort().isSorted()){
             List<Order> orders = new ArrayList<>();
@@ -86,22 +81,29 @@ public class ActivityDefinitionVersionCustomRepoImpl implements ActivityDefiniti
             query.orderBy(orders);
         }
 
+        // Pagination
+        TypedQuery<ActivityDefnVersion> typedQuery = entityManager.createQuery(query);
+        typedQuery.setFirstResult((int) pageable.getOffset());
+        typedQuery.setMaxResults(pageable.getPageSize());
+        List<ActivityDefnVersion> activityDefnList = typedQuery.getResultList();
+
         // Count query
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<ActivityDefnVersion> countRoot = countQuery.from(ActivityDefnVersion.class);
         Join<ActivityDefnVersion, ActivityDefn> countDefnJoin = countRoot.join("activityDefn");
-        List<Predicate> countPredicates = buildPredicates(description, status, sponsorKey, isDefault, criteriaBuilder, countRoot, countDefnJoin);
+        List<Predicate> countPredicates = buildPredicates(activityDefnKey, description, status, sponsorKey, isDefault, criteriaBuilder, countRoot, countDefnJoin);
         countQuery.select(criteriaBuilder.count(countRoot)).where(criteriaBuilder.and(countPredicates.toArray(new Predicate[0])));
         Long totalRecords = entityManager.createQuery(countQuery).getSingleResult();
         return new PageImpl<>(activityDefnList, pageable, totalRecords);
     }
 
-    private List<Predicate> buildPredicates(String description, List<String> status,
+    private List<Predicate> buildPredicates(String activityDefnKey, String description, List<String> status,
                                             String sponsorKey, Boolean isDefault, CriteriaBuilder criteriaBuilder,
                                             Root<ActivityDefnVersion> root, Join<ActivityDefnVersion, ActivityDefn> defnJoin) {
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(criteriaBuilder.equal(defnJoin.get("sponsorKey"), sponsorKey));
         predicates.add(root.get("status").in(status));
+        predicates.add(criteriaBuilder.equal(root.get("activityDefnKey"),activityDefnKey));
         if (description != null && !description.isEmpty()) {
             predicates.add(criteriaBuilder.like(root.get("description"), "%" + description + "%"));
         }

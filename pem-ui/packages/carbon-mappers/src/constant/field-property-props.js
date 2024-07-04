@@ -250,3 +250,20 @@ export const decodeBase64 = {
   labelA: 'No',
   labelB: 'Yes'
 }
+
+export const accept = {
+  propsName: 'accept',
+  label: 'Accept',
+  options: [
+    { label: 'JPG', value: 'jpg' },
+    { label: 'PNG', value: 'png' }
+  ],
+  type: 'checkbox'
+};
+
+export const maxFileSize = {
+  propsName: 'maxFileSize',
+  label: 'Max File Size',
+  type: 'TextInput',
+  value: '',
+}

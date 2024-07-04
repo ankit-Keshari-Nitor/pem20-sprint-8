@@ -21,7 +21,7 @@ import {
   Accordion,
   AccordionItem,
   Checkbox,
-  FileUploader
+  FileUploader, CheckboxGroup,
 } from '@carbon/react';
 
 import './props-panel.scss';
@@ -352,6 +352,22 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                         {item?.options.length > 0 &&
                                           item?.options.map((option, idx) => (option?.value ? <RadioButton key={idx} labelText={option.label} value={option.value} /> : null))}
                                       </RadioButtonGroup>
+                                    </div>
+                                  )}
+                                  {/* CheckBox */}
+                                  {key === 'Basic' && item.type === 'checkbox' && (
+                                    <div className="right-palette-form-item">
+                                      <CheckboxGroup
+                                        legendText={item.label}
+                                        name={`checkbox-group-${selectedFiledProps?.id}`}
+                                        //valueSelected={selectedRadioValue}
+                                        onChange={(value) => {
+                                          console.log(value, '--------------');
+                                        }}
+                                      >
+                                        {item?.options.length > 0 &&
+                                          item?.options.map((option, idx) => (option?.value ? <Checkbox id={selectedFiledProps?.id + idx} labelText={option.label} value={option.value} /> : null))}
+                                      </CheckboxGroup >
                                     </div>
                                   )}
                                   {/* File Uploader */}
@@ -685,45 +701,45 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     e.preventDefault();
                                     advncProps.type === OPTIONS
                                       ? handleSchemaChanges(
-                                          selectedFiledProps?.id,
-                                          'advance',
-                                          advncProps.propsName,
-                                          { ...advncProps.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
-                                          selectedFiledProps?.currentPathDetail
-                                        )
+                                        selectedFiledProps?.id,
+                                        'advance',
+                                        advncProps.propsName,
+                                        { ...advncProps.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
+                                        selectedFiledProps?.currentPathDetail
+                                      )
                                       : handleSchemaChanges(
-                                          selectedFiledProps?.id,
-                                          'advance',
-                                          advncProps.propsName,
-                                          {
-                                            value: advncProps.value.value,
-                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
-                                          },
-                                          selectedFiledProps?.currentPathDetail
-                                        );
+                                        selectedFiledProps?.id,
+                                        'advance',
+                                        advncProps.propsName,
+                                        {
+                                          value: advncProps.value.value,
+                                          message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                        },
+                                        selectedFiledProps?.currentPathDetail
+                                      );
                                   } else {
                                     advncProps.type === OPTIONS
                                       ? handleSchemaChanges(
-                                          selectedFiledProps?.id,
-                                          'advance',
-                                          advncProps.propsName,
-                                          {
-                                            pattern: advncProps.value.pattern,
-                                            value: advncProps.value.value,
-                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
-                                          },
-                                          selectedFiledProps?.currentPathDetail
-                                        )
+                                        selectedFiledProps?.id,
+                                        'advance',
+                                        advncProps.propsName,
+                                        {
+                                          pattern: advncProps.value.pattern,
+                                          value: advncProps.value.value,
+                                          message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                        },
+                                        selectedFiledProps?.currentPathDetail
+                                      )
                                       : handleSchemaChanges(
-                                          selectedFiledProps?.id,
-                                          'advance',
-                                          advncProps.propsName,
-                                          {
-                                            value: advncProps.value.value,
-                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
-                                          },
-                                          selectedFiledProps?.currentPathDetail
-                                        );
+                                        selectedFiledProps?.id,
+                                        'advance',
+                                        advncProps.propsName,
+                                        {
+                                          value: advncProps.value.value,
+                                          message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                        },
+                                        selectedFiledProps?.currentPathDetail
+                                      );
                                   }
                                 }}
                               />

@@ -16,12 +16,11 @@ import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
 import com.precisely.pem.service.PEMActivitiService;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.Process;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -54,6 +53,9 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     @Mock
     PEMActivitiService pemActivitiService;
+
+    @Mock
+    BpmnModel bpmnModel;
 
     @BeforeEach
     public void setup(){
@@ -282,7 +284,7 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     @Test
     void getActivityDataForSpecificVersion_Positive() throws Exception{
-        byte[] mockData = "Sample data".getBytes();
+        byte[] mockData = SAMPLE_DATA.getBytes();
         when(mockBlob.length()).thenReturn((long) mockData.length);
         when(mockBlob.getBytes(1, (int) mockBlob.length())).thenReturn(mockData);
 
@@ -327,6 +329,47 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
             activityVersionService
                     .getActivityDataForSpecificVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY);
         });
+        assertEquals(ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND,exception.getMessage());
+    }
+
+    @Test
+    void getActivityContextDataForSpecificVersion_Positive() throws Exception{
+        byte[] mockData = SAMPLE_DATA.getBytes();
+        when(mockBlob.length()).thenReturn((long) mockData.length);
+        when(mockBlob.getBytes(1, (int) mockBlob.length())).thenReturn(mockData);
+
+        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+
+        ActivityDefnData activityDefnData = getVchActivityDefnDataObj();
+        activityDefnData.setDefData(mockBlob);
+        mockActivityDefnDataFindById().thenReturn(Optional.of(activityDefnData));
+
+        Mockito.when(bpmnModel.getProcessById(ArgumentMatchers.anyString())).thenReturn(new Process());
+        Mockito.when(bpmnConvertService.getBpmnModel(activityDefnData.getDefData())).thenReturn(bpmnModel);
+        Mockito.when(bpmnConvertService.getContextDataFromProcess(ArgumentMatchers.any())).thenReturn(TEST_CONTEXT_DATA);
+        Object response = activityVersionService.getActivityDefinitionContextData(TEST_ACTIVITY_DEFN_VERSION_KEY);
+        assertNotNull(response);
+    }
+
+    @Test
+    void getActivityContextDataForSpecificVersion_Version_NotFound(){
+        mockActivityDefnVersionFindById().thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(Exception.class, () -> activityVersionService
+                .getActivityDefinitionContextData(TEST_ACTIVITY_DEFN_VERSION_KEY));
+        assertEquals(ACTIVITY_DEFINITION_VERSION_NOT_FOUND,exception.getMessage());
+    }
+
+    @Test
+    void getActivityContextDataForSpecificVersion_VersionData_NotFound(){
+        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+
+        mockActivityDefnDataFindById().thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(Exception.class, () -> activityVersionService
+                .getActivityDefinitionContextData(TEST_ACTIVITY_DEFN_VERSION_KEY));
         assertEquals(ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND,exception.getMessage());
     }
 

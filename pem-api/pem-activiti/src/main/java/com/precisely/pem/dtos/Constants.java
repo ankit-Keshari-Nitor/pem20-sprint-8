@@ -13,6 +13,7 @@ public class Constants {
     public static final String SYSTEM_CONNECTOR = "ConnectorTaskId";
     //field name used at Process Level.
     public static final String PROCESS_FIELD_CONTEXT_DATA = "contextData";
+    public static final String PROCESS_ID_PREFIX = "ID-";
 
     //field name used in API Node Handler
     public static final String API_FIELD_URL = "url";

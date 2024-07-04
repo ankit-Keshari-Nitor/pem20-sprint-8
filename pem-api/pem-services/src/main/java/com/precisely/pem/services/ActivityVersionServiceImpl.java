@@ -15,6 +15,7 @@ import com.precisely.pem.repositories.*;
 import com.precisely.pem.service.BpmnConvertService;
 import com.precisely.pem.service.PEMActivitiService;
 import lombok.extern.log4j.Log4j2;
+import org.activiti.bpmn.model.BpmnModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -30,6 +31,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import static com.precisely.pem.dtos.Constants.PROCESS_ID_PREFIX;
 
 @Service
 @Log4j2
@@ -282,6 +284,22 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
                 .streamResource(resource)
                 .fileName(activityDefnVersion.get().getActivityDefnDataKey()+".json")
                 .build();
+    }
+
+    @Override
+    public Object getActivityDefinitionContextData(String activityDefnVersionKey) throws Exception{
+        Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
+        if(activityDefnVersion.isEmpty())
+            throw new ResourceNotFoundException("activityDefnVersionKey", "NoDataFound", "Activity Definition Version with key '" + activityDefnVersionKey + "' not found. Kindly check the activityDefnVersionKey.");
+
+        Optional<ActivityDefnData> activityDefnData = activityDefnDataRepo.findById(activityDefnVersion.get().getActivityDefnDataKey());
+        if(activityDefnData.isEmpty())
+            throw new ResourceNotFoundException("activityDefnData", "NoDataFound","Activity Definition Version Data with key '" + activityDefnVersion.get().getActivityDefnDataKey() + "' not found. Kindly check the activityDefnDataKey.");
+
+        BpmnModel bpmnModel = bpmnConvertService.getBpmnModel(activityDefnData.get().getDefData());
+
+        return bpmnConvertService.getContextDataFromProcess(bpmnModel.getProcessById(PROCESS_ID_PREFIX+activityDefnVersion.get().getActivityDefnVersionKey()));
+
     }
 
     public void deployDefaultADVersion(String activityDefnVersionKey) throws SQLException, ResourceNotFoundException {

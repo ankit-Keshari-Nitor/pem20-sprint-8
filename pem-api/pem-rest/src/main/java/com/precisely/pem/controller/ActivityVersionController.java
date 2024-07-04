@@ -195,4 +195,23 @@ public class ActivityVersionController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + activityDataResponse.getFileName() + "\"")
                 .body(activityDataResponse.getStreamResource());
     }
+
+    @Operation(summary = "Get Activity Definition Context Data for Specific Version of Activity Definition", tags = { "Activity Definition Version" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = Object.class), mediaType = MediaType.APPLICATION_JSON_VALUE)}),
+            @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE)}),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
+    })
+    @GetMapping("/{activityDefnVersionKey}/actions/getContextData")
+    public ResponseEntity<Object> getActivityDefinitionContextData( @PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
+        if(log.isEnabled(Level.INFO))
+            log.info("getActivityDefinitionContextData: Starts");
+        Object activityContextData = activityVersionService.getActivityDefinitionContextData(activityDefnVersionKey);
+        return  ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(activityContextData);
+    }
 }

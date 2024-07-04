@@ -3,7 +3,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.PemBpmnModel;
-import com.precisely.pem.service.BpmnConvertService;
+import com.precisely.pem.exceptionhandler.BpmnConverterException;
 import com.precisely.pem.service.BpmnConvertServiceImpl;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.Process;
@@ -42,7 +42,7 @@ public class BpmnConvertServiceTest {
     }
 
     @Test
-    public void convertUiJsonIntoBpmnDefinition() throws JsonProcessingException {
+    public void convertUiJsonIntoBpmnDefinition() throws JsonProcessingException, BpmnConverterException {
         PemBpmnModel pemBpmnModel = objectMapper.readValue(inputJson,PemBpmnModel.class);
 
         BpmnModel bpmnModel = bpmnConvertService.convertIntoBpmnDefinition(pemBpmnModel, BpmnConverterRequest.builder().processId(PEM_TEST_PROCESS).build() );
@@ -58,7 +58,7 @@ public class BpmnConvertServiceTest {
     }
 
     @Test
-    public void convertBpmnDefinitionIntoUiJson() throws JsonProcessingException {
+    public void convertBpmnDefinitionIntoUiJson() throws JsonProcessingException, BpmnConverterException {
 
         BpmnModel bpmnModel = bpmnConvertService
                 .convertIntoBpmnDefinition(objectMapper.readValue(inputJson,PemBpmnModel.class),BpmnConverterRequest.builder().processId(PEM_TEST_PROCESS).build() );

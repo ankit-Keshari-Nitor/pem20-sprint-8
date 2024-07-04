@@ -93,7 +93,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         return new InputStreamResource(bpmnModelToJsonStream);
     }
 
-    public BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel, BpmnConverterRequest bpmnConverterRequest) {
+    public BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel, BpmnConverterRequest bpmnConverterRequest) throws BpmnConverterException {
         List<Node> nodes = pemBpmnModel.getProcess().getNodes();
 
         if (!nodes.isEmpty()) {
@@ -164,9 +164,9 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         return null;
     }
 
-    private void addContextData(BpmnModel bpmnModel, PemBpmnModel pemBpmnModel) {
+    private void addContextData(BpmnModel bpmnModel, PemBpmnModel pemBpmnModel) throws BpmnConverterException {
         Process process = bpmnModel.getProcesses().get(0);
-        process.addExtensionElement(getStringExtensionElement(PROCESS_FIELD_CONTEXT_DATA,pemBpmnModel.getProcess().getProcessData().getContextData()));
+        process.addExtensionElement(getStringExtensionElement(PROCESS_FIELD_CONTEXT_DATA, validateAndGetContextData(pemBpmnModel)));
 
         pemBpmnModel.getProcess().getNodes().forEach(node -> {
             if(NodeTypes.API_NODE.getName().equalsIgnoreCase(node.getType())){
@@ -179,6 +179,17 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 process.addExtensionElement(getStringExtensionElement(node.getId(),resultJsonString));
             }
         });
+    }
+
+    private String validateAndGetContextData(PemBpmnModel pemBpmnModel) throws BpmnConverterException {
+        try {
+            // Parse and validate the JSON string
+            objectMapper.readTree(pemBpmnModel.getProcess().getProcessData().getContextData());
+        } catch (Exception e) {
+            log.error("Invalid Context Data JSON: " + e.getMessage());
+            throw new BpmnConverterException("ConvertToBpmnDefinition", "Invalid Context Data JSON.");
+        }
+        return pemBpmnModel.getProcess().getProcessData().getContextData();
     }
 
     /* This will add UserTask from System Side into each subprocess. There should be Start Node in subprocess.*/

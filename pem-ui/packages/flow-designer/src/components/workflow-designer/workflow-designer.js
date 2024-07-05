@@ -23,6 +23,7 @@ import { useEffect } from 'react';
 import useTaskStore from '../../store';
 import { Column, Grid } from '@carbon/react';
 import { CrossIcon } from '../../icons';
+import { Edit } from '@carbon/icons-react';
 
 let dialogId = 0;
 const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
@@ -55,6 +56,7 @@ const WorkFlowDesigner = forwardRef(
     const restStore = useTaskStore((state) => state.reset);
     const [isDialogFlowActive, setIsDialogFlowActive] = useState(false);
     const [isPageDesignerActive, setIsPageDesignerActive] = useState(false);
+    const [hover, setHover] = useState(false);
 
     // --------------------------------- Task Flow States -----------------------------------
     const taskFlowWrapper = useRef(null);
@@ -288,6 +290,14 @@ const WorkFlowDesigner = forwardRef(
       }
     };
 
+    const onActivityDefinitionHover = () => {
+      setHover(true);
+    };
+
+    const onActivityDefinitionLeave = () => {
+      setHover(false);
+    };
+
     return (
       <>
         {isPageDesignerActive ? (
@@ -310,8 +320,12 @@ const WorkFlowDesigner = forwardRef(
                       setOpenTaskPropertiesBlock(false);
                       setShowActivityDefineDrawer(true);
                     }}
+                    onMouseEnter={onActivityDefinitionHover}
+                    onMouseLeave={onActivityDefinitionLeave}
+                    style={{ color: hover ? ' #0f62fe' : '#161616' }}
                   >
                     {activityDefinitionData && activityDefinitionData.definition?.name}
+                    {hover ? <Edit /> : null}
                   </span>
                 </Column>
                 {isDialogFlowActive && (

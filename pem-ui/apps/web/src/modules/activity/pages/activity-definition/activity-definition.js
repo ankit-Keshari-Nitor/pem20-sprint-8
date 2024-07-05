@@ -18,7 +18,7 @@ export default function ActivityDefinition() {
   const updateActivitySchema = useActivityStore((state) => state.updateActivitySchema);
   const updateActivityDetails = useActivityStore((state) => state.updateActivityDetails);
   const [notificationProps, setNotificationProps] = useState(null);
-  const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
+  const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState(true);
 
   const [activityDefinitionData, setActivityDefinitionData] = useState(store.activityData);
   const [activityVersions, setActivityVersions] = useState([]);
@@ -26,13 +26,13 @@ export default function ActivityDefinition() {
   const readOnly = currentActivity?.operation === OPERATIONS.VIEW ? true : false;
   const ref = useRef();
 
-  useEffect(() => {
-    if (activityDefinitionData?.id !== '' || activityDefinitionData?.name === '' || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
-      setShowActivityDefineDrawer(true);
-    } else {
-      setShowActivityDefineDrawer(false);
-    }
-  }, [activityDefinitionData]);
+  // useEffect(() => {
+  //   if (activityDefinitionData?.id !== '' || activityDefinitionData?.name === '' || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
+  //     setShowActivityDefineDrawer(true);
+  //   } else {
+  //     setShowActivityDefineDrawer(false);
+  //   }
+  // }, [activityDefinitionData]);
 
   useEffect(() => {
     const getActivityData = (activityDefKey, versionKey) => {

@@ -99,7 +99,7 @@ const TaskFlowDesigner = ({
             </Panel>
           </>
         )}
-        {showActivityDefineDrawer && !openTaskPropertiesBlock && (
+        {showActivityDefineDrawer && (
           <>
             <PanelResizeHandle />
             <Panel defaultSize={34} minSize={34} maxSize={80}>

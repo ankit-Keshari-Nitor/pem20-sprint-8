@@ -57,27 +57,20 @@ const WorkFlowDesigner = forwardRef(
     const [isPageDesignerActive, setIsPageDesignerActive] = useState(false);
 
     // --------------------------------- Task Flow States -----------------------------------
-    const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState();
     const taskFlowWrapper = useRef(null);
     const [nodes, setTaskNodes, onTaskNodesChange] = useNodesState(storeData.nodes);
     const [edges, setTaskEdges, onTaskEdgesChange] = useEdgesState([]);
     const [taskFlowInstance, setTaskFlowInstance] = useState(null);
     const [selectedTaskNode, setSelectedTaskNode] = useState(null);
+    const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState(false);
 
     // --------------------------------- Dialog Flow States -----------------------------------
-    const [openDialogPropertiesBlock, setOpenDialogPropertiesBlock] = useState(false);
     const dialogFlowWrapper = useRef(null);
     const [dialogNodes, setDialogNodes, onDialogNodesChange] = useNodesState([]);
     const [dialogEdges, setDialogEdges, onDialogEdgesChange] = useEdgesState([]);
     const [dialogFlowInstance, setDialogFlowInstance] = useState(null);
     const [selectedDialogNode, setSelectedDialogNode] = useState(null);
-
-    // --------------------------------- Dialog Flow Methods -----------------------------------
-    const onDialogNodeDoubleClick = (event, node) => {
-      if (node.type === NODE_TYPE.DIALOG) {
-        setIsPageDesignerActive(true);
-      }
-    };
+    const [openDialogPropertiesBlock, setOpenDialogPropertiesBlock] = useState(false);
 
     const handleRest = () => {
       restStore();
@@ -88,27 +81,6 @@ const WorkFlowDesigner = forwardRef(
         handleRest
       };
     });
-
-    const onDialogNodeConnect = useCallback(
-      (params) => {
-        let newParam = params;
-        newParam.type = 'crossEdge';
-        newParam.markerEnd = endMarks;
-        newParam.data = { id: selectedTaskNode?.id };
-        /// newParam.data = selectedTaskNode?.id;//incoming change
-        addDialogEdge(selectedTaskNode, addEdge({ ...newParam, style: { stroke: '#000' } }, dialogEdges));
-      },
-      [addDialogEdge, dialogEdges, selectedTaskNode]
-    );
-
-    const onDialogNodeDragOver = useCallback((event) => {
-      event.preventDefault();
-      event.dataTransfer.dropEffect = 'move';
-    }, []);
-
-    /*  useEffect(() => {
-    setOpenTaskPropertiesBlock(showActivityDefineDrawer);
-  }, [showActivityDefineDrawer]);*/
 
     useEffect(() => {
       if (storeData.nodes.length === 0) {
@@ -127,6 +99,30 @@ const WorkFlowDesigner = forwardRef(
       //this is sending the new schema to web page  - activity-definition.js
       updateActivitySchema(storeData, activityOperation);
     }, [setTaskNodes, setTaskEdges, setDialogEdges, storeData, selectedTaskNode, updateActivitySchema, setDialogNodes]);
+
+    // -------------------------------------------------------------------- Dialog Flow Methods Start ----------------------------------------------------------------------
+    const onDialogNodeDoubleClick = (event, node) => {
+      if (node.type === NODE_TYPE.DIALOG) {
+        setIsPageDesignerActive(true);
+      }
+    };
+
+    const onDialogNodeConnect = useCallback(
+      (params) => {
+        let newParam = params;
+        newParam.type = 'crossEdge';
+        newParam.markerEnd = endMarks;
+        newParam.data = { id: selectedTaskNode?.id };
+        /// newParam.data = selectedTaskNode?.id;//incoming change
+        addDialogEdge(selectedTaskNode, addEdge({ ...newParam, style: { stroke: '#000' } }, dialogEdges));
+      },
+      [addDialogEdge, dialogEdges, selectedTaskNode]
+    );
+
+    const onDialogNodeDragOver = useCallback((event) => {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+    }, []);
 
     const onDialogNodeDrop = useCallback(
       (event) => {
@@ -149,7 +145,7 @@ const WorkFlowDesigner = forwardRef(
           id: getNewDialogId(),
           position,
           type: nodeData.type,
-          data: { ...nodeData, onDoubleClick: onDialogNodeDoubleClick }
+          data: { ...nodeData }
         };
 
         addDialogNodes(selectedTaskNode, newDialog);
@@ -186,7 +182,7 @@ const WorkFlowDesigner = forwardRef(
       }
     };
 
-    // --------------------------------- Task Flow Methods -----------------------------------
+    // -------------------------------------------------------------------- Task Flow Methods Start ----------------------------------------------------------------------
     const onTaskNodeDoubleClick = (event, node) => {
       if (node.type === NODE_TYPE.PARTNER || node.type === NODE_TYPE.SPONSOR || node.type === NODE_TYPE.CUSTOM || node.type === NODE_TYPE.SYSTEM) {
         setIsDialogFlowActive(true);
@@ -230,7 +226,7 @@ const WorkFlowDesigner = forwardRef(
           id: getNewTaskId(),
           position,
           type: nodeData.type,
-          data: { ...nodeData, onDoubleClick: onTaskNodeDoubleClick, dialogNodes: DIALOG_INITIAL_NODES, dialogEdges: [] }
+          data: { ...nodeData, dialogNodes: DIALOG_INITIAL_NODES, dialogEdges: [] }
         };
         addTaskNode(newTask);
       },
@@ -263,6 +259,8 @@ const WorkFlowDesigner = forwardRef(
         setShowActivityDefineDrawer(false);
       }
     };
+
+    // -------------------------------------------------------------------- Task Flow Methods End ----------------------------------------------------------------------
 
     const onClickPageDesignerBack = () => {
       setIsDialogFlowActive(true);

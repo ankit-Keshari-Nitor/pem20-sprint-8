@@ -48,7 +48,8 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Partner Task',
     editableProps: {},
-    exitValidationData: {},
+    exitValidationQuery: {},
+    exitValidationMessage: '',
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -62,7 +63,8 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Approval Task',
     editableProps: {},
-    exitValidationData: {},
+    exitValidationQuery: {},
+    exitValidationMessage: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -76,7 +78,8 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Attribute Task',
     editableProps: {},
-    exitValidationData: {},
+    exitValidationQuery: {},
+    exitValidationMessage: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -90,7 +93,8 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Sponsor Task',
     editableProps: {},
-    exitValidationData: {},
+    exitValidationQuery: {},
+    exitValidationMessage: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -104,7 +108,8 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Custom Task',
     editableProps: {},
-    exitValidationData: {},
+    exitValidationQuery: {},
+    exitValidationMessage: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -118,7 +123,8 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'System Task',
     editableProps: {},
-    exitValidationData: {},
+    exitValidationQuery: {},
+    exitValidationMessage: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -134,7 +140,8 @@ export const NODE_TYPES = [
     editableProps: {
       name: 'Gateway'
     },
-    exitValidationData: {},
+    exitValidationQuery: {},
+    exitValidationMessage: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -148,7 +155,8 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Dialog Task',
     editableProps: {},
-    exitValidationData: {},
+    exitValidationQuery: {},
+    exitValidationMessage: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -162,7 +170,8 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'API Task',
     editableProps: {},
-    exitValidationData: {},
+    exitValidationQuery: {},
+    exitValidationMessage: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -176,7 +185,8 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'XSLT Task',
     editableProps: {},
-    exitValidationData: {},
+    exitValidationQuery: {},
+    exitValidationMessage: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -192,7 +202,8 @@ export const NODE_TYPES = [
     editableProps: {
       name: 'Gateway'
     },
-    exitValidationData: {},
+    exitValidationQuery: {},
+    exitValidationMessage: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },

@@ -27,11 +27,13 @@ export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode
     setOpenCancelDialog(true);
   };
 
-  const onSubmitExitValidationForm = (query) => {
+  const onSubmitExitValidationForm = (query, errorMessage) => {
     if (selectedNode.type === NODE_TYPE.API || selectedNode.type === NODE_TYPE.DIALOG || selectedNode.type === NODE_TYPE.XSLT) {
-      editDialog(selectedNode, selectedTaskNode, 'exitValidationData', query);
+      editDialog(selectedNode, selectedTaskNode, 'exitValidationQuery', query);
+      editDialog(selectedNode, selectedTaskNode, 'exitValidationMessage', errorMessage);
     } else {
-      editTask(selectedNode, 'exitValidationData', query);
+      editTask(selectedNode, 'exitValidationQuery', query);
+      editDialog(selectedNode, selectedTaskNode, 'exitValidationMessage', errorMessage);
     }
   };
 

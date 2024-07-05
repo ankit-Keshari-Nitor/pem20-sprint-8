@@ -4,6 +4,7 @@ import {
   TextInput,
   Button,
   Select,
+  Dropdown,
   SelectItem,
   RadioButtonGroup,
   RadioButton,
@@ -379,6 +380,26 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                         {item?.options.length > 0 &&
                                           item?.options.map((option, idx) => (option?.value ? <Checkbox id={selectedFiledProps?.id + idx} labelText={option.label} value={option.value} checked={selectedCheckboxValues.includes(option.value)} /> : null))}
                                       </CheckboxGroup >
+                                    </div>
+                                  )}
+                                  {/* DropDown */}
+                                  {key === 'Basic' && item.type === 'DropDown' && (
+                                    <div className='right-palette-form-item'>
+                                      <Dropdown
+                                        id={item.propsName}
+                                        items={item.options}
+                                        selectedItem={item.value}
+                                        titleText={item.label}
+                                        onChange={({ selectedItem }) =>
+                                          handleSchemaChanges(
+                                            selectedFiledProps?.id,
+                                            key,
+                                            item.propsName,
+                                            selectedItem,
+                                            selectedFiledProps?.currentPathDetail
+                                          )
+                                        }
+                                      />
                                     </div>
                                   )}
                                   {/* File Uploader */}

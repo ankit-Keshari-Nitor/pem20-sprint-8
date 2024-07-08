@@ -209,7 +209,9 @@ export const selectRow = {
   propsName: 'selectablerows',
   label: 'Selectable Rows',
   value: false,
-  type: 'Toggle'
+  type: 'Toggle',
+  labelA: 'No',
+  labelB: 'Yes'
 };
 
 export const pageSize = {

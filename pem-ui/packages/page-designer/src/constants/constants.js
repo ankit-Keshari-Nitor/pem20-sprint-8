@@ -50,20 +50,20 @@ export const INITIAL_DATA = {
 
 export const TABLE_HEADER = [
   {
-    key: 'column0',
-    header: 'column0',
+    key: 'column1',
+    header: 'column1',
     colSpan: '6',
     searchable: false,
     sortable: false,
     required: false
   },
   {
-    key: 'column1',
-    header: 'column1',
+    key: 'column2',
+    header: 'column2',
     colSpan: '6',
-    Searchable: false,
-    Sortable: false,
-    Required: false
+    searchable: false,
+    sortable: false,
+    required: false
   }
 ];
 

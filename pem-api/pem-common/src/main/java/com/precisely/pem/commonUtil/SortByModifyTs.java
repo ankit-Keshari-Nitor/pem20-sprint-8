@@ -1,11 +1,10 @@
 package com.precisely.pem.commonUtil;
 
-public enum SortBy{
-    modifyTs ("modifyTs"), activityName ("activityName");
+public enum SortByModifyTs {
+    modifyTs ("modifyTs");
 
     private String sort_by;
-
-    SortBy(String asc) {
+    SortByModifyTs(String asc) {
         this.sort_by = sort_by;
     }
 

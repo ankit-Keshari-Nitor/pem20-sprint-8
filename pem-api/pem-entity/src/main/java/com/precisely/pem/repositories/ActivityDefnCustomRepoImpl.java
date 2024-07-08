@@ -1,6 +1,5 @@
 package com.precisely.pem.repositories;
 
-import com.precisely.pem.Validator.StatusEnumValidator;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnVersion;
 import jakarta.persistence.EntityManager;
@@ -33,6 +32,19 @@ public class ActivityDefnCustomRepoImpl implements ActivityDefnCustomRepo {
         Join<ActivityDefn, ActivityDefnVersion> versionsJoin = activityDefnRoot.join("versions");
         List<Predicate> predicates = buildPredicates(name, description, status, application, sponsorKey, cb, activityDefnRoot, versionsJoin);
         query.select(activityDefnRoot).where(cb.and(predicates.toArray(new Predicate[0])));
+
+        if(pageable.getSort().isSorted()){
+            List<Order> orders = new ArrayList<>();
+            pageable.getSort().forEach(order -> {
+                if(order.isAscending()){
+                    orders.add(cb.asc(activityDefnRoot.get(order.getProperty())));
+                }else{
+                    orders.add(cb.desc(activityDefnRoot.get(order.getProperty())));
+                }
+            });
+            query.orderBy(orders);
+        }
+
         // Pagination
         TypedQuery<ActivityDefn> typedQuery = entityManager.createQuery(query);
         typedQuery.setFirstResult((int) pageable.getOffset());

@@ -1,5 +1,6 @@
 package com.precisely.pem.services;
 
+import com.precisely.pem.Validator.StatusEnumValidator;
 import com.precisely.pem.commonUtil.ApplicationConstants;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.BpmnConverterRequest;
@@ -32,6 +33,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import static com.precisely.pem.dtos.Constants.PROCESS_ID_PREFIX;
+import java.util.stream.Stream;
 
 @Service
 @Log4j2
@@ -52,9 +54,11 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
     private ModelMapper mapper;
     @Autowired
     private BpmnConvertService bpmnConvertService;
+    @Autowired
+    private ActivityDefinitionVersionCustomRepo activityDefinitionVersionCustomRepo;
 
     @Override
-    public ActivityVersionDefnPaginationResp getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, Boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status) throws Exception {
+    public ActivityVersionDefnPaginationResp getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, Boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,List<String> status) throws Exception {
         ActivityVersionDefnPaginationResp activityVersionDefnPaginationResp = new ActivityVersionDefnPaginationResp();
         PaginationDto paginationDto = new PaginationDto();
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
@@ -63,14 +67,15 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
         Page<ActivityDefnVersion> defnsPage = null;
-        if(description != null && !description.isEmpty())
-            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndIsDefaultAndDescriptionContaining(activityDefnKey,status,sponsorInfo.getSponsorKey(),isDefault,description,pageable);
-        else
-            defnsPage = activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndIsDefault(activityDefnKey,status,sponsorInfo.getSponsorKey(),isDefault,pageable);
+
+        status = getStatusListOfString(status);
+
+        defnsPage = activityDefinitionVersionCustomRepo.getAllVersionsList(activityDefnKey,status,sponsorInfo.getSponsorKey(),isDefault,description,pageable);
 
         if(defnsPage == null || defnsPage.isEmpty()) {
             throw new ResourceNotFoundException("NoDataFound", "No data was found for the provided query parameter combination.");
         }
+
         List<ActivityDefnVersion> listOfDefns = defnsPage.getContent();
         List<ActivityDefnVersionListResp> defnContent = new ArrayList<>();
 
@@ -338,5 +343,18 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         }
         log.info("sponsorkey : " + sponsorInfo.getSponsorKey());
         return sponsorInfo;
+    }
+
+    private List<String> getStatusListOfString(List<String> status) throws Exception {
+        if (status == null || status.isEmpty()) {
+            status = Stream.of(Status.values())
+                    .map(Enum::name)
+                    .collect(Collectors.toList());
+        }
+        if(StatusEnumValidator.validateStatuses(status).size() != status.size()){
+            throw new InvalidStatusException("InvalidStatus","The provided status is not valid. Please verify the status.");
+        }
+        log.info("Status selected : {}", status);
+        return status;
     }
 }

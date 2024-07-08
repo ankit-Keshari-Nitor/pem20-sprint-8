@@ -10,9 +10,10 @@ import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 public interface ActivityVersionService {
-    ActivityVersionDefnPaginationResp getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, Boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir,String status) throws Exception;
+    ActivityVersionDefnPaginationResp getAllVersionDefinitionList(String sponsorContext, String activityDefnKey, String description, Boolean isDefault, int pageNo, int pageSize, String sortBy, String sortDir, List<String> status) throws Exception;
 
     ActivityDefnVersionListResp getVersionDefinitionById(String activityDefnKey, String sponsorContext, String activityDefnVersionKey) throws Exception;
 

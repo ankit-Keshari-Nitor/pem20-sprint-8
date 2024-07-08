@@ -6,7 +6,7 @@ import DataTableComponent from '../../components/datatable-component';
 
 import { ACTIVITY_VERSION_COLUMNS } from '../../constants';
 
-import * as ActivityService from '../../services/activity-service.js';
+import * as ActivityVersionService from '../../services/actvity-version-service.js';
 
 const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, showDrawer }) => {
   // Version Side drawer
@@ -20,7 +20,7 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
   const fetchVersionRowData = useCallback(
     async (activityDefnKey, status) => {
       try {
-        const data = await ActivityService.getActivityVersionkey(pageNo - 1, pageSize, sortDir, status, true, activityDefnKey);
+        const data = await ActivityVersionService.getActivityVersionList(activityDefnKey, pageNo - 1, pageSize, status, sortDir);
         setVersionRows(data.content);
         setTotalRows(data.pageContent.totalElements);
       } catch (error) {

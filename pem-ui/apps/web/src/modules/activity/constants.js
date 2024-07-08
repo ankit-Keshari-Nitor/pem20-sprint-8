@@ -32,7 +32,8 @@ export const ACTION_COLUMN_KEYS = {
   MARK_AS_DEFAULT: 'Mark As Default',
   ACTIVITYDEFVERSIONKEY: 'activityDefnVersionKey',
   RESTORE: 'Restore',
-  DESCRCIPTION: 'description'
+  DESCRCIPTION: 'description',
+  ISDEFAULT: 'isDefault'
 };
 
 export const ACTIVITY_LIST_COLUMNS = [
@@ -52,7 +53,8 @@ export const ACTIVITY_VERSION_COLUMNS = [
   { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
   { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' },
   { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' },
-  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' }
+  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' },
+  { key: ACTION_COLUMN_KEYS.ISDEFAULT, header: '' }
 ];
 
 export const ROLLOUT_STEPS = [

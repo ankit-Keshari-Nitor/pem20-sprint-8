@@ -148,6 +148,8 @@ tbody tr:nth-child {
 .encrypted-wrapper-text,
 .information-text {
   padding-inline-start: 0.25rem !important;
+  padding-inline-end: 0.25rem !important;
+
 }
 
 .recently-view-text {
@@ -217,6 +219,6 @@ tbody tr:nth-child {
   padding-bottom: 0.5rem !important;
 }
 
-.cds--popover--bottom:not(.cds--popover--auto-align) > .cds--popover > .cds--popover-content {
+.cds--popover--bottom:not(.cds--popover--auto-align)>.cds--popover>.cds--popover-content {
   transform: translate(-12%, calc(100% + var(--cds-popover-offset, 0rem))) !important;
 }

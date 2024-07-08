@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import * as ReactDnD from 'react-dnd';
 import { TextArea, Grid, Column, Button } from '@carbon/react';
 import { QueryBuilderDnD } from '@react-querybuilder/dnd';
@@ -6,13 +6,11 @@ import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
 import CarbonWrapper from './condition-builder-wrapper/carbon-wrapper';
 import QueryBuilder from 'react-querybuilder';
 import { validationQuery } from '../helpers/generate-validation-query';
-import { INITIAL_QUERY, QUERY_COMBINATOR, QUERY_FIELDS } from '../../constants';
+import { QUERY_COMBINATOR, QUERY_FIELDS } from '../../constants';
 
 import './condition-builder.scss';
 
-export default function ConditionalBuilder({ onSubmitExitValidationForm, setOpenCancelDialog, readOnly = { readOnly } }) {
-  const [query, setQuery] = useState(INITIAL_QUERY);
-  const [errorMessage, setErrorMessage] = useState('');
+export default function ConditionalBuilder({ onSubmitExitValidationForm, setOpenCancelDialog, readOnly = { readOnly }, query, errorMessage, setErrorMessage, setQuery }) {
   return (
     <Grid>
       <Column className="form-field" lg={16}>

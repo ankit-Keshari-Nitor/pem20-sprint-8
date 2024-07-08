@@ -2,38 +2,46 @@ import React, { useEffect, useState } from 'react';
 import ConditionalBuilder from '../condition-builder';
 import { Select, SelectItem, Grid, Column } from '@carbon/react';
 import useTaskStore from '../../store';
+import { INITIAL_QUERY, NODE_TYPE } from '../../constants';
 
-export default function GatewayValidation({ readOnly, selectedNode }) {
+export default function GatewayValidation({ readOnly, selectedNode, selectedTaskNode }) {
   const storeData = useTaskStore((state) => state.tasks);
   const [connectedGatewayNodes, setConnectedGatewayNodes] = useState([]);
   const [selectedGatewayNode, setSelectedGatewayNode] = useState();
-  const [finalSchema, setFinalSchema] = useState([]);
+  const editTask = useTaskStore((state) => state.editTaskNodePros);
+  const editDialog = useTaskStore((state) => state.editDialogNodePros);
+
+  const [query, setQuery] = useState(INITIAL_QUERY);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (storeData && storeData.edges.length > 0 && storeData.nodes.length > 0) {
       const connectedEdges = storeData.edges.filter((edge) => edge.source === selectedNode.id);
       const connectedNodes = getConnectedNodes(storeData.nodes, connectedEdges);
       setConnectedGatewayNodes(connectedNodes);
-      setSelectedGatewayNode(connectedNodes && connectedNodes[0].id);
+      setSelectedGatewayNode(connectedNodes.length > 0 && connectedNodes[0].id);
     }
   }, [storeData]);
 
-  const getConnectedNodes = (taskNodes, connectedEdges) => {
-    return taskNodes.filter((o1) => {
+  const getConnectedNodes = (storeNodes, connectedEdges) => {
+    return storeNodes.filter((o1) => {
       return connectedEdges.some((o2) => o2.target === o1.id);
     });
   };
 
-  const updateFinalSchema = (array, element) => {
-    const i = array.findIndex((e) => e.id === element.id);
-    if (i > -1) array[i] = element;
-    else array.push(element);
-    return array;
-  };
-
-  const onGatewayValidationSubmit = (query, errorMessage) => {
-    const updatedSchema = updateFinalSchema(finalSchema, { id: selectedGatewayNode, gatewayQuery: query, gatewayErrorMessage: errorMessage });
-    setFinalSchema([...updatedSchema]);
+  const onGatewayValidationSubmit = (modifiedQuery, errorMessage) => {
+    const chooseGatewayNode = storeData.nodes.filter((node) => node.id === selectedGatewayNode);
+    if (chooseGatewayNode.length > 0) {
+      if (chooseGatewayNode[0].type === NODE_TYPE.API || chooseGatewayNode[0].type === NODE_TYPE.DIALOG || chooseGatewayNode[0].type === NODE_TYPE.XSLT) {
+        editDialog(chooseGatewayNode[0], selectedTaskNode, 'entryValidationQuery', query);
+        editDialog(chooseGatewayNode[0], selectedTaskNode, 'validateEntryValidationQuery', modifiedQuery);
+        editDialog(chooseGatewayNode[0], selectedTaskNode, 'entryValidationMessage', errorMessage);
+      } else {
+        editTask(chooseGatewayNode[0], 'entryValidationQuery', query);
+        editTask(chooseGatewayNode[0], 'validateEntryValidationQuery', modifiedQuery);
+        editDialog(chooseGatewayNode[0], 'entryValidationMessage', errorMessage);
+      }
+    }
   };
 
   return (
@@ -54,7 +62,15 @@ export default function GatewayValidation({ readOnly, selectedNode }) {
           </Select>
         </Column>
       </Grid>
-      <ConditionalBuilder setOpenCancelDialog={() => console.log('Cancel')} onSubmitExitValidationForm={onGatewayValidationSubmit} readOnly={readOnly} />
+      <ConditionalBuilder
+        setOpenCancelDialog={() => console.log('Cancel')}
+        onSubmitExitValidationForm={onGatewayValidationSubmit}
+        readOnly={readOnly}
+        query={query}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+        setQuery={setQuery}
+      />
     </>
   );
 }

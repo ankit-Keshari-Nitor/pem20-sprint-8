@@ -48,8 +48,24 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Partner Task',
     editableProps: {},
-    exitValidationQuery: {},
+    exitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateExitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
     exitValidationMessage: '',
+    entryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateEntryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    entryValidationMessage: '',
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -63,8 +79,24 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Approval Task',
     editableProps: {},
-    exitValidationQuery: {},
-    exitValidationMessage: {},
+    exitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateExitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    exitValidationMessage: '',
+    entryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateEntryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    entryValidationMessage: '',
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -78,8 +110,24 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Attribute Task',
     editableProps: {},
-    exitValidationQuery: {},
-    exitValidationMessage: {},
+    exitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateExitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    exitValidationMessage: '',
+    entryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateEntryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    entryValidationMessage: '',
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -93,8 +141,24 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Sponsor Task',
     editableProps: {},
-    exitValidationQuery: {},
-    exitValidationMessage: {},
+    exitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateExitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    exitValidationMessage: '',
+    entryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateEntryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    entryValidationMessage: '',
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -108,8 +172,24 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Custom Task',
     editableProps: {},
-    exitValidationQuery: {},
-    exitValidationMessage: {},
+    exitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateExitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    exitValidationMessage: '',
+    entryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateEntryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    entryValidationMessage: '',
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -123,8 +203,24 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'System Task',
     editableProps: {},
-    exitValidationQuery: {},
-    exitValidationMessage: {},
+    exitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateExitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    exitValidationMessage: '',
+    entryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateEntryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    entryValidationMessage: '',
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -140,8 +236,24 @@ export const NODE_TYPES = [
     editableProps: {
       name: 'Gateway'
     },
-    exitValidationQuery: {},
-    exitValidationMessage: {},
+    exitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateExitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    exitValidationMessage: '',
+    entryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateEntryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    entryValidationMessage: '',
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -155,8 +267,24 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'Dialog Task',
     editableProps: {},
-    exitValidationQuery: {},
-    exitValidationMessage: {},
+    exitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateExitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    exitValidationMessage: '',
+    entryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateEntryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    entryValidationMessage: '',
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -170,8 +298,24 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'API Task',
     editableProps: {},
-    exitValidationQuery: {},
-    exitValidationMessage: {},
+    exitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateExitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    exitValidationMessage: '',
+    entryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateEntryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    entryValidationMessage: '',
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -185,8 +329,24 @@ export const NODE_TYPES = [
     borderColor: '#0585FC',
     taskName: 'XSLT Task',
     editableProps: {},
-    exitValidationQuery: {},
-    exitValidationMessage: {},
+    exitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateExitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    exitValidationMessage: '',
+    entryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateEntryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    entryValidationMessage: '',
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -202,8 +362,24 @@ export const NODE_TYPES = [
     editableProps: {
       name: 'Gateway'
     },
-    exitValidationQuery: {},
-    exitValidationMessage: {},
+    exitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateExitValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    exitValidationMessage: '',
+    entryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    validateEntryValidationQuery: {
+      combinator: 'and',
+      rules: []
+    },
+    entryValidationMessage: '',
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },

@@ -49,7 +49,7 @@ export default function BlockPropertiesTray(props) {
       case NODE_TYPE.API:
         return <BlockDefinitionForm id={'api-define-form'} schema={API_FORM_SCHEMA} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />;
       case NODE_TYPE.GATEWAY:
-        return <GatewayValidation id={'gateway-validation-form'} selectedNode={selectedNode} readOnly={readOnly} />;
+        return <GatewayValidation id={'gateway-validation-form'} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode}  readOnly={readOnly} />;
       default:
         return null;
     }

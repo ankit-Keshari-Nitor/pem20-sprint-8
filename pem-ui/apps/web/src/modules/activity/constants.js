@@ -43,7 +43,8 @@ export const ACTIVITY_LIST_COLUMNS = [
   { key: ACTION_COLUMN_KEYS.VERSION, header: 'Default Version' },
   { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
   { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' },
-  { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' }
+  { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' },
+  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' },
 ];
 
 export const ACTIVITY_VERSION_COLUMNS = [

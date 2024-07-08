@@ -1,8 +1,8 @@
 package com.precisely.pem.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.precisely.pem.converter.NodeHandler;
 import com.precisely.pem.dtos.BpmnConverterRequest;
-import com.precisely.pem.dtos.PemBpmnModel;
 import com.precisely.pem.exceptionhandler.BpmnConverterException;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.Process;
@@ -19,5 +19,6 @@ public interface BpmnConvertService {
     NodeHandler createNodeHandlerChain();
     InputStreamResource getPemBpmnJsonData(Blob activityDefnData) throws SQLException, XMLStreamException, IOException;
     BpmnModel getBpmnModel(Blob activityDefnData) throws SQLException, XMLStreamException;
+    String getPemBpmnModelString(Blob activityDefnData) throws SQLException, XMLStreamException, JsonProcessingException;
     String getContextDataFromProcess(Process process);
 }

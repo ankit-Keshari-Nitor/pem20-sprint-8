@@ -1,6 +1,7 @@
 package com.precisely.pem.service;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.precisely.pem.converter.*;
@@ -73,16 +74,24 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     /*This method will accept bmn xml definition in Blob and convert into pem bpmn json and return InputStreamResource which will be return to UI.*/
     @Override
     public InputStreamResource getPemBpmnJsonData(Blob activityDefnData) throws SQLException, XMLStreamException, IOException {
+        String jsonString = getPemBpmnModelString(activityDefnData);
+        InputStream bpmnModelToJsonStream = new ByteArrayInputStream(jsonString.getBytes());
+
+        return new InputStreamResource(bpmnModelToJsonStream);
+    }
+    @Override
+    public String getPemBpmnModelString(Blob activityDefnData) throws SQLException, XMLStreamException, JsonProcessingException {
+        PemBpmnModel pemBpmnModel = getPemBpmnModel(activityDefnData);
+
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(pemBpmnModel);
+    }
+
+    public PemBpmnModel getPemBpmnModel(Blob activityDefnData) throws SQLException, XMLStreamException {
         BpmnModel bpmnModel = getBpmnModel(activityDefnData);
 
         //This will convert BPMN Model into PemBpmnModel object.
         log.debug("Conversion of Bpmn Model into Pem Bpmn Model started.");
-        PemBpmnModel pemBpmnModel = convertToPemProcess(bpmnModel, BpmnConverterRequest.builder().build());
-
-        String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(pemBpmnModel);
-        InputStream bpmnModelToJsonStream = new ByteArrayInputStream(jsonString.getBytes());
-
-        return new InputStreamResource(bpmnModelToJsonStream);
+        return convertToPemProcess(bpmnModel, BpmnConverterRequest.builder().build());
     }
 
     @Override

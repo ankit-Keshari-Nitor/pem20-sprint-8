@@ -6,15 +6,13 @@ import {
   maxProps,
   readOnly,
   helperText,
-  placeHolder,
-  regexValidation,
+  placeHolder,  
   NameLabel,
   FORM_FIELD_LABEL,
   FORM_FIELD_GROUPS,
   isRequired,
   labelText,
-  id,
-  isDisabled
+  id
 } from '../constant';
 import { CharacterWholeNumber } from '@carbon/icons-react';
 
@@ -63,5 +61,5 @@ NumberInput.config = {
     Basic: [id, NameLabel, labelText, placeHolder, helperText, readOnly],
     Condition: []
   },
-  advanceProps: [minProps, maxProps, regexValidation, isRequired]
+  advanceProps: [minProps, maxProps, isRequired]
 };

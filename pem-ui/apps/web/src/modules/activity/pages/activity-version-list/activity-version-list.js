@@ -12,7 +12,7 @@ import * as ActivityVersionService from '../../services/actvity-version-service.
 const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, showDrawer }) => {
   // Version Side drawer
   const [totalRows, setTotalRows] = useState(0);
-  const [sortDir, setSortDir] = useState('ASC'); // Sorting direction state
+  const [sortDir, setSortDir] = useState('DESC'); // Sorting direction state
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [versionRows, setVersionRows] = useState([]);
@@ -21,7 +21,7 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
   const fetchVersionRowData = useCallback(
     async (activityDefnKey, status) => {
       try {
-        const data = await ActivityVersionService.getActivityVersionList(activityDefnKey, pageNo - 1, pageSize, status, sortDir);
+        const data = await ActivityVersionService.getActivityVersionList(activityDefnKey, pageNo - 1, pageSize, sortDir);
         setVersionRows(data.content);
         setTotalRows(data.pageContent.totalElements);
       } catch (error) {

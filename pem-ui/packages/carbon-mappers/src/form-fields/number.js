@@ -24,7 +24,7 @@ const NumberInput = ({ field, id, currentPath, onChangeHandle, previewMode }) =>
 
   useEffect(() => {
     if (previewMode) {
-      setFieldValue(value ? value : '');
+      setFieldValue(value ? value : 0);
     }
   }, [field, previewMode, value]);
 

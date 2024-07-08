@@ -96,7 +96,10 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
     }
   } catch (error) {
     console.error('Failed to fetch data:', error);
-    return 'Internal Error';
+    return {
+      success: false,
+      status: undefined
+    }
   }
 };
 
@@ -149,24 +152,3 @@ export const saveActivityData = async (activityData) => {
   };
   return await new RestApiService().callWithFile(config, null);
 };
-
-/* ----------------------------- Get the version data of activity -------------------------------------------- */
-export const getActivityVersionData = async (activityDefnKey, activityDefnVersionKey) => {
-  try {
-    const url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}/versions/${activityDefnVersionKey}`;
-    const response = await fetch(url, {
-      method: 'GET'
-    });
-
-    if (!response.ok) {
-      console.error(`HTTP error! status: ${response.status}`);
-      return undefined;
-    }
-    let responseJson = await response.json();
-    return responseJson;
-  } catch (error) {
-    console.error('Failed to fetch data:', error);
-    return [];
-  }
-};
-

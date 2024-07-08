@@ -63,7 +63,7 @@ const ActivityDataTableComponent = ({
   };
 
   // Generate the ellipsis menu for each row
-  const renderEllipsisMenu = (id, status = '') => {
+  const renderEllipsisMenu = (id, status = '', isDefault = false) => {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
         <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.VIEW} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.VIEW, id)} />
@@ -77,7 +77,7 @@ const ActivityDataTableComponent = ({
         ) : (
           <>
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_VERSION, id)} />
-            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_DEFAULT, id)} />
+            {!isDefault ? <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_DEFAULT, id)} /> : null}
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_VERSION, id)} />
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_VERSION, id)} />
           </>
@@ -202,7 +202,7 @@ const ActivityDataTableComponent = ({
                             {cell.info.header === 'action'
                               ? renderActionItem(statusCell.value, row.id, versionKeyCell.value)
                               : cell.info.header === 'ellipsis'
-                                ? renderEllipsisMenu(row.id, statusCell.value)
+                                ? renderEllipsisMenu(row.id, statusCell.value, isDefault?.value)
                                 : cell.info.header === 'status'
                                   ? renderTag(cell.value.toLowerCase())
                                   : cell.info.header === 'name'

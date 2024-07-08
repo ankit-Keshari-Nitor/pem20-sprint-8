@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { CrossIcon } from '../../icons';
 import { TableContainer } from '@carbon/react';
+import './activity-version-list.scss';
 
 import DataTableComponent from '../../components/datatable-component';
 

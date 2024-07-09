@@ -36,7 +36,6 @@ export const getActivityVersionList = async (activityDefnKey, pageNo, pageSize, 
       }
     }
   } catch (error) {
-    console.log(error);
     return {
       success: false,
       content: [],

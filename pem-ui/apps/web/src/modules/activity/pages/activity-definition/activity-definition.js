@@ -26,14 +26,6 @@ export default function ActivityDefinition() {
   const readOnly = currentActivity?.operation === OPERATIONS.VIEW ? true : false;
   const ref = useRef();
 
-  // useEffect(() => {
-  //   if (activityDefinitionData?.id !== '' || activityDefinitionData?.name === '' || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
-  //     setShowActivityDefineDrawer(true);
-  //   } else {
-  //     setShowActivityDefineDrawer(false);
-  //   }
-  // }, [activityDefinitionData]);
-
   useEffect(() => {
     const getActivityData = (activityDefKey, versionKey) => {
       getActivityDetails(activityDefKey, versionKey).then((response) => {

@@ -253,9 +253,9 @@ export const decodeBase64 = {
   labelB: 'Yes'
 }
 
-export const accept = {
-  propsName: 'accept',
-  label: 'Accept',
+export const extensions = {
+  propsName: 'extensions',
+  label: 'Extensions',
   options: [
     { label: 'JPEG', value: 'image/jpeg' },
     { label: 'PNG', value: 'image/png' }
@@ -267,7 +267,7 @@ export const maxFileSize = {
   propsName: 'maxFileSize',
   label: 'Max File Size',
   type: 'TextInput',
-  value: '',
+  value: '100kb',
 }
 
 export const fontSize = {

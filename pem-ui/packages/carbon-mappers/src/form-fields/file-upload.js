@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { FileUploaderDropContainer, FileUploaderItem } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, id, maxFileSize, NameLabel, helperText, accept, isRequired, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, id, maxFileSize, NameLabel, helperText, extensions, isRequired, labelText } from '../constant';
 import { FileUploadIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.FILE_UPLOADER;
 
 const FileUploader = ({ field, id, }) => {
-  const { labelText, label, maxFileSize, accept, ...rest } = field;
+  const { labelText, label, maxFileSize, extensions, } = field;
 
   const [file, setFile] = useState();
   const [error, setError] = useState('');
@@ -68,7 +68,7 @@ const FileUploader = ({ field, id, }) => {
         iconDescription: 'Delete Icon',
         invalid: true,
         errorSubject: 'InValid ',
-        errorBody: ('Error', { fileName: fileUpload.name, fileType: accept.join(',') })
+        errorBody: ('Error', { fileName: fileUpload.name, fileType: extensions.join(',') })
       };
       setFile(updatedFile);
     } else {
@@ -91,7 +91,8 @@ const FileUploader = ({ field, id, }) => {
             filenameStatus='edit'
             onChange={onAddFiles}
             onAddFiles={onAddFiles}
-            accept={accept}
+            accept={extensions}
+            id={id}
           />
           {error && <p className="error-text">{error}</p>}
         </>
@@ -100,7 +101,7 @@ const FileUploader = ({ field, id, }) => {
         <div>
           <p className="cds--label-description">{labelText === undefined ? label : labelText}</p>
           <FileUploaderItem
-            errorBody="500kb max file size. Select a new file and try again."
+            errorBody={`${maxFileSize} max file size. Select a new file and try again.`}
             errorSubject="File size exceeds limit"
             iconDescription="Delete file"
             name={file.name}
@@ -123,7 +124,7 @@ FileUploader.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <FileUploadIcon />,
   editableProps: {
-    Basic: [id, NameLabel, labelText, helperText, maxFileSize, accept],
+    Basic: [id, NameLabel, labelText, helperText, maxFileSize, extensions],
     Condition: []
   },
   advanceProps: [isRequired]

@@ -126,6 +126,13 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
                 localTaskVariable.remove("draft");
                 this.setTaskVariables(taskId, localTaskVariable);
             }
+
+            // TODO : debug purpose we have added this log.
+            Map<String, Object> updatedvariables = runtimeService.getVariables(processInstance.getProcessInstanceId());
+            for (Map.Entry<String,Object> entry : updatedvariables.entrySet()){
+                log.debug("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+            }
+
             taskService.complete(taskId);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -248,7 +255,12 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
                     }
                 }
             }
+
             task.setFormData((String) this.getTaskVariables(taskId).get("draft"));
+
+            if(task.getFormData()!=null && task.getFormData().length()>0){
+                task.setStatus("IN_PROGRESS");
+            }
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

@@ -355,7 +355,7 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
         if(Objects.isNull(activityProcDefList) || activityProcDefList.isEmpty()){
             throw new ResourceNotFoundException("ActivityProcDefListEmpty", "The activity process definition not found.");
         }
-        String processInstanceId = pemActivitiService.startProcessInstanceById(activityProcDefList.get(0).getId(),null,map);
+        String processInstanceId = pemActivitiService.startProcessInstanceById(activityProcDefList.get(0).getId(),null, contextData);
         log.info("processInstanceId = "+processInstanceId);
         if(Objects.isNull(processInstanceId)){
             throw new ResourceNotFoundException("CouldNotStartInstance", "The participant activity instance could not be started. Kindly check.");

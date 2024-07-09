@@ -8,6 +8,7 @@ export const validationQuery = (query) => {
     } else {
       return {
         rule: {
+          id: item.id,
           datatype: item.field,
           lhs: Array.isArray(item.operator) ? item.operator[0] : '',
           operator: Array.isArray(item.operator) ? item.operator[1] : item.operator,

@@ -18,21 +18,13 @@ export default function ActivityDefinition() {
   const updateActivitySchema = useActivityStore((state) => state.updateActivitySchema);
   const updateActivityDetails = useActivityStore((state) => state.updateActivityDetails);
   const [notificationProps, setNotificationProps] = useState(null);
-  const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
+  const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState(true);
 
   const [activityDefinitionData, setActivityDefinitionData] = useState(store.activityData);
   const [activityVersions, setActivityVersions] = useState([]);
 
   const readOnly = currentActivity?.operation === OPERATIONS.VIEW ? true : false;
   const ref = useRef();
-
-  useEffect(() => {
-    if (activityDefinitionData?.id !== '' || activityDefinitionData?.name === '' || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
-      setShowActivityDefineDrawer(true);
-    } else {
-      setShowActivityDefineDrawer(false);
-    }
-  }, [activityDefinitionData]);
 
   useEffect(() => {
     const getActivityData = (activityDefKey, versionKey) => {
@@ -66,7 +58,11 @@ export default function ActivityDefinition() {
         diagram: {
           x: x.position.x,
           y: x.position.y
-        }
+        },
+        exitCondition: x.validateExitValidationQuery,
+        exitConditionErrorMessage: x.exitValidationMessage,
+        entryCondition: x.validateEntryValidationQuery,
+        entryConditionErrorMessage: x.entryValidationMessage
       };
     });
     const edges = activityObj.schema.edges.map((x) => {

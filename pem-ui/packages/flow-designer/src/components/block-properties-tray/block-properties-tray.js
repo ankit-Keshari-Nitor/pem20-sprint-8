@@ -16,6 +16,7 @@ import {
 } from './../../constants/define-form-renderer.schema';
 
 import './block-properties-tray.scss';
+import GatewayValidation from '../gateway-validation';
 
 export default function BlockPropertiesTray(props) {
   const {
@@ -48,7 +49,7 @@ export default function BlockPropertiesTray(props) {
       case NODE_TYPE.API:
         return <BlockDefinitionForm id={'api-define-form'} schema={API_FORM_SCHEMA} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />;
       case NODE_TYPE.GATEWAY:
-        return null;
+        return <GatewayValidation id={'gateway-validation-form'} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode}  readOnly={readOnly} />;
       default:
         return null;
     }
@@ -59,17 +60,21 @@ export default function BlockPropertiesTray(props) {
       <div className="block-properties-container">
         <div className="title-bar">
           <span className="title">
-            <span>
-              {selectedNode?.data?.editableProps.name ? (
-                <span>
-                  {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})
-                </span>
-              ) : (
-                <span>
-                  {selectedNode?.id} ({selectedNode?.data?.taskName})
-                </span>
-              )}
-            </span>
+            {selectedNode && selectedNode.type === NODE_TYPE.GATEWAY ? (
+              'Gateway Validation'
+            ) : (
+              <span>
+                {selectedNode?.data?.editableProps.name ? (
+                  <span>
+                    {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})
+                  </span>
+                ) : (
+                  <span>
+                    {selectedNode?.id} ({selectedNode?.data?.taskName})
+                  </span>
+                )}
+              </span>
+            )}
           </span>
           <div className="icon">
             <span onClick={() => setOpenExpandMode(true)} className="icon">
@@ -87,15 +92,23 @@ export default function BlockPropertiesTray(props) {
         onRequestClose={() => setOpenExpandMode(false)}
         isFullWidth
         modalHeading={
-          selectedNode?.data?.editableProps.name ? (
-            <span>
-              {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})
-            </span>
-          ) : (
-            <span>
-              {selectedNode?.id} ({selectedNode?.data?.taskName})
-            </span>
-          )
+          <span className="title">
+            {selectedNode && selectedNode.type === NODE_TYPE.GATEWAY ? (
+              'Gateway Validation'
+            ) : (
+              <span>
+                {selectedNode?.data?.editableProps.name ? (
+                  <span>
+                    {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})
+                  </span>
+                ) : (
+                  <span>
+                    {selectedNode?.id} ({selectedNode?.data?.taskName})
+                  </span>
+                )}
+              </span>
+            )}
+          </span>
         }
         passiveModal
         primaryButtonText="Exit"

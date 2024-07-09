@@ -10,7 +10,7 @@ const Tooltip = ({ field, id }) => {
   const { labelText, ...rest } = field;
 
   return (
-    <CarbonTooltip align="bottom" label={labelText}>
+    <CarbonTooltip data-testid={id} align="bottom" label={labelText}>
       <Information />
     </CarbonTooltip>
   );

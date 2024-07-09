@@ -95,6 +95,11 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           item.component.height = '1';
         }
 
+        //Condition for File Uploader row Property
+        if (item.component.type === 'fileUploader') {
+          item.component.maxFileSize = '100kb';
+        }
+
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
@@ -291,7 +296,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             <span className="header-title">{activityDefinitionData && Object.keys(activityDefinitionData).length > 0 ? activityDefinitionData.name : 'New Form Builder'}</span>
           </Column>
           <Column lg={12} className="buttons-container">
-            {/* <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
+           {/*  <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
               View Schema
             </Button>
             <Button kind="secondary" className="cancelButton" onClick={() => setOpenPreview(true)}>

@@ -63,7 +63,7 @@ const ActivityDataTableComponent = ({
   };
 
   // Generate the ellipsis menu for each row
-  const renderEllipsisMenu = (id, status = '') => {
+  const renderEllipsisMenu = (id, status = '', isDefault = false) => {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
         <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.VIEW} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.VIEW, id)} />
@@ -77,7 +77,7 @@ const ActivityDataTableComponent = ({
         ) : (
           <>
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_VERSION, id)} />
-            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_DEFAULT, id)} />
+            {!isDefault ? <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_DEFAULT, id)} /> : null}
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_VERSION, id)} />
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_VERSION, id)} />
           </>
@@ -122,7 +122,7 @@ const ActivityDataTableComponent = ({
   };
 
   // Render recently viewed icon and text
-  const renderRecentlyViewed = (value = '""', id, activityName = '', status = '', description = '') => (
+  const renderRecentlyViewed = (value = '""', id, activityName = '', status = '', description = '', isDefault = false) => (
     <div>
       {showDrawer ? (
         <div className="information-wrapper">
@@ -132,12 +132,17 @@ const ActivityDataTableComponent = ({
             </Tooltip>
           ) : null}
           <span className="information-text">{`Ver. ${value}`}</span>
+          {isDefault ? <Tag type='cyan'>Default</Tag> : null}
         </div>
       ) : (
-        <div className="recently-view-wrapper" onClick={() => handleVersion(id, activityName, status)}>
-          <span className="recently-view-text">{`Ver. ${value}`}</span>
-          <RecentlyViewed />
-        </div>
+        <>
+          <Tooltip label='Version History'>
+            <div className="recently-view-wrapper" onClick={() => handleVersion(id, activityName, status)}>
+              <span className="recently-view-text">{`Ver. ${value}`}</span>
+              <RecentlyViewed />
+            </div>
+          </Tooltip>
+        </>
       )}
     </div>
   );
@@ -189,6 +194,7 @@ const ActivityDataTableComponent = ({
                     const statusCell = row.cells.find((cell) => cell.id === `${row.id}:status`);
                     const activityName = row.cells.find((cell) => cell.id === `${row.id}:name`);
                     const description = row.cells.find((cell) => cell.id === `${row.id}:description`);
+                    const isDefault = row.cells.find((cell) => cell.id === `${row.id}:isDefault`);
                     return (
                       <TableRow {...getRowProps({ row })} key={row.id}>
                         {row.cells.map((cell) => (
@@ -196,13 +202,13 @@ const ActivityDataTableComponent = ({
                             {cell.info.header === 'action'
                               ? renderActionItem(statusCell.value, row.id, versionKeyCell.value)
                               : cell.info.header === 'ellipsis'
-                                ? renderEllipsisMenu(row.id, statusCell.value)
+                                ? renderEllipsisMenu(row.id, statusCell.value, isDefault?.value)
                                 : cell.info.header === 'status'
                                   ? renderTag(cell.value.toLowerCase())
                                   : cell.info.header === 'name'
                                     ? renderInformation(cell.value, description?.value)
                                     : cell.info.header === 'version'
-                                      ? renderRecentlyViewed(cell.value, row.id, activityName?.value, statusCell?.value, description?.value)
+                                      ? renderRecentlyViewed(cell.value, row.id, activityName?.value, statusCell?.value, description?.value, isDefault?.value)
                                       : cell.info.header === 'isEncrypted'
                                         ? renderCheckmarkFilled(cell.value)
                                         : null}

@@ -169,15 +169,15 @@ export default function ActivityList() {
   // Handler for marking activity as final
   const handleMarkAsFinal = async (id, versionKey) => {
     const responseStatus = await ActivityService.markActivityDefinitionAsFinal(id, versionKey);
-    const success = responseStatus !== undefined && responseStatus === 'FINAL';
-    if (success) {
+
+    if (responseStatus.success && responseStatus.status !== undefined && responseStatus.status === 'FINAL') {
       fetchAndSetData();
     }
     setNotificationProps({
-      open: success,
-      title: success ? 'Success - ' : 'Error - ',
-      subtitle: success ? 'Action completed successfully!' : `Action not completed successfully - ${responseStatus}`,
-      kind: success ? 'success' : 'error',
+      open: responseStatus.success,
+      title: responseStatus.success ? 'Success - ' : 'Error - ',
+      subtitle: responseStatus.success ? 'Action completed successfully!' : `Action not completed successfully - ${responseStatus}`,
+      kind: responseStatus.success ? 'success' : 'error',
       onCloseButtonClick: () => setNotificationProps(null)
     });
     setShowGeneralActionModal(false);

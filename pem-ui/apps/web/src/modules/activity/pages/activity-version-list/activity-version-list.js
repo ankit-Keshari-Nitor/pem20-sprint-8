@@ -1,17 +1,18 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { CrossIcon } from '../../icons';
 import { TableContainer } from '@carbon/react';
+import './activity-version-list.scss';
 
 import DataTableComponent from '../../components/datatable-component';
 
 import { ACTIVITY_VERSION_COLUMNS } from '../../constants';
 
-import * as ActivityService from '../../services/activity-service.js';
+import * as ActivityVersionService from '../../services/actvity-version-service.js';
 
 const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, showDrawer }) => {
   // Version Side drawer
   const [totalRows, setTotalRows] = useState(0);
-  const [sortDir, setSortDir] = useState('ASC'); // Sorting direction state
+  const [sortDir, setSortDir] = useState('DESC'); // Sorting direction state
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [versionRows, setVersionRows] = useState([]);
@@ -20,7 +21,7 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
   const fetchVersionRowData = useCallback(
     async (activityDefnKey, status) => {
       try {
-        const data = await ActivityService.getActivityVersionkey(pageNo - 1, pageSize, sortDir, status, true, activityDefnKey);
+        const data = await ActivityVersionService.getActivityVersionList(activityDefnKey, pageNo - 1, pageSize, sortDir);
         setVersionRows(data.content);
         setTotalRows(data.pageContent.totalElements);
       } catch (error) {

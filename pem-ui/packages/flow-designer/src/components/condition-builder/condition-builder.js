@@ -28,7 +28,7 @@ export default function ConditionalBuilder({ onSubmitExitValidationForm, setOpen
         </CarbonWrapper>
       </Column>
       <Column className="form-field" lg={16}>
-        <TextArea placeholder="Enter Text" labelText="Error Message" rows={4} id="text-area-1" disabled={readOnly} onChange={(e) => setErrorMessage(e.target.value)} />
+        <TextArea placeholder="Enter Text" labelText="Error Message" rows={4} id="text-area-1" disabled={readOnly} onChange={(e) => setErrorMessage(e.target.value)}  value={errorMessage}/>
       </Column>
       {/* <Column className="form-field" lg={16}>
           <h4>Query</h4>

@@ -20,6 +20,7 @@ export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode
 
   useEffect(() => {
     setQuery(selectedNode?.data?.exitValidationQuery);
+    setErrorMessage(selectedNode?.data?.exitValidationMessage);
   }, [selectedNode]);
 
   const onSubmitDefinitionForm = (values) => {
@@ -42,7 +43,7 @@ export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode
     } else {
       editTask(selectedNode, 'exitValidationQuery', query);
       editTask(selectedNode, 'validateExitValidationQuery', modifiedQuery);
-      editDialog(selectedNode, 'exitValidationMessage', errorMessage);
+      editTask(selectedNode, 'exitValidationMessage', errorMessage);
     }
   };
 
@@ -85,9 +86,9 @@ export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode
               onSubmitExitValidationForm={onSubmitExitValidationForm}
               readOnly={readOnly}
               query={query}
+              setQuery={setQuery}
               errorMessage={errorMessage}
               setErrorMessage={setErrorMessage}
-              setQuery={setQuery}
             />
           </TabPanel>
         </TabPanels>

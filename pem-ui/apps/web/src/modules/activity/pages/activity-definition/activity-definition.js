@@ -66,7 +66,11 @@ export default function ActivityDefinition() {
         diagram: {
           x: x.position.x,
           y: x.position.y
-        }
+        },
+        exitCondition: x.validateExitValidationQuery,
+        exitConditionErrorMessage: x.exitValidationMessage,
+        entryCondition: x.validateEntryValidationQuery,
+        entryConditionErrorMessage: x.entryValidationMessage
       };
     });
     const edges = activityObj.schema.edges.map((x) => {

@@ -90,7 +90,6 @@ const WorkFlowDesigner = forwardRef(
       }
     }, [restStore, storeData]);
 
-    console.log('storeData', storeData);
     useEffect(() => {
       setTaskNodes(storeData.nodes);
       setTaskEdges(storeData.edges);

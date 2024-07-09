@@ -95,6 +95,11 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           item.component.height = '1';
         }
 
+        //Condition for File Uploader row Property
+        if (item.component.type === 'fileUploader') {
+          item.component.maxFileSize = '100kb';
+        }
+
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,

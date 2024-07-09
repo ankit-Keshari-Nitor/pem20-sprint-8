@@ -16,12 +16,14 @@ const FileUploader = ({ field, id, }) => {
     const sizePattern = /(\d+(\.\d+)?)(b|kb|mb)/i;
     const match = sizeStr !== '' ? sizeStr.match(sizePattern) : false;
 
+    setError('');
+
     if (!match) {
-      throw new Error("Invalid size format. Use format like '500b', '500kb', or '500mb'.");
+      setError("Invalid size format. Use format like '500b', '500kb', or '500mb'.");
     }
 
     const value = parseFloat(match[1]);
-    const unit = match[3].toLowerCase();
+    const unit = match[3]?.toLowerCase();
 
     let bytes;
 
@@ -36,7 +38,7 @@ const FileUploader = ({ field, id, }) => {
         bytes = value * 1024 * 1024;
         break;
       default:
-        throw new Error("Unsupported unit. Use 'b', 'kb', or 'mb'.");
+        setError("Unsupported unit. Use 'b', 'kb', or 'mb'.");
     }
 
     return bytes;
@@ -44,7 +46,6 @@ const FileUploader = ({ field, id, }) => {
 
   const onAddFiles = (event, files) => {
     const file = event.target.files || files.addedFiles;
-
     const newFile = [
       {
         name: file[0].name,
@@ -72,13 +73,14 @@ const FileUploader = ({ field, id, }) => {
       };
       setFile(updatedFile);
     } else {
+      setFile();
       setError('File size exceeds the maximum limit');
     }
   }
 
   const onDeleteFile = function (...args) {
     setFile();
-
+    setError('')
   };
 
   return (

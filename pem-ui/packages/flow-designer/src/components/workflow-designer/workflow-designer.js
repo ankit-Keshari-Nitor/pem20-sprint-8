@@ -23,7 +23,6 @@ import { useEffect } from 'react';
 import useTaskStore from '../../store';
 import { Column, Grid } from '@carbon/react';
 import { CrossIcon } from '../../icons';
-import { Edit } from '@carbon/icons-react';
 
 let dialogId = 0;
 const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
@@ -56,23 +55,29 @@ const WorkFlowDesigner = forwardRef(
     const restStore = useTaskStore((state) => state.reset);
     const [isDialogFlowActive, setIsDialogFlowActive] = useState(false);
     const [isPageDesignerActive, setIsPageDesignerActive] = useState(false);
-    const [hover, setHover] = useState(false);
 
     // --------------------------------- Task Flow States -----------------------------------
+    const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState();
     const taskFlowWrapper = useRef(null);
     const [nodes, setTaskNodes, onTaskNodesChange] = useNodesState(storeData.nodes);
     const [edges, setTaskEdges, onTaskEdgesChange] = useEdgesState([]);
     const [taskFlowInstance, setTaskFlowInstance] = useState(null);
     const [selectedTaskNode, setSelectedTaskNode] = useState(null);
-    const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState(false);
 
     // --------------------------------- Dialog Flow States -----------------------------------
+    const [openDialogPropertiesBlock, setOpenDialogPropertiesBlock] = useState(false);
     const dialogFlowWrapper = useRef(null);
     const [dialogNodes, setDialogNodes, onDialogNodesChange] = useNodesState([]);
     const [dialogEdges, setDialogEdges, onDialogEdgesChange] = useEdgesState([]);
     const [dialogFlowInstance, setDialogFlowInstance] = useState(null);
     const [selectedDialogNode, setSelectedDialogNode] = useState(null);
-    const [openDialogPropertiesBlock, setOpenDialogPropertiesBlock] = useState(false);
+
+    // --------------------------------- Dialog Flow Methods -----------------------------------
+    const onDialogNodeDoubleClick = (event, node) => {
+      if (node.type === NODE_TYPE.DIALOG) {
+        setIsPageDesignerActive(true);
+      }
+    };
 
     const handleRest = () => {
       restStore();
@@ -83,6 +88,27 @@ const WorkFlowDesigner = forwardRef(
         handleRest
       };
     });
+
+    const onDialogNodeConnect = useCallback(
+      (params) => {
+        let newParam = params;
+        newParam.type = 'crossEdge';
+        newParam.markerEnd = endMarks;
+        newParam.data = { id: selectedTaskNode?.id };
+        /// newParam.data = selectedTaskNode?.id;//incoming change
+        addDialogEdge(selectedTaskNode, addEdge({ ...newParam, style: { stroke: '#000' } }, dialogEdges));
+      },
+      [addDialogEdge, dialogEdges, selectedTaskNode]
+    );
+
+    const onDialogNodeDragOver = useCallback((event) => {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+    }, []);
+
+    /*  useEffect(() => {
+    setOpenTaskPropertiesBlock(showActivityDefineDrawer);
+  }, [showActivityDefineDrawer]);*/
 
     useEffect(() => {
       if (storeData.nodes.length === 0) {
@@ -101,30 +127,6 @@ const WorkFlowDesigner = forwardRef(
       //this is sending the new schema to web page  - activity-definition.js
       updateActivitySchema(storeData, activityOperation);
     }, [setTaskNodes, setTaskEdges, setDialogEdges, storeData, selectedTaskNode, updateActivitySchema, setDialogNodes]);
-
-    // -------------------------------------------------------------------- Dialog Flow Methods Start ----------------------------------------------------------------------
-    const onDialogNodeDoubleClick = (event, node) => {
-      if (node.type === NODE_TYPE.DIALOG) {
-        setIsPageDesignerActive(true);
-      }
-    };
-
-    const onDialogNodeConnect = useCallback(
-      (params) => {
-        let newParam = params;
-        newParam.type = 'crossEdge';
-        newParam.markerEnd = endMarks;
-        newParam.data = { id: selectedTaskNode?.id };
-        /// newParam.data = selectedTaskNode?.id;//incoming change
-        addDialogEdge(selectedTaskNode, addEdge({ ...newParam, style: { stroke: '#000' } }, dialogEdges));
-      },
-      [addDialogEdge, dialogEdges, selectedTaskNode]
-    );
-
-    const onDialogNodeDragOver = useCallback((event) => {
-      event.preventDefault();
-      event.dataTransfer.dropEffect = 'move';
-    }, []);
 
     const onDialogNodeDrop = useCallback(
       (event) => {
@@ -184,7 +186,7 @@ const WorkFlowDesigner = forwardRef(
       }
     };
 
-    // -------------------------------------------------------------------- Task Flow Methods Start ----------------------------------------------------------------------
+    // --------------------------------- Task Flow Methods -----------------------------------
     const onTaskNodeDoubleClick = (event, node) => {
       if (node.type === NODE_TYPE.PARTNER || node.type === NODE_TYPE.SPONSOR || node.type === NODE_TYPE.CUSTOM || node.type === NODE_TYPE.SYSTEM) {
         setIsDialogFlowActive(true);
@@ -262,8 +264,6 @@ const WorkFlowDesigner = forwardRef(
       }
     };
 
-    // -------------------------------------------------------------------- Task Flow Methods End ----------------------------------------------------------------------
-
     const onClickPageDesignerBack = () => {
       setIsDialogFlowActive(true);
       setIsPageDesignerActive(false);
@@ -290,14 +290,6 @@ const WorkFlowDesigner = forwardRef(
       }
     };
 
-    const onActivityDefinitionHover = () => {
-      setHover(true);
-    };
-
-    const onActivityDefinitionLeave = () => {
-      setHover(false);
-    };
-
     return (
       <>
         {isPageDesignerActive ? (
@@ -320,12 +312,8 @@ const WorkFlowDesigner = forwardRef(
                       setOpenTaskPropertiesBlock(false);
                       setShowActivityDefineDrawer(true);
                     }}
-                    onMouseEnter={onActivityDefinitionHover}
-                    onMouseLeave={onActivityDefinitionLeave}
-                    style={{ color: hover ? ' #0f62fe' : '#161616' }}
                   >
                     {activityDefinitionData && activityDefinitionData.definition?.name}
-                    {hover ? <Edit /> : null}
                   </span>
                 </Column>
                 {isDialogFlowActive && (

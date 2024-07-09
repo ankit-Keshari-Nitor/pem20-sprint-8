@@ -18,7 +18,7 @@ import DataTable from './data-table';
 import FileDownload from './file-download';
 
 export const formFields = [
-  FileDownload,
+
   Group,
   TextInput,
   Textarea,
@@ -34,6 +34,7 @@ export const formFields = [
   DataTable,
   DatePicker,
   FileUploader,
+  FileDownload,
   Accordion,
   Tab
 ];

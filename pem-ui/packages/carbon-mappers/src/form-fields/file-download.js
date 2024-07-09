@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, id, fileUploader, decodeBase64, NameLabel, helperText, buttonLabel, isRequired, labelText } from '../constant';
-import { FileAttachmentIcon } from './../icons';
+import { FileDownloadIcon } from './../icons';
 import { Button } from '@carbon/react';
 import './../style.scss';
 const type = FORM_FIELD_TYPE.FILE_DOWNLOADER;
@@ -28,7 +28,7 @@ FileDownload.config = {
     type,
     label: FORM_FIELD_LABEL.FILE_DOWNLOADER,
     group: FORM_FIELD_GROUPS.BASIC_INPUT,
-    icon: <FileAttachmentIcon />,
+    icon: <FileDownloadIcon />,
     editableProps: {
         Basic: [id, NameLabel, labelText, helperText, buttonLabel, fileUploader],
         Condition: []

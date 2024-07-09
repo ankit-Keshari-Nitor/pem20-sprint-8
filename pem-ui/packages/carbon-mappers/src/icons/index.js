@@ -150,7 +150,7 @@ export const DatepickerIcon = () => {
   );
 };
 
-export const FileAttachmentIcon = () => {
+export const FileUploadIcon = () => {
   return (
     <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="30" height="30" fill="white" style={{ 'mix-blend-mode': 'multiply' }} />
@@ -158,6 +158,16 @@ export const FileAttachmentIcon = () => {
         d="M26.3438 17.7189L12.2813 3.65642C9.9375 1.21892 6.09375 1.21892 3.65625 3.56267C1.21875 5.90642 1.21875 9.84392 3.65625 12.1877L3.75 12.2814L6.375 15.0002L7.6875 13.6877L4.96875 10.9689C3.375 9.37517 3.375 6.65642 4.96875 5.06267C6.5625 3.46892 9.28125 3.37517 10.875 4.96892C10.875 4.96892 10.875 4.96892 10.9688 5.06267L24.9375 19.0314C26.625 20.6252 26.625 23.3439 25.0312 24.9377C23.4375 26.6252 20.7187 26.6252 19.125 25.0314C19.125 25.0314 19.125 25.0314 19.0312 24.9377L12.0938 18.0002C11.1562 17.0627 11.25 15.5627 12.0938 14.7189C13.0312 13.8752 14.4375 13.8752 15.375 14.7189L19.2188 18.5627L20.5312 17.2502L16.5938 13.3127C14.9063 11.7189 12.2812 11.8127 10.6875 13.5002C9.1875 15.0939 9.1875 17.6252 10.6875 19.3127L17.7187 26.3439C20.0625 28.7814 23.9062 28.7814 26.3438 26.4377C28.7812 24.0939 28.7812 20.1564 26.3438 17.7189C26.3438 17.8127 26.3438 17.7189 26.3438 17.7189Z"
         fill="#161616"
       />
+    </svg>
+  );
+};
+
+export const FileDownloadIcon = () => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+      <polyline points="7 10 12 15 17 10"></polyline>
+      <line x1="12" y1="15" x2="12" y2="3"></line>
     </svg>
   );
 };

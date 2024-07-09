@@ -7,6 +7,8 @@ import org.activiti.bpmn.model.BpmnModel;
 import java.util.List;
 import java.util.Map;
 
+import static com.precisely.pem.dtos.Constants.PROCESS_ID_PREFIX;
+
 
 @Data
 public class BpmnConverterRequest {
@@ -27,7 +29,7 @@ public class BpmnConverterRequest {
         private String processId;
 
         public Builder processId(String processId) {
-            this.processId = "ID-" + processId;
+            this.processId = PROCESS_ID_PREFIX + processId;
             return this;
         }
 

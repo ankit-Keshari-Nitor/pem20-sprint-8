@@ -22,6 +22,7 @@ public abstract class AbstractNodeHandler implements NodeHandler{
     }
 
     protected void passToNext(Node node, ObjectNode outputJson, ObjectMapper objectMapper, BpmnConverterRequest request) {
+        log.debug("Started {}",node.getType());
         if (nextHandler != null) {
             nextHandler.handleNode(node, outputJson, objectMapper,request);
         }
@@ -35,6 +36,7 @@ public abstract class AbstractNodeHandler implements NodeHandler{
             outputJson.putArray("childShapes").add(taskChildShape);
     }
 
+    /* SourceMap contains list of SequenceFlow Ids for each Resource, outgoing node should contain all the Flow Ids starting from source.*/
     protected static void getOutGoingNode(BpmnConverterRequest request, String resourceId, ArrayNode outgoing) {
         if(Objects.nonNull(request.getSourceMap()) && request.getSourceMap().containsKey(resourceId)){
             List<String> flows = request.getSourceMap().get(resourceId);

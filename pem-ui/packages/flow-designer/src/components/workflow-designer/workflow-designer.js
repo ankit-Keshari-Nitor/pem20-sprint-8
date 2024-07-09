@@ -149,7 +149,7 @@ const WorkFlowDesigner = forwardRef(
           id: getNewDialogId(),
           position,
           type: nodeData.type,
-          data: { ...nodeData, onDoubleClick: onDialogNodeDoubleClick }
+          data: { ...nodeData }
         };
 
         addDialogNodes(selectedTaskNode, newDialog);
@@ -158,7 +158,7 @@ const WorkFlowDesigner = forwardRef(
     );
 
     const onDialogNodeClick = (event, node) => {
-      if (node.type === NODE_TYPE.DIALOG || node.type === NODE_TYPE.XSLT || node.type === NODE_TYPE.API) {
+      if (node.type === NODE_TYPE.DIALOG || node.type === NODE_TYPE.XSLT || node.type === NODE_TYPE.API || node.type === NODE_TYPE.GATEWAY) {
         let copyNodes = dialogNodes;
         copyNodes.map((copyNode) => {
           if (node.id === copyNode.id) {
@@ -230,7 +230,7 @@ const WorkFlowDesigner = forwardRef(
           id: getNewTaskId(),
           position,
           type: nodeData.type,
-          data: { ...nodeData, onDoubleClick: onTaskNodeDoubleClick, dialogNodes: DIALOG_INITIAL_NODES, dialogEdges: [] }
+          data: { ...nodeData, dialogNodes: DIALOG_INITIAL_NODES, dialogEdges: [] }
         };
         addTaskNode(newTask);
       },
@@ -244,7 +244,8 @@ const WorkFlowDesigner = forwardRef(
         node.type === NODE_TYPE.ATTRIBUTE ||
         node.type === NODE_TYPE.SPONSOR ||
         node.type === NODE_TYPE.CUSTOM ||
-        node.type === NODE_TYPE.SYSTEM
+        node.type === NODE_TYPE.SYSTEM ||
+        node.type === NODE_TYPE.GATEWAY
       ) {
         let copyNodes = nodes;
         copyNodes.map((copyNode) => {

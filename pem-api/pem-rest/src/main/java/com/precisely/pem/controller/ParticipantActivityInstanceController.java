@@ -117,7 +117,7 @@ public class ParticipantActivityInstanceController {
         return new ResponseEntity<>(messageResp, HttpStatus.OK);
     }
 
-    @Operation(summary = "Get Task details for specific task")
+    @Operation(summary = "Get Task details for specific task [DO NOT USE]")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
                     @Content(schema = @Schema(implementation = ActivityTaskDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
@@ -139,7 +139,7 @@ public class ParticipantActivityInstanceController {
 
     }
 
-    @Operation(summary = "Submit/Resume activity for form node")
+    @Operation(summary = "Submit/Resume activity for form node [DO NOT USE]")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
                     @Content(schema = @Schema(implementation = ParticipantActivityInstResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),

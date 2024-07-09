@@ -1,6 +1,7 @@
 import { API_END_POINTS } from './../constants';
 import { RestApiService } from '../../../common/api-handler/rest-api-service';
 
+// Function to get the list of all activities
 export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchKey = '', status = '', sortBy = 'modifyts') => {
   const url = `${API_END_POINTS.ACTIVITY_DEFINITION}`;
   let config = {
@@ -15,7 +16,6 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
       name: `con:${searchKey}`
     }
   }
-
   const response = await new RestApiService().call(config, null);
   if (response.success) {
     const customizedData = response.data.content.map((e) => ({
@@ -26,7 +26,6 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
       status: e.defaultVersion.status,
       ...e
     }));
-
     return {
       success: true,
       content: customizedData || [],
@@ -42,14 +41,13 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
 
 };
 
+// Function to delete the activity
 export const deleteActivity = async (activityDefnKey) => {
-
   let url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}`;
   let config = {
     url,
     method: 'DELETE'
   }
-
   const response = await new RestApiService().call(config, null);
   if (response.success) {
     return {
@@ -63,15 +61,14 @@ export const deleteActivity = async (activityDefnKey) => {
 
 };
 
+// Function to mark the activity as final status
 export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDefnKeyVersion) => {
-
   let url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}/versions/${activityDefnKeyVersion}/actions/markAsFinal`;
   let config = {
     url,
     method: 'POST',
     data: ''
   }
-
   const response = await new RestApiService().call(config, null);
   if (response.success) {
     return {
@@ -87,6 +84,7 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
 
 };
 
+// Function to get the details of activity
 export const getActivityDetails = async (activityKey, activityVersoinKey) => {
   const url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityKey}`;
   const response = await new RestApiService().call({ url }, null);
@@ -122,6 +120,7 @@ export const getActivityDetails = async (activityKey, activityVersoinKey) => {
   }
 };
 
+// Function to save the details of activity
 export const saveActivityData = async (activityData) => {
   const url = `${API_END_POINTS.ACTIVITY_DEFINITION}`;
   const file = new Blob([JSON.stringify(activityData)], { type: 'text/json' });

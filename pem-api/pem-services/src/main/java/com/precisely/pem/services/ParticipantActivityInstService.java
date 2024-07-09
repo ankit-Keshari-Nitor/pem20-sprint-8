@@ -10,7 +10,7 @@ public interface ParticipantActivityInstService {
                                                                                       int pageNo, int pageSize, String sortDir) throws Exception;
     ParticipantActivityInstResp getParticipantActivityInstanceByKey(String sponsorContext, String pcptActivityInstKey) throws Exception;
     MessageResp startActivity(String sponsorContext, String pcptActivityInstKey) throws ResourceNotFoundException, InvalidStatusException;
-    ActivityTaskDto getTaskDetails(String sponsorContext, String pcptActivityInstKey, String taskKey) throws Exception;
+    ActivityTaskDto getNodeDetails(String sponsorContext, String pcptActivityInstKey, String taskKey) throws Exception;
 
-    MarkAsFinalActivityDefinitionVersionResp submitTask(String sponsorContext, String pcptActivityInstKey, String taskKey, String data) throws Exception;
+    public MarkAsFinalActivityDefinitionVersionResp completeNode(String sponsorContext, String pcptActivityInstKey, String taskKey, String data, Boolean isDraft) throws Exception;
 }

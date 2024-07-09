@@ -94,12 +94,7 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     }
 
     @Override
-    public void completeTask(String taskId) {
-        taskService.complete(taskId);
-    }
-
-    @Override
-    public void completeUserTask(String taskId, String input) throws Exception {
+    public void completeUserNode(String taskId, String input) throws Exception {
         try {
             // TODO: We have not integrated authentication in application,
             //  Problem : We can not read task details without Auth
@@ -117,20 +112,20 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
             ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
                     .processInstanceId(task.getProcessInstanceId())
                     .singleResult();
+
+            Map<String,Object> formData = new HashMap<>();
+
+            formData.put("formData",input);
+
+            runtimeService.setVariable(task.getProcessInstanceId(), task.getTaskDefinitionKey(),formData);
+
             Map<String, Object> variables = runtimeService.getVariables(processInstance.getProcessInstanceId());
-            if (variables == null) {
-                variables = new HashMap<>();
-            }
-            Map<String,Object> contextData = (Map<String, Object>) variables.get("contextData");
-            if(contextData ==null){
-               contextData = new HashMap<>();
-            }
-            contextData.put(task.getTaskDefinitionKey(),input);
-            variables.put("contextData", contextData);
-            runtimeService.setVariables(task.getProcessInstanceId(), variables);
-            
-            variables = runtimeService.getVariables(processInstance.getProcessInstanceId());
             System.out.println(new JSONObject(variables).toString());
+            Map<String, Object> localTaskVariable =  this.getTaskVariables(taskId);
+            if(localTaskVariable.containsKey("draft")) {
+                localTaskVariable.remove("draft");
+                this.setTaskVariables(taskId, localTaskVariable);
+            }
             taskService.complete(taskId);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -205,10 +200,9 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     }
 
     @Override
-    public TaskDTO getTaskDetails(String taskId) throws Exception {
+    public TaskDTO getUserNodeDetails(String taskId) throws Exception {
         TaskDTO task = null;
         try {
-            Map<String, Object> variables = new HashMap<>();
             // TODO: We have not integrated authentication in application,
             //  Problem : We can not read task details without Auth
             //  Error: Unauthorized.
@@ -219,13 +213,7 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-
             task = mapper.map(taskRuntime.task(taskId), TaskDTO.class);
-            variables = task.getVariables();
-            if (variables == null) {
-                variables = new HashMap<>();
-            }
-
 
             ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
                     .processInstanceId(task.getProcessInstanceId())
@@ -252,7 +240,7 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
                                 List<FormProperty> formProperty = userTask.getFormProperties();
                                 for (FormProperty item : formProperty) {
                                     if (item.getName().equalsIgnoreCase("form")) {
-                                        variables.put("form", item.getVariable());
+                                        task.setForm(item.getVariable());
                                     }
                                 }
                             }
@@ -260,7 +248,7 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
                     }
                 }
             }
-            task.setVariables(variables);
+            task.setFormData((String) this.getTaskVariables(taskId).get("draft"));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -269,12 +257,12 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
 
     @Override
     public Map<String, Object> getTaskVariables(String taskId) {
-        return taskService.getVariables(taskId);
+        return taskService.getVariablesLocal(taskId);
     }
 
     @Override
     public void setTaskVariables(String taskId, Map<String, Object> variables) {
-        taskService.setVariables(taskId, variables);
+        taskService.setVariablesLocal(taskId,variables);
     }
 
     @Override

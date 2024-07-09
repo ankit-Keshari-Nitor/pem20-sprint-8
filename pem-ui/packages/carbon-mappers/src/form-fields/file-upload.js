@@ -69,7 +69,7 @@ const FileUploader = ({ field, id, }) => {
         iconDescription: 'Delete Icon',
         invalid: true,
         errorSubject: 'InValid ',
-        errorBody: ('Error', { fileName: fileUpload.name, fileType: extensions.join(',') })
+        errorBody: ('Error', { fileName: fileUpload.name, fileType: extensions !== undefined ? extensions.join(',') : '' })
       };
       setFile(updatedFile);
     } else {

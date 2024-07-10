@@ -221,6 +221,7 @@ export default function ActivityList() {
 
   const handleClose = () => {
     setShowDrawer(false);
+    fetchAndSetData();
   };
 
   // -------------------------------------Test operation Start-------------------------------------------------

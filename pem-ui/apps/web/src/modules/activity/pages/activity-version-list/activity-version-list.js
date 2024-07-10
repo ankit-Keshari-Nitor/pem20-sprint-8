@@ -63,7 +63,7 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
   };
 
   // Handler for action clicks
-  const onCellActionClick = (action, actVersionKey = '') => {
+  const onCellActionClick = (action, actVersionKey = '', versionName = '') => {
     /* const record = rows.filter((x) => x.id === activityDefKey)[0];
     store.setSelectedActivity({
       activityDefKey: record.activityDefnKey,
@@ -78,17 +78,16 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
     switch (action) {
       case ACTION_COLUMN_KEYS.MARK_AS_FINAL:
         setActionText('Mark as final');
-        setMessage('The Activity can not be modified once you Mark as final. Do you want to Mark as final?');
+        setMessage('The Version can not be modified once you Mark as final. Do you want to Mark as final?');
         setOnPrimaryButtonClick(() => () => handleMarkAsFinal(activityDefnKey, actVersionKey)); // Updated
         setShowGeneralActionModal(true);
-
         break;
       case ACTION_COLUMN_KEYS.DELETE:
         console.log('Delete Version');
         break;
       case ACTION_COLUMN_KEYS.MARK_AS_DEFAULT:
-        setActionText('Mark As Default');
-        setMessage('text');
+        setActionText('Yes');
+        setMessage(`Are you sure you want to make 'Ver.${versionName}' Mark as default? The Activity version will be marked as default.`);
         setOnPrimaryButtonClick(() => () => handleMarkAsDefaultActivity(activityDefnKey, actVersionKey)); // Updated
         setShowGeneralActionModal(true);
         break;

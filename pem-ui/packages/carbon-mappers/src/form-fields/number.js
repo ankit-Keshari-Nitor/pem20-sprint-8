@@ -6,7 +6,7 @@ import {
   maxProps,
   readOnly,
   helperText,
-  placeHolder,  
+  placeHolder,
   NameLabel,
   FORM_FIELD_LABEL,
   FORM_FIELD_GROUPS,
@@ -19,8 +19,8 @@ import { CharacterWholeNumber } from '@carbon/icons-react';
 const type = FORM_FIELD_TYPE.NUMBER;
 
 const NumberInput = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
-  const { labelText, helperText, disabled, label, value, isRequired, min, max, ...rest } = field;
-  const [fieldValue, setFieldValue] = useState();
+  const { labelText, helperText, readOnly, label, value, isRequired, min, max, ...rest } = field;
+  const [fieldValue, setFieldValue] = useState(0);
 
   useEffect(() => {
     if (previewMode) {
@@ -31,19 +31,22 @@ const NumberInput = ({ field, id, currentPath, onChangeHandle, previewMode }) =>
   return (
     <>
       <CarbonNumberInput
-        type={FORM_FIELD_TYPE.TEXT}
         data-testid={id}
         id={id}
         label={labelText === undefined ? label : labelText}
         helperText={helperText}
-        disabled={disabled}
-        defaultValue={0}
+        readOnly={readOnly}
         value={fieldValue}
-        onChange={(e) => {
-          previewMode && onChangeHandle(currentPath, e.target.value);
-          setFieldValue(e.target.value);
+        onChange={(e, data) => {
+          previewMode && onChangeHandle(currentPath, data.value);
+          setFieldValue(data.value);
         }}
-        {...rest}
+        onKeyUp={(e) => {
+          previewMode && onChangeHandle(currentPath, e?.target?.value);
+          setFieldValue(e?.target?.value);
+        }}
+        min={min?.value}
+        max={max?.value}
       />
     </>
   );

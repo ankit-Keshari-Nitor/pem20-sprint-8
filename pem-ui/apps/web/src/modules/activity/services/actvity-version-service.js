@@ -35,6 +35,18 @@ export const getActivityVersionList = async (activityDefnKey, pageNo, pageSize, 
       pageContent: {},
     }
   }
+}
 
+export const markVersionAsDefault = async (activityDefnKey, activityDefnKeyVersion) => {
 
+  let url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityDefnKey}/versions/${activityDefnKeyVersion}/actions/markAsDefault`;
+
+  let config = {
+    url,
+    method: 'POST',
+    data: ''
+  }
+  const response = await new RestApiService().call(config, null);
+
+  return response.success;
 }

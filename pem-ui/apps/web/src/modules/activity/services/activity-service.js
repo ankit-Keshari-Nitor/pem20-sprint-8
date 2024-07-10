@@ -49,16 +49,8 @@ export const deleteActivity = async (activityDefnKey) => {
     method: 'DELETE'
   }
   const response = await new RestApiService().call(config, null);
-  if (response.success) {
-    return {
-      success: true,
-    }
-  } else {
-    return {
-      success: false,
-    }
-  }
 
+  return response.success;
 };
 
 // Function to mark the activity as final status
@@ -70,18 +62,8 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
     data: ''
   }
   const response = await new RestApiService().call(config, null);
-  if (response.success) {
-    return {
-      success: true,
-      status: response.data.status
-    }
-  } else {
-    return {
-      success: false,
-      status: response?.data?.status
-    }
-  }
 
+  return response.success && response?.data?.status !== undefined && response?.data?.status === 'FINAL'
 };
 
 // Function to get the details of activity

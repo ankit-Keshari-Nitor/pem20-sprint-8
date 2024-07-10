@@ -168,16 +168,16 @@ export default function ActivityList() {
 
   // Handler for marking activity as final
   const handleMarkAsFinal = async (id, versionKey) => {
-    const responseStatus = await ActivityService.markActivityDefinitionAsFinal(id, versionKey);
+    const response = await ActivityService.markActivityDefinitionAsFinal(id, versionKey);
 
-    if (responseStatus.success && responseStatus.status !== undefined && responseStatus.status === 'FINAL') {
+    if (response) {
       fetchAndSetData();
     }
     setNotificationProps({
-      open: responseStatus.success,
-      title: responseStatus.success ? 'Success - ' : 'Error - ',
-      subtitle: responseStatus.success ? 'Action completed successfully!' : `Action not completed successfully - ${responseStatus}`,
-      kind: responseStatus.success ? 'success' : 'error',
+      open: true,
+      title: response ? 'Success - ' : 'Error - ',
+      subtitle: response ? 'Action completed successfully!' : `Action not completed successfully!`,
+      kind: response ? 'success' : 'error',
       onCloseButtonClick: () => setNotificationProps(null)
     });
     setShowGeneralActionModal(false);
@@ -186,14 +186,14 @@ export default function ActivityList() {
   // Handler for actual delete API call
   const handleDeleteActivity = async (id) => {
     const response = await ActivityService.deleteActivity(id);
-    if (response.success) {
+    if (response) {
       fetchAndSetData();
     }
     setNotificationProps({
-      open: response.success,
-      title: response.success ? 'Success - ' : 'Error - ',
-      subtitle: response.success ? 'Action completed successfully!' : 'Action not completed successfully!',
-      kind: response.success ? 'success' : 'error',
+      open: true,
+      title: response ? 'Success - ' : 'Error - ',
+      subtitle: response ? 'Action completed successfully!' : 'Action not completed successfully!',
+      kind: response ? 'success' : 'error',
       onCloseButtonClick: () => setNotificationProps(null)
     });
     setShowGeneralActionModal(false);
@@ -221,6 +221,7 @@ export default function ActivityList() {
 
   const handleClose = () => {
     setShowDrawer(false);
+    fetchAndSetData();
   };
 
   // -------------------------------------Test operation Start-------------------------------------------------

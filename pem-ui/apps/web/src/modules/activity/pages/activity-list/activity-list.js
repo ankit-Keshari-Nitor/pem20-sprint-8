@@ -3,9 +3,8 @@ import './activity-list.scss';
 import Shell from '@b2bi/shell';
 import '@b2bi/styles/pages/list-page.scss';
 import * as ActivityService from '../../services/activity-service.js';
-import * as RolloutService from '../../services/rollout-service';
 
-import { ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS, TEST_DIALOG_DATA } from '../../constants';
+import { ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_KEYS } from '../../constants';
 import { ExpandableSearch, MultiSelect, Button } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
 
@@ -13,12 +12,11 @@ import GeneralModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
 
 import useActivityStore from '../../store';
-import PageDesigner from '@b2bi/page-designer';
 
 import ActivityDataTableComponent from '../../components/datatable-component.js';
 
 import ActivityRolloutModal from '../../components/rollout-wizard';
-import ActivityTestModal from '../../components/test-wizard/test-wizard.js';
+import ActivityTestModal from '../../components/test-wizard';
 
 import ActivityVersionList from '../activity-version-list/activity-version-list.js';
 import ActivityVersionsSideDrawer from '../../components/activity-sidedrawer/activity-sidedrawer.js';
@@ -50,23 +48,10 @@ export default function ActivityList() {
 
   const [selectedActivity, setSelectedActivity] = useState(null);
 
-  // Test operation states
-  const [currentTestStep, setCurrentTestStep] = useState(0);
-  const [testDialogData, setTestDialogData] = useState(TEST_DIALOG_DATA);
-  const [currentTestData, setCurrentTestData] = useState(null);
-  const [formRenderSchema, setFormRenderSchema] = useState();
-
   const [activityName, setActivityName] = useState('');
   const [activityDefnKey, setActivityDefnKey] = useState('');
   const [activityStatus, setActivityStatus] = useState('');
   const [showDrawer, setShowDrawer] = useState(false);
-
-  useEffect(() => {
-    if (testDialogData) {
-      let data = testDialogData[currentTestStep].schema.fields;
-      setFormRenderSchema(data);
-    }
-  }, [currentTestData, currentTestStep, testDialogData]);
 
   // Function to fetch and set data from the API
   const fetchAndSetData = useCallback(() => {
@@ -144,7 +129,7 @@ export default function ActivityList() {
         setShowRolloutModal(true); //(id);
         break;
       case ACTION_COLUMN_KEYS.TEST_ACTIVITY:
-        handleTestOperation(activityDefKey);
+        setShowTestModal(true);
         break;
       case ACTION_COLUMN_KEYS.EDIT:
         handleEdit(activityDefKey);
@@ -223,48 +208,6 @@ export default function ActivityList() {
     setShowDrawer(false);
   };
 
-  // -------------------------------------Test operation Start-------------------------------------------------
-  // Function to handle the Test operation
-  const handleTestOperation = async (id) => {
-    //const activityDetailsResponse = await getActivityDetails(id);
-    // if (activityDetailsResponse) {
-    //setActivityDetails(activityDetailsResponse);
-    getTestData();
-    //}
-  };
-  const getTestData = () => {
-    RolloutService.getTestList().then((data) => {
-      setTestDialogData(data);
-      setCurrentTestStep(0);
-      setCurrentTestData(data && data[currentTestStep]);
-      setShowTestModal(true);
-    });
-  };
-  // Function to handle the Next/rollout Button Click
-  const handelTestFinishClick = () => {
-    let schema = JSON.parse(JSON.stringify(formRenderSchema));
-    schema = PageDesigner.formValidation(schema);
-    setFormRenderSchema(schema);
-
-    if (currentTestStep < testDialogData.length - 1) {
-      setCurrentTestData(testDialogData[currentTestStep + 1]);
-      setCurrentTestStep(currentTestStep + 1);
-    } else if (currentTestStep === testDialogData.length - 1) {
-      setShowTestModal(false);
-      // TODO -> Test API will call here
-    }
-  };
-  // Function to handle the Cancel/Previous Button Click
-  const handelTestCloseClick = () => {
-    if (currentTestStep === 0) {
-      setShowTestModal(false);
-    } else if (currentTestStep > 0 && currentTestStep <= testDialogData.length - 1) {
-      setCurrentTestData(testDialogData[currentTestStep - 1]);
-      setCurrentTestStep(currentTestStep - 1);
-    }
-  };
-  // -------------------------------------Test operation End-------------------------------------------------
-
   return (
     <>
       <div className="headers">
@@ -332,18 +275,7 @@ export default function ActivityList() {
       </GeneralModal>
       {/* Modal for Test operation */}
       {showTestModal && (
-        <GeneralModal
-          isOpen={showTestModal}
-          setIsOpen={setShowTestModal}
-          modalHeading={selectedActivity ? selectedActivity.name : ''}
-          secondaryButtonText={currentTestStep === 0 ? 'Cancel' : 'Previous'}
-          primaryButtonText={currentTestStep < testDialogData.length - 1 ? 'Next' : 'Finish'}
-          onPrimaryButtonClick={handelTestFinishClick}
-          onSecondaryButtonClick={handelTestCloseClick}
-          onRequestClose={() => setShowTestModal(false)}
-        >
-          <ActivityTestModal currentTestData={currentTestData} formRenderSchema={formRenderSchema} />
-        </GeneralModal>
+        <ActivityTestModal showTestModal={showTestModal} setShowTestModal={() => setShowTestModal(false)} activityName={selectedActivity ? selectedActivity.name : ''} />
       )}
 
       {/* Notification toast */}

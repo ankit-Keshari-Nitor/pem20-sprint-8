@@ -1,4 +1,4 @@
-import { API_END_POINTS } from './../constants';
+import { API_END_POINTS, TEST_DIALOG_DATA } from './../constants';
 import { RestApiService } from '../../../common/api-handler/rest-api-service';
 
 // Function to get the list of all activities
@@ -134,4 +134,13 @@ export const saveActivityData = async (activityData) => {
     }
   };
   return await new RestApiService().callWithFile(config, null);
+};
+
+export const getActivityTestData = async () => {
+  try {
+    return await TEST_DIALOG_DATA;
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+    return [];
+  }
 };

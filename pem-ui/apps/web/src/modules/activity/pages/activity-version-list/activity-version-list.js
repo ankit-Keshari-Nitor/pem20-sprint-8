@@ -119,16 +119,16 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
 
   // Handler for marking activity as final
   const handleMarkAsFinal = async (activityDefnKey, versionKey) => {
-    const responseStatus = await ActivityService.markActivityDefinitionAsFinal(activityDefnKey, versionKey);
+    const response = await ActivityService.markActivityDefinitionAsFinal(activityDefnKey, versionKey);
 
-    if (responseStatus.success && responseStatus.status !== undefined && responseStatus.status === 'FINAL') {
+    if (response) {
       fetchVersionRowData(activityDefnKey);
     }
     setNotificationProps({
       open: true,
-      title: responseStatus.success ? 'Success - ' : 'Error - ',
-      subtitle: responseStatus.success ? 'Action completed successfully!' : `Action not completed successfully!`,
-      kind: responseStatus.success ? 'success' : 'error',
+      title: response ? 'Success - ' : 'Error - ',
+      subtitle: response ? 'Action completed successfully!' : `Action not completed successfully!`,
+      kind: response ? 'success' : 'error',
       onCloseButtonClick: () => setNotificationProps(null)
     });
     setShowGeneralActionModal(false);
@@ -136,16 +136,16 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
 
   //Handle Mark As Default action
   const handleMarkAsDefaultActivity = async (activityDefnKey, versionKey) => {
-    const responseStatus = await ActivityVersionService.markVersionAsDefault(activityDefnKey, versionKey);
+    const response = await ActivityVersionService.markVersionAsDefault(activityDefnKey, versionKey);
 
-    if (responseStatus.success) {
+    if (response) {
       fetchVersionRowData(activityDefnKey);
     }
     setNotificationProps({
       open: true,
-      title: responseStatus.success ? 'Success - ' : 'Error - ',
-      subtitle: responseStatus.success ? 'Action completed successfully!' : `Action not completed successfully!`,
-      kind: responseStatus.success ? 'success' : 'error',
+      title: response ? 'Success - ' : 'Error - ',
+      subtitle: response ? 'Action completed successfully!' : `Action not completed successfully!`,
+      kind: response ? 'success' : 'error',
       onCloseButtonClick: () => setNotificationProps(null)
     });
 

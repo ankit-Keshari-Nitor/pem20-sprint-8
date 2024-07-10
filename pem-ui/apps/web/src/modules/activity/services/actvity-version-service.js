@@ -47,14 +47,6 @@ export const markVersionAsDefault = async (activityDefnKey, activityDefnKeyVersi
     data: ''
   }
   const response = await new RestApiService().call(config, null);
-  
-  if (response.success) {
-    return {
-      success: true,
-    }
-  } else {
-    return {
-      success: false,
-    }
-  }
+
+  return response.success;
 }

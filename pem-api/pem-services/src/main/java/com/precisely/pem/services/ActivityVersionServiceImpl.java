@@ -1,6 +1,10 @@
 package com.precisely.pem.services;
 
 import com.precisely.pem.Validator.StatusEnumValidator;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ReadContext;
+import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.precisely.pem.commonUtil.ApplicationConstants;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.BpmnConverterRequest;
@@ -305,6 +309,25 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
 
         return bpmnConvertService.getContextDataFromProcess(bpmnModel.getProcessById(PROCESS_ID_PREFIX+activityDefnVersion.get().getActivityDefnVersionKey()));
 
+    }
+
+    @Override
+    public Object resolveAndGetJsonPath(String activityDefnVersionKey,String jsonPath) throws Exception {
+        Optional<ActivityDefnVersion> activityDefnVersion = activityDefnVersionRepo.findById(activityDefnVersionKey);
+        if(activityDefnVersion.isEmpty())
+            throw new ResourceNotFoundException("activityDefnVersionKey", "NoDataFound", "Activity Definition Version with key '" + activityDefnVersionKey + "' not found. Kindly check the activityDefnVersionKey.");
+
+        Optional<ActivityDefnData> activityDefnData = activityDefnDataRepo.findById(activityDefnVersion.get().getActivityDefnDataKey());
+        if(activityDefnData.isEmpty())
+            throw new ResourceNotFoundException("activityDefnData", "NoDataFound","Activity Definition Version Data with key '" + activityDefnVersion.get().getActivityDefnDataKey() + "' not found. Kindly check the activityDefnDataKey.");
+
+        String pemBpmnModel = bpmnConvertService.getPemBpmnModelString(activityDefnData.get().getDefData());
+
+        Configuration conf = Configuration.defaultConfiguration();
+        conf.jsonProvider( new JacksonJsonProvider());
+        ReadContext ctx = JsonPath.using(conf).parse(pemBpmnModel);
+        List<String> allNodeTypes = ctx.read(jsonPath);
+        return allNodeTypes;
     }
 
     public void deployDefaultADVersion(String activityDefnVersionKey) throws SQLException, ResourceNotFoundException {

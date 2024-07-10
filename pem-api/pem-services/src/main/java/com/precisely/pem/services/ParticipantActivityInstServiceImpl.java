@@ -16,6 +16,7 @@ import com.precisely.pem.models.*;
 import com.precisely.pem.repositories.*;
 import com.precisely.pem.service.PEMActivitiService;
 import lombok.extern.log4j.Log4j2;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -364,9 +365,15 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
         pcptActivityInst.setPcptInstStatus(PcptInstStatus.STARTED.getPcptInstStatus());
         pcptInstRepo.save(pcptActivityInst);
 
+        get(processInstanceId);
         return MessageResp.builder()
                 .response("SUCCESS")
                 .build();
+    }
+
+    public void get(String processInstanceId){
+        ProcessInstance processInstance = pemActivitiService.getProcessInstanceById(processInstanceId);
+        Map<String,Object> processVars =  processInstance.getProcessVariables();
     }
 
     @Override

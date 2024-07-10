@@ -29,6 +29,7 @@ import com.precisely.pem.repositories.ActivityDefnVersionRepo;
 import com.precisely.pem.repositories.ActivityInstRepo;
 import com.precisely.pem.repositories.PartnerRepo;
 import com.precisely.pem.repositories.PcptInstRepo;
+import com.precisely.pem.service.PEMActivitiService;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONException;
@@ -67,6 +68,9 @@ public class ActivityInstServiceImpl implements ActivityInstService{
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    PEMActivitiService pemActivitiService;
 
     @Override
     @Transactional

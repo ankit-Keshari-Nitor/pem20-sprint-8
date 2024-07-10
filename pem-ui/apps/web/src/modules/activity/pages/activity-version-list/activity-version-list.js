@@ -64,17 +64,6 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
 
   // Handler for action clicks
   const onCellActionClick = (action, actVersionKey = '', versionName = '') => {
-    /* const record = rows.filter((x) => x.id === activityDefKey)[0];
-    store.setSelectedActivity({
-      activityDefKey: record.activityDefnKey,
-      actDefName: record.name,
-      actDefVerKey: record.activityDefnVersionKey,
-      operation: action,
-      status: record.status,
-      version: record.version
-    });
-    setSelectedActivity(record); */
-
     switch (action) {
       case ACTION_COLUMN_KEYS.MARK_AS_FINAL:
         setActionText('Mark as final');

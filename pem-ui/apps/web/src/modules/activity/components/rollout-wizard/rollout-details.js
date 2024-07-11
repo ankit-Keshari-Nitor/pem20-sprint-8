@@ -10,7 +10,7 @@ export default function RolloutDetails(props) {
     <>
       <Grid className="define-grid">
         {/* Name */}
-        <Column className="col-margin" lg={16}>
+        <Column className="col-margin" lg={12}>
           <TextInput
             id="name"
             required
@@ -25,12 +25,12 @@ export default function RolloutDetails(props) {
           />
         </Column>
         {/* Description */}
-        <Column className="col-margin" lg={16}>
+        <Column className="col-margin" lg={12}>
           <TextArea
             id="description"
             data-testid="description"
             labelText="Description"
-            rows={5}
+            rows={3}
             rules={{ required: false, minLength: 20, maxLength: 100 }}
             enableCounter={true}
             counterMode="character"
@@ -43,8 +43,14 @@ export default function RolloutDetails(props) {
             onChange={(e) => setRolloutDetails((prev) => ({ ...prev, description: e.target.value }))}
           />
         </Column>
+        {/*   Click to check Context Data Button */}
+        <Column className="col-margin" lg={16}>
+          <Button kind="tertiary" size="md">
+            View Context Data
+          </Button>
+        </Column>
         {/*  Due Date */}
-        <Column className="col-margin" lg={8}>
+        <Column className="col-margin" lg={4}>
           <DatePicker
             datePickerType="single"
             value={rolloutDetails.dueDate}
@@ -73,7 +79,7 @@ export default function RolloutDetails(props) {
           </DatePicker>
         </Column>
         {/*  Alert Date */}
-        <Column className="col-margin" lg={8}>
+        <Column className="col-margin" lg={4}>
           <DatePicker
             datePickerType="single"
             value={rolloutDetails.alertDate}
@@ -105,14 +111,11 @@ export default function RolloutDetails(props) {
           </DatePicker>
         </Column>
         {/*   Alert Interval */}
-        <Column className="col-margin" lg={16}>
-          <NumberInput
+        <Column className="col-margin" lg={4}>
+          <TextInput
             id="alert_interval"
             data-testid="alert-interval"
-            min={0}
-            max={99}
-            value={rolloutDetails.alertInterval}
-            label={
+            labelText={
               <>
                 Alert Interval&nbsp;
                 <Tooltip align="right" label="Specify the alert email frequency in days. Enter the alert interval value in the range 1 - 99 days.">
@@ -121,6 +124,9 @@ export default function RolloutDetails(props) {
               </>
             }
             placeholder={'Enter days'}
+            invalidText={'Test'}
+            invalid={false}
+            value={rolloutDetails.alertInterval}
             onChange={(e) =>
               setRolloutDetails((prev) => ({
                 ...prev,
@@ -129,14 +135,8 @@ export default function RolloutDetails(props) {
             }
           />
         </Column>
-        {/*   Click to check Context Data Button */}
-        <Column className="col-margin" lg={16}>
-          <Button kind="tertiary" size="md">
-            Click to check Context Data
-          </Button>
-        </Column>
         {/*   Rolling out to */}
-        <Column className="col-margin" lg={16}>
+        <Column className="col-margin" lg={12}>
           <RadioButtonGroup
             legendText="Rolling out to"
             data-testid="rolling-out"
@@ -153,7 +153,7 @@ export default function RolloutDetails(props) {
         </Column>
         {/*  Partner, Groups and Attributes */}
         {rolloutDetails.rollingOutTo === 'partners' && (
-          <Column className="partners_rollout-container" lg={16}>
+          <Column className="partners_rollout-container" lg={12}>
             <TextArea
               id="partners_rollout"
               data-testid="partners_rollout"
@@ -162,6 +162,7 @@ export default function RolloutDetails(props) {
               invalid={false}
               required
               placeholder={'Partners and Groups, Attributes'}
+              rows={3}
             />
             <Button className="add-button" kind="secondary" onClick={handleAddClick}>
               Add

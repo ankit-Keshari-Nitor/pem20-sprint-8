@@ -5,15 +5,16 @@ import GenericModal from '../../helpers/wrapper-modal';
 
 const ActivityRolloutModal = (props) => {
   const { showModal, setShowModal, activityName } = props;
+  const [openAddModal, setOpenAddModal] = useState(false);
   const [rolloutGapData, setRolloutGapData] = useState({ selectedGroupsData: [], selectedAttributesData: [], selectedPartnersData: [] });
   const [rolloutDetails, setRolloutDetails] = useState({
+    name: '',
     dueDate: new Date(),
     description: '',
     alertDate: new Date(),
     alertInterval: 0,
-    rollingOutTo: 'partners'
+    rollingOutTo: 'internal_users'
   });
-  const [openAddModal, setOpenAddModal] = useState(false);
 
   const handleActivityRollout = () => {
     //todo - get all data and call rollout/create instance api from here -- close dialog once done
@@ -40,7 +41,8 @@ const ActivityRolloutModal = (props) => {
     <>
       <GenericModal
         isOpen={showModal}
-        modalHeading={activityName}
+        modalLabel={`Activity Rollout -${activityName}`}
+        modalHeading="Details"
         secondaryButtonText={openAddModal ? 'Back to Details' : 'Cancel'}
         primaryButtonText={openAddModal ? 'Save' : 'Rollout'}
         onPrimaryButtonClick={handleActivityRollout}

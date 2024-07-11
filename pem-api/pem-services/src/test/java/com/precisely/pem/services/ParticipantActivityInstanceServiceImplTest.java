@@ -21,6 +21,9 @@ import org.springframework.data.domain.Pageable;
 
 
 import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -221,13 +224,11 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
         assertEquals(PCPT_ACTIVITY_INSTANCE_PROCESS_DATA_NOT_FOUND,exception.getMessage());
     }
 
-    private static Map<String, Object>  getMockedProcessVariables() throws JsonProcessingException {
-        //TODO get file from pem-activiti project only
+    private static Map<String, Object>  getMockedProcessVariables() throws IOException {
         String projectBasePath = System.getProperty("user.dir");
-        String relativePath = "..\\pem-activiti\\src\\test\\resources\\context_data_sample.json";
-        String fullPath = projectBasePath + "\\" + relativePath;
+        String fullPath = projectBasePath + "\\" + CONTEXT_DATA_FILE_RELATIVE_PATH;
 
-        String contextDatJson = readAndGetInputFile("context_data_sample.json");
+        String contextDatJson = new String(Files.readAllBytes(Paths.get(fullPath)));
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(contextDatJson, new TypeReference<HashMap<String, Object>>() {});
     }

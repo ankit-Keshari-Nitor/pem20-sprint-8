@@ -72,6 +72,9 @@ public class BaseServiceTest {
     public static final String ACTIVITY_DEFINITION_VERSION_IS_IN_FINAL_DELETE_STATUS = "Activity Definition Version is in FINAL/DELETE status.";
     public static final String ACTIVITY_DEFN_KEY_WHICH_IS_ALREADY_IN_DELETED_STATE = "Cannot Update Activity Definition with key '"+TEST_ACTIVITY_DEFN_KEY+"' which is already in Deleted state.";
     public static final String TEST_CONTEXT_DATA_FIELD = "TEST_FTP_NETMAP";
+
+    public static final String CONTEXT_DATA_FILE_RELATIVE_PATH = "..\\pem-activiti\\src\\test\\resources\\context_data_sample.json";
+
     @Mock
     protected ActivityDefnRepo activityDefnRepo;
     @Mock
@@ -135,16 +138,6 @@ public class BaseServiceTest {
     //Static Request Object Creation
     protected static MultipartFile getMultipartFile() {
         return new MockMultipartFile(TEST_FILE_KEY, TEST_FILE_VALUE, CONTENT_TYPE_TEXT, TEST_FILE_DATA.getBytes());
-    }
-
-    protected static String readAndGetInputFile(String path) {
-        try {
-            ClassPathResource classPathResource = new ClassPathResource(path);
-            Path filePath = Paths.get(classPathResource.getURI());
-            return  new String(Files.readAllBytes(filePath));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     protected List<ActivityDefnVersion> getPartialDraftVersionList() {

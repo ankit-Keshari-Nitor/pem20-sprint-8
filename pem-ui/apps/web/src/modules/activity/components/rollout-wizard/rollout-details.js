@@ -147,8 +147,8 @@ export default function RolloutDetails(props) {
             value={rolloutDetails.rollingOutTo}
             //defaultChecked={true}
           >
-            <RadioButton labelText="Partners" value="partners" id="partners" checked />
-            <RadioButton labelText="Internal Users" value="internal_users" id="internal_users" />
+            <RadioButton labelText="Partners" value="partners" id="partners" />
+            <RadioButton labelText="Internal Users" value="internal_users" id="internal_users" checked />
           </RadioButtonGroup>
         </Column>
         {/*  Partner, Groups and Attributes */}
@@ -161,7 +161,7 @@ export default function RolloutDetails(props) {
               invalidText={'Test'}
               invalid={false}
               required
-              placeholder={'Partners and Groups, Attributes'}
+              placeholder={'Click on add button to Partners, Attributes and Groups '}
               rows={3}
             />
             <Button className="add-button" kind="secondary" onClick={handleAddClick}>

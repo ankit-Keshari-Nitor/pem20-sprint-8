@@ -273,7 +273,6 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           }
         })
       }
-      debugger
       if (key !== 'advance') {
         objCopy.component.editableProps[key].map((config) => {
           if (config.propsName === propsName) {

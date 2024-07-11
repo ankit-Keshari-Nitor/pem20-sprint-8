@@ -1,6 +1,5 @@
 package com.precisely.pem.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.precisely.pem.converter.NodeHandler;
 import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.exceptionhandler.BpmnConverterException;

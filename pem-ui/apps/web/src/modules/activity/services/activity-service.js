@@ -71,9 +71,9 @@ export const getActivityDetails = async (activityKey, activityVersoinKey) => {
   const url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityKey}`;
   const response = await new RestApiService().call({ url }, null);
   if (response.success) {
-    const activityVersions = await new RestApiService.call({ url: `${url}versions?&pageNo=0&pageSize=100` }, null);
+    const activityVersions = await new RestApiService().call({ url: `${url}versions?&pageNo=0&pageSize=100` }, null);
     const activityCurrentVersionDetails = await new RestApiService().call({ url: `${url}versions/${activityVersoinKey}` }, null);
-    const activityCurrentVersionData = await new RestApiService().call({ url: `${url}versions/${activityVersoinKey}/data` }, null);
+    const activityCurrentVersionData = await new RestApiService().call({ url: `${url}versions/${activityVersoinKey}/actions/getData` }, null);
     return {
       success: true,
       definition: {

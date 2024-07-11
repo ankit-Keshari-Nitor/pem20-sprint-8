@@ -54,7 +54,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
   const [open, setOpen] = useState(false);
   const [openPreview, setOpenPreview] = useState(false);
   const [deletedFieldPath, setDeletedFieldPath] = useState();
-  const [componentsName, setComponentsName] = useState([]);
+  const [componentsNames, setComponentsNames] = useState([]);
 
   const handleDrop = useCallback(
     (dropZone, item) => {
@@ -105,7 +105,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           type: COMPONENT,
           component: { ...item.component, id: newComponent.id, name: 'form-control-' + newComponent.id.substring(0, 2), labelText: item.component.label }
         };
-        setComponentsName((preState) => [...preState, { id: newItem.id, name: newItem.id }]);
+        setComponentsNames((preState) => [...preState, { id: newItem.id, name: newItem.id }]);
         setLayout(handleMoveSidebarComponentIntoParent(layout, splitDropZonePath, newItem));
         return;
       }
@@ -210,10 +210,10 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
     } else {
       let objCopy = selectedFiledProps;
       if (propsName === NAME) {
-        componentsName.map((item, idx) => {
+        componentsNames.map((item, idx) => {
           if (item.name !== newValue) {
             if (item.id === selectedFiledProps.id) {
-              setComponentsName((stateItems) => [
+              setComponentsNames((stateItems) => [
                 ...stateItems.slice(0, idx),
                 {
                   ...stateItems[idx],

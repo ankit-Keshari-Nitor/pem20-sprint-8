@@ -47,19 +47,27 @@ const FileUploader = ({ field, id, }) => {
   }
 
   const onAddFiles = (event, files) => {
-    const file = event.target.files || files.addedFiles;
-    const newFile = [
-      {
-        name: file[0].name,
-        filesize: file[0].size,
-        status: 'edit',
-        iconDescription: 'Delete icon',
-        invalidFileType: file[0].invalidFileType
-      }
-    ];
-    setFile(newFile[0]);
-    onUploadFiles(newFile[0]);
 
+    const file = event.target.files || files.addedFiles;
+    // Check if file extension is valid
+    const isValidExtension = extensionsArray.some(ext => file[0].name.toLowerCase().endsWith(ext.toLowerCase()));
+
+    if (!isValidExtension) {
+      setError(`Invalid file type. Allowed extensions: ${extensionsArray.join(', ')}`);
+      setFile();
+    } else {
+      const newFile = [
+        {
+          name: file[0].name,
+          filesize: file[0].size,
+          status: 'edit',
+          iconDescription: 'Delete icon',
+          invalidFileType: file[0].invalidFileType
+        }
+      ];
+      setFile(newFile[0]);
+      onUploadFiles(newFile[0]);
+    }
   }
 
   const onUploadFiles = (fileUpload) => {

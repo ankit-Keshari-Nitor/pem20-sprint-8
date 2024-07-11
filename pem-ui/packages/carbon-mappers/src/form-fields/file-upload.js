@@ -6,8 +6,10 @@ import { FileUploadIcon } from './../icons';
 const type = FORM_FIELD_TYPE.FILE_UPLOADER;
 
 const FileUploader = ({ field, id, }) => {
-  const { labelText, label, maxFileSize, extensions, } = field;
+  const { labelText, label, maxFileSize, extensions: extensionsStr, } = field;
 
+  // Convert comma-separated extensions string to array
+  const extensionsArray = extensionsStr ? extensionsStr.split(',') : [];
   const [file, setFile] = useState();
   const [error, setError] = useState('');
 
@@ -69,7 +71,7 @@ const FileUploader = ({ field, id, }) => {
         iconDescription: 'Delete Icon',
         invalid: true,
         errorSubject: 'InValid ',
-        errorBody: ('Error', { fileName: fileUpload.name, fileType: extensions !== undefined ? extensions.join(',') : '' })
+        errorBody: ('Error', { fileName: fileUpload.name, fileType: extensionsArray !== undefined ? extensionsArray.join(',') : '' })
       };
       setFile(updatedFile);
     } else {
@@ -93,7 +95,7 @@ const FileUploader = ({ field, id, }) => {
             filenameStatus='edit'
             onChange={onAddFiles}
             onAddFiles={onAddFiles}
-            accept={extensions}
+            accept={extensionsArray}
             id={id}
           />
           {error && <p className="error-text">{error}</p>}

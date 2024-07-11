@@ -145,6 +145,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
       filedTypeConfig?.editableProps?.Basic.map((basicEditPops) => {
         if (fieldData?.component[basicEditPops?.propsName]) {
           basicEditPops?.propsName === NAME && (basicEditPops.invalid = false);
+          basicEditPops?.regexPattern && (basicEditPops.invalid = false);
           return (basicEditPops.value = fieldData.component[basicEditPops?.propsName]);
         } else {
           // Initialize options for checkbox-group and radio-group
@@ -192,6 +193,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
   const handleSchemaChanges = (id, key, propsName, newValue, currentPathDetail) => {
     const componentPosition = currentPathDetail.split('-');
     let uniqueName = true;
+    let isInvalid = false;
     if (key === SUBTAB) {
       const position = indexForChild(layout, componentPosition, 0);
       componentPosition.push(position);
@@ -228,13 +230,31 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             }
           }
         });
+      } else {
+        objCopy?.component?.editableProps.Basic.map((prop) => {
+          if (prop.propsName === propsName) {
+            if (prop?.regexPattern) {
+              const value = newValue;
+              const regex = new RegExp(prop.regexPattern); // Assuming currentProp has a regexPattern property
+              const isValid = regex.test(value);
+              prop.invalid = !isValid;
+              prop.value = value;
+              // Ensure the invalid text is set if invalid
+              if (!isValid) {
+                isInvalid = true
+                prop.invalidText = prop.invalidText || 'Invalid input'; // default message if none provided
+              }
+            }
+          }
+        })
       }
+      debugger
       if (key !== 'advance') {
         objCopy.component.editableProps[key].map((config) => {
           if (config.propsName === propsName) {
             config.value = newValue;
             config.invalid = false;
-            if (!uniqueName) {
+            if (!uniqueName || isInvalid) {
               config.invalid = true;
             }
           }
@@ -247,7 +267,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
         });
       }
       setSelectedFiledProps({ ...objCopy });
-      if (uniqueName) {
+      if (uniqueName && !isInvalid) {
         setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
       }
     }
@@ -296,7 +316,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             <span className="header-title">{activityDefinitionData && Object.keys(activityDefinitionData).length > 0 ? activityDefinitionData.name : 'New Form Builder'}</span>
           </Column>
           <Column lg={12} className="buttons-container">
-           {/*  <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
+            {/*  <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
               View Schema
             </Button>
             <Button kind="secondary" className="cancelButton" onClick={() => setOpenPreview(true)}>

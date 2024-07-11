@@ -258,8 +258,8 @@ export const extensions = {
   label: 'Extensions',
   type: 'TextInput',
   invalid: false,
-  invalidText: 'test',
-  regexPattern: /([^,]+)(?:,([^,]+))*/g,
+  invalidText: 'Only comma separated values are allowed',
+  regexPattern: /^[a-zA-Z0-9,]+$/,
 };
 
 

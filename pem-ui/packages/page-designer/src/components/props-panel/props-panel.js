@@ -263,26 +263,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     handleSchemaChanges(selectedFiledProps?.id, 'Basic', TABLE_COLUMNS, tableHeader, selectedFiledProps?.currentPathDetail);
   };
 
-  const handleValidation = (event, currentProp, selectedFiledProps) => {
-    const value = event.target.value;
-    const regex = new RegExp(currentProp.regexPattern); // Assuming currentProp has a regexPattern property
-    const isValid = regex.test(value);
-
-    currentProp.invalid = !isValid;
-    currentProp.value = value;
-    // Ensure the invalid text is set if invalid
-    if (!isValid) {
-      currentProp.invalidText = currentProp.invalidText || 'Invalid input'; // default message if none provided
-    }
-
-    // Update state to trigger re-render
-    selectedFiledProps?.component?.editableProps.Basic.map((prop) => {
-      prop.propsName === currentProp.propsName ? { ...prop, ...currentProp } : prop
-    })
-    
-    handleSchemaChanges(selectedFiledProps?.id, 'Basic', currentProp.propsName, value, selectedFiledProps?.currentPathDetail);
-  };
-
   return (
     <div className="right-palette-container">
       {selectedFiledProps && (
@@ -331,8 +311,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       value={item.value}
                                       invalid={item.invalid ? item.invalid : false}
                                       invalidText={item.invalidText ? item.invalidText : null}
-                                      onChange={(e) => handleValidation(e, item, selectedFiledProps)}
-                                    //onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value, selectedFiledProps?.currentPathDetail)}
+                                      onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value, selectedFiledProps?.currentPathDetail)}
                                     />
                                   )}
                                   {/* Mapping */}
@@ -749,12 +728,12 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     e.preventDefault();
                                     advncProps.type === OPTIONS
                                       ? handleSchemaChanges(
-                                          selectedFiledProps?.id,
-                                          'advance',
-                                          advncProps.propsName,
-                                          { ...advncProps.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
-                                          selectedFiledProps?.currentPathDetail
-                                        )
+                                        selectedFiledProps?.id,
+                                        'advance',
+                                        advncProps.propsName,
+                                        { ...advncProps.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
+                                        selectedFiledProps?.currentPathDetail
+                                      )
                                       : handleSchemaChanges(
                                           selectedFiledProps?.id,
                                           'advance',

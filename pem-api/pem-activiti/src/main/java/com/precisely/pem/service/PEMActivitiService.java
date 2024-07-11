@@ -186,8 +186,6 @@ public interface PEMActivitiService {
      */
     Map<String, Object> getProcessVariables(String processId);
 
-
-
     /**
      * Sets the variables for a specific task.
      *

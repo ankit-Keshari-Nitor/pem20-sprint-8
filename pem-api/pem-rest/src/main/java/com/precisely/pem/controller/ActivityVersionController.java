@@ -216,5 +216,4 @@ public class ActivityVersionController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(activityContextData);
     }
-
 }

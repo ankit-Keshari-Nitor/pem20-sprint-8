@@ -1,10 +1,6 @@
 package com.precisely.pem.services;
 
 import com.precisely.pem.Validator.StatusEnumValidator;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.ReadContext;
-import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.precisely.pem.commonUtil.ApplicationConstants;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.BpmnConverterRequest;
@@ -36,8 +32,9 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import static com.precisely.pem.dtos.Constants.PROCESS_ID_PREFIX;
 import java.util.stream.Stream;
+
+import static com.precisely.pem.dtos.Constants.PROCESS_ID_PREFIX;
 
 @Service
 @Log4j2
@@ -310,8 +307,6 @@ public class ActivityVersionServiceImpl implements ActivityVersionService{
         return bpmnConvertService.getContextDataFromProcess(bpmnModel.getProcessById(PROCESS_ID_PREFIX+activityDefnVersion.get().getActivityDefnVersionKey()));
 
     }
-
-
 
     public void deployDefaultADVersion(String activityDefnVersionKey) throws SQLException, ResourceNotFoundException {
         log.info("Starting the deployment process for {}",activityDefnVersionKey);

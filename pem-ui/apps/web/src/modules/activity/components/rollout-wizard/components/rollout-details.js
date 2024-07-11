@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Column, TextArea, TextInput, DatePicker, DatePickerInput, Button, Tooltip, RadioButtonGroup, RadioButton, NumberInput } from '@carbon/react';
-import './../style.scss';
+import './../../style.scss';
 import { Information } from '@carbon/icons-react';
 
 export default function RolloutDetails(props) {

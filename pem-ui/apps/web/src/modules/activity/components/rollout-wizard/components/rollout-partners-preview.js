@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Column, TextInput, Checkbox } from '@carbon/react';
 import './../../style.scss';
 
-export default function Preview({ rolloutGapData }) {
+export default function RolloutPartnersPreview({ rolloutPartnersData }) {
   return (
     <Grid className="define-grid">
       <Column className="col-margin" lg={16}>
@@ -18,7 +18,7 @@ export default function Preview({ rolloutGapData }) {
           Group
         </p>
       </Column>
-      {rolloutGapData?.selectedGroupsData.map((item) => {
+      {rolloutPartnersData?.selectedGroupsData.map((item) => {
         return (
           <Column className="col-margin" lg={16}>
             <Checkbox id={item.key} labelText={item.value} s />
@@ -30,7 +30,7 @@ export default function Preview({ rolloutGapData }) {
           Attributes
         </p>
       </Column>
-      {rolloutGapData?.selectedAttributesData.map((item) => {
+      {rolloutPartnersData?.selectedAttributesData.map((item) => {
         return (
           <Column className="col-margin" lg={16}>
             <Checkbox id={item.key} labelText={item.value} s />
@@ -42,7 +42,7 @@ export default function Preview({ rolloutGapData }) {
           Partners
         </p>
       </Column>
-      {rolloutGapData?.selectedPartnersData.map((item) => {
+      {rolloutPartnersData?.selectedPartnersData.map((item) => {
         return (
           <Column className="col-margin" lg={16}>
             <Checkbox id={item.key} labelText={item.value} s />

@@ -10,10 +10,13 @@ export default function RolloutGroupTab({ handleAddGroups }) {
   const [selectedGroupsData, setSelectedGroupsData] = React.useState([]);
 
   useEffect(() => {
-    RolloutService.getGroupList().then((data) => {
-      setGroupList(data);
-    });
+    getGroupList();
   });
+
+  const getGroupList = async (type) => {
+    const response = await RolloutService.getGroupList(type);
+    setGroupList(response);
+  };
 
   const handleCheck = (item) => {
     if (!selectedGroups.includes(item.key)) {
@@ -54,7 +57,7 @@ export default function RolloutGroupTab({ handleAddGroups }) {
         </Column>
       )}
 
-      {groupList.map((item) => {
+      {groupList && groupList.map((item) => {
         return (
           <Column className="col-margin" lg={16}>
             <Checkbox id={item.key} labelText={item.value} checked={selectedGroups.includes(item.key)} onChange={() => handleCheck(item)} />

@@ -7,9 +7,19 @@ export const ROUTES = {
 export const API_END_POINTS = {
   ACTIVITY_DEFINITION: '/sponsors/cashbank/v2/activityDefinitions',
   ACTIVITY_INSTANCE: '/sponsors/{sponsorContext}/v2/activityInstances',
-  ACTIVITY_DEFINITION_VERSION: '/sponsors/{sponsorContext}/v2/activityDefinitions/{activityDefnKey}/version'
+  ACTIVITY_DEFINITION_VERSION: '/sponsors/{sponsorContext}/v2/activityDefinitions/{activityDefnKey}/version',
+  ATTRIBUTE_TYPES: '/rest/sponsors/b2b/attributetypes/',
+  ATTRIBUTE_LIST: '/sponsors/{sponsorContext}/attributetypes/{attributetypeId}/attributeValues/ ',
+  PARTNERS_LIST: '/sponsors/{sponsorContext}/attributetypes/{attributetypeId}/attributeValues/ ',
+  
 };
 
+export const API_METHODS = {
+  GET: 'GET',
+  POST: 'POST',
+  DELETE: 'DELETE',
+  UPDATE: 'UPDATE'
+};
 export const ACTION_COLUMN_KEYS = {
   NAME: 'name',
   ENCRYPTED: 'isEncrypted',
@@ -44,7 +54,7 @@ export const ACTIVITY_LIST_COLUMNS = [
   { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
   { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' },
   { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' },
-  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' },
+  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' }
 ];
 
 export const ACTIVITY_VERSION_COLUMNS = [
@@ -68,6 +78,33 @@ export const ROLLOUT_STEPS = [
     id: 'step2',
     label: 'Step 2',
     secondaryLabel: 'Select Group, Attributes, Partners'
+  }
+];
+
+export const ATTRIBUTE_TYPES = [
+  {
+    name: 'RequestType',
+    attributeTypeKey: '64a285c4-a4a3-4fb1-8f00-9fecf1ed3da9',
+    visibility: {
+      code: 'SPONSOR',
+      display: 'Sponsor Only'
+    }
+  },
+  {
+    name: 'SubResourceType',
+    attributeTypeKey: '6317cc3b-c709-4c5a-9525-308828db757b',
+    visibility: {
+      code: 'SPONSOR',
+      display: 'Sponsor Only'
+    }
+  },
+  {
+    name: 'My Partners',
+    attributeTypeKey: 'ee679ea2-d573-4075-b16c-b8addd344c6d',
+    visibility: {
+      code: 'SPONSOR',
+      display: 'Sponsor Only'
+    }
   }
 ];
 

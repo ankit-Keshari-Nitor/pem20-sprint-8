@@ -1,5 +1,5 @@
 import React from 'react';
-import { ACTION_COLUMN_KEYS } from '../constants';
+import { ACTION_COLUMN_KEYS } from '../../constants';
 import {
   Button,
   DataTable,
@@ -18,7 +18,7 @@ import {
 } from '@carbon/react';
 import { Information, RecentlyViewed, CheckmarkFilled, Delete, CloseFilled } from '@carbon/icons-react';
 
-const ActivityDataTableComponent = ({
+const DataTableComponent = ({
   rows = [],
   headers,
   sortDirection,
@@ -77,7 +77,9 @@ const ActivityDataTableComponent = ({
         ) : (
           <>
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_VERSION, id)} />
-            {!isDefault ? <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_DEFAULT, id, versionName)} /> : null}
+            {!isDefault ? (
+              <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_DEFAULT, id, versionName)} />
+            ) : null}
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_VERSION, id)} />
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_VERSION, id)} />
           </>
@@ -132,11 +134,11 @@ const ActivityDataTableComponent = ({
             </Tooltip>
           ) : null}
           <span className="information-text">{`Ver. ${value}`}</span>
-          {isDefault ? <Tag type='cyan'>Default</Tag> : null}
+          {isDefault ? <Tag type="cyan">Default</Tag> : null}
         </div>
       ) : (
         <>
-          <Tooltip label='Version History'>
+          <Tooltip label="Version History">
             <div className="recently-view-wrapper" onClick={() => handleVersion(id, activityName, status)}>
               <span className="recently-view-text">{`Ver. ${value}`}</span>
               <RecentlyViewed />
@@ -246,4 +248,4 @@ const ActivityDataTableComponent = ({
   );
 };
 
-export default ActivityDataTableComponent;
+export default DataTableComponent;

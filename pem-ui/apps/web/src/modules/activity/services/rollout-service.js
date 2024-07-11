@@ -1,43 +1,46 @@
-import { GROUP_LIST_DATA, ATTRIBUTE_LIST_DATA, PARTNER_LIST_DATA } from '../constants';
+import { RestApiService } from '../../../common/api-handler/rest-api-service';
+import { API_METHODS, API_END_POINTS } from '../constants';
 
-// TODO with actual api url
-export const getGroupList = async () => {
-  try {
-    return await GROUP_LIST_DATA;
-  } catch (error) {
-    console.error('Failed to fetch data:', error);
-    return [];
-  }
-};
-
-// TODO with actual api url
-export const getAttributeList = async (selectedAttributeType) => {
-  try {
-    let response = [];
-    if (selectedAttributeType === '') {
-      response = [];
-    } else {
-      response = ATTRIBUTE_LIST_DATA;
-    }
-    return await response;
-  } catch (error) {
-    console.error('Failed to fetch data:', error);
-    return [];
-  }
-};
-
-// TODO with actual api url
+// Function to get the Partners List
 export const getPartnerList = async (selectedPartnerType) => {
-  try {
-    let response = [];
-    if (selectedPartnerType === '') {
-      response = [];
-    } else {
-      response = PARTNER_LIST_DATA;
-    }
-    return await response;
-  } catch (error) {
-    console.error('Failed to fetch data:', error);
-    return [];
-  }
+  let url = `${API_END_POINTS.PARTNERS_LIST}/${selectedPartnerType}/`;
+  let config = {
+    url,
+    method: API_METHODS.GET
+  };
+  const response = await new RestApiService().call(config, null);
+  return response.success ? response?.data : [];
+};
+
+// Function to get the Attribute Type List
+export const getAttributeTypeList = async () => {
+  let url = `${API_END_POINTS.ATTRIBUTE_TYPES}`;
+  let config = {
+    url,
+    method: API_METHODS.GET
+  };
+  const response = await new RestApiService().call(config, null);
+  return response.success ? response?.data : [];
+};
+
+// Function to get the Attributes List
+export const getAttributeList = async (selectedAttributeType) => {
+  let url = `${API_END_POINTS.ATTRIBUTE_LIST}/${selectedAttributeType}/`;
+  let config = {
+    url,
+    method: API_METHODS.GET
+  };
+  const response = await new RestApiService().call(config, null);
+  return response.success ? response?.data : [];
+};
+
+// Function to get the Group List
+export const getGroupList = async (selectedAttributeType) => {
+  let url = `${API_END_POINTS.ATTRIBUTE_LIST}/${selectedAttributeType}/`;
+  let config = {
+    url,
+    method: API_METHODS.GET
+  };
+  const response = await new RestApiService().call(config, null);
+  return response.success ? response?.data : [];
 };

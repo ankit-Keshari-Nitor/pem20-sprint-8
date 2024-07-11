@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import RolloutDetails from './rollout-details';
-import RolloutGapDetails from './rollout-gap-details';
 import GenericModal from '../../helpers/wrapper-modal';
+
+import RolloutPartnersDetails from './components/rollout-partners-details';
+import RolloutDetails from './components/rollout-details';
+
 
 const ActivityRolloutModal = (props) => {
   const { showModal, setShowModal, activityName } = props;
   const [openAddModal, setOpenAddModal] = useState(false);
-  const [rolloutGapData, setRolloutGapData] = useState({ selectedGroupsData: [], selectedAttributesData: [], selectedPartnersData: [] });
+  const [rolloutPartnersData, setRolloutPartnersData] = useState({ selectedGroupsData: [], selectedAttributesData: [], selectedPartnersData: [] });
   const [rolloutDetails, setRolloutDetails] = useState({
     name: '',
     dueDate: new Date(),
@@ -26,23 +28,24 @@ const ActivityRolloutModal = (props) => {
   };
 
   const handleAddGroups = (selectedGroupsData) => {
-    setRolloutGapData((prev) => ({ ...prev, selectedGroupsData: [...selectedGroupsData] }));
+    setRolloutPartnersData((prev) => ({ ...prev, selectedGroupsData: [...selectedGroupsData] }));
   };
 
   const handleAddAttributes = (selectedAttributesData) => {
-    setRolloutGapData((prev) => ({ ...prev, selectedAttributesData: [...selectedAttributesData] }));
+    setRolloutPartnersData((prev) => ({ ...prev, selectedAttributesData: [...selectedAttributesData] }));
   };
 
   const handleAddPartners = (selectedPartnersData) => {
-    setRolloutGapData((prev) => ({ ...prev, selectedPartnersData: [...selectedPartnersData] }));
+    setRolloutPartnersData((prev) => ({ ...prev, selectedPartnersData: [...selectedPartnersData] }));
   };
 
+  console.log('rolloutPartnersData', rolloutPartnersData);
   return (
     <>
       <GenericModal
         isOpen={showModal}
         modalLabel={`Activity Rollout -${activityName}`}
-        modalHeading="Details"
+        modalHeading={openAddModal ? 'Adding Partners' : 'Details'}
         secondaryButtonText={openAddModal ? 'Back to Details' : 'Cancel'}
         primaryButtonText={openAddModal ? 'Save' : 'Rollout'}
         onPrimaryButtonClick={handleActivityRollout}
@@ -50,7 +53,7 @@ const ActivityRolloutModal = (props) => {
         onRequestClose={() => setShowModal(false)}
       >
         {openAddModal ? (
-          <RolloutGapDetails handleAddGroups={handleAddGroups} handleAddAttributes={handleAddAttributes} handleAddPartners={handleAddPartners} rolloutGapData={rolloutGapData} />
+          <RolloutPartnersDetails handleAddGroups={handleAddGroups} handleAddAttributes={handleAddAttributes} handleAddPartners={handleAddPartners} rolloutPartnersData={rolloutPartnersData} />
         ) : (
           <RolloutDetails {...props} rolloutDetails={rolloutDetails} setRolloutDetails={setRolloutDetails} handleAddClick={() => setOpenAddModal(true)} />
         )}

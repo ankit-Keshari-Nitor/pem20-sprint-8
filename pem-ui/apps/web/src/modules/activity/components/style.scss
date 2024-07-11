@@ -74,3 +74,28 @@
   position: relative;
   top: -16px;
 }
+
+.partners-details-view-container {
+  --cds-grid-gutter-start: none;
+  padding-inline: unset;
+  height: 100%;
+}
+
+.partners-details-view {
+  background-color: #F4F4F4;
+}
+.partners-tab-title {
+  font-family: IBM Plex Sans;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22.5px;
+  letter-spacing: -0.011em;
+  text-align: left;
+  margin: 8px;
+}
+
+.cds--tabs__nav-item-label-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

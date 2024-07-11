@@ -14,7 +14,7 @@ module.exports = function (app) {
   app.use(
     '/rest',
     createProxyMiddleware({
-      target: 'https://10.15.102.181:16101/',
+      target: 'https://10.15.101.101:29473/',
       pathRewrite: { '^/rest': '/rest' },
       changeOrigin: true,
       logLevel: 'debug',

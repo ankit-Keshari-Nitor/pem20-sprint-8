@@ -4,7 +4,7 @@ import './../../style.scss';
 import * as RolloutService from '../../../services/rollout-service';
 
 export default function RolloutTradingTab({ handleAddPartners }) {
-  const [selectedPartnerType, setSelectedPartnerType] = useState('');
+  const [selectedPartnerType, setSelectedPartnerType] = useState('company-id');
   const [partnerList, setPartnerList] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
   const [selectedPartners, setSelectedPartners] = React.useState([]);
@@ -14,19 +14,16 @@ export default function RolloutTradingTab({ handleAddPartners }) {
     getTradingPartnerList(selectedPartnerType);
   }, [selectedPartnerType]);
 
-  const getTradingPartnerList = (type) => {
-    RolloutService.getPartnerList(type).then((data) => {
-      setPartnerList(data);
-    });
+  const getTradingPartnerList = async (type) => {
+    const response = await RolloutService.getPartnerList(type);
+    setPartnerList(response);
   };
 
-  // TODO- Function to handle the select type input filled
   const handleOnChangeType = (e) => {
     setSelectedPartnerType(e.target.value);
     getTradingPartnerList(e.target.value);
   };
 
-  // TODO- Function to handle the search input filled
   const handleSearchInput = (e) => {
     console.log('e.target.value', e.target.value);
   };
@@ -57,17 +54,16 @@ export default function RolloutTradingTab({ handleAddPartners }) {
   return (
     <Grid className="define-grid">
       <Column className="col-margin" lg={8}>
-        <TextInput id={`trading-partners-search`} type="text" placeholder="Search by attribute type" style={{ marginTop: '1.5rem' }} onChange={handleSearchInput} />
+        <TextInput id={`trading-partners-search`} type="text" placeholder="Search by partner" style={{ marginTop: '0.5rem' }} onChange={handleSearchInput} />
       </Column>
       <Column className="col-margin" lg={8}>
-        <Select id={`trading-partners-select`} labelText="Select an trading partners" onChange={handleOnChangeType}>
-          <SelectItem value="" text="" />
-          <SelectItem value="option-1" text="Company/Unique ID" />
-          <SelectItem value="option-2" text="User ID" />
+        <Select id={`trading-partners-select`} labelText="" onChange={handleOnChangeType}>
+          <SelectItem value="company-id" text="Company/Unique ID" />
+          <SelectItem value="user-id" text="User ID (Email)" />
         </Select>
       </Column>
 
-      {partnerList.length === 0 ? (
+      {partnerList && partnerList.length === 0 ? (
         <Column className="col-margin" lg={16}>
           <p id={`attribute-list-label`} className="no-data-display-text">
             No Data to Display
@@ -85,13 +81,14 @@ export default function RolloutTradingTab({ handleAddPartners }) {
               </Button>
             </Column>
           )}
-          {partnerList.map((item) => {
-            return (
-              <Column className="col-margin" lg={16}>
-                <Checkbox id={item.key} labelText={item.value} checked={selectedPartners.includes(item.key)} onChange={() => handleCheck(item)} />
-              </Column>
-            );
-          })}
+          {partnerList &&
+            partnerList.map((item) => {
+              return (
+                <Column className="col-margin" lg={16}>
+                  <Checkbox id={item.key} labelText={item.value} checked={selectedPartners.includes(item.key)} onChange={() => handleCheck(item)} />
+                </Column>
+              );
+            })}
         </>
       )}
     </Grid>

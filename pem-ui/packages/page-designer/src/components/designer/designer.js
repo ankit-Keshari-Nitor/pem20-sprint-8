@@ -247,6 +247,22 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             }
           }
         })
+        objCopy?.component?.advanceProps.map((prop) => {
+          if (prop.propsName === propsName) {
+            if (prop?.regexPattern) {
+              const value = newValue?.value;
+              const regex = new RegExp(prop.regexPattern); // Assuming currentProp has a regexPattern property
+              const isValid = regex.test(value);
+              prop.invalid = !isValid;
+              prop.value = value;
+              // Ensure the invalid text is set if invalid
+              if (!isValid) {
+                isInvalid = true
+                prop.invalidText = prop.invalidText || 'Invalid input'; // default message if none provided
+              }
+            }
+          }
+        })
       }
       debugger
       if (key !== 'advance') {
@@ -263,6 +279,10 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
         objCopy.component.advanceProps.map((config) => {
           if (config.propsName === propsName) {
             config.value = newValue;
+            config.invalid = false;
+            if (isInvalid) {
+              config.invalid = true;
+            }
           }
         });
       }

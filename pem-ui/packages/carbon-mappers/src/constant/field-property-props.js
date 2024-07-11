@@ -51,20 +51,26 @@ export const minProps = {
   propsName: 'min',
   label: 'Min Length',
   value: {
-    value: '',
+    value: '0',
     message: ''
   },
-  type: 'TextInput'
+  type: 'TextInput',
+  invalid: false,
+  invalidText: 'Only Numbers are allowed',
+  regexPattern: /^[0-9]+$/,
 };
 
 export const maxProps = {
   propsName: 'max',
   label: 'Max Length',
   value: {
-    value: '',
+    value: '20',
     message: ''
   },
-  type: 'TextInput'
+  type: 'TextInput',
+  invalid: false,
+  invalidText: 'Only Numbers are allowed',
+  regexPattern: /^[0-9]+$/,
 };
 
 // New constant for Options type

@@ -164,16 +164,19 @@ public class ParticipantActivityInstanceController {
 
     }
 
-    @Operation(summary = "Evaluate Path from Activity Instance Context Data")
+    @Operation(summary = "Evaluate Path from Pcpt Activity Instance Context Data")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = Object.class), mediaType = MediaType.APPLICATION_JSON_VALUE)}),
-            @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
-                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE)}),
+                    @Content(schema = @Schema(implementation = ProcessEvaluationResponse.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ProcessEvaluationResponse.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "400", description = "Pcpt Activity Instance not found", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
             @ApiResponse(responseCode = "500", content = {
-                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
     })
-    @PostMapping("/{pcptActivityInstKey}/actions/evaluatePaths")
+    @PostMapping( value = "/{pcptActivityInstKey}/actions/evaluatePaths" ,consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<ProcessEvaluationResponse> evaluatePaths(@PathVariable(value = "sponsorContext")String sponsorContext, @RequestBody ProcessDataEvaluation jsonPath, @PathVariable(value = "pcptActivityInstKey")String pcptActivityInstKey) throws Exception {
         if(log.isEnabled(Level.INFO))
             log.info("evaluatePaths: Starts");

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@XmlRootElement(name = "processEvaluation")
+@XmlRootElement(name = "processDataEvaluation")
 @Data
 @Builder
 @AllArgsConstructor

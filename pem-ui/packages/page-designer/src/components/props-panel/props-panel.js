@@ -850,9 +850,9 @@ function getValidationMessage(label, propertiesName, value) {
     case 'isRequired':
       return 'This is a required field';
     case 'min':
-      return label + ' must be at least ' + value + 'characters';
+      return label + ' must be at least ' + value + ' characters';
     case 'max':
-      return label + ' must be no longer than ' + value + 'characters';
+      return label + ' must be no longer than ' + value + ' characters';
     case 'regexValidation':
       return value;
     default:

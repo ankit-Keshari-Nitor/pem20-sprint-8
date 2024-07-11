@@ -1,4 +1,4 @@
-import { API_END_POINTS } from './../constants';
+import { API_END_POINTS, TEST_DIALOG_DATA } from './../constants';
 import { RestApiService } from '../../../common/api-handler/rest-api-service';
 
 // Function to get the list of all activities
@@ -71,9 +71,9 @@ export const getActivityDetails = async (activityKey, activityVersoinKey) => {
   const url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityKey}`;
   const response = await new RestApiService().call({ url }, null);
   if (response.success) {
-    const activityVersions = await new RestApiService.call({ url: `${url}versions?&pageNo=0&pageSize=100` }, null);
+    const activityVersions = await new RestApiService().call({ url: `${url}versions?&pageNo=0&pageSize=100` }, null);
     const activityCurrentVersionDetails = await new RestApiService().call({ url: `${url}versions/${activityVersoinKey}` }, null);
-    const activityCurrentVersionData = await new RestApiService().call({ url: `${url}versions/${activityVersoinKey}/data` }, null);
+    const activityCurrentVersionData = await new RestApiService().call({ url: `${url}versions/${activityVersoinKey}/actions/getData` }, null);
     return {
       success: true,
       definition: {
@@ -116,4 +116,13 @@ export const saveActivityData = async (activityData) => {
     }
   };
   return await new RestApiService().callWithFile(config, null);
+};
+
+export const getActivityTestData = async () => {
+  try {
+    return await TEST_DIALOG_DATA;
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+    return [];
+  }
 };

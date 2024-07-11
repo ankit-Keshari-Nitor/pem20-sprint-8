@@ -21,6 +21,7 @@ import {
   SIDEBAR_ITEM,
   COMPONENT,
   COLUMN,
+  ISREQUIRED,
   INITIAL_DATA,
   ACCORDION,
   CUSTOM_COLUMN,
@@ -37,7 +38,8 @@ import {
   OPTION,
   DATATABLE,
   TABLE_ROWS,
-  LABEL_TEXT
+  MAXPROPS,
+  MINPROPS
 } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Grid, Modal, Column } from '@carbon/react';
@@ -171,9 +173,10 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
 
       filedTypeConfig?.advanceProps.map((advancePops) => {
         if (fieldData?.component[advancePops?.propsName]) {
+          advancePops?.regexPattern && (advancePops.invalid = false);
           return (advancePops.value = fieldData.component[advancePops?.propsName]);
         } else {
-          return advancePops?.propsName === REGEXVALIDATION ? (advancePops.value = { pattern: 'None', value: '', message: '' }) : (advancePops.value = { value: '', message: '' });
+          return advancePops?.propsName === REGEXVALIDATION ? (advancePops.value = { pattern: 'None', value: '', message: '' }) : advancePops?.propsName === MAXPROPS ? (advancePops.value = { value: 20, message: '' }) : advancePops?.propsName === MINPROPS ? (advancePops.value = { value: 0, message: '' }) : null;
         }
       });
     } else if (componentDetail.type === COLUMN) {
@@ -230,6 +233,12 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             }
           }
         });
+      } else if (propsName === ISREQUIRED) {
+        objCopy?.component?.advanceProps.map((prop) => {
+          if (prop.propsName === 'min') {
+            prop.value.value === 0 ? prop.value.value = 1 : prop.value.value
+          }
+        })
       } else {
         objCopy?.component?.editableProps.Basic.map((prop) => {
           if (prop.propsName === propsName) {

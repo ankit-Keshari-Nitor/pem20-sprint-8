@@ -13,12 +13,15 @@ export const CUSTOM_TITLE = 'customTitle';
 export const TEXT_INPUT = 'textinput';
 export const NAME = 'name';
 export const REGEXVALIDATION = 'regexValidation';
+export const MAXPROPS = 'max';
+export const MINPROPS = 'min';
 export const OPTIONS = 'Options';
 export const CUSTOMREGEX = 'customRegex';
 export const DATATABLE = 'data-table';
 export const TABLE_COLUMNS = 'tableColumns';
 export const TABLE_ROWS = 'tableRows';
 export const LABEL_TEXT = 'labelText';
+export const ISREQUIRED = 'isRequired';
 
 export const PALETTE_GROUPS = [
   {

@@ -256,18 +256,22 @@ export const decodeBase64 = {
 export const extensions = {
   propsName: 'extensions',
   label: 'Extensions',
-  options: [
-    { label: 'JPEG', value: 'image/jpeg' },
-    { label: 'PNG', value: 'image/png' }
-  ],
-  type: 'checkbox'
+  type: 'TextInput',
+  invalid: false,
+  invalidText: 'test',
+  regexPattern: /([^,]+)(?:,([^,]+))*/g,
 };
+
+
 
 export const maxFileSize = {
   propsName: 'maxFileSize',
   label: 'Max File Size',
   type: 'TextInput',
   value: '100kb',
+  invalid: false,
+  invalidText: "Invalid size format. Use format like '500b', '500kb', or '500mb'.",
+  regexPattern: /(\d+(\.\d+)?)(b|kb|mb)/i,
 }
 
 export const fontSize = {

@@ -12,23 +12,16 @@ import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityInstReq;
 import com.precisely.pem.dtos.requests.ContextDataNodes;
 import com.precisely.pem.dtos.requests.Partners;
-import com.precisely.pem.dtos.responses.ActivityInstListResp;
-import com.precisely.pem.dtos.responses.ActivityInstPagnResp;
-import com.precisely.pem.dtos.responses.ActivityInstResp;
-import com.precisely.pem.dtos.responses.SponsorInfo;
+import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityInstDto;
 import com.precisely.pem.dtos.shared.PaginationDto;
 import com.precisely.pem.dtos.shared.PcptActivityInstDto;
 import com.precisely.pem.dtos.shared.TenantContext;
 import com.precisely.pem.exceptionhandler.InvalidStatusException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
-import com.precisely.pem.models.ActivityDefnVersion;
-import com.precisely.pem.models.ActivityInst;
-import com.precisely.pem.models.PcptActivityInst;
-import com.precisely.pem.repositories.ActivityDefnVersionRepo;
-import com.precisely.pem.repositories.ActivityInstRepo;
-import com.precisely.pem.repositories.PartnerRepo;
-import com.precisely.pem.repositories.PcptInstRepo;
+import com.precisely.pem.models.*;
+import com.precisely.pem.repositories.*;
+import com.precisely.pem.service.PEMActivitiService;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONException;
@@ -42,9 +35,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialBlob;
+import javax.xml.stream.XMLStreamException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,6 +47,17 @@ import java.util.stream.Collectors;
 @Service
 @Log4j2
 public class ActivityInstServiceImpl implements ActivityInstService{
+
+    @Autowired
+    ActivityDefnRepo activityDefnRepo;
+
+    @Autowired
+    ActivityDefnDataRepo activityDefnDataRepo;
+
+
+    @Autowired
+    PEMActivitiService pemActivitiService;
+
 
     @Autowired
     ActivityDefnVersionRepo activityDefnVersionRepo;
@@ -238,6 +244,64 @@ public class ActivityInstServiceImpl implements ActivityInstService{
         resp.setContent(defnContent);
         resp.setPage(paginationDto);
         return resp;
+    }
+
+    @Override
+    public ActivityInstStatsResp getActivityInstStatsByKey(String sponsorContext, String activityInstKey) throws ResourceNotFoundException, XMLStreamException, SQLException {
+        SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
+        ActivityInstStatsResp activityInstStatsResp = new ActivityInstStatsResp();
+        LocalDate currentDate = LocalDate.now();
+        ActivityInst activityInst = activityInstRepo.findByActivityInstKey(activityInstKey);
+        if (Objects.isNull(activityInst))
+            throw new ResourceNotFoundException("activityInstanceKey", "NoDataFound", "Activity Instance with key '" + activityInstKey + "' not found. Kindly check the activityInstKey.");
+        List<PcptActivityInst> pcptActivityInsts = pcptInstRepo.findByActivityInstKey(activityInstKey);
+
+        int totalTasks = 0;
+        int partners = pcptActivityInsts.size();
+        int completed = 0;
+        int sponsorAction = 0;
+        int delayed = 0;
+        int onSchedule = 0;
+
+        List<ActivityDefnVersion> activityDefnVersionList = activityDefnVersionRepo.findByActivityDefnKey(activityInst.getActivityDefnKey());
+        if(!activityDefnVersionList.isEmpty()){
+            ActivityDefnData activityDefnData = activityDefnDataRepo.findByActivityDefnDataKey(activityDefnVersionList.get(0).getActivityDefnDataKey());
+            if(activityDefnData != null){
+                totalTasks = pemActivitiService.countSubprocesses(activityDefnData.getDefData());
+            }
+        }
+
+        if(!pcptActivityInsts.isEmpty()){
+            for (PcptActivityInst pcptActivityInst : pcptActivityInsts) {
+                if (pcptActivityInst.getPcptInstStatus().equalsIgnoreCase("Completed")) {
+                    completed++;
+                }
+                if (pcptActivityInst.getPcptInstStatus().equalsIgnoreCase("ApprovalPending")){
+                    sponsorAction++;
+                }
+
+                if (pcptActivityInst.getDueDate() != null) {
+                    LocalDateTime dueDateTime = pcptActivityInst.getDueDate();
+                    LocalDate dueDate = dueDateTime.toLocalDate();
+                    if (dueDate.isBefore(currentDate)) {
+                        delayed++;
+                    } else {
+                        onSchedule++;
+                    }
+                }else{
+                    onSchedule++;
+                }
+            }
+        }
+
+        activityInstStatsResp.setTotalTasks(totalTasks);
+        activityInstStatsResp.setPartners(partners);
+        activityInstStatsResp.setCompleted(completed);
+        activityInstStatsResp.setSponsorAction(sponsorAction);
+        activityInstStatsResp.setDelayed(delayed);
+        activityInstStatsResp.setOnSchedule(onSchedule);
+
+        return activityInstStatsResp;
     }
 
     private SponsorInfo validateSponsorContext(String sponsorContext) throws ResourceNotFoundException {

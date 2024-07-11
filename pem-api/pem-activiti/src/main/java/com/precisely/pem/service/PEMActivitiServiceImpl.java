@@ -6,10 +6,8 @@ import lombok.extern.log4j.Log4j2;
 import org.activiti.api.task.model.Task;
 import org.activiti.api.task.runtime.TaskRuntime;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
-import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.bpmn.model.FlowElement;
-import org.activiti.bpmn.model.FormProperty;
-import org.activiti.bpmn.model.UserTask;
+import org.activiti.bpmn.model.*;
+import org.activiti.bpmn.model.Process;
 import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
@@ -25,15 +23,17 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.*;
 
 @Service
 @DependsOn("processEngineConfiguration")
@@ -335,4 +335,43 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     public void defineAccessControlList(String processDefinitionId, List<String> userIds, List<String> groupIds) {
         // Implement ACL definition logic here
     }
+
+    @Override
+    public int countSubprocesses(Blob activityDefnData) throws SQLException, XMLStreamException {
+        InputStream inputStream = activityDefnData.getBinaryStream();
+
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream);
+
+        BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+        BpmnModel bpmnModel = bpmnXMLConverter.convertToBpmnModel(xmlStreamReader);
+
+        int subprocessCount = 0;
+
+        for (Process process : bpmnModel.getProcesses()) {
+            for (FlowElement flowElement : process.getFlowElements()) {
+                if (flowElement instanceof SubProcess) {
+                    subprocessCount += countSubprocessesRecursive(flowElement);
+                }
+            }
+        }
+
+        return subprocessCount;
+    }
+
+    private static int countSubprocessesRecursive(FlowElement flowElement) {
+        int count = 0;
+        if (flowElement instanceof SubProcess) {
+            SubProcess subProcess = (SubProcess) flowElement;
+            count++;
+
+            // Recursive call to count subprocesses within this subprocess
+            for (FlowElement subElement : subProcess.getFlowElements()) {
+                count += countSubprocessesRecursive(subElement);
+            }
+        }
+
+        return count;
+    }
+
 }

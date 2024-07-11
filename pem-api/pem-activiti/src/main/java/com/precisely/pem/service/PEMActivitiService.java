@@ -1,12 +1,16 @@
 package com.precisely.pem.service;
 
 import com.precisely.pem.dtos.task.TaskDTO;
+import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.security.core.userdetails.User;
 
+import javax.xml.stream.XMLStreamException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -287,6 +291,8 @@ public interface PEMActivitiService {
      * @param groupIds            the list of group IDs to include in the ACL
      */
     void defineAccessControlList(String processDefinitionId, List<String> userIds, List<String> groupIds);
+
+    int countSubprocesses(Blob activityDefnData) throws SQLException, XMLStreamException;
 
 } 
 

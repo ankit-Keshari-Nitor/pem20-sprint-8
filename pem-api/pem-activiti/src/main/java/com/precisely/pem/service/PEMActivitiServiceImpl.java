@@ -273,6 +273,11 @@ public class PEMActivitiServiceImpl implements PEMActivitiService {
     }
 
     @Override
+    public Map<String, Object> getProcessVariables(String processId) {
+        return runtimeService.getVariables(processId);
+    }
+
+    @Override
     public void setTaskVariables(String taskId, Map<String, Object> variables) {
         taskService.setVariables(taskId, variables);
     }

@@ -19,6 +19,5 @@ public interface BpmnConvertService {
     NodeHandler createNodeHandlerChain();
     InputStreamResource getPemBpmnJsonData(Blob activityDefnData) throws SQLException, XMLStreamException, IOException;
     BpmnModel getBpmnModel(Blob activityDefnData) throws SQLException, XMLStreamException;
-    String getPemBpmnModelString(Blob activityDefnData) throws SQLException, XMLStreamException, JsonProcessingException;
     String getContextDataFromProcess(Process process);
 }

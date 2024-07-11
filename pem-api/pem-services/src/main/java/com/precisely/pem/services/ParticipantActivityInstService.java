@@ -1,5 +1,6 @@
 package com.precisely.pem.services;
 
+import com.precisely.pem.dtos.requests.ProcessDataEvaluation;
 import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.exceptionhandler.InvalidStatusException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
@@ -13,4 +14,5 @@ public interface ParticipantActivityInstService {
     ActivityTaskDto getTaskDetails(String sponsorContext, String pcptActivityInstKey, String taskKey) throws Exception;
 
     MarkAsFinalActivityDefinitionVersionResp submitTask(String sponsorContext, String pcptActivityInstKey, String taskKey, String data) throws Exception;
+    ProcessEvaluationResponse evaluatePaths(String pcptActivityInstKey, ProcessDataEvaluation jsonPath) throws Exception;
 }

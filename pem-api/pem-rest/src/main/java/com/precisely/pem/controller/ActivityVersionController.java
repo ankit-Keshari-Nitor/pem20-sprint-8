@@ -217,22 +217,4 @@ public class ActivityVersionController {
                 .body(activityContextData);
     }
 
-    @Operation(summary = "Get Activity Definition Context Data for Specific Version of Activity Definition", tags = { "Activity Definition Version" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = Object.class), mediaType = MediaType.APPLICATION_JSON_VALUE)}),
-            @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
-                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE)}),
-            @ApiResponse(responseCode = "500", content = {
-                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
-    })
-    @GetMapping("/{activityDefnVersionKey}/actions/getJsonPathResolved")
-    public ResponseEntity<Object> getJsonPathResolved( @PathVariable(value = "sponsorContext")String sponsorContext,@RequestParam(value = "jsonPath") String jsonPath, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
-        if(log.isEnabled(Level.INFO))
-            log.info("getJsonPathResolved: Starts");
-        Object activityContextData = activityVersionService.resolveAndGetJsonPath(activityDefnVersionKey,jsonPath);
-        return  ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(activityContextData);
-    }
 }

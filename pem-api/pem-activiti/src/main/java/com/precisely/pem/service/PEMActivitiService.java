@@ -179,6 +179,16 @@ public interface PEMActivitiService {
     Map<String, Object> getTaskVariables(String taskId);
 
     /**
+     * Retrieves the variables associated with a specific task.
+     *
+     * @param processId the ID of the task to retrieve variables from
+     * @return a map of variables associated with the specified task
+     */
+    Map<String, Object> getProcessVariables(String processId);
+
+
+
+    /**
      * Sets the variables for a specific task.
      *
      * @param taskId    the ID of the task to set variables for

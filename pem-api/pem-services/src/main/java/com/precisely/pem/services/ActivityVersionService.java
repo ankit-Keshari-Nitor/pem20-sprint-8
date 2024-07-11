@@ -30,6 +30,4 @@ public interface ActivityVersionService {
 
     Object getActivityDefinitionContextData(String activityDefnVersionKey)throws Exception;
 
-    Object resolveAndGetJsonPath(String activityDefnVersionKey,String jsonPath) throws Exception;
-
 }

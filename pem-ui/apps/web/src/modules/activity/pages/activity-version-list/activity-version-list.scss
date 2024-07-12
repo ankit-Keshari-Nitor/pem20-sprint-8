@@ -43,5 +43,8 @@
 
 td:empty {
   display: none;
-  /* Hides empty cells */
+}
+
+.activity-sidedrawer-drawer div:last-child th:first-child div {
+  text-align: start !important;
 }

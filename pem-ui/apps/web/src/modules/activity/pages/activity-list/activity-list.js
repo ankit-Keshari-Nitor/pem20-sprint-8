@@ -255,9 +255,11 @@ export default function ActivityList() {
       />
       {/* For Version Drawer */}
       {activityDefnKey !== '' && (
-        <ActivityVersionsSideDrawer anchor="right" showDrawer={showDrawer} onClose={handleClose}>
-          <ActivityVersionList activityName={activityName} onClose={handleClose} activityDefnKey={activityDefnKey} status={activityStatus} showDrawer={showDrawer} />
-        </ActivityVersionsSideDrawer>
+        <div className='activity-sidedrawer-drawer'>
+          <ActivityVersionsSideDrawer anchor="right" showDrawer={showDrawer} onClose={handleClose}>
+            <ActivityVersionList activityName={activityName} onClose={handleClose} activityDefnKey={activityDefnKey} status={activityStatus} showDrawer={showDrawer} />
+          </ActivityVersionsSideDrawer>
+        </div>
       )}
       {/* For Version Drawer */}
       {/*  </Section> */}

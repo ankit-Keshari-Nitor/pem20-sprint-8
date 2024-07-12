@@ -220,3 +220,13 @@ tbody tr:nth-child {
 .cds--popover--bottom:not(.cds--popover--auto-align)>.cds--popover>.cds--popover-content {
   transform: translate(-12%, calc(100% + var(--cds-popover-offset, 0rem))) !important;
 }
+
+.tbody-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cds--table-header-label {
+  text-align: center !important;
+}

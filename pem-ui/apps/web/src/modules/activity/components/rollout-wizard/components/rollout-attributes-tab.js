@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Column, TextInput, Checkbox, Select, SelectItem, Button } from '@carbon/react';
-import './../../style.scss';
+import { Grid, Column, Checkbox, Select, SelectItem, Button, Search } from '@carbon/react';
 import * as RolloutService from '../../../services/rollout-service';
+import './../../style.scss';
 
 export default function RolloutAttributeTab({ handleAddAttributes }) {
   const [attributeTypeList, setAttributeTypeList] = useState([]);
   const [selectedAttributeType, setSelectedAttributeType] = useState('');
-
   const [attributeList, setAttributeList] = useState([]);
+  const [searchKey, setSearchKey] = useState('');
+
   const [isChecked, setIsChecked] = useState(false);
   const [selectedAttributes, setSelectedAttributes] = React.useState([]);
   const [selectedAttributesData, setSelectedAttributesData] = React.useState([]);
-
-  useEffect(() => {
-    getAttributeTypes();
-  }, []);
-
-  useEffect(() => {
-    getAttributeData(selectedAttributeType);
-  }, [selectedAttributeType]);
 
   // Function to get the attributes types list
   const getAttributeTypes = async () => {
@@ -26,43 +19,52 @@ export default function RolloutAttributeTab({ handleAddAttributes }) {
     setAttributeTypeList(response);
     if (response && response.length > 0) {
       setSelectedAttributeType(response[0].attributeTypeKey);
+      getAttributeListData(response[0].attributeTypeKey);
     }
   };
 
   // Function to get the attributes list
-  const getAttributeData = async (type) => {
-    const response = await RolloutService.getAttributeList(type);
-    setAttributeList(response);
+  const getAttributeListData = async (type, searchKey) => {
+    if (type !== '') {
+      const response = await RolloutService.getAttributeList(type, searchKey);
+      setAttributeList([...response]);
+    }
   };
 
-  // TODO- Function to handle the select type input filled
+  useEffect(() => {
+    if (searchKey !== '') {
+      getAttributeListData(selectedAttributeType, searchKey);
+    }
+  }, [searchKey, selectedAttributeType, getAttributeListData]);
+
+  useEffect(() => {
+    getAttributeTypes();
+  }, []);
+  
+  // Function to handle the selected attribute type input field
   const handleOnChangeType = (e) => {
     setSelectedAttributeType(e.target.value);
-    getAttributeData(e.target.value);
-  };
-
-  // TODO- Function to handle the search input filled
-  const handleSearchInput = (e) => {
-    console.log('e.target.value', e.target.value);
+    getAttributeListData(e.target.value, searchKey);
   };
 
   const handleCheck = (item) => {
-    if (!selectedAttributes.includes(item.key)) {
-      setSelectedAttributes([...selectedAttributes, item.key]);
+    if (!selectedAttributes.includes(item.attributeValueKey)) {
+      setSelectedAttributes([...selectedAttributes, item.attributeValueKey]);
       setSelectedAttributesData([...selectedAttributesData, item]);
     } else {
-      setSelectedAttributes(selectedAttributes.filter((e) => e !== item.key));
-      setSelectedAttributesData(selectedAttributesData.filter((e) => e.key !== item.key));
+      setSelectedAttributes(selectedAttributes.filter((e) => e !== item.attributeValueKey));
+      setSelectedAttributesData(selectedAttributesData.filter((e) => e.attributeValueKey !== item.attributeValueKey));
     }
   };
 
   const handleSelectAll = () => {
+    console.log("Ankit");
     if (isChecked) {
       setSelectedAttributes([]);
       setSelectedAttributesData([]);
       setIsChecked(false);
     } else {
-      const keys = attributeList.map((e) => e.key);
+      const keys = attributeList.map((e) => e.attributeValueKey);
       setSelectedAttributes([...keys]);
       setSelectedAttributesData([...attributeList]);
       setIsChecked(true);
@@ -72,10 +74,20 @@ export default function RolloutAttributeTab({ handleAddAttributes }) {
   return (
     <Grid className="define-grid">
       <Column className="col-margin" lg={8}>
-        <TextInput id={`attribute-search`} type="text" placeholder="Select by Attribute value" style={{ marginTop: '0.5rem' }} onChange={handleSearchInput} />
+        <Search
+          size="lg"
+          placeholder="Select by Attribute value"
+          labelText=""
+          closeButtonLabelText="Clear search input"
+          id={`attribute-search`}
+          onChange={(event) => setSearchKey(event.target.value)}
+          onKeyDown={(event) => setSearchKey(event.target.value)}
+          value={searchKey}
+        />
       </Column>
       <Column className="col-margin" lg={8}>
         <Select id={`attribute-select`} labelText="" onChange={handleOnChangeType}>
+          <SelectItem value={''} text={'Select Attribute Type'} />
           {attributeTypeList?.map((attributeType) => {
             return <SelectItem value={attributeType?.attributeTypeKey} text={attributeType?.name} />;
           })}
@@ -90,7 +102,7 @@ export default function RolloutAttributeTab({ handleAddAttributes }) {
       ) : (
         <>
           <Column className="select-all-checkbox" lg={8}>
-            <Checkbox id="select_all" labelText="select_all" checked={isChecked} onChange={handleSelectAll} />
+            <Checkbox id="select_all-attribute" labelText="Select All" checked={isChecked} onChange={handleSelectAll} />
           </Column>
           {attributeList && selectedAttributes.length > 0 && (
             <Column className="col-margin" lg={8}>
@@ -103,7 +115,12 @@ export default function RolloutAttributeTab({ handleAddAttributes }) {
             attributeList.map((item) => {
               return (
                 <Column className="col-margin" lg={16}>
-                  <Checkbox id={item.key} labelText={item.value} checked={selectedAttributes.includes(item.key)} onChange={() => handleCheck(item)} />
+                  <Checkbox
+                    id={item.attributeValueKey}
+                    labelText={item?.attrValue}
+                    checked={selectedAttributes.includes(item.attributeValueKey)}
+                    onChange={() => handleCheck(item)}
+                  />
                 </Column>
               );
             })}

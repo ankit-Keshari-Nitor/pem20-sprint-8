@@ -9,9 +9,8 @@ export const API_END_POINTS = {
   ACTIVITY_INSTANCE: '/sponsors/{sponsorContext}/v2/activityInstances',
   ACTIVITY_DEFINITION_VERSION: '/sponsors/{sponsorContext}/v2/activityDefinitions/{activityDefnKey}/version',
   ATTRIBUTE_TYPES: '/rest/sponsors/b2b/attributetypes/',
-  ATTRIBUTE_LIST: '/sponsors/{sponsorContext}/attributetypes/{attributetypeId}/attributeValues/ ',
-  PARTNERS_LIST: '/sponsors/{sponsorContext}/attributetypes/{attributetypeId}/attributeValues/ ',
-  
+  ATTRIBUTE_LIST: '/rest/sponsors/b2b/attributetypes',
+  PARTNERS_LIST: '/rest/sponsors/b2b/partners/'
 };
 
 export const API_METHODS = {

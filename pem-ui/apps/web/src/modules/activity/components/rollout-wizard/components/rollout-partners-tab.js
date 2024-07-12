@@ -1,40 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Column, TextInput, Checkbox, Select, SelectItem, Button } from '@carbon/react';
-import './../../style.scss';
+import { Grid, Column, Checkbox, Select, SelectItem, Button, Search } from '@carbon/react';
 import * as RolloutService from '../../../services/rollout-service';
 
+import './../../style.scss';
+
 export default function RolloutTradingTab({ handleAddPartners }) {
-  const [selectedPartnerType, setSelectedPartnerType] = useState('company-id');
+  const [selectedPartnerType, setSelectedPartnerType] = useState('');
   const [partnerList, setPartnerList] = useState([]);
+  const [searchKey, setSearchKey] = useState('');
+
   const [isChecked, setIsChecked] = useState(false);
   const [selectedPartners, setSelectedPartners] = React.useState([]);
   const [selectedPartnersData, setSelectedPartnersData] = React.useState([]);
 
   useEffect(() => {
-    getTradingPartnerList(selectedPartnerType);
-  }, [selectedPartnerType]);
+    getTradingPartnerList(selectedPartnerType, searchKey);
+  }, [selectedPartnerType, searchKey]);
 
-  const getTradingPartnerList = async (type) => {
-    const response = await RolloutService.getPartnerList(type);
+  useEffect(() => {
+    if (searchKey !== '') {
+      getTradingPartnerList(selectedPartnerType, searchKey);
+    }
+  }, [searchKey, selectedPartnerType]);
+
+  const getTradingPartnerList = async (type, searchKey) => {
+    const response = await RolloutService.getPartnerList(type, searchKey);
     setPartnerList(response);
   };
 
   const handleOnChangeType = (e) => {
     setSelectedPartnerType(e.target.value);
-    getTradingPartnerList(e.target.value);
-  };
-
-  const handleSearchInput = (e) => {
-    console.log('e.target.value', e.target.value);
+    getTradingPartnerList(e.target.value, searchKey);
   };
 
   const handleCheck = (item) => {
-    if (!selectedPartners.includes(item.key)) {
-      setSelectedPartners([...selectedPartners, item.key]);
+    if (!selectedPartners.includes(item.partnerUniqueId)) {
+      setSelectedPartners([...selectedPartners, item.partnerUniqueId]);
       setSelectedPartnersData([...selectedPartnersData, item]);
     } else {
-      setSelectedPartners(selectedPartners.filter((e) => e !== item.key));
-      setSelectedPartnersData(selectedPartnersData.filter((e) => e.key !== item.key));
+      setSelectedPartners(selectedPartners.filter((e) => e !== item.partnerUniqueId));
+      setSelectedPartnersData(selectedPartnersData.filter((e) => e.partnerUniqueId !== item.partnerUniqueId));
     }
   };
 
@@ -44,7 +49,7 @@ export default function RolloutTradingTab({ handleAddPartners }) {
       setSelectedPartnersData([]);
       setIsChecked(false);
     } else {
-      const keys = partnerList.map((e) => e.key);
+      const keys = partnerList.map((e) => e.partnerUniqueId);
       setSelectedPartners([...keys]);
       setSelectedPartnersData([...partnerList]);
       setIsChecked(true);
@@ -54,15 +59,24 @@ export default function RolloutTradingTab({ handleAddPartners }) {
   return (
     <Grid className="define-grid">
       <Column className="col-margin" lg={8}>
-        <TextInput id={`trading-partners-search`} type="text" placeholder="Search by partner" style={{ marginTop: '0.5rem' }} onChange={handleSearchInput} />
+        <Search
+          size="lg"
+          placeholder="Search by partner"
+          labelText=""
+          closeButtonLabelText="Clear search input"
+          id={`trading-partners-search`}
+          onChange={(event) => setSearchKey(event.target.value)}
+          onKeyDown={(event) => setSearchKey(event.target.value)}
+          value={searchKey}
+        />
       </Column>
       <Column className="col-margin" lg={8}>
         <Select id={`trading-partners-select`} labelText="" onChange={handleOnChangeType}>
+          <SelectItem value="" text="None" />
           <SelectItem value="company-id" text="Company/Unique ID" />
           <SelectItem value="user-id" text="User ID (Email)" />
         </Select>
       </Column>
-
       {partnerList && partnerList.length === 0 ? (
         <Column className="col-margin" lg={16}>
           <p id={`attribute-list-label`} className="no-data-display-text">
@@ -72,7 +86,7 @@ export default function RolloutTradingTab({ handleAddPartners }) {
       ) : (
         <>
           <Column className="select-all-checkbox" lg={8}>
-            <Checkbox id="select_all" labelText="select_all" checked={isChecked} onChange={handleSelectAll} />
+            <Checkbox id="select_all-partners" labelText="Select All" checked={isChecked} onChange={handleSelectAll} />
           </Column>
           {selectedPartners.length > 0 && (
             <Column className="col-margin" lg={8}>
@@ -85,7 +99,12 @@ export default function RolloutTradingTab({ handleAddPartners }) {
             partnerList.map((item) => {
               return (
                 <Column className="col-margin" lg={16}>
-                  <Checkbox id={item.key} labelText={item.value} checked={selectedPartners.includes(item.key)} onChange={() => handleCheck(item)} />
+                  <Checkbox
+                    id={item.partnerUniqueId}
+                    labelText={item.firstName + '' + item.lastName}
+                    checked={selectedPartners.includes(item.partnerUniqueId)}
+                    onChange={() => handleCheck(item)}
+                  />
                 </Column>
               );
             })}

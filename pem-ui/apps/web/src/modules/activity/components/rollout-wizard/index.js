@@ -38,8 +38,6 @@ const ActivityRolloutModal = (props) => {
   const handleAddPartners = (selectedPartnersData) => {
     setRolloutPartnersData((prev) => ({ ...prev, selectedPartnersData: [...selectedPartnersData] }));
   };
-
-  console.log('rolloutPartnersData', rolloutPartnersData);
   return (
     <>
       <GenericModal

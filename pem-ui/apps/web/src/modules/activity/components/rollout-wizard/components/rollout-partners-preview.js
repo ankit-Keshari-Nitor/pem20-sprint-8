@@ -1,5 +1,6 @@
 import React from 'react';
 import { Grid, Column, TextInput, Checkbox } from '@carbon/react';
+
 import './../../style.scss';
 
 export default function RolloutPartnersPreview({ rolloutPartnersData }) {
@@ -15,13 +16,13 @@ export default function RolloutPartnersPreview({ rolloutPartnersData }) {
       </Column>
       <Column className="col-margin" lg={16}>
         <p id={`group-list-label`} className="rollout-list-text">
-          Group
+          Partners
         </p>
       </Column>
-      {rolloutPartnersData?.selectedGroupsData.map((item) => {
+      {rolloutPartnersData?.selectedPartnersData.map((item) => {
         return (
           <Column className="col-margin" lg={16}>
-            <Checkbox id={item.key} labelText={item.value} s />
+            <Checkbox id={`preview-${item.partnerUniqueId}`} labelText={item.firstName + '' + item.lastName} />
           </Column>
         );
       })}
@@ -33,19 +34,19 @@ export default function RolloutPartnersPreview({ rolloutPartnersData }) {
       {rolloutPartnersData?.selectedAttributesData.map((item) => {
         return (
           <Column className="col-margin" lg={16}>
-            <Checkbox id={item.key} labelText={item.value} s />
+            <Checkbox id={`preview-${item.attributeTypeKey}`}  labelText={item.attrValue}  />
           </Column>
         );
       })}
       <Column className="col-margin" lg={16}>
         <p id={`group-list-label`} className="rollout-list-text">
-          Partners
+          Group
         </p>
       </Column>
-      {rolloutPartnersData?.selectedPartnersData.map((item) => {
+      {rolloutPartnersData?.selectedGroupsData.map((item) => {
         return (
           <Column className="col-margin" lg={16}>
-            <Checkbox id={item.key} labelText={item.value} s />
+            <Checkbox id={`preview-${item.key}`} labelText={item.value} />
           </Column>
         );
       })}

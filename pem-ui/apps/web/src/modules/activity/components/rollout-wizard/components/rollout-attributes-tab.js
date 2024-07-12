@@ -32,7 +32,7 @@ export default function RolloutAttributeTab({ handleAddAttributes }) {
   // Function to get the attributes list
   const getAttributeData = async (type) => {
     const response = await RolloutService.getAttributeList(type);
-    setAttributeTypeList(response);
+    setAttributeList(response);
   };
 
   // TODO- Function to handle the select type input filled

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.precisely.pem.models.ApiConfig;
+import com.precisely.pem.repositories.ApiConfigRepo;
 import lombok.extern.log4j.Log4j2;
 import org.activiti.engine.delegate.BpmnError;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -11,6 +12,7 @@ import org.activiti.engine.delegate.Expression;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
@@ -18,7 +20,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service("RestTemplateApiService")
@@ -39,8 +40,10 @@ public class RestTemplateApiService implements JavaDelegate {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
+    @Transactional
     public void execute(DelegateExecution execution) throws Error {
         String serviceTaskId = (String) execution.getCurrentActivityId();
+        ApiConfigRepo apiConfigRepo = (ApiConfigRepo) SpringContext.getApiConfigBean();
 
         try {
             String apiURL = (String) url.getValue(execution);
@@ -57,15 +60,20 @@ public class RestTemplateApiService implements JavaDelegate {
             ApiConfig apiConfig = null;
             if (!isValidUrl(apiURL)) {
                 if (!apiConfKey.isEmpty()) {
-                    apiConfig = createDummyApiConfig();
+                    apiConfig = apiConfigRepo.findByApiConfigKey(apiConfKey);
                     String protocol = apiConfig.getProtocol();
                     String host = apiConfig.getHost();
                     String port = apiConfig.getPort();
 
                     StringBuilder aPiURL = new StringBuilder();
-                    aPiURL.append(protocol).append("://").append(host).append(":").append(port).append(apiURL);
+                    if(!port.isEmpty()){
+                        aPiURL.append(protocol).append("://").append(host).append(":").append(port).append(apiURL);
+                    }else{
+                        aPiURL.append(protocol).append("://").append(host).append(apiURL);
+                    }
                     apiUrl = aPiURL.toString();
-                    if(!apiConfig.getUserName().isEmpty()){
+                    String userName = apiConfig.getUserName();
+                    if(userName != null && !userName.isEmpty()){
                         byte[] base64AuthBytes = Base64.getEncoder().encode(apiConfig.getUserName().getBytes());
                         String base64Auth = new String(base64AuthBytes);
                         apiHeaders.setBasicAuth(base64Auth);
@@ -126,25 +134,6 @@ public class RestTemplateApiService implements JavaDelegate {
         } catch (MalformedURLException e) {
             return false;
         }
-    }
-
-    private ApiConfig createDummyApiConfig() {
-        ApiConfig apiConfig = new ApiConfig();
-        apiConfig.setApiConfigKey("apiConfigKey");
-        apiConfig.setHost("10.15.106.209");
-        apiConfig.setApiName("API01");
-        apiConfig.setApiKey(UUID.randomUUID().toString());
-        apiConfig.setPort("9080");
-        apiConfig.setProtocol("http");
-        apiConfig.setCreateTs(LocalDateTime.of(2016, 8, 9, 12, 30, 0));
-        apiConfig.setCreatedBy(UUID.randomUUID().toString());
-        apiConfig.setModifyTs(LocalDateTime.of(2016, 8, 9, 12, 30, 0));
-        apiConfig.setModifiedBy(UUID.randomUUID().toString());
-        apiConfig.setUserName("test_user:test_password");
-        apiConfig.setPreemptiveAuth("false");
-        apiConfig.setVerifyHost("true");
-
-        return apiConfig;
     }
 
     private void handleHttpException(RuntimeException e) {

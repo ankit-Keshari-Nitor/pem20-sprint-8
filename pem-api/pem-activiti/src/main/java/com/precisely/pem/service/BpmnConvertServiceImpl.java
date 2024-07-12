@@ -1,8 +1,6 @@
 package com.precisely.pem.service;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.precisely.pem.converter.*;
@@ -75,13 +73,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     /*This method will accept bmn xml definition in Blob and convert into pem bpmn json and return InputStreamResource which will be return to UI.*/
     @Override
     public InputStreamResource getPemBpmnJsonData(Blob activityDefnData) throws SQLException, XMLStreamException, IOException {
-        InputStream inputStream = activityDefnData.getBinaryStream();
-
-        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream);
-
-        BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
-        BpmnModel bpmnModel = bpmnXMLConverter.convertToBpmnModel(xmlStreamReader);
+        BpmnModel bpmnModel = getBpmnModel(activityDefnData);
 
         //This will convert BPMN Model into PemBpmnModel object.
         log.debug("Conversion of Bpmn Model into Pem Bpmn Model started.");
@@ -93,7 +85,18 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         return new InputStreamResource(bpmnModelToJsonStream);
     }
 
-    public BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel, BpmnConverterRequest bpmnConverterRequest) {
+    @Override
+    public BpmnModel getBpmnModel(Blob activityDefnData) throws SQLException, XMLStreamException {
+        InputStream inputStream = activityDefnData.getBinaryStream();
+
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream);
+
+        BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+        return bpmnXMLConverter.convertToBpmnModel(xmlStreamReader);
+    }
+
+    public BpmnModel convertIntoBpmnDefinition(PemBpmnModel pemBpmnModel, BpmnConverterRequest bpmnConverterRequest) throws BpmnConverterException  {
         List<Node> nodes = pemBpmnModel.getProcess().getNodes();
 
         if (!nodes.isEmpty()) {
@@ -157,16 +160,16 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             addCustomFieldsInBpmnModel(bpmnModel, nodeMap);
             log.debug("======= Add custom fields in BpmnModel completed.");
 
-            addContextData(bpmnModel,pemBpmnModel);
+            addContextData(bpmnModel,pemBpmnModel,bpmnConverterRequest);
             log.debug("======= Add context Data information in BpmnModel completed.");
             return bpmnModel;
         }
         return null;
     }
 
-    private void addContextData(BpmnModel bpmnModel, PemBpmnModel pemBpmnModel) {
-        Process process = bpmnModel.getProcesses().get(0);
-        process.addExtensionElement(getStringExtensionElement(PROCESS_FIELD_CONTEXT_DATA,pemBpmnModel.getProcess().getProcessData().getContextData()));
+    private void addContextData(BpmnModel bpmnModel, PemBpmnModel pemBpmnModel,BpmnConverterRequest bpmnConverterRequest)throws BpmnConverterException  {
+        Process process = bpmnModel.getProcessById(bpmnConverterRequest.getProcessId());
+        process.addExtensionElement(getStringExtensionElement(PROCESS_FIELD_CONTEXT_DATA, validateAndGetContextData(pemBpmnModel)));
 
         pemBpmnModel.getProcess().getNodes().forEach(node -> {
             if(NodeTypes.API_NODE.getName().equalsIgnoreCase(node.getType())){
@@ -179,6 +182,17 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 process.addExtensionElement(getStringExtensionElement(node.getId(),resultJsonString));
             }
         });
+    }
+
+    private String validateAndGetContextData(PemBpmnModel pemBpmnModel) throws BpmnConverterException {
+        try {
+            // Parse and validate the JSON string
+            objectMapper.readTree(pemBpmnModel.getProcess().getProcessData().getContextData());
+        } catch (Exception e) {
+            log.error("Invalid Context Data JSON: " + e.getMessage());
+            throw new BpmnConverterException("ConvertToBpmnDefinition", "Invalid Context Data JSON.");
+        }
+        return pemBpmnModel.getProcess().getProcessData().getContextData();
     }
 
     /* This will add UserTask from System Side into each subprocess. There should be Start Node in subprocess.*/
@@ -358,7 +372,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 connectors.add(createConnector((SequenceFlow) sequeunceFlowElement, bpmnModel));
             }
             log.debug("======= Generated Pem Bpmn Model Connectors successfully.");
-            addContextData(process, pemProcess);
+            pemProcess.setProcessData(ProcessData.builder().contextData(getContextDataFromProcess(process)).build());
             log.debug("======= Add ContextData successfully.");
             pemProcess.setNodes(nodes);
             pemProcess.setConnectors(connectors);
@@ -367,7 +381,8 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         return response;
     }
 
-    private void addContextData(Process process, PemProcess pemProcess) {
+    @Override
+    public String getContextDataFromProcess(Process process) {
         String prefix = "";
         if(Objects.nonNull(process.getExtensionElements().get("activiti:field")) && !process.getExtensionElements().get("activiti:field").isEmpty()){
             prefix = "activiti:";
@@ -375,11 +390,11 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
 
         for (ExtensionElement element : process.getExtensionElements().get(prefix+"field")) {
             String name = element.getAttributes().get("name").get(0).getValue();
-            if("contextData".equalsIgnoreCase(name)){
-                String contextData = element.getChildElements().get(prefix+"string").get(0).getElementText();
-                pemProcess.setProcessData(ProcessData.builder().contextData(contextData).build());
+            if(PROCESS_FIELD_CONTEXT_DATA.equalsIgnoreCase(name)){
+                return element.getChildElements().get(prefix+"string").get(0).getElementText();
             }
         }
+        return "";
     }
 
     private static void appendSubProcessesSequenceFlow(SubProcess subprocess, List<FlowElement> sequenceFlowElements) {

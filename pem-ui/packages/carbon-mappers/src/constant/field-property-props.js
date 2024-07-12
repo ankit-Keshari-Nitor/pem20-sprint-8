@@ -51,7 +51,7 @@ export const minProps = {
   propsName: 'min',
   label: 'Min Length',
   value: {
-    value: 0,
+    value: '0',
     message: ''
   },
   type: 'TextInput',
@@ -64,7 +64,7 @@ export const maxProps = {
   propsName: 'max',
   label: 'Max Length',
   value: {
-    value: 20,
+    value: '20',
     message: ''
   },
   type: 'TextInput',

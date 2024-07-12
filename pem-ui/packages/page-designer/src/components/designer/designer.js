@@ -15,7 +15,8 @@ import {
   updateChildToChildren,
   addChildToChildren,
   findChildComponentById,
-  indexForChild
+  indexForChild,
+  capitalizeFirstLetter
 } from '../../utils/helpers';
 import {
   SIDEBAR_ITEM,
@@ -102,6 +103,16 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           item.component.maxFileSize = '100kb';
         }
 
+        //Condition for Max Length Property
+        if (item.component.type === 'textarea' || item.component.type === 'textinput' || item.component.type === 'password') {
+          item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` }
+        }
+
+        if (item.component.type === 'numberinput') {
+          item.component.max = { value: '20', message: `${item.component.label} value should be between 0 - 20.` }
+          item.component.min = { value: '0', message: `${item.component.label} value should be between 0 - 20.` }
+        }
+
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
@@ -172,11 +183,16 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
       });
 
       filedTypeConfig?.advanceProps.map((advancePops) => {
+        if (componentDetail?.component?.type === 'numberinput') {
+          if (advancePops?.propsName === 'min' || advancePops?.propsName === 'max') {
+            advancePops.label = `${capitalizeFirstLetter(advancePops?.propsName)} Value`;
+          }
+        }
         if (fieldData?.component[advancePops?.propsName]) {
           advancePops?.regexPattern && (advancePops.invalid = false);
           return (advancePops.value = fieldData.component[advancePops?.propsName]);
         } else {
-          return advancePops?.propsName === REGEXVALIDATION ? (advancePops.value = { pattern: 'None', value: '', message: '' }) : advancePops?.propsName === MAXPROPS ? (advancePops.value = { value: 20, message: '' }) : advancePops?.propsName === MINPROPS ? (advancePops.value = { value: 0, message: '' }) : null;
+          return advancePops?.propsName === REGEXVALIDATION ? (advancePops.value = { pattern: 'None', value: '', message: '' }) : advancePops?.propsName === MAXPROPS ? (advancePops.value = { value: '20', message: '' }) : advancePops?.propsName === MINPROPS ? (advancePops.value = { value: '0', message: '' }) : (advancePops.value = { value: '', message: '' });
         }
       });
     } else if (componentDetail.type === COLUMN) {
@@ -197,6 +213,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
     const componentPosition = currentPathDetail.split('-');
     let uniqueName = true;
     let isInvalid = false;
+    let minValue = 0;
     if (key === SUBTAB) {
       const position = indexForChild(layout, componentPosition, 0);
       componentPosition.push(position);
@@ -236,7 +253,8 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
       } else if (propsName === ISREQUIRED) {
         objCopy?.component?.advanceProps.map((prop) => {
           if (prop.propsName === 'min') {
-            prop.value.value === 0 ? prop.value.value = 1 : prop.value.value
+            newValue ? prop.value.value.trim() === '0' ? prop.value.value = '1' : prop.value.value : prop.value.value;
+            minValue = prop.value.value;
           }
         })
       } else {
@@ -296,7 +314,13 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
       }
       setSelectedFiledProps({ ...objCopy });
       if (uniqueName && !isInvalid) {
-        setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
+        if (propsName === ISREQUIRED) {
+          setLayout(updateChildToChildren(layout, componentPosition, 'min', { value: minValue, message: `Minimum ${minValue} characters required` }));
+        }
+        setLayout(prevLayout => {
+          return updateChildToChildren(prevLayout, componentPosition, propsName, newValue)
+        })
+        //setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
       }
     }
   };

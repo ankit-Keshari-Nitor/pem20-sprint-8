@@ -112,10 +112,8 @@ tbody tr:nth-child {
 .action-item {
   padding-right: 1rem !important;
   width: 55%;
-}
-
-.action-item-drawer {
-  padding-right: 1rem !important;
+  display: flex;
+  justify-content: center;
 }
 
 .action-item-delete {

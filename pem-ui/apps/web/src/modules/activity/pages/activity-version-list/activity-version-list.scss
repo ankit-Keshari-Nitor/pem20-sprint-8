@@ -33,3 +33,15 @@
 .custom-inline-notification-container {
   top: 50px !important;
 }
+
+.action-item-drawer {
+  padding-right: 1rem !important;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+}
+
+td:empty {
+  display: none;
+  /* Hides empty cells */
+}

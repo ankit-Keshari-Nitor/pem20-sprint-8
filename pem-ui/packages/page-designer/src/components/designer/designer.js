@@ -15,12 +15,14 @@ import {
   updateChildToChildren,
   addChildToChildren,
   findChildComponentById,
-  indexForChild
+  indexForChild,
+  capitalizeFirstLetter
 } from '../../utils/helpers';
 import {
   SIDEBAR_ITEM,
   COMPONENT,
   COLUMN,
+  ISREQUIRED,
   INITIAL_DATA,
   ACCORDION,
   CUSTOM_COLUMN,
@@ -37,7 +39,8 @@ import {
   OPTION,
   DATATABLE,
   TABLE_ROWS,
-  LABEL_TEXT
+  MAXPROPS,
+  MINPROPS
 } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Grid, Modal, Column } from '@carbon/react';
@@ -100,6 +103,16 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           item.component.maxFileSize = '100kb';
         }
 
+        //Condition for Max Length Property
+        if (item.component.type === 'textarea' || item.component.type === 'textinput' || item.component.type === 'password') {
+          item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` }
+        }
+
+        if (item.component.type === 'numberinput') {
+          item.component.max = { value: '20', message: `${item.component.label} value should be between 0 - 20.` }
+          item.component.min = { value: '0', message: `${item.component.label} value should be between 0 - 20.` }
+        }
+
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
@@ -145,6 +158,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
       filedTypeConfig?.editableProps?.Basic.map((basicEditPops) => {
         if (fieldData?.component[basicEditPops?.propsName]) {
           basicEditPops?.propsName === NAME && (basicEditPops.invalid = false);
+          basicEditPops?.regexPattern && (basicEditPops.invalid = false);
           return (basicEditPops.value = fieldData.component[basicEditPops?.propsName]);
         } else {
           // Initialize options for checkbox-group and radio-group
@@ -169,10 +183,16 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
       });
 
       filedTypeConfig?.advanceProps.map((advancePops) => {
+        if (componentDetail?.component?.type === 'numberinput') {
+          if (advancePops?.propsName === 'min' || advancePops?.propsName === 'max') {
+            advancePops.label = `${capitalizeFirstLetter(advancePops?.propsName)} Value`;
+          }
+        }
         if (fieldData?.component[advancePops?.propsName]) {
+          advancePops?.regexPattern && (advancePops.invalid = false);
           return (advancePops.value = fieldData.component[advancePops?.propsName]);
         } else {
-          return advancePops?.propsName === REGEXVALIDATION ? (advancePops.value = { pattern: 'None', value: '', message: '' }) : (advancePops.value = { value: '', message: '' });
+          return advancePops?.propsName === REGEXVALIDATION ? (advancePops.value = { pattern: 'None', value: '', message: '' }) : advancePops?.propsName === MAXPROPS ? (advancePops.value = { value: '20', message: '' }) : advancePops?.propsName === MINPROPS ? (advancePops.value = { value: '0', message: '' }) : (advancePops.value = { value: '', message: '' });
         }
       });
     } else if (componentDetail.type === COLUMN) {
@@ -192,6 +212,8 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
   const handleSchemaChanges = (id, key, propsName, newValue, currentPathDetail) => {
     const componentPosition = currentPathDetail.split('-');
     let uniqueName = true;
+    let isInvalid = false;
+    let minValue = 0;
     if (key === SUBTAB) {
       const position = indexForChild(layout, componentPosition, 0);
       componentPosition.push(position);
@@ -228,13 +250,53 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             }
           }
         });
+      } else if (propsName === ISREQUIRED) {
+        objCopy?.component?.advanceProps.map((prop) => {
+          if (prop.propsName === 'min') {
+            newValue ? prop.value.value.trim() === '0' ? prop.value.value = '1' : prop.value.value : prop.value.value;
+            minValue = prop.value.value;
+          }
+        })
+      } else {
+        objCopy?.component?.editableProps.Basic.map((prop) => {
+          if (prop.propsName === propsName) {
+            if (prop?.regexPattern) {
+              const value = newValue;
+              const regex = new RegExp(prop.regexPattern); // Assuming currentProp has a regexPattern property
+              const isValid = regex.test(value);
+              prop.invalid = !isValid;
+              prop.value = value;
+              // Ensure the invalid text is set if invalid
+              if (!isValid) {
+                isInvalid = true
+                prop.invalidText = prop.invalidText || 'Invalid input'; // default message if none provided
+              }
+            }
+          }
+        })
+        objCopy?.component?.advanceProps.map((prop) => {
+          if (prop.propsName === propsName) {
+            if (prop?.regexPattern) {
+              const value = newValue?.value;
+              const regex = new RegExp(prop.regexPattern); // Assuming currentProp has a regexPattern property
+              const isValid = regex.test(value);
+              prop.invalid = !isValid;
+              prop.value = value;
+              // Ensure the invalid text is set if invalid
+              if (!isValid) {
+                isInvalid = true
+                prop.invalidText = prop.invalidText || 'Invalid input'; // default message if none provided
+              }
+            }
+          }
+        })
       }
       if (key !== 'advance') {
         objCopy.component.editableProps[key].map((config) => {
           if (config.propsName === propsName) {
             config.value = newValue;
             config.invalid = false;
-            if (!uniqueName) {
+            if (!uniqueName || isInvalid) {
               config.invalid = true;
             }
           }
@@ -243,12 +305,22 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
         objCopy.component.advanceProps.map((config) => {
           if (config.propsName === propsName) {
             config.value = newValue;
+            config.invalid = false;
+            if (isInvalid) {
+              config.invalid = true;
+            }
           }
         });
       }
       setSelectedFiledProps({ ...objCopy });
-      if (uniqueName) {
-        setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
+      if (uniqueName && !isInvalid) {
+        if (propsName === ISREQUIRED) {
+          setLayout(updateChildToChildren(layout, componentPosition, 'min', { value: minValue, message: `Minimum ${minValue} characters required` }));
+        }
+        setLayout(prevLayout => {
+          return updateChildToChildren(prevLayout, componentPosition, propsName, newValue)
+        })
+        //setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
       }
     }
   };
@@ -296,7 +368,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             <span className="header-title">{activityDefinitionData && Object.keys(activityDefinitionData).length > 0 ? activityDefinitionData.name : 'New Form Builder'}</span>
           </Column>
           <Column lg={12} className="buttons-container">
-           {/*  <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
+            {/*  <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
               View Schema
             </Button>
             <Button kind="secondary" className="cancelButton" onClick={() => setOpenPreview(true)}>

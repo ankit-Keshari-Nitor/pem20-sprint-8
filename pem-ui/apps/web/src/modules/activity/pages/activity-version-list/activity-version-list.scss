@@ -33,3 +33,18 @@
 .custom-inline-notification-container {
   top: 50px !important;
 }
+
+.action-item-drawer {
+  padding-right: 1rem !important;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+}
+
+td:empty {
+  display: none;
+}
+
+.activity-sidedrawer-drawer div:last-child th:first-child div {
+  text-align: start !important;
+}

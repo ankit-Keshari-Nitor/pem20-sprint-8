@@ -42,11 +42,11 @@ const NumberInput = ({ field, id, currentPath, onChangeHandle, previewMode }) =>
           setFieldValue(data.value);
         }}
         onKeyUp={(e) => {
-          previewMode && onChangeHandle(currentPath, e?.target?.value);
-          setFieldValue(e?.target?.value);
+          e.preventDefault();
         }}
-        min={min?.value}
-        max={max?.value}
+        min={parseInt(min?.value)}
+        max={parseInt(max?.value)}
+        {...rest}
       />
     </>
   );

@@ -36,26 +36,32 @@ const ActivityDataTableComponent = ({
     switch (status) {
       case 'DRAFT':
         return (
-          <Button
-            kind="tertiary"
-            size="sm"
-            className={showDrawer ? 'action-item-drawer' : 'action-item'}
-            onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_FINAL, id, versionKey)}
-          >
-            {ACTION_COLUMN_KEYS.MARK_AS_FINAL}
-          </Button>
+          <div className='tbody-wrapper'>
+            <Button
+              kind="tertiary"
+              size="sm"
+              className={showDrawer ? 'action-item-drawer' : 'action-item'}
+              onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_FINAL, id, versionKey)}
+            >
+              {ACTION_COLUMN_KEYS.MARK_AS_FINAL}
+            </Button>
+          </div>
         );
       case 'FINAL':
         return (
-          <Button kind="tertiary" size="sm" className={showDrawer ? 'action-item-drawer' : 'action-item'} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.ROLLOUT, id)}>
-            {ACTION_COLUMN_KEYS.ROLLOUT}
-          </Button>
+          <div className='tbody-wrapper'>
+            <Button kind="tertiary" size="sm" className={showDrawer ? 'action-item-drawer' : 'action-item'} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.ROLLOUT, id)}>
+              {ACTION_COLUMN_KEYS.ROLLOUT}
+            </Button>
+          </div>
         );
       case 'DELETE':
         return (
-          <Button kind="tertiary" size="sm" className={`${showDrawer ? 'action-item-drawer' : 'action-item'} action-item-delete`}>
-            {ACTION_COLUMN_KEYS.RESTORE}
-          </Button>
+          <div className='tbody-wrapper'>
+            <Button kind="tertiary" size="sm" className={`${showDrawer ? 'action-item-drawer' : 'action-item'} action-item-delete`}>
+              {ACTION_COLUMN_KEYS.RESTORE}
+            </Button>
+          </div>
         );
       default:
         return null;
@@ -118,12 +124,16 @@ const ActivityDataTableComponent = ({
   // Render status tag
   const renderTag = (status) => {
     const formattedStatus = capitalizeFirstLetter(status);
-    return <Tag type={status === 'draft' ? 'cool-gray' : status === 'final' ? 'green' : 'red'}>{formattedStatus}</Tag>;
+    return (
+      <div className='tbody-wrapper'>
+        <Tag type={status === 'draft' ? 'cool-gray' : status === 'final' ? 'green' : 'red'}>{formattedStatus}</Tag>
+      </div>
+    )
   };
 
   // Render recently viewed icon and text
-  const renderRecentlyViewed = (value = '""', id, activityName = '', status = '', description = '', isDefault = false) => (
-    <div>
+  const renderRecentlyViewed = (value = '', id, activityName = '', status = '', description = '', isDefault = false) => (
+    <div >
       {showDrawer ? (
         <div className="information-wrapper">
           {description !== '' ? (
@@ -135,21 +145,21 @@ const ActivityDataTableComponent = ({
           {isDefault ? <Tag type='cyan'>Default</Tag> : null}
         </div>
       ) : (
-        <>
+        <div className='tbody-wrapper'>
           <Tooltip label='Version History'>
             <div className="recently-view-wrapper" onClick={() => handleVersion(id, activityName, status)}>
               <span className="recently-view-text">{`Ver. ${value}`}</span>
               <RecentlyViewed />
             </div>
           </Tooltip>
-        </>
+        </div>
       )}
     </div>
   );
 
   // Render checkmark icon and text for encryption status
   const renderCheckmarkFilled = (encryptedvalue = '') => (
-    <div>
+    <div className='tbody-wrapper'>
       <span className="encrypted-wrapper">
         {encryptedvalue ? (
           <>

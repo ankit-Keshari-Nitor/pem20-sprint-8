@@ -34,4 +34,5 @@ public class Node {
     private List<Variable> inVariables;
     private List<Variable> outVariables;
 
+    List<Connector> connectors;
 }

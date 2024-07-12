@@ -1,6 +1,7 @@
 package com.precisely.pem.converter;
 
 import com.precisely.pem.dtos.*;
+import com.precisely.pem.service.BpmnConvertServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.*;
@@ -153,6 +154,7 @@ public class PemNodeFactory {
         //get Type of Sub Process from documentation field, which was appended during generate SubProcess BPMN definition
         setTypeAndDocumentation(subProcess, node);
 
+        List<Connector> connectors = new ArrayList<>();
         for (FlowElement sub : subProcess.getFlowElements()) {
 
             if(sub instanceof UserTask){
@@ -162,6 +164,10 @@ public class PemNodeFactory {
                     node.setRoleKeys(String.join(",", ((UserTask)sub).getCandidateGroups()));
                     continue;
                 }
+            }
+            //For SubProcess we need to add Connectors at time of NodeConversion into each SubProcess node itself.
+            if(sub instanceof SequenceFlow sequenceFlow){
+                connectors.add(BpmnConvertServiceImpl.createConnector(sequenceFlow,bpmnConverterRequest.getBpmnModel()));
             }
 
             //Recursive Call which creates SubNode again.
@@ -176,7 +182,7 @@ public class PemNodeFactory {
                 nodes.add(subNode);
             }
         }
-
+        node.setConnectors(connectors);
         node.setNodes(nodes);
         return node;
     }

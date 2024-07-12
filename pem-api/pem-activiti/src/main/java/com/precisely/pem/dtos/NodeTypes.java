@@ -1,18 +1,18 @@
 package com.precisely.pem.dtos;
 
 public enum NodeTypes {
-    START("startEvent","StartNoneEvent"),
-    END("endEvent","EndNoneEvent"),
-    FORM("form","UserTask"),
-    SEQUENCE("connectors","SequenceFlow"),
-    API_NODE("api","ServiceTask"),
-    XSLT_NODE("xslt","ServiceTask"),
-    EXCLUSIVE_GATEWAY("gateway","ExclusiveGateway"),
-    INCLUSIVE_GATEWAY("gateway","InclusiveGateway"),
-    PARTNER_SUB_PROCESS("PartnerTask","SubProcess"),
-    SYSTEM_SUB_PROCESS("SystemTask","SubProcess"),
-    SPONSOR_SUB_PROCESS("SponsorTask","SubProcess"),
-    CALL_ACTIVITY("linkActivity","CallActivity");
+    START("START","StartNoneEvent"),
+    END("END","EndNoneEvent"),
+    FORM("FORM","UserTask"),
+    SEQUENCE("CONNECTORS","SequenceFlow"),
+    API_NODE("API","ServiceTask"),
+    XSLT_NODE("XSLT","ServiceTask"),
+    EXCLUSIVE_GATEWAY("GATEWAY","ExclusiveGateway"),
+    INCLUSIVE_GATEWAY("GATEWAY","InclusiveGateway"),
+    PARTNER_SUB_PROCESS("PARTNER","SubProcess"),
+    SYSTEM_SUB_PROCESS("SYSTEM","SubProcess"),
+    SPONSOR_SUB_PROCESS("SPONSOR","SubProcess"),
+    CALL_ACTIVITY("CALL_ACTIVITY","CallActivity");
 
     private String name;
     private String bpmnName;

@@ -100,6 +100,12 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         List<Node> nodes = pemBpmnModel.getProcess().getNodes();
 
         if (!nodes.isEmpty()) {
+
+            //Merge all SubProcess Connectors into Global List as Activiti framework will accept.
+            List<Connector> subConnectors = new ArrayList<>(pemBpmnModel.getProcess().getConnectors());
+            mergeSubConnectors(nodes, subConnectors);
+            pemBpmnModel.getProcess().setConnectors(subConnectors);
+
             // Create the output JSON structure
             ObjectNode outputJson = objectMapper.createObjectNode();
 
@@ -165,6 +171,19 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             return bpmnModel;
         }
         return null;
+    }
+
+    private void mergeSubConnectors(List<Node> nodes, List<Connector> connectors) {
+        nodes.stream().filter(node -> ( NodeTypes.PARTNER_SUB_PROCESS.getName().equalsIgnoreCase(node.getType()) || NodeTypes.SYSTEM_SUB_PROCESS.getName().equalsIgnoreCase(node.getType())
+                || NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(node.getType()))).forEach(node -> {
+            node.getConnectors().forEach(subConnector -> {
+                subConnector.setParent(node.getId());
+                connectors.add(subConnector);
+            });
+            if (Objects.nonNull(node.getNodes())){
+                mergeSubConnectors(node.getNodes(),connectors);
+            }
+        });
     }
 
     private void addContextData(BpmnModel bpmnModel, PemBpmnModel pemBpmnModel,BpmnConverterRequest bpmnConverterRequest)throws BpmnConverterException  {
@@ -341,6 +360,13 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             List<Node> nodes = new ArrayList<>();
             List<Connector> connectors = new ArrayList<>();
 
+            //Fetch all sequence flow and append in sequenceFlowElements List for all layers of subProcesses using recursive method appendSubProcessesSequenceFlow
+            //Recursive Call
+            process.getFlowElements().stream()
+                    .filter(flowElement -> flowElement instanceof SubProcess)
+                    .forEach(subprocess -> appendSubProcessesSequenceFlow((SubProcess) subprocess));
+            log.debug("======= Generated list of all SubProcessesSequenceFlows and First layer of Sequence Flows successfully.");
+
             /*reverse conversion started for Nodes*/
             for (FlowElement flowElement : process.getFlowElements()) {
                 if(!(flowElement instanceof SequenceFlow)){
@@ -361,12 +387,6 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             //Fetch all sequence flow from first layer of Nodes.
             List<FlowElement> sequenceFlowElements = new ArrayList<>(process.getFlowElements().stream().filter(flowElement -> flowElement instanceof SequenceFlow).toList());
 
-            //Fetch all sequence flow and append in sequenceFlowElements List for all layers of subProcesses using recursive method appendSubProcessesSequenceFlow
-            //Recursive Call
-            process.getFlowElements().stream()
-                    .filter(flowElement -> flowElement instanceof SubProcess)
-                    .forEach(subprocess -> appendSubProcessesSequenceFlow((SubProcess) subprocess, sequenceFlowElements));
-            log.debug("======= Generated list of all SubProcessesSequenceFlows and First layer of Sequence Flows successfully.");
             /*reverse conversion ended for Connectors*/
             for (FlowElement sequeunceFlowElement : sequenceFlowElements){
                 connectors.add(createConnector((SequenceFlow) sequeunceFlowElement, bpmnModel));
@@ -397,7 +417,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         return "";
     }
 
-    private static void appendSubProcessesSequenceFlow(SubProcess subprocess, List<FlowElement> sequenceFlowElements) {
+    private static void appendSubProcessesSequenceFlow(SubProcess subprocess) {
 
         /* System Connectors Change
          * Fetching System Connectors and Update existing Connectors Target.*/
@@ -419,14 +439,14 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         /*Add all SequenceFlow present in SubProcesses into Main sequenceFlowElements List.*/
         for (FlowElement flowElement : subprocess.getFlowElements()){
             if(flowElement instanceof SequenceFlow){
-                sequenceFlowElements.add(flowElement);
+
             }else if ( flowElement instanceof SubProcess ){
-                appendSubProcessesSequenceFlow((SubProcess) flowElement,sequenceFlowElements);
+                appendSubProcessesSequenceFlow((SubProcess) flowElement);
             }
         }
     }
 
-    private Connector createConnector(SequenceFlow sequenceFlow, BpmnModel bpmnModel) {
+    public static Connector createConnector(SequenceFlow sequenceFlow, BpmnModel bpmnModel) {
         Connector connector = Connector.builder()
                 .id(sequenceFlow.getId())
                 .source(sequenceFlow.getSourceRef())

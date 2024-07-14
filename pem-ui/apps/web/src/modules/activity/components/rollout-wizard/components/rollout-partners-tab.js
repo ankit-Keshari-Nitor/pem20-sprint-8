@@ -104,6 +104,7 @@ export default function RolloutTradingTab({ handleAddPartners }) {
                     labelText={item.firstName + '' + item.lastName}
                     checked={selectedPartners.includes(item.partnerUniqueId)}
                     onChange={() => handleCheck(item)}
+                    className='partners-data-item'
                   />
                 </Column>
               );

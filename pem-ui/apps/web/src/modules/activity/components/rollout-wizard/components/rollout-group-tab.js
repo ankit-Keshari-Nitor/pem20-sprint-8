@@ -62,7 +62,7 @@ export default function RolloutGroupTab({ handleAddGroups }) {
         groupList.map((item) => {
           return (
             <Column className="col-margin" lg={16}>
-              <Checkbox id={item.key} labelText={item.value} checked={selectedGroups.includes(item.key)} onChange={() => handleCheck(item)} />
+              <Checkbox id={item.key} labelText={item.value} checked={selectedGroups.includes(item.key)} onChange={() => handleCheck(item)} className='partners-data-item'/>
             </Column>
           );
         })}

@@ -120,6 +120,7 @@ export default function RolloutAttributeTab({ handleAddAttributes }) {
                     labelText={item?.attrValue}
                     checked={selectedAttributes.includes(item.attributeValueKey)}
                     onChange={() => handleCheck(item)}
+                    className='partners-data-item'
                   />
                 </Column>
               );

@@ -20,6 +20,12 @@ const ActivityRolloutModal = (props) => {
     partnersDetails: ''
   });
 
+  // Final Submit
+  const handleActivityRollout = () => {
+    //todo - get all data and call rollout/create instance api from here -- close dialog once done
+    console.log('rolloutDetails', rolloutDetails);
+  };
+
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && submitting) {
       handleActivityRollout();
@@ -76,12 +82,6 @@ const ActivityRolloutModal = (props) => {
     setSubmitting(true);
   };
 
-  // Final Submit
-  const handleActivityRollout = () => {
-    //todo - get all data and call rollout/create instance api from here -- close dialog once done
-    console.log('rolloutDetails', rolloutDetails);
-  };
-
   // Function to handle the Next/rollout Button Click
   const handleBackToDetails = () => {
     setOpenAddModal(false);
@@ -98,8 +98,6 @@ const ActivityRolloutModal = (props) => {
   const handleAddPartners = (selectedPartnersData) => {
     setRolloutPartnersData((prev) => ({ ...prev, selectedPartnersData: [...selectedPartnersData] }));
   };
-
-  console.log('formErrors', formErrors);
 
   return (
     <>
@@ -121,7 +119,14 @@ const ActivityRolloutModal = (props) => {
             rolloutPartnersData={rolloutPartnersData}
           />
         ) : (
-          <RolloutDetails {...props} rolloutDetails={rolloutDetails} setRolloutDetails={setRolloutDetails} handleAddClick={() => setOpenAddModal(true)} formErrors={formErrors} rolloutPartnersData={rolloutPartnersData} />
+          <RolloutDetails
+            {...props}
+            rolloutDetails={rolloutDetails}
+            setRolloutDetails={setRolloutDetails}
+            handleAddClick={() => setOpenAddModal(true)}
+            formErrors={formErrors}
+            rolloutPartnersData={rolloutPartnersData}
+          />
         )}
       </GenericModal>
     </>

@@ -112,10 +112,8 @@ tbody tr:nth-child {
 .action-item {
   padding-right: 1rem !important;
   width: 55%;
-}
-
-.action-item-drawer {
-  padding-right: 1rem !important;
+  display: flex;
+  justify-content: center;
 }
 
 .action-item-delete {
@@ -221,4 +219,18 @@ tbody tr:nth-child {
 
 .cds--popover--bottom:not(.cds--popover--auto-align)>.cds--popover>.cds--popover-content {
   transform: translate(-12%, calc(100% + var(--cds-popover-offset, 0rem))) !important;
+}
+
+.tbody-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cds--table-header-label {
+  text-align: center !important;
+}
+
+.cds--data-table td {
+  text-align: center !important;
 }

@@ -51,20 +51,26 @@ export const minProps = {
   propsName: 'min',
   label: 'Min Length',
   value: {
-    value: '',
+    value: '0',
     message: ''
   },
-  type: 'TextInput'
+  type: 'TextInput',
+  invalid: false,
+  invalidText: 'Only Numbers are allowed',
+  regexPattern: /^[0-9]+$/,
 };
 
 export const maxProps = {
   propsName: 'max',
   label: 'Max Length',
   value: {
-    value: '',
+    value: '20',
     message: ''
   },
-  type: 'TextInput'
+  type: 'TextInput',
+  invalid: false,
+  invalidText: 'Only Numbers are allowed',
+  regexPattern: /^[0-9]+$/,
 };
 
 // New constant for Options type
@@ -256,18 +262,22 @@ export const decodeBase64 = {
 export const extensions = {
   propsName: 'extensions',
   label: 'Extensions',
-  options: [
-    { label: 'JPEG', value: 'image/jpeg' },
-    { label: 'PNG', value: 'image/png' }
-  ],
-  type: 'checkbox'
+  type: 'TextInput',
+  invalid: false,
+  invalidText: 'Only comma separated values are allowed',
+  regexPattern: /^[a-zA-Z0-9,]+$/,
 };
+
+
 
 export const maxFileSize = {
   propsName: 'maxFileSize',
   label: 'Max File Size',
   type: 'TextInput',
   value: '100kb',
+  invalid: false,
+  invalidText: "Invalid size format. Use format like '500b', '500kb', or '500mb'.",
+  regexPattern: /(\d+(\.\d+)?)(b|kb|mb)/i,
 }
 
 export const fontSize = {

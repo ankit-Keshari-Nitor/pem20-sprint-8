@@ -6,8 +6,10 @@ import { FileUploadIcon } from './../icons';
 const type = FORM_FIELD_TYPE.FILE_UPLOADER;
 
 const FileUploader = ({ field, id, }) => {
-  const { labelText, label, maxFileSize, extensions, } = field;
+  const { labelText, label, maxFileSize, extensions: extensionsStr, } = field;
 
+  // Convert comma-separated extensions string to array
+  const extensionsArray = extensionsStr ? extensionsStr.split(',') : [];
   const [file, setFile] = useState();
   const [error, setError] = useState('');
 
@@ -45,19 +47,27 @@ const FileUploader = ({ field, id, }) => {
   }
 
   const onAddFiles = (event, files) => {
-    const file = event.target.files || files.addedFiles;
-    const newFile = [
-      {
-        name: file[0].name,
-        filesize: file[0].size,
-        status: 'edit',
-        iconDescription: 'Delete icon',
-        invalidFileType: file[0].invalidFileType
-      }
-    ];
-    setFile(newFile[0]);
-    onUploadFiles(newFile[0]);
 
+    const file = event.target.files || files.addedFiles;
+    // Check if file extension is valid
+    const isValidExtension = extensionsArray.some(ext => file[0].name.toLowerCase().endsWith(ext.toLowerCase()));
+
+    if (!isValidExtension) {
+      setError(`Invalid file type. Allowed extensions: ${extensionsArray.join(', ')}`);
+      setFile();
+    } else {
+      const newFile = [
+        {
+          name: file[0].name,
+          filesize: file[0].size,
+          status: 'edit',
+          iconDescription: 'Delete icon',
+          invalidFileType: file[0].invalidFileType
+        }
+      ];
+      setFile(newFile[0]);
+      onUploadFiles(newFile[0]);
+    }
   }
 
   const onUploadFiles = (fileUpload) => {
@@ -69,7 +79,7 @@ const FileUploader = ({ field, id, }) => {
         iconDescription: 'Delete Icon',
         invalid: true,
         errorSubject: 'InValid ',
-        errorBody: ('Error', { fileName: fileUpload.name, fileType: extensions !== undefined ? extensions.join(',') : '' })
+        errorBody: ('Error', { fileName: fileUpload.name, fileType: extensionsArray !== undefined ? extensionsArray.join(',') : '' })
       };
       setFile(updatedFile);
     } else {
@@ -93,7 +103,7 @@ const FileUploader = ({ field, id, }) => {
             filenameStatus='edit'
             onChange={onAddFiles}
             onAddFiles={onAddFiles}
-            accept={extensions}
+            accept={extensionsArray}
             id={id}
           />
           {error && <p className="error-text">{error}</p>}

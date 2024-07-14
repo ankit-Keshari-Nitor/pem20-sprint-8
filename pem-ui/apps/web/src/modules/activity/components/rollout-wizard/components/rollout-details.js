@@ -1,11 +1,13 @@
 import React from 'react';
 import { Information } from '@carbon/icons-react';
-import { Grid, Column, TextArea, TextInput, DatePicker, DatePickerInput, Button, Tooltip, RadioButtonGroup, RadioButton } from '@carbon/react';
+import { Grid, Column, TextArea, TextInput, DatePicker, DatePickerInput, Button, Tooltip, RadioButtonGroup, RadioButton, Tag } from '@carbon/react';
 
 import './../../style.scss';
 
 export default function RolloutDetails(props) {
-  const { rolloutDetails, setRolloutDetails, handleAddClick } = props;
+  const { rolloutDetails, setRolloutDetails, handleAddClick, formErrors, rolloutPartnersData } = props;
+  const rolloutPartnersDataLength =
+    rolloutPartnersData.selectedGroupsData.length + rolloutPartnersData.selectedAttributesData.length + rolloutPartnersData.selectedPartnersData.length;
 
   return (
     <>
@@ -19,8 +21,8 @@ export default function RolloutDetails(props) {
             data-testid="name"
             labelText="Name (required)"
             placeholder={'Enter Name'}
-            invalidText={'Test'}
-            invalid={false}
+            invalidText={'Name is required.'}
+            invalid={formErrors.name}
             value={rolloutDetails.name}
             onChange={(e) => setRolloutDetails((prev) => ({ ...prev, name: e.target.value }))}
           />
@@ -32,13 +34,13 @@ export default function RolloutDetails(props) {
             data-testid="description"
             labelText="Description"
             rows={3}
-            rules={{ required: false, minLength: 20, maxLength: 100 }}
             enableCounter={true}
             counterMode="character"
             maxCount={100}
             minLength={10}
-            invalidText={'Test'}
-            invalid={false}
+            rules={{ required: false, minLength: 20, maxLength: 100 }}
+            invalidText={'Description must beat least 20 character long.'}
+            invalid={formErrors.description}
             value={rolloutDetails.description}
             placeholder={'Enter Description'}
             onChange={(e) => setRolloutDetails((prev) => ({ ...prev, description: e.target.value }))}
@@ -125,8 +127,8 @@ export default function RolloutDetails(props) {
               </>
             }
             placeholder={'Enter days'}
-            invalidText={'Test'}
-            invalid={false}
+            invalidText={'Alert interval days should be between 1 and 99.'}
+            invalid={formErrors.alertInterval}
             value={rolloutDetails.alertInterval}
             onChange={(e) =>
               setRolloutDetails((prev) => ({
@@ -155,16 +157,57 @@ export default function RolloutDetails(props) {
         {/*  Partner, Groups and Attributes */}
         {rolloutDetails.rollingOutTo === 'partners' && (
           <Column className="partners_rollout-container" lg={12}>
-            <TextArea
-              id="partners_rollout"
-              data-testid="partners_rollout"
-              labelText="Partner, Groups and Attributes (required)"
-              invalidText={'Test'}
-              invalid={false}
-              required
-              placeholder={'Click on add button to Partners, Attributes and Groups '}
-              rows={3}
-            />
+            {rolloutPartnersDataLength === 0 ? (
+              <>
+                <TextArea
+                  id="partners_rollout"
+                  data-testid="partners_rollout"
+                  labelText="Partner, Groups and Attributes (required)"
+                  invalidText={'Partner, Groups and Attributes are required'}
+                  invalid={formErrors.partnersDetails}
+                  required
+                  placeholder={'Click on add button to Partners, Attributes and Groups '}
+                  rows={3}
+                />
+              </>
+            ) : (
+              <>
+                {rolloutPartnersData.selectedPartnersData.length > 0 && (
+                  <>
+                    {rolloutPartnersData.selectedPartnersData.map((item) => {
+                      console.log('item', item);
+                      return (
+                        <Tag className="some-class" type="blue" id={`tag-${item.partnerUniqueId}`}  onClose={() => console.log('ankit')}>
+                          {item.firstName + '' + item.lastName}
+                        </Tag>
+                      );
+                    })}
+                  </>
+                )}
+                {rolloutPartnersData.selectedAttributesData.length > 0 && (
+                  <>
+                    {rolloutPartnersData.selectedAttributesData.map((item) => {
+                      return (
+                        <Tag className="some-class" type="blue" id={`tag-${item.attributeTypeKey}`}  onClose={() => console.log('ankit')}>
+                          {item.attrValue}
+                        </Tag>
+                      );
+                    })}
+                  </>
+                )}
+                {rolloutPartnersData.selectedGroupsData.length > 0 && (
+                  <>
+                    {rolloutPartnersData.selectedGroupsData.map((item) => {
+                      return (
+                        <Tag className="some-class" type="blue" id={`tag-${item.key}`} onClose={() => console.log('ankit')}>
+                          {item.value}
+                        </Tag>
+                      );
+                    })}
+                  </>
+                )}
+              </>
+            )}
             <Button className="add-button" kind="secondary" onClick={handleAddClick}>
               Add
             </Button>

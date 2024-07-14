@@ -1,25 +1,85 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import GenericModal from '../../helpers/wrapper-modal';
 
 import RolloutPartnersDetails from './components/rollout-partners-details';
 import RolloutDetails from './components/rollout-details';
 
-
 const ActivityRolloutModal = (props) => {
   const { showModal, setShowModal, activityName } = props;
   const [openAddModal, setOpenAddModal] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
   const [rolloutPartnersData, setRolloutPartnersData] = useState({ selectedGroupsData: [], selectedAttributesData: [], selectedPartnersData: [] });
   const [rolloutDetails, setRolloutDetails] = useState({
     name: '',
-    dueDate: new Date(),
     description: '',
+    dueDate: new Date(),
     alertDate: new Date(),
-    alertInterval: 0,
-    rollingOutTo: 'internal_users'
+    alertInterval: 1,
+    rollingOutTo: 'internal_users',
+    partnersDetails: ''
   });
 
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && submitting) {
+      handleActivityRollout();
+    }
+  }, [formErrors, handleActivityRollout, submitting]);
+
+  useEffect(() => {
+    if (rolloutDetails.name.length > 0) {
+      setFormErrors({ ...formErrors, name: false });
+    }
+    if (rolloutDetails.description.length > 20) {
+      setFormErrors({ ...formErrors, description: false });
+    }
+
+    if (Number(rolloutDetails.alertInterval) > 1 || Number(rolloutDetails.alertInterval) > 99) {
+      setFormErrors({ ...formErrors, alertInterval: false });
+    }
+
+    if (rolloutDetails.rollingOutTo === 'partners') {
+      let rolloutPartnersDataLength =
+        rolloutPartnersData.selectedGroupsData.length + rolloutPartnersData.selectedAttributesData.length + rolloutPartnersData.selectedPartnersData.length;
+      if (rolloutPartnersDataLength > 0) {
+        setFormErrors({ ...formErrors, partnersDetails: false });
+      }
+    }
+  }, [rolloutDetails, rolloutPartnersData, formErrors]);
+
+  const validateValues = (inputValues) => {
+    let errors = {};
+    if (inputValues.name.length === 0) {
+      errors.name = true;
+    }
+    if (inputValues.description.length < 20) {
+      errors.description = true;
+    }
+
+    if (Number(inputValues.alertInterval) < 1 || Number(inputValues.alertInterval) > 99) {
+      errors.alertInterval = true;
+    }
+
+    if (rolloutDetails.rollingOutTo === 'partners') {
+      let rolloutPartnersDataLength =
+        rolloutPartnersData.selectedGroupsData.length + rolloutPartnersData.selectedAttributesData.length + rolloutPartnersData.selectedPartnersData.length;
+      if (rolloutPartnersDataLength === 0) {
+        errors.partnersDetails = true;
+      }
+    }
+    return errors;
+  };
+
+  const handleRolloutSubmit = (event) => {
+    event.preventDefault();
+    setFormErrors(validateValues(rolloutDetails));
+    setSubmitting(true);
+  };
+
+  // Final Submit
   const handleActivityRollout = () => {
     //todo - get all data and call rollout/create instance api from here -- close dialog once done
+    console.log('rolloutDetails', rolloutDetails);
   };
 
   // Function to handle the Next/rollout Button Click
@@ -38,6 +98,9 @@ const ActivityRolloutModal = (props) => {
   const handleAddPartners = (selectedPartnersData) => {
     setRolloutPartnersData((prev) => ({ ...prev, selectedPartnersData: [...selectedPartnersData] }));
   };
+
+  console.log('formErrors', formErrors);
+
   return (
     <>
       <GenericModal
@@ -46,14 +109,19 @@ const ActivityRolloutModal = (props) => {
         modalHeading={openAddModal ? 'Adding Partners' : 'Details'}
         secondaryButtonText={openAddModal ? 'Back to Details' : 'Cancel'}
         primaryButtonText={openAddModal ? 'Save' : 'Rollout'}
-        onPrimaryButtonClick={handleActivityRollout}
+        onPrimaryButtonClick={handleRolloutSubmit}
         onSecondaryButtonClick={() => (openAddModal ? handleBackToDetails() : setShowModal(false))}
         onRequestClose={() => setShowModal(false)}
       >
         {openAddModal ? (
-          <RolloutPartnersDetails handleAddGroups={handleAddGroups} handleAddAttributes={handleAddAttributes} handleAddPartners={handleAddPartners} rolloutPartnersData={rolloutPartnersData} />
+          <RolloutPartnersDetails
+            handleAddGroups={handleAddGroups}
+            handleAddAttributes={handleAddAttributes}
+            handleAddPartners={handleAddPartners}
+            rolloutPartnersData={rolloutPartnersData}
+          />
         ) : (
-          <RolloutDetails {...props} rolloutDetails={rolloutDetails} setRolloutDetails={setRolloutDetails} handleAddClick={() => setOpenAddModal(true)} />
+          <RolloutDetails {...props} rolloutDetails={rolloutDetails} setRolloutDetails={setRolloutDetails} handleAddClick={() => setOpenAddModal(true)} formErrors={formErrors} rolloutPartnersData={rolloutPartnersData} />
         )}
       </GenericModal>
     </>

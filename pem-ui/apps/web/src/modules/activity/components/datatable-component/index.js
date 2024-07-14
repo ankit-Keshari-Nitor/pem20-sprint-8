@@ -1,5 +1,5 @@
 import React from 'react';
-import { ACTION_COLUMN_KEYS } from '../constants';
+import { ACTION_COLUMN_KEYS } from '../../constants';
 import {
   Button,
   DataTable,

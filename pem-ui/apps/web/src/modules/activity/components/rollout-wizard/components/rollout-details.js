@@ -171,7 +171,7 @@ export default function RolloutDetails(props) {
                 />
               </>
             ) : (
-              <>
+              <div className='partners_tags'>
                 {rolloutPartnersData.selectedPartnersData.length > 0 && (
                   <>
                     {rolloutPartnersData.selectedPartnersData.map((item) => {
@@ -206,7 +206,7 @@ export default function RolloutDetails(props) {
                     })}
                   </>
                 )}
-              </>
+              </div>
             )}
             <Button className="add-button" kind="secondary" onClick={handleAddClick}>
               Add

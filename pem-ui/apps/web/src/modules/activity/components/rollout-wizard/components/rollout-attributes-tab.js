@@ -40,7 +40,7 @@ export default function RolloutAttributeTab({ handleAddAttributes, handleDetails
   useEffect(() => {
     getAttributeTypes();
   }, []);
-  
+
   // Function to handle the selected attribute type input field
   const handleOnChangeType = (e) => {
     setSelectedAttributeType(e.target.value);
@@ -58,7 +58,6 @@ export default function RolloutAttributeTab({ handleAddAttributes, handleDetails
   };
 
   const handleSelectAll = () => {
-    console.log("Ankit");
     if (isChecked) {
       setSelectedAttributes([]);
       setSelectedAttributesData([]);
@@ -120,7 +119,7 @@ export default function RolloutAttributeTab({ handleAddAttributes, handleDetails
                     labelText={item?.attrValue}
                     checked={selectedAttributes.includes(item.attributeValueKey)}
                     onChange={() => handleCheck(item)}
-                    className='partners-data-item'
+                    className="partners-data-item"
                     onClick={() => handleDetailsViewClick(item, 'attribute')}
                   />
                 </Column>

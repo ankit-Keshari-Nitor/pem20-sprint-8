@@ -25,7 +25,9 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -140,30 +142,104 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
     }
 
     @Test
-    public void testGetTaskDetails() throws Exception {
-        // Mock dependencies
+    public void testGetTaskDetails_success() throws Exception {
+        String sponsorContext = "sponsorContext";
+        String pcptActivityInstKey = "pcptActivityInstKey";
+        String taskKey = "taskKey";
+        SponsorInfo sponsorInfo = new SponsorInfo();
+        sponsorInfo.setSponsorKey("sponsorKey");
         PcptActivityInst pcptActivityInst = new PcptActivityInst();
-        pcptActivityInst.setPcptInstStatus("Started");
+        pcptActivityInst.setPcptInstStatus("STARTED");
         TaskDTO taskDTO = new TaskDTO();
         ActivityTaskDto activityTaskDto = new ActivityTaskDto();
-        activityTaskDto.setPcptActivityInstTaskKey("testActivityInstKey");
         when(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(anyString(), anyString())).thenReturn(pcptActivityInst);
-        when(pemActivitiService.getTaskDetails(anyString())).thenReturn(taskDTO);
-        when(mapper.map(taskDTO, ActivityTaskDto.class)).thenReturn(activityTaskDto);
-        ActivityTaskDto result = participantActivityInstServiceImpl.getTaskDetails("sponsorContext", "pcptActivityInstKey", "taskKey");
-        assertEquals("pcptActivityInstKey", result.getPcptActivityInstTaskKey());
+        when(pemActivitiService.getUserNodeDetails(anyString())).thenReturn(taskDTO);
+        when(mapper.map(any(TaskDTO.class), eq(ActivityTaskDto.class))).thenReturn(activityTaskDto);
+        ActivityTaskDto result = participantActivityInstServiceImpl.getNodeDetails(sponsorContext, pcptActivityInstKey, taskKey);
+        assertNotNull(result);
+        verify(pemActivitiService, times(1)).getUserNodeDetails(taskKey);
     }
+
     @Test
-    public void testSubmitTask() throws Exception {
+    public void testSubmitTaskWhenPcptInstIsStartedAndNotDraft() throws Exception {
         PcptActivityInst pcptActivityInst = new PcptActivityInst();
-        pcptActivityInst.setPcptInstStatus("Started");
+        pcptActivityInst.setPcptInstStatus("STARTED");
+        String sponsorContext = "sponsorContext";
+        String pcptActivityInstKey = "pcptActivityInstKey";
+        String taskKey = "taskKey";
+        String data = "data";
+        Boolean isDraft = false;
+        when(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(anyString(), anyString())).thenReturn(pcptActivityInst);
+        MarkAsFinalActivityDefinitionVersionResp response = participantActivityInstServiceImpl.completeNode(sponsorContext, pcptActivityInstKey, taskKey, data, isDraft);
+        assertNotNull(response);
+        verify(pemActivitiService).completeUserNode(taskKey, data);
+    }
+
+    @Test
+    public void testSubmitTaskWhenPcptInstIsStartedAndDraft() throws Exception {
+        String sponsorContext = "sponsorContext";
+        String pcptActivityInstKey = "pcptActivityInstKey";
+        String taskKey = "taskKey";
+        String data = "data";
+        Boolean isDraft = true;
+        PcptActivityInst pcptActivityInst = new PcptActivityInst();
+        pcptActivityInst.setPcptInstStatus("STARTED");
+        when(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(anyString(), anyString())).thenReturn(pcptActivityInst);
+        MarkAsFinalActivityDefinitionVersionResp response = participantActivityInstServiceImpl.completeNode(sponsorContext, pcptActivityInstKey, taskKey, data, isDraft);
+        assertNotNull(response);
+        Map<String, Object> expectedVariables = new HashMap<>();
+        expectedVariables.put("draft", data);
+        verify(pemActivitiService).setTaskVariables(taskKey, expectedVariables);
+    }
+
+    @Test
+    public void testGetNodeDetails_success() throws Exception {
+        String sponsorContext = "sponsorContext";
+        String pcptActivityInstKey = "pcptActivityInstKey";
+        String nodeKey = "nodeKey";
+        SponsorInfo sponsorInfo = new SponsorInfo();
+        sponsorInfo.setSponsorKey("sponsorKey");
+        PcptActivityInst pcptActivityInst = new PcptActivityInst();
+        pcptActivityInst.setPcptInstStatus("STARTED");
         TaskDTO taskDTO = new TaskDTO();
         ActivityTaskDto activityTaskDto = new ActivityTaskDto();
-        activityTaskDto.setPcptActivityInstTaskKey("testActivityInstKey");
         when(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(anyString(), anyString())).thenReturn(pcptActivityInst);
-        when(pemActivitiService.getTaskDetails(anyString())).thenReturn(taskDTO);
-        when(mapper.map(taskDTO, ActivityTaskDto.class)).thenReturn(activityTaskDto);
-        MarkAsFinalActivityDefinitionVersionResp response = participantActivityInstServiceImpl.submitTask("sponsorContext", "pcptActivityInstKey", "taskKey","{\"fields\":[{\"id\":\"1f161396-681a-4ae8-b16f-4f4e4ed282ad\",\"type\":\"textinput\",\"labelText\":\"Email\",\"helperText\":\"Enter email\",\"min\":{\"value\":\"3\",\"message\":\"value should be min 3 char\"},\"max\":{\"value\":\"5\",\"message\":\"value should be max 5 char\"},\"isRequired\":{\"value\":true,\"message\":\"isRequired\"}},{\"id\":\"682127c1-f894-488b-97db-5d06bf8dff89\",\"type\":\"textarea\",\"labelText\":\"TextArea\"},{\"id\":\"1488e97a-975d-4822-b223-f0b0fccf6698\",\"type\":\"select\",\"labelText\":\"Select Filed\"},{\"id\":\"7450017e-e15a-4278-86fa-bb00c40069b5\",\"type\":\"checkbox\",\"labelText\":\"Check Box\"},{\"id\":\"a6bcd0f9-842c-4f6f-88f1-f232c2e59a30\",\"type\":\"radio\",\"labelText\":\"Radio\"},{\"id\":\"9431f756-10c0-4ca5-bab1-3ba27d33c0c3\",\"type\":\"toggle\",\"labelText\":\"Toggler\"},{\"id\":\"3b6ed547-f460-4ed7-9cc9-1c47f64e39e7\",\"type\":\"link\",\"labelText\":\"Link\"},{\"id\":\"ed3f7b49-0265-4fbe-8d4a-6be0a9775922\",\"type\":\"datepicker\",\"labelText\":\"Date Picker\"},{\"id\":\"29e61a98-968d-4303-b777-0959927aefe9\",\"type\":\"tab\",\"children\":[{\"id\":\"43969e1c-1490-47d8-b767-86c89bce91b3\",\"tabTitle\":\"Tab-1\",\"children\":[{\"id\":\"6baf6df7-9a83-4ead-be65-4711f6a4f887\",\"type\":\"radio\",\"labelText\":\"Radio Button\"}]},{\"id\":\"f68f60d9-4538-4047-8343-504a927c8a66\",\"tabTitle\":\"tab-2\",\"children\":[{\"id\":\"43989c6a-1e8c-4e40-b02b-743f6e0d3533\",\"type\":\"textarea\",\"labelText\":\"Text Area\"}]}]},{\"id\":\"6d13daa4-da42-4d16-851d-2df2b00fc8af\",\"type\":\"button\",\"labelText\":\"Submit\"}]}");
-        assertEquals("Success", response.getStatus());
+        when(pemActivitiService.getUserNodeDetails(anyString())).thenReturn(taskDTO);
+        when(mapper.map(any(TaskDTO.class), eq(ActivityTaskDto.class))).thenReturn(activityTaskDto);
+        ActivityTaskDto result = participantActivityInstServiceImpl.getNodeDetails(sponsorContext, pcptActivityInstKey, nodeKey);
+        assertNotNull(result);
+        verify(pemActivitiService, times(1)).getUserNodeDetails(nodeKey);
+    }
+
+    @Test
+    public void testSubmitNodeWhenPcptInstIsStartedAndNotDraft() throws Exception {
+        PcptActivityInst pcptActivityInst = new PcptActivityInst();
+        pcptActivityInst.setPcptInstStatus("STARTED");
+        String sponsorContext = "sponsorContext";
+        String pcptActivityInstKey = "pcptActivityInstKey";
+        String nodeKey = "nodeKey";
+        String data = "data";
+        Boolean isDraft = false;
+        when(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(anyString(), anyString())).thenReturn(pcptActivityInst);
+        MarkAsFinalActivityDefinitionVersionResp response = participantActivityInstServiceImpl.completeNode(sponsorContext, pcptActivityInstKey, nodeKey, data, isDraft);
+        assertNotNull(response);
+        verify(pemActivitiService).completeUserNode(nodeKey, data);
+    }
+
+    @Test
+    public void testSubmitNodeWhenPcptInstIsStartedAndDraft() throws Exception {
+        String sponsorContext = "sponsorContext";
+        String pcptActivityInstKey = "pcptActivityInstKey";
+        String nodeKey = "nodeKey";
+        String data = "data";
+        Boolean isDraft = true;
+        PcptActivityInst pcptActivityInst = new PcptActivityInst();
+        pcptActivityInst.setPcptInstStatus("STARTED");
+        when(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(anyString(), anyString())).thenReturn(pcptActivityInst);
+        MarkAsFinalActivityDefinitionVersionResp response = participantActivityInstServiceImpl.completeNode(sponsorContext, pcptActivityInstKey, nodeKey, data, isDraft);
+        assertNotNull(response);
+        Map<String, Object> expectedVariables = new HashMap<>();
+        expectedVariables.put("draft", data);
+        verify(pemActivitiService).setTaskVariables(nodeKey, expectedVariables);
     }
 }

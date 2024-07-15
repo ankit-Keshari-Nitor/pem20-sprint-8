@@ -20,8 +20,7 @@ public class SubProcessHandler extends AbstractNodeHandler {
     public void handleNode(Node node, ObjectNode outputJson, ObjectMapper objectMapper, BpmnConverterRequest request) {
         String type = node.getType();
         BpmnConvertService bpmnConvertService = new BpmnConvertServiceImpl();
-        if(type.equalsIgnoreCase(NodeTypes.PARTNER_SUB_PROCESS.getName()) || type.equalsIgnoreCase(NodeTypes.SYSTEM_SUB_PROCESS.getName())
-        || type.equalsIgnoreCase(NodeTypes.SPONSOR_SUB_PROCESS.getName())){
+        if(isSubProcess(type)){
             String id =  node.getId();
             String name = node.getName();
             String description = node.getDescription();
@@ -41,7 +40,7 @@ public class SubProcessHandler extends AbstractNodeHandler {
             ObjectNode properties = subProcessChildShape.putObject("properties");
             // Map input fields to output JSON
             properties.put("name", type+"-"+name);
-            properties.put("documentation", type+"-"+description);
+            properties.put("documentation",description);
 
             //Recursive Call: This will create Complete Cycle of Nodes within this subNode.
             ObjectNode subNodeOutputJson = generateSubProcessNode(node, objectMapper, request, bpmnConvertService);

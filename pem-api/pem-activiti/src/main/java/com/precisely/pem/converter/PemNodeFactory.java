@@ -126,13 +126,13 @@ public class PemNodeFactory {
         node.setId(gateway.getId());
         node.setName(gateway.getName());
         node.setDescription(gateway.getDocumentation());
-        node.setGatewayType(getExtensionElementsText(gateway, CustomElementTextType.TYPE, 0));
+        node.setGatewayType(getExtensionElementsText(gateway, CustomElementTextType.TYPE));
         node.setType(NodeTypes.EXCLUSIVE_GATEWAY.getName());
         return node;
     }
 
     //We have to make sure whatever order we have added the ExtensionElements in getStringExtensionElement, with that same index we call this method to get its ElementText.
-    private static String getExtensionElementsText(FlowElement flowElement, CustomElementTextType customElementTextType, Integer index) {
+    private static String getExtensionElementsText(FlowElement flowElement, CustomElementTextType customElementTextType) {
         try {
             Map<String,List<ExtensionElement>> extensions = flowElement.getExtensionElements();
             String fieldPrefix = "activiti:field";
@@ -161,13 +161,13 @@ public class PemNodeFactory {
         SubProcess subProcess = (SubProcess) subFlowElement;
         node.setId(subProcess.getId());
         node.setName(subProcess.getName());
-        node.setType(getExtensionElementsText(subProcess,CustomElementTextType.TYPE,0));// we have always added Type as first element in addExtensionElementsToSubProcess.
+        node.setType(getExtensionElementsText(subProcess,CustomElementTextType.TYPE));// we have always added Type as first element in addExtensionElementsToSubProcess.
         node.setDescription(subProcess.getDocumentation());
 
-        String estimateDays = getExtensionElementsText(subProcess,CustomElementTextType.ESTIMATE_DAYS,1);
+        String estimateDays = getExtensionElementsText(subProcess,CustomElementTextType.ESTIMATE_DAYS);
         node.setEstimateDays(StringUtils.isNumeric(estimateDays) ? Integer.parseInt(estimateDays) : null );
         if (NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(node.getType())){
-            node.setShowToPartner(Boolean.parseBoolean(getExtensionElementsText(subProcess,CustomElementTextType.SHOW_TO_PARTNER,2)));
+            node.setShowToPartner(Boolean.parseBoolean(getExtensionElementsText(subProcess,CustomElementTextType.SHOW_TO_PARTNER)));
         }
 
         List<Connector> connectors = new ArrayList<>();

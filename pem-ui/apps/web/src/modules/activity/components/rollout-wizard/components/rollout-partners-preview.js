@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Column, Search, Checkbox, Select, SelectItem } from '@carbon/react';
+import { Grid, Column, TextInput, Search, Select, SelectItem, Checkbox, Accordion, AccordionItem, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 
 import './../../style.scss';
 
@@ -74,8 +74,76 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, showPrevie
         </Grid>
       ) : (
         //TODO
-        <>Implement the Details View of Partners/Attribute/Group</>
-      )}
+        <>
+          <div style={{ fontWeight: '600', margin: '1rem', fontSize: '18px' }}>{selectedViewData?.firstName} {selectedViewData?.lastName} Details</div>
+          <Tabs>
+            <TabList aria-label="List of tabs">
+              <Tab>Organization</Tab>
+              <Tab>Administrators</Tab>
+              <Tab>Users</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <Accordion>
+                  <AccordionItem title='Partner Organization Information'>
+                    <div style={{ marginLeft: '5rem' }}>
+                      <div><strong>Partner Key</strong></div>
+                      <div>{selectedViewData?.partnerKey ? selectedViewData?.partnerKey : 'None'}</div>
+                      <div><strong>Partner Unique ID</strong></div>
+                      <div>{selectedViewData?.partnerUniqueId ? selectedViewData?.partnerUniqueId : 'None'}</div>
+                      <div><strong>Name of Company</strong></div>
+                      <div>{selectedViewData?.nameOfCompany ? selectedViewData?.nameOfCompany : 'None'}</div>
+                      <div><strong>Street address and PO Box </strong></div>
+                      <div>{selectedViewData?.streetAddress ? selectedViewData?.streetAddress : 'None'}</div>
+                      <div><strong>City </strong></div>
+                      <div>{selectedViewData?.city ? selectedViewData?.city : 'None'}</div>
+                      <div><strong>Country/Region </strong></div>
+                      <div>{selectedViewData?.country ? selectedViewData?.country : 'None'}</div>
+                      <div><strong>State/Province </strong></div>
+                      <div>{selectedViewData?.state ? selectedViewData?.state : 'None'}</div>
+                      <div><strong>Zip / Postal Code</strong></div>
+                      <div>{selectedViewData?.zipCode ? selectedViewData?.zipCode : 'None'}</div>
+                      <div><strong>Headquaters Phone</strong></div>
+                      <div>{selectedViewData?.headOfficePhone ? selectedViewData?.headOfficePhone : 'None'}</div>
+                      <div><strong>Website</strong></div>
+                      <div>{'None'}</div>
+                      <div><strong>Invite Status</strong></div>
+                      <div>{selectedViewData?.status?.display ? selectedViewData?.status?.display : 'None'}</div>
+                    </div>
+                  </AccordionItem>
+                  <AccordionItem title='Account Information'>
+                    <div style={{ marginLeft: '5rem' }}>
+                      <div><strong>User ID (Email)</strong></div>
+                      <div>{selectedViewData?.userId ? selectedViewData?.userId : 'None'}</div>
+                      <div><strong>Given name</strong></div>
+                      <div>{selectedViewData?.firstName ? selectedViewData?.firstName : 'None'}</div>
+                      <div><strong>Surname</strong></div>
+                      <div>{selectedViewData?.lastName ? selectedViewData?.lastName : 'None'}</div>
+                      <div><strong>Business role/Title </strong></div>
+                      <div>{'None'}</div>
+                      <div><strong>Alternate email</strong></div>
+                      <div>{'None'}</div>
+                      <div><strong>Phone (Office)</strong></div>
+                      <div>{selectedViewData?.officePhone ? selectedViewData?.officePhone : 'None'}</div>
+                      <div><strong>Phone (Mobile)</strong></div>
+                      <div>{'None'}</div>
+                      <div><strong>Other contact information</strong></div>
+                      <div>{'None'}</div>
+                    </div>
+                  </AccordionItem>
+                </Accordion>
+              </TabPanel>
+              <TabPanel>
+                <div>Administrators</div>
+              </TabPanel>
+              <TabPanel>
+                <div>Users</div>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </>
+      )
+      }
     </>
   );
 }

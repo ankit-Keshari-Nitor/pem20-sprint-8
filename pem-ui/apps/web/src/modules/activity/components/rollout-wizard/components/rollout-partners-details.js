@@ -15,7 +15,12 @@ export default function RolloutPartnersDetails({ handleAddGroups, handleAddAttri
   const handleDetailsViewClick = (viewData, viewType) => {
     setSelectedViewData(viewData);
     setSelectedViewType(viewType);
+    setShowPreview(false)
   };
+
+  const handleOnClose = () => {
+    setShowPreview(true)
+  }
 
   return (
     <Grid className="partners-details-view-container">
@@ -31,7 +36,7 @@ export default function RolloutPartnersDetails({ handleAddGroups, handleAddAttri
         <RightArrow />
       </Column>
       <Column lg={7} className="partners-details-view">
-        <RolloutPartnersPreview rolloutPartnersData={rolloutPartnersData} showPreview={showPreview} selectedViewData={selectedViewData} selectedViewType={selectedViewType} />
+        <RolloutPartnersPreview onClose={handleOnClose} rolloutPartnersData={rolloutPartnersData} showPreview={showPreview} selectedViewData={selectedViewData} selectedViewType={selectedViewType} />
       </Column>
     </Grid>
   );

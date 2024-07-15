@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Grid, Column, TextInput, Search, Select, SelectItem, Checkbox, Accordion, AccordionItem, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
+import { Grid, Column, Search, Select, SelectItem, Checkbox, Accordion, AccordionItem, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 
 import './../../style.scss';
 
-export default function RolloutPartnersPreview({ rolloutPartnersData, showPreview, selectedViewData, selectedViewType }) {
+import { CrossIcon } from '../../../icons';
+
+export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, showPreview, selectedViewData, selectedViewType }) {
   const [searchKey, setSearchKey] = useState('');
   const [selectFilter, setSelectFilter] = useState('all');
 
@@ -75,7 +77,14 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, showPrevie
       ) : (
         //TODO
         <>
-          <div style={{ fontWeight: '600', margin: '1rem', fontSize: '18px' }}>{selectedViewData?.firstName} {selectedViewData?.lastName} Details</div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '1rem' }}>
+            <div style={{ fontWeight: '600', fontSize: '18px' }}>
+              {selectedViewData?.firstName} {selectedViewData?.lastName} Details
+            </div>
+            <div className="close-icon" aria-label="close" onClick={onClose}>
+              <CrossIcon />
+            </div>
+          </div>
           <Tabs>
             <TabList aria-label="List of tabs">
               <Tab>Organization</Tab>

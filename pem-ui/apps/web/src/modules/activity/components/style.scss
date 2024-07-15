@@ -84,6 +84,7 @@
 .partners-details-view {
   background-color: #f4f4f4;
 }
+
 .partners-tab-title {
   font-family: IBM Plex Sans;
   font-size: 15px;
@@ -112,4 +113,20 @@
   letter-spacing: 0.1599999964237213px;
   text-align: left;
   color: #0F62FE;
+}
+
+.partners-data-item {
+  display: flex;
+  color: #0F62FE;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: IBM Plex Sans;
+}
+
+.partner-checkbox-label {
+  cursor: pointer;
+}
+
+.partner-checkbox-label:hover {
+  text-decoration: underline;
 }

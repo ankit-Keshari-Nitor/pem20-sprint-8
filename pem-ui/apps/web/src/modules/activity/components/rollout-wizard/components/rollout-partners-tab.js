@@ -40,13 +40,22 @@ export default function RolloutTradingTab({ handleAddPartners, handleDetailsView
   };
 
   const handleCheck = (item) => {
+    let updatedSelectedPartners;
+    let updatedSelectedPartnersData;
+
     if (!selectedPartners.includes(item.partnerUniqueId)) {
-      setSelectedPartners([...selectedPartners, item.partnerUniqueId]);
-      setSelectedPartnersData([...selectedPartnersData, item]);
+      updatedSelectedPartners = [...selectedPartners, item.partnerUniqueId];
+      updatedSelectedPartnersData = [...selectedPartnersData, item];
     } else {
-      setSelectedPartners(selectedPartners.filter((e) => e !== item.partnerUniqueId));
-      setSelectedPartnersData(selectedPartnersData.filter((e) => e.partnerUniqueId !== item.partnerUniqueId));
+      updatedSelectedPartners = selectedPartners.filter((e) => e !== item.partnerUniqueId);
+      updatedSelectedPartnersData = selectedPartnersData.filter((e) => e.partnerUniqueId !== item.partnerUniqueId);
     }
+
+    setSelectedPartners(updatedSelectedPartners);
+    setSelectedPartnersData(updatedSelectedPartnersData);
+
+    // Update the "Select All" checkbox state
+    setIsChecked(updatedSelectedPartners.length === partnerList.length);
   };
 
   const handleSelectAll = () => {
@@ -104,19 +113,29 @@ export default function RolloutTradingTab({ handleAddPartners, handleDetailsView
             partnerList.map((item) => {
               return (
                 <Column className="col-margin" lg={16}>
-                  <Checkbox
-                    id={item.partnerUniqueId}
-                    labelText={item.firstName + '' + item.lastName}
-                    checked={selectedPartners.includes(item.partnerUniqueId)}
-                    onChange={() => handleCheck(item)}
-                    className="partners-data-item"
-                    onClick={() => handleDetailsViewClick(item, 'partner')}
-                  />
+                  <div className="partners-data-item">
+                    <Checkbox
+                      id={item.partnerUniqueId}
+                      labelText=""
+                      checked={selectedPartners.includes(item.partnerUniqueId)}
+                      onChange={() => handleCheck(item)}
+                      className="checkbox-input"
+                    />
+                    <span
+                      className="partner-checkbox-label"
+                      onClick={() => {
+                        handleDetailsViewClick(item, 'partner');
+                      }}
+                    >
+                      {item.firstName + ' ' + item.lastName}
+                    </span>
+                  </div>
                 </Column>
               );
             })}
         </>
-      )}
-    </Grid>
+      )
+      }
+    </Grid >
   );
 }

@@ -75,7 +75,6 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
           })}
         </Grid>
       ) : (
-        //TODO
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '1rem' }}>
             <div style={{ fontWeight: '600', fontSize: '18px' }}>

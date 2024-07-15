@@ -171,11 +171,10 @@ export default function RolloutDetails(props) {
                 />
               </>
             ) : (
-              <>
+              <div className='partners_tags'>
                 {rolloutPartnersData.selectedPartnersData.length > 0 && (
                   <>
                     {rolloutPartnersData.selectedPartnersData.map((item) => {
-                      console.log('item', item);
                       return (
                         <Tag className="some-class" type="blue" id={`tag-${item.partnerUniqueId}`}  onClose={() => console.log('ankit')}>
                           {item.firstName + '' + item.lastName}
@@ -206,7 +205,7 @@ export default function RolloutDetails(props) {
                     })}
                   </>
                 )}
-              </>
+              </div>
             )}
             <Button className="add-button" kind="secondary" onClick={handleAddClick}>
               Add

@@ -18,8 +18,8 @@ export default function GenericModal({
     <Modal
       open={isOpen}
       modalLabel={modalLabel}
-      onRequestClose={onRequestClose}
       modalHeading={modalHeading}
+      onRequestClose={onRequestClose}
       onRequestSubmit={onPrimaryButtonClick}
       primaryButtonText={primaryButtonText}
       secondaryButtonText={secondaryButtonText}

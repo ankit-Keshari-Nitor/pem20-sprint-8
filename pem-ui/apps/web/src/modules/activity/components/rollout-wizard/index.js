@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import GenericModal from '../../helpers/wrapper-modal';
+import GeneralModal from '../../helpers/wrapper-modal';
 
 import RolloutPartnersDetails from './components/rollout-partners-details';
 import RolloutDetails from './components/rollout-details';
@@ -100,8 +100,8 @@ const ActivityRolloutModal = (props) => {
   };
 
   return (
-    <>
-      <GenericModal
+    <span className='rollout'>
+      <GeneralModal
         isOpen={showModal}
         modalLabel={`Activity Rollout -${activityName}`}
         modalHeading={openAddModal ? 'Adding Partners' : 'Details'}
@@ -128,8 +128,8 @@ const ActivityRolloutModal = (props) => {
             rolloutPartnersData={rolloutPartnersData}
           />
         )}
-      </GenericModal>
-    </>
+      </GeneralModal>
+    </span>
   );
 };
 

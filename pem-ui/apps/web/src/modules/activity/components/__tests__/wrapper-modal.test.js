@@ -13,7 +13,7 @@ describe('GenericModal component', () => {
     const modalHeading = 'Confirmation';
 
     const { getByLabelText, getByText } = render(
-      <GenericModal
+      <GeneralModal
         isOpen={true}
         setIsOpen={setIsOpen}
         primaryButtonText={primaryButtonText}
@@ -24,7 +24,7 @@ describe('GenericModal component', () => {
         onRequestClose={onSecondaryButtonClick}
       >
         {/* You can add children components here if needed */}
-      </GenericModal>
+      </GeneralModal>
     );
 
     expect(getByLabelText(modalHeading)).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('GenericModal component', () => {
   it('calls onRequestClose when the modal is closed', () => {
     const setIsOpen = jest.fn();
     const onRequestClose = setIsOpen;
-    const { getByLabelText } = render(<GenericModal isOpen={true} setIsOpen={setIsOpen} onRequestClose={onRequestClose} />);
+    const { getByLabelText } = render(<GeneralModal isOpen={true} setIsOpen={setIsOpen} onRequestClose={onRequestClose} />);
     fireEvent.click(getByLabelText('Close'));
     expect(setIsOpen).toHaveBeenCalledTimes(1);
   });
@@ -43,7 +43,7 @@ describe('GenericModal component', () => {
   it('calls handlePrimaryButtonClick when the primary button is clicked', () => {
     const handlePrimaryButtonClick = jest.fn();
     const { getByText } = render(
-      <GenericModal
+      <GeneralModal
         isOpen={true}
         onPrimaryButtonClick={handlePrimaryButtonClick} // Pass the function as the onPrimaryButtonClick prop
         primaryButtonText="Mark as final"
@@ -55,7 +55,7 @@ describe('GenericModal component', () => {
 
   it('renders the provided message', () => {
     const message = 'This is a test message';
-    const { getByText } = render(<GenericModal isOpen={true} children={message} />);
+    const { getByText } = render(<GeneralModal isOpen={true} children={message} />);
     expect(getByText(message)).toBeInTheDocument();
   });
 });

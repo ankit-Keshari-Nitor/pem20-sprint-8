@@ -22,7 +22,7 @@ export default function TestWizard({ currentTestData, formRenderSchema }) {
 
   return (
     <div>
-      {currentTestData.name}
+      <h5 style={{ marginBottom: '1rem' }}> {currentTestData.name}</h5>
       <PageDesigner.FormPreview layout={formRenderSchema} componentMapper={componentMapper} renderRow={renderRow} buttonView={false} />
     </div>
   );

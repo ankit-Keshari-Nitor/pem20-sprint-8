@@ -51,20 +51,26 @@ export const minProps = {
   propsName: 'min',
   label: 'Min Length',
   value: {
-    value: '',
+    value: '0',
     message: ''
   },
-  type: 'TextInput'
+  type: 'TextInput',
+  invalid: false,
+  invalidText: 'Only Numbers are allowed',
+  regexPattern: /^[0-9]+$/,
 };
 
 export const maxProps = {
   propsName: 'max',
   label: 'Max Length',
   value: {
-    value: '',
+    value: '20',
     message: ''
   },
-  type: 'TextInput'
+  type: 'TextInput',
+  invalid: false,
+  invalidText: 'Only Numbers are allowed',
+  regexPattern: /^[0-9]+$/,
 };
 
 // New constant for Options type
@@ -112,8 +118,8 @@ export const placeHolder = {
 };
 
 export const valueLabel = {
-  propsName: 'Default Value',
-  label: 'Value',
+  propsName: 'valueLabel',
+  label: 'Default Value',
   value: '',
   type: 'TextInput'
 };
@@ -209,7 +215,9 @@ export const selectRow = {
   propsName: 'selectablerows',
   label: 'Selectable Rows',
   value: false,
-  type: 'Toggle'
+  type: 'Toggle',
+  labelA: 'No',
+  labelB: 'Yes'
 };
 
 export const pageSize = {
@@ -218,3 +226,81 @@ export const pageSize = {
   value: '',
   type: 'TextInput'
 };
+
+export const buttonLabel = {
+  propsName: 'buttonLabel',
+  label: 'Button Label',
+  value: '',
+  type: 'TextInput'
+};
+
+export const fileUploader = {
+  propsName: 'fileUploader',
+  label: 'File Upload',
+  value: '',
+  type: 'FileUpload'
+}
+
+export const mulitipleAllow = {
+  propsName: 'mulitipleAllow',
+  label: 'Multiple Allow',
+  value: false,
+  type: 'Toggle',
+  labelA: 'No',
+  labelB: 'Yes'
+};
+
+export const decodeBase64 = {
+  propsName: 'decodeBase64',
+  label: 'Decode Base64',
+  value: false,
+  type: 'Toggle',
+  labelA: 'No',
+  labelB: 'Yes'
+}
+
+export const extensions = {
+  propsName: 'extensions',
+  label: 'Extensions',
+  type: 'TextInput',
+  invalid: false,
+  invalidText: 'Only comma separated values are allowed',
+  regexPattern: /^[a-zA-Z0-9,]+$/,
+};
+
+
+
+export const maxFileSize = {
+  propsName: 'maxFileSize',
+  label: 'Max File Size',
+  type: 'TextInput',
+  value: '100kb',
+  invalid: false,
+  invalidText: "Invalid size format. Use format like '500b', '500kb', or '500mb'.",
+  regexPattern: /(\d+(\.\d+)?)(b|kb|mb)/i,
+}
+
+export const fontSize = {
+  propsName: 'fontSize',
+  label: 'Font Size',
+  type: 'DropDown',
+  options: [
+    { label: '8px', value: '8px' },
+    { label: '9px', value: '9px' },
+    { label: '10px', value: '10px' },
+    { label: '11px', value: '11px' },
+    { label: '12px', value: '12px' },
+    { label: '14px', value: '14px' },
+    { label: '16px', value: '16px' },
+    { label: '18px', value: '18px' },
+    { label: '20px', value: '20px' },
+    { label: '22px', value: '22px' },
+    { label: '24px', value: '24px' },
+    { label: '26px', value: '26px' },
+    { label: '28px', value: '28px' },
+    { label: '30px', value: '30px' },
+    { label: '32px', value: '32px' },
+    { label: '34px', value: '34px' },
+    { label: '36px', value: '36px' },
+  ],
+}

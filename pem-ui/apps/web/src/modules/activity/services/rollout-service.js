@@ -1,4 +1,4 @@
-import { GROUP_LIST_DATA, ATTRIBUTE_LIST_DATA, PARTNER_LIST_DATA, TEST_DIALOG_DATA } from '../constants';
+import { GROUP_LIST_DATA, ATTRIBUTE_LIST_DATA, PARTNER_LIST_DATA } from '../constants';
 
 // TODO with actual api url
 export const getGroupList = async () => {
@@ -36,15 +36,6 @@ export const getPartnerList = async (selectedPartnerType) => {
       response = PARTNER_LIST_DATA;
     }
     return await response;
-  } catch (error) {
-    console.error('Failed to fetch data:', error);
-    return [];
-  }
-};
-
-export const getTestList = async () => {
-  try {
-    return await TEST_DIALOG_DATA;
   } catch (error) {
     console.error('Failed to fetch data:', error);
     return [];

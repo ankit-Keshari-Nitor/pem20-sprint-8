@@ -4,6 +4,7 @@ import {
   TextInput,
   Button,
   Select,
+  Dropdown,
   SelectItem,
   RadioButtonGroup,
   RadioButton,
@@ -20,9 +21,11 @@ import {
   Column,
   Accordion,
   AccordionItem,
-  Checkbox
+  Checkbox,
+  FileUploader,
+  CheckboxGroup
 } from '@carbon/react';
-
+import { v4 as uuid } from 'uuid';
 import './props-panel.scss';
 import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLE_COLUMNS, TABLE_ROWS } from '../../constants/constants';
 import { collectPaletteEntries } from '../../utils/helpers';
@@ -42,9 +45,12 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
   const [mappingSelectorValue, setMappingSelectorValue] = useState('');
   const [mappedId, setMappedId] = useState('');
   const [mappedKey, setMappedKey] = useState('');
+  const [tableColId, setTableColId] = useState('');
+  const [tableColKey, setTableColKey] = useState('');
   const [mappedPropsName, setMappedPropsName] = useState('');
   const [mappedCurrentPathDetail, setMappedCurrentPathDetail] = useState('');
   const [selectedRadioValue, setSelectedRadioValue] = useState('');
+  const [selectedCheckboxValues, setSelectedCheckboxValues] = useState([]);
 
   const [tableHeader, setTableHeader] = React.useState([]);
   const [tableRows, setTableRows] = React.useState([]);
@@ -74,6 +80,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setTabSubTitle(selectedFiledProps?.component?.tabTitle);
     setComponentType(selectedFiledProps.component.type);
     setComponentTypes(collectPaletteEntries(componentMapper));
+    setSelectedCheckboxValues(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.type === 'checkbox')?.value || []);
     setSelectedRadioValue(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.type === 'radio')?.value || '');
     setOptions(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.type === 'Options')?.value || []);
     setTableHeader(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.propsName === TABLE_COLUMNS)?.value || []);
@@ -83,6 +90,18 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
   const handleChange = (e) => {
     columnSizeCustomization(e.target.value, selectedFiledProps.currentPathDetail);
     setComponentStyle([{ labelText: 'Column Size', text: e.target.value }]);
+  };
+
+  const handleFileChange = (e, key, propsName, selectedFiledProps) => {
+    const file = e.target?.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result.split(',')[1]; // Get the base64 string
+        handleSchemaChanges(selectedFiledProps?.id, key, propsName, file.name + '/' + base64String, selectedFiledProps?.currentPathDetail);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleAddOption = () => {
@@ -150,16 +169,29 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     handleSchemaChanges(id, 'advance', propsName, newValue, path);
   };
 
-  const OpenMappingDialog = (id, key, propsName, currentPathDetail) => {
+  const handleCheckboxGroupChange = (e, propsName) => {
+    const value = e.target.value;
+    setSelectedCheckboxValues((prevValues) => {
+      const newValues = prevValues.includes(value) ? prevValues.filter((val) => val !== value) : [...prevValues, value];
+      handleSchemaChanges(selectedFiledProps?.id, 'Basic', propsName, newValues, selectedFiledProps?.currentPathDetail);
+      return newValues;
+    });
+  };
+
+  const OpenMappingDialog = (id, key, propsName, currentPathDetail, columnId = null, columnKey = null) => {
     setOpenMappingDialog(true);
     setMappedId(id);
     setMappedKey(key);
     setMappedPropsName(propsName);
+    setTableColId(columnId);
+    setTableColKey(columnKey);
     setMappedCurrentPathDetail(currentPathDetail);
   };
 
   const mappingSelector = (selectedValue) => {
-    handleSchemaChanges(mappedId, mappedKey, mappedPropsName, selectedValue, mappedCurrentPathDetail);
+    mappedPropsName === TABLE_ROWS
+      ? handleRowOpt(tableColId, selectedValue, tableColKey)
+      : handleSchemaChanges(mappedId, mappedKey, mappedPropsName, selectedValue, mappedCurrentPathDetail);
     setMappingSelectorValue(selectedValue);
     setOpenMappingDialog(false);
   };
@@ -207,7 +239,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     tableolumns.map((item) => {
       tableRow[item.key] = '';
     });
-    setTableRows((preRows) => [...preRows, { id: 'a', ...tableRow }]);
+    setTableRows((preRows) => [...preRows, { id: uuid(), ...tableRow }]);
   };
 
   const handleRowOpt = (index, value, key) => {
@@ -219,10 +251,16 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     });
   };
 
+  const handleTableRowdelete = (index) => {
+    tableRows.splice(index, 1);
+    setTableHeader(tableRows);
+    handleSchemaChanges(selectedFiledProps?.id, 'Basic', TABLE_ROWS, tableRows, selectedFiledProps?.currentPathDetail);
+  };
+
   const handleTableColumn = (index) => {
-    const updatedHeader = tableHeader.splice(index, 1);
-    setTableHeader(updatedHeader);
-    handleSchemaChanges(selectedFiledProps?.id, 'Basic', TABLE_COLUMNS, updatedHeader, selectedFiledProps?.currentPathDetail);
+    tableHeader.splice(index, 1);
+    setTableHeader(tableHeader);
+    handleSchemaChanges(selectedFiledProps?.id, 'Basic', TABLE_COLUMNS, tableHeader, selectedFiledProps?.currentPathDetail);
   };
 
   return (
@@ -340,25 +378,80 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       </RadioButtonGroup>
                                     </div>
                                   )}
+                                  {/* CheckBox */}
+                                  {key === 'Basic' && item.type === 'checkbox' && (
+                                    <div className="right-palette-form-item">
+                                      <CheckboxGroup
+                                        legendText={item.label}
+                                        name={`checkbox-group-${selectedFiledProps?.id}`}
+                                        onChange={(e) => handleCheckboxGroupChange(e, item.propsName)}
+                                      >
+                                        {item?.options.length > 0 &&
+                                          item?.options.map((option, idx) =>
+                                            option?.value ? (
+                                              <Checkbox
+                                                id={selectedFiledProps?.id + idx}
+                                                labelText={option.label}
+                                                value={option.value}
+                                                checked={selectedCheckboxValues.includes(option.value)}
+                                              />
+                                            ) : null
+                                          )}
+                                      </CheckboxGroup>
+                                    </div>
+                                  )}
+                                  {/* DropDown */}
+                                  {key === 'Basic' && item.type === 'DropDown' && (
+                                    <div className="right-palette-form-item">
+                                      <Dropdown
+                                        id={item.propsName}
+                                        items={item.options}
+                                        selectedItem={item.value}
+                                        titleText={item.label}
+                                        onChange={({ selectedItem }) =>
+                                          handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, selectedItem, selectedFiledProps?.currentPathDetail)
+                                        }
+                                      />
+                                    </div>
+                                  )}
+                                  {/* File Uploader */}
+                                  {key === 'Basic' && item.type === 'FileUpload' && (
+                                    <div className="right-palette-form-item">
+                                      <FileUploader
+                                        labelTitle="File Attachment"
+                                        labelDescription=""
+                                        buttonLabel="Select"
+                                        buttonKind="primary"
+                                        size="sm"
+                                        filenameStatus="edit"
+                                        multiple={false}
+                                        iconDescription="Delete file"
+                                        name=""
+                                        onChange={(e) => handleFileChange(e, key, item.propsName, selectedFiledProps)}
+                                        onDelete={() => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, '', selectedFiledProps?.currentPathDetail)}
+                                      />
+                                    </div>
+                                  )}
                                   {/* Table Column */}
                                   {key === 'Basic' && item.propsName === TABLE_COLUMNS && (
-                                    <div className="table-header">
+                                    <div className="table-col-header">
                                       <span>
-                                        <label>Column Column</label>
+                                        <label>Table Column</label>
                                         <Button size="sm" onClick={handleAddHeader} className="add-header">
                                           Add Column
                                         </Button>
                                       </span>
                                       <Accordion>
                                         {tableHeader.map((header, index) => (
-                                          <AccordionItem title={`Column-${index}`}>
+                                          <AccordionItem title={`Column-${index + 1}`}>
                                             <TextInput
                                               key={`key-${idx}-${index}`}
                                               id={String(`key-${idx}`)}
                                               className="right-palette-form-item "
                                               labelText={'Key'}
+                                              helperText={'Space is not allowed'}
                                               value={header?.key}
-                                              onChange={(e) => handleHeaderChange(index, e.target.value, 'key')}
+                                              onChange={(e) => handleHeaderChange(index, e.target.value.replace(/\s+/g, ''), 'key')}
                                             />
                                             <TextInput
                                               key={`value-${idx}-${index}`}
@@ -368,21 +461,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                               value={header?.header}
                                               onChange={(e) => handleHeaderChange(index, e.target.value, 'header')}
                                             />
-                                            {/* <TextInput
-                                              key={`colspan-${idx}-${index}`}
-                                              id={String(`colspan-${idx}`)}
-                                              className="right-palette-form-item "
-                                              labelText={'Column Width'}
-                                              value={header?.colSpan}
-                                              onChange={(e) => handleHeaderChange(index, e.target.value, 'colSpan')}
-                                            /> */}
-                                            {/* <Checkbox
-                                              key={`searchable-${idx}-${index}`}
-                                              id={`searchable-${idx}-${index}`}
-                                              labelText="Searchable"
-                                              checked={header.searchable}
-                                              onChange={(e) => handleHeaderChange(index, !header?.searchable, 'searchable')}
-                                            /> */}
                                             <Checkbox
                                               key={`sortable-${idx}-${index}`}
                                               id={`sortable-${idx}-${index}`}
@@ -390,25 +468,16 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                               checked={header.sortable}
                                               onChange={(e) => handleHeaderChange(index, !header?.sortable, 'sortable')}
                                             />
-                                            {/* <Checkbox
-                                              key={`required-${idx}-${index}`}
-                                              id={`required-${idx}-${index}`}
-                                              labelText="Required"
-                                              checked={header.required}
-                                              onChange={(e) => handleHeaderChange(index, !header?.required, 'required')}
-                                            /> */}
+                                            <Checkbox
+                                              key={`searchable-${idx}-${index}`}
+                                              id={`searchable-${idx}-${index}`}
+                                              labelText="Searchable"
+                                              checked={header.searchable}
+                                              onChange={(e) => handleHeaderChange(index, !header?.searchable, 'searchable')}
+                                            />
                                             <Button size="sm" className="delete-table-column" onClick={() => handleTableColumn(index)}>
                                               Delete Column
                                             </Button>
-                                            {/* <Toggle 
-                                                key={`searchable-${idx}-${index}`}
-                                                id={String(`searchable-${idx}-${index}`)}
-                                                //labelText={''}
-                                                defaultToggled={Boolean(false)}
-                                                toggled={Boolean(false)}
-                                                //onClick={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, !item.value, selectedFiledProps?.currentPathDetail)}
-                                                hideLabel
-                                              /> */}
                                           </AccordionItem>
                                         ))}
                                       </Accordion>
@@ -426,27 +495,34 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       <Accordion>
                                         {tableRows.map((rowValue, index) => (
                                           <AccordionItem title={`Row-${index}`}>
-                                            {/* <Select id={String(idx)} labelText="Column" onChange={(e)=>handleRowOpt(index,e.target.value)}>
-                                            {tableHeader.map((item, index) => {
-                                              return <SelectItem key={index} value={item.key} text={item.key} />;
-                                            })}
-                                          </Select> */}
-                                            {tableHeader.map((item, colidex) => {
+                                            {tableHeader.map((rowitem, colidex) => {
                                               return (
-                                                <TextInput
-                                                  key={`${item.key}-${idx}-${colidex}`}
-                                                  id={String(`${item.key}-${idx}`)}
-                                                  className="right-palette-form-item "
-                                                  labelText={item.key}
-                                                  value={rowValue[item.key]}
-                                                  onChange={(e) => handleRowOpt(index, e.target.value, item.key)}
-                                                />
+                                                <>
+                                                  <TextInput
+                                                    key={`${rowitem.key}-${idx}-${colidex}`}
+                                                    id={String(`${rowitem.key}-${idx}`)}
+                                                    className="right-palette-form-item-mapping"
+                                                    labelText={rowitem.key}
+                                                    value={rowValue[rowitem.key]}
+                                                    onChange={(e) => handleRowOpt(index, e.target.value, rowitem.key)}
+                                                  />
+                                                  <Button
+                                                    size="md"
+                                                    className="opt-btn"
+                                                    kind="secondary"
+                                                    renderIcon={ElippsisIcon}
+                                                    onClick={() =>
+                                                      OpenMappingDialog(selectedFiledProps?.id, key, item.propsName, selectedFiledProps?.currentPathDetail, index, rowitem.key)
+                                                    }
+                                                  ></Button>
+                                                  <br />
+                                                </>
                                               );
                                             })}
 
-                                            <Button size="sm" className="delete-table-column">
+                                            {/* <Button size="sm" className="delete-table-column" onClick={()=> handleTableRowdelete(index)}>
                                               Delete Row
-                                            </Button>
+                                            </Button> */}
                                           </AccordionItem>
                                         ))}
                                       </Accordion>
@@ -594,7 +670,9 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                               id={String(idx)}
                               className="right-palette-form-item"
                               labelText={advncProps.label}
-                              value={advncProps.value.value}
+                              value={advncProps?.value?.value}
+                              invalid={advncProps.invalid ? advncProps.invalid : false}
+                              invalidText={advncProps.invalidText ? advncProps.invalidText : null}
                               onChange={(e) => {
                                 if (isNaN(e.target.value)) {
                                   e.preventDefault();
@@ -645,52 +723,52 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                 key={`${idx}-'message'`}
                                 id={String(idx)}
                                 className="right-palette-form-item"
-                                labelText={'Message'}
+                                labelText={'Regex Message'}
                                 value={advncProps.value.message}
                                 onChange={(e) => {
                                   if (isNaN(e.target.value)) {
                                     e.preventDefault();
                                     advncProps.type === OPTIONS
                                       ? handleSchemaChanges(
-                                          selectedFiledProps?.id,
-                                          'advance',
-                                          advncProps.propsName,
-                                          { ...advncProps.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
-                                          selectedFiledProps?.currentPathDetail
-                                        )
+                                        selectedFiledProps?.id,
+                                        'advance',
+                                        advncProps.propsName,
+                                        { ...advncProps.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
+                                        selectedFiledProps?.currentPathDetail
+                                      )
                                       : handleSchemaChanges(
-                                          selectedFiledProps?.id,
-                                          'advance',
-                                          advncProps.propsName,
-                                          {
-                                            value: advncProps.value.value,
-                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
-                                          },
-                                          selectedFiledProps?.currentPathDetail
-                                        );
+                                        selectedFiledProps?.id,
+                                        'advance',
+                                        advncProps.propsName,
+                                        {
+                                          value: advncProps.value.value,
+                                          message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                        },
+                                        selectedFiledProps?.currentPathDetail
+                                      );
                                   } else {
                                     advncProps.type === OPTIONS
                                       ? handleSchemaChanges(
-                                          selectedFiledProps?.id,
-                                          'advance',
-                                          advncProps.propsName,
-                                          {
-                                            pattern: advncProps.value.pattern,
-                                            value: advncProps.value.value,
-                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
-                                          },
-                                          selectedFiledProps?.currentPathDetail
-                                        )
+                                        selectedFiledProps?.id,
+                                        'advance',
+                                        advncProps.propsName,
+                                        {
+                                          pattern: advncProps.value.pattern,
+                                          value: advncProps.value.value,
+                                          message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                        },
+                                        selectedFiledProps?.currentPathDetail
+                                      )
                                       : handleSchemaChanges(
-                                          selectedFiledProps?.id,
-                                          'advance',
-                                          advncProps.propsName,
-                                          {
-                                            value: advncProps.value.value,
-                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
-                                          },
-                                          selectedFiledProps?.currentPathDetail
-                                        );
+                                        selectedFiledProps?.id,
+                                        'advance',
+                                        advncProps.propsName,
+                                        {
+                                          value: advncProps.value.value,
+                                          message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                        },
+                                        selectedFiledProps?.currentPathDetail
+                                      );
                                   }
                                 }}
                               />
@@ -774,9 +852,9 @@ function getValidationMessage(label, propertiesName, value) {
     case 'isRequired':
       return 'This is a required field';
     case 'min':
-      return label + ' must be at least ' + value + 'characters';
+      return label + ' must be at least ' + value + ' characters';
     case 'max':
-      return label + ' must be no longer than ' + value + 'characters';
+      return label + ' must be no longer than ' + value + ' characters';
     case 'regexValidation':
       return value;
     default:

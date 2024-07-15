@@ -460,22 +460,41 @@ export const formValidation = (formLayout) => {
     switch (fieldItem.type) {
       case COMPONENT: {
         fieldItem.component.invalid = false;
+        // Check required field
         if (fieldItem.component?.isRequired?.value && (fieldItem.component?.value === undefined || fieldItem.component?.value.length <= 0)) {
           fieldItem.component.invalid = true;
           fieldItem.component.invalidText = fieldItem.component?.isRequired.message;
         }
+        // Check minimum length
         if (fieldItem.component?.min?.value && fieldItem.component?.value !== undefined && fieldItem.component?.value.length < Number(fieldItem.component?.min?.value.trim())) {
           fieldItem.component.invalid = true;
           fieldItem.component.invalidText = fieldItem.component?.min.message;
         }
+        // Check maximum length
         if (fieldItem.component?.max?.value && fieldItem.component?.value !== undefined && fieldItem.component?.value.length > Number(fieldItem.component?.max?.value.trim())) {
           fieldItem.component.invalid = true;
           fieldItem.component.invalidText = fieldItem.component?.max.message;
         }
+        // Regex validation
         if (fieldItem.component?.regexValidation?.value && fieldItem.component?.regexValidation?.value !== undefined) {
           const isValueValid = validateRegex(fieldItem.component?.value, fieldItem.component?.regexValidation);
           fieldItem.component.invalid = isValueValid;
           fieldItem.component.invalidText = fieldItem.component?.regexValidation.message;
+        }
+        // Additional checks for number input
+        if (fieldItem.component?.type === 'numberinput') {
+          const value = Number(fieldItem.component?.value);
+          const minValue = Number(fieldItem.component.min?.value);
+          const maxValue = Number(fieldItem.component.max?.value);
+
+          if (!isNaN(minValue) && value < minValue) {
+            fieldItem.component.invalid = true;
+            fieldItem.component.invalidText = fieldItem.component?.min.message;
+          }
+          if (!isNaN(maxValue) && value > maxValue) {
+            fieldItem.component.invalid = true;
+            fieldItem.component.invalidText = fieldItem.component?.max.message;
+          }
         }
         break;
       }
@@ -527,3 +546,7 @@ export const collectPaletteEntries = (formFields) => {
     })
     .filter(({ type }) => type !== 'default');
 };
+
+// Capitalize the first letter of a string
+export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+

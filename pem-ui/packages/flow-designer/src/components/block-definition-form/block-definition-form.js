@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 
 import './block-definition-form.scss';
 import useTaskStore from '../../store';
-import ExitValidationFrom from '../exit-validation-form';
-import { COMPONENT_MAPPER, FORM_TEMPLATE, NODE_TYPE } from '../../constants';
+import { COMPONENT_MAPPER, FORM_TEMPLATE, INITIAL_QUERY, NODE_TYPE } from '../../constants';
+import ConditionalBuilder from '../condition-builder';
 
 export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode = null, schema, readOnly }) {
   schema.fields = schema.fields.map((item) => ({ ...item, isReadOnly: readOnly }));
@@ -14,6 +14,14 @@ export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode
   const editDialog = useTaskStore((state) => state.editDialogNodePros);
   let initialValues = {};
   initialValues.name = selectedNode.id;
+
+  const [query, setQuery] = useState(INITIAL_QUERY);
+  const [errorMessage, setErrorMessage] = useState(selectedNode?.data?.exitValidationMessage);
+
+  useEffect(() => {
+    setQuery(selectedNode?.data?.exitValidationQuery);
+    setErrorMessage(selectedNode?.data?.exitValidationMessage);
+  }, [selectedNode]);
 
   const onSubmitDefinitionForm = (values) => {
     if (selectedNode.type === NODE_TYPE.API || selectedNode.type === NODE_TYPE.DIALOG || selectedNode.type === NODE_TYPE.XSLT) {
@@ -27,11 +35,15 @@ export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode
     setOpenCancelDialog(true);
   };
 
-  const onSubmitExitValidationForm = (query) => {
+  const onSubmitExitValidationForm = (modifiedQuery, errorMessage) => {
     if (selectedNode.type === NODE_TYPE.API || selectedNode.type === NODE_TYPE.DIALOG || selectedNode.type === NODE_TYPE.XSLT) {
-      editDialog(selectedNode, selectedTaskNode, 'exitValidationData', query);
+      editDialog(selectedNode, selectedTaskNode, 'exitValidationQuery', query);
+      editDialog(selectedNode, selectedTaskNode, 'validateExitValidationQuery', modifiedQuery);
+      editDialog(selectedNode, selectedTaskNode, 'exitValidationMessage', errorMessage);
     } else {
-      editTask(selectedNode, 'exitValidationData', query);
+      editTask(selectedNode, 'exitValidationQuery', query);
+      editTask(selectedNode, 'validateExitValidationQuery', modifiedQuery);
+      editTask(selectedNode, 'exitValidationMessage', errorMessage);
     }
   };
 
@@ -69,7 +81,15 @@ export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>
-            <ExitValidationFrom setOpenCancelDialog={onCancelDefinitionForm} onSubmitExitValidationForm={onSubmitExitValidationForm} readOnly={readOnly} />
+            <ConditionalBuilder
+              setOpenCancelDialog={onCancelDefinitionForm}
+              onSubmitExitValidationForm={onSubmitExitValidationForm}
+              readOnly={readOnly}
+              query={query}
+              setQuery={setQuery}
+              errorMessage={errorMessage}
+              setErrorMessage={setErrorMessage}
+            />
           </TabPanel>
         </TabPanels>
       </Tabs>

@@ -19,7 +19,8 @@ export const FORM_FIELD_TYPE = {
   RADIO: 'radio',
   NUMBER: 'numberinput',
   SWITCH: 'switch',
-  DATATABLE: 'data-table'
+  DATATABLE: 'data-table',
+  FILE_DOWNLOADER:'filedownloader'
 };
 
 export const FORM_FIELD_LABEL = {
@@ -43,7 +44,8 @@ export const FORM_FIELD_LABEL = {
   BUTTON: 'Button',
   CHECKBOX: 'Checkbox',
   RADIO: 'Radio',
-  DATATABLE: 'Data Table'
+  DATATABLE: 'Data Table',
+  FILE_DOWNLOADER:'File Downloader'
 };
 
 export const FORM_FIELD_GROUPS = {

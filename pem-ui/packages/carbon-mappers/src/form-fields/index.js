@@ -15,23 +15,25 @@ import Tooltip from './tooltip';
 import Password from './password';
 import NumberInput from './number';
 import DataTable from './data-table';
+import FileDownload from './file-download';
 
 export const formFields = [
   Group,
+  Text,
   TextInput,
   Textarea,
-  Text,
   Password,
-  NumberInput,
-  Select,
-  CheckboxGroup,
   RadioButtonGroup,
+  CheckboxGroup,
+  Select,
   Toggle,
+  NumberInput,
   Link,
   Tooltip,
+  FileUploader,
+  FileDownload,
   DataTable,
   DatePicker,
-  FileUploader,
   Accordion,
   Tab
 ];

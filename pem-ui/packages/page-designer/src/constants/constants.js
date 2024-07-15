@@ -13,12 +13,15 @@ export const CUSTOM_TITLE = 'customTitle';
 export const TEXT_INPUT = 'textinput';
 export const NAME = 'name';
 export const REGEXVALIDATION = 'regexValidation';
+export const MAXPROPS = 'max';
+export const MINPROPS = 'min';
 export const OPTIONS = 'Options';
 export const CUSTOMREGEX = 'customRegex';
 export const DATATABLE = 'data-table';
 export const TABLE_COLUMNS = 'tableColumns';
 export const TABLE_ROWS = 'tableRows';
 export const LABEL_TEXT = 'labelText';
+export const ISREQUIRED = 'isRequired';
 
 export const PALETTE_GROUPS = [
   {
@@ -50,20 +53,20 @@ export const INITIAL_DATA = {
 
 export const TABLE_HEADER = [
   {
-    key: 'column0',
-    header: 'column0',
+    key: 'column1',
+    header: 'column1',
     colSpan: '6',
     searchable: false,
     sortable: false,
     required: false
   },
   {
-    key: 'column1',
-    header: 'column1',
+    key: 'column2',
+    header: 'column2',
     colSpan: '6',
-    Searchable: false,
-    Sortable: false,
-    Required: false
+    searchable: false,
+    sortable: false,
+    required: false
   }
 ];
 

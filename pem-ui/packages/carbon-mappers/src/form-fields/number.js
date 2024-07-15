@@ -7,44 +7,45 @@ import {
   readOnly,
   helperText,
   placeHolder,
-  regexValidation,
   NameLabel,
   FORM_FIELD_LABEL,
   FORM_FIELD_GROUPS,
   isRequired,
   labelText,
-  id,
-  isDisabled
+  id
 } from '../constant';
 import { CharacterWholeNumber } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.NUMBER;
 
 const NumberInput = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
-  const { labelText, helperText, disabled, label, value, isRequired, min, max, ...rest } = field;
-  const [fieldValue, setFieldValue] = useState();
+  const { labelText, helperText, readOnly, label, value, isRequired, min, max, ...rest } = field;
+  const [fieldValue, setFieldValue] = useState(0);
 
   useEffect(() => {
     if (previewMode) {
-      setFieldValue(value ? value : '');
+      setFieldValue(value ? value : 0);
     }
   }, [field, previewMode, value]);
 
   return (
     <>
       <CarbonNumberInput
-        type={FORM_FIELD_TYPE.TEXT}
         data-testid={id}
         id={id}
         label={labelText === undefined ? label : labelText}
         helperText={helperText}
-        disabled={disabled}
-        defaultValue={0}
+        readOnly={readOnly}
         value={fieldValue}
-        onChange={(e) => {
-          previewMode && onChangeHandle(currentPath, e.target.value);
-          setFieldValue(e.target.value);
+        onChange={(e, data) => {
+          previewMode && onChangeHandle(currentPath, data.value);
+          setFieldValue(data.value);
         }}
+        onKeyUp={(e) => {
+          e.preventDefault();
+        }}
+        min={parseInt(min?.value)}
+        max={parseInt(max?.value)}
         {...rest}
       />
     </>
@@ -63,5 +64,5 @@ NumberInput.config = {
     Basic: [id, NameLabel, labelText, placeHolder, helperText, readOnly],
     Condition: []
   },
-  advanceProps: [minProps, maxProps, regexValidation, isRequired]
+  advanceProps: [minProps, maxProps, isRequired]
 };

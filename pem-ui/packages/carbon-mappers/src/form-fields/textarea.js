@@ -23,12 +23,12 @@ import { TextAreaIcon } from '../icons';
 const type = FORM_FIELD_TYPE.TEXT_AREA;
 
 const TextArea = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
-  const { labelText, label, height, readOnly, isRequired, value, min, max, ...rest } = field;
+  const { labelText, label, height, readOnly, isRequired, value, min, max, valueLabel, ...rest } = field;
   const [fieldValue, setFieldValue] = useState();
 
   useEffect(() => {
     if (previewMode) {
-      setFieldValue(value ? value : '');
+      setFieldValue(value ? value : valueLabel);
     }
   }, [field, previewMode, value]);
 
@@ -38,7 +38,9 @@ const TextArea = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
       rows={height}
       data-testid={id}
       labelText={labelText === undefined ? label : labelText}
+      defaultValue={valueLabel}
       value={fieldValue}
+      readOnly={readOnly}
       onChange={(e) => {
         previewMode && onChangeHandle(currentPath, e.target.value);
         setFieldValue(e.target.value);

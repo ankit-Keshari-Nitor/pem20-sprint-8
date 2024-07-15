@@ -3,7 +3,7 @@ import { Grid, Column, Checkbox, Select, SelectItem, Button, Search } from '@car
 import * as RolloutService from '../../../services/rollout-service';
 import './../../style.scss';
 
-export default function RolloutAttributeTab({ handleAddAttributes }) {
+export default function RolloutAttributeTab({ handleAddAttributes, handleDetailsViewClick }) {
   const [attributeTypeList, setAttributeTypeList] = useState([]);
   const [selectedAttributeType, setSelectedAttributeType] = useState('');
   const [attributeList, setAttributeList] = useState([]);
@@ -121,6 +121,7 @@ export default function RolloutAttributeTab({ handleAddAttributes }) {
                     checked={selectedAttributes.includes(item.attributeValueKey)}
                     onChange={() => handleCheck(item)}
                     className='partners-data-item'
+                    onClick={() => handleDetailsViewClick(item, 'attribute')}
                   />
                 </Column>
               );

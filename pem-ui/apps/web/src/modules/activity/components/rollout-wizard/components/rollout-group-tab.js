@@ -4,7 +4,7 @@ import * as RolloutService from '../../../services/rollout-service';
 
 import './../../style.scss';
 
-export default function RolloutGroupTab({ handleAddGroups }) {
+export default function RolloutGroupTab({ handleAddGroups, handleDetailsViewClick }) {
   const [groupList, setGroupList] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
   const [selectedGroups, setSelectedGroups] = React.useState([]);
@@ -62,7 +62,14 @@ export default function RolloutGroupTab({ handleAddGroups }) {
         groupList.map((item) => {
           return (
             <Column className="col-margin" lg={16}>
-              <Checkbox id={item.key} labelText={item.value} checked={selectedGroups.includes(item.key)} onChange={() => handleCheck(item)} className='partners-data-item'/>
+              <Checkbox
+                id={item.key}
+                labelText={item.value}
+                checked={selectedGroups.includes(item.key)}
+                onChange={() => handleCheck(item)}
+                className="partners-data-item"
+                onClick={() => handleDetailsViewClick(item, 'group')}
+              />
             </Column>
           );
         })}

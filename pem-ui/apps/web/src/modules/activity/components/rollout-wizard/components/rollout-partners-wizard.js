@@ -8,7 +8,7 @@ import RolloutAttributeTab from './rollout-attributes-tab';
 
 import './../../style.scss';
 
-export default function RolloutPartnersWizard({ id, handleAddGroups, handleAddAttributes, handleAddPartners }) {
+export default function RolloutPartnersWizard({ id, handleAddGroups, handleAddAttributes, handleAddPartners, handleDetailsViewClick }) {
   return (
     <div data-testid={id}>
       <Tabs>
@@ -28,13 +28,13 @@ export default function RolloutPartnersWizard({ id, handleAddGroups, handleAddAt
         </TabList>
         <TabPanels>
           <TabPanel>
-            <RolloutTradingTab handleAddPartners={handleAddPartners} />
+            <RolloutTradingTab handleAddPartners={handleAddPartners} handleDetailsViewClick={handleDetailsViewClick} />
           </TabPanel>
           <TabPanel>
-            <RolloutAttributeTab handleAddAttributes={handleAddAttributes} />
+            <RolloutAttributeTab handleAddAttributes={handleAddAttributes} handleDetailsViewClick={handleDetailsViewClick}  />
           </TabPanel>
           <TabPanel>
-            <RolloutGroupTab handleAddGroups={handleAddGroups} />
+            <RolloutGroupTab handleAddGroups={handleAddGroups} handleDetailsViewClick={handleDetailsViewClick}  />
           </TabPanel>
         </TabPanels>
       </Tabs>

@@ -4,7 +4,7 @@ import * as RolloutService from '../../../services/rollout-service';
 
 import './../../style.scss';
 
-export default function RolloutTradingTab({ handleAddPartners }) {
+export default function RolloutTradingTab({ handleAddPartners, handleDetailsViewClick }) {
   const [selectedPartnerType, setSelectedPartnerType] = useState('');
   const [partnerList, setPartnerList] = useState([]);
   const [searchKey, setSearchKey] = useState('');
@@ -104,7 +104,8 @@ export default function RolloutTradingTab({ handleAddPartners }) {
                     labelText={item.firstName + '' + item.lastName}
                     checked={selectedPartners.includes(item.partnerUniqueId)}
                     onChange={() => handleCheck(item)}
-                    className='partners-data-item'
+                    className="partners-data-item"
+                    onClick={() => handleDetailsViewClick(item, 'partner')}
                   />
                 </Column>
               );

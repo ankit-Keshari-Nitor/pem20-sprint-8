@@ -1,4 +1,4 @@
-.generic-modal > .cds--modal-container {
+.rollout .generic-modal > .cds--modal-container {
   @media (min-width: 82rem) {
     inline-size: 75%;
     min-height: 680px;
@@ -11,13 +11,13 @@
   }
 }
 
-.generic-modal > .cds--modal-container-body {
+.rollout .generic-modal > .cds--modal-container-body {
   .page-content {
     display: contents;
   }
 }
 
-.generic-modal > .cds--modal-lg {
+.rollout .generic-modal > .cds--modal-lg {
   .cds--modal-container {
     height: 100%;
   }

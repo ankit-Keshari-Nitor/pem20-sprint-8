@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Column, Checkbox, Select, SelectItem, Button, Search } from '@carbon/react';
 import * as RolloutService from '../../../services/rollout-service';
-
+import { Add } from '@carbon/icons-react';
 import './../../style.scss';
 
 export default function RolloutTradingTab({ handleAddPartners, handleDetailsViewClick }) {
-  const [selectedPartnerType, setSelectedPartnerType] = useState('');
+  const [selectedPartnerType, setSelectedPartnerType] = useState('company-id');
   const [partnerList, setPartnerList] = useState([]);
   const [searchKey, setSearchKey] = useState('');
 
@@ -24,7 +24,13 @@ export default function RolloutTradingTab({ handleAddPartners, handleDetailsView
   }, [searchKey, selectedPartnerType]);
 
   const getTradingPartnerList = async (type, searchKey) => {
-    const response = await RolloutService.getPartnerList(type, searchKey);
+    let param = {};
+    if (type === 'user-id' && searchKey != '') {
+      param = { userId: `con:${searchKey}` };
+    } else if (type === 'company-id' && searchKey != '') {
+      param = { searchText: searchKey };
+    }
+    const response = await RolloutService.getPartnerList(param);
     setPartnerList(response);
   };
 
@@ -72,7 +78,6 @@ export default function RolloutTradingTab({ handleAddPartners, handleDetailsView
       </Column>
       <Column className="col-margin" lg={8}>
         <Select id={`trading-partners-select`} labelText="" onChange={handleOnChangeType}>
-          <SelectItem value="" text="None" />
           <SelectItem value="company-id" text="Company/Unique ID" />
           <SelectItem value="user-id" text="User ID (Email)" />
         </Select>
@@ -90,7 +95,7 @@ export default function RolloutTradingTab({ handleAddPartners, handleDetailsView
           </Column>
           {selectedPartners.length > 0 && (
             <Column className="col-margin" lg={8}>
-              <Button size="sm" onClick={() => handleAddPartners(selectedPartnersData)}>
+              <Button size="sm" className="new-button" renderIcon={Add} onClick={() => handleAddPartners(selectedPartnersData)}>
                 Add
               </Button>
             </Column>

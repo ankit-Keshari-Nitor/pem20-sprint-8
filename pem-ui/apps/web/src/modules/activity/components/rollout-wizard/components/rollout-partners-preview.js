@@ -4,7 +4,6 @@ import { Grid, Column, TextInput, Checkbox } from '@carbon/react';
 import './../../style.scss';
 
 export default function RolloutPartnersPreview({ rolloutPartnersData, showPreview, selectedViewData, selectedViewType }) {
-  console.log('viewData, viewType', selectedViewData, selectedViewType);
   return (
     <>
       {showPreview ? (

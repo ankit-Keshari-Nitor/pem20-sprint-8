@@ -219,12 +219,12 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     private String validateAndGetContextData(PemBpmnModel pemBpmnModel) throws BpmnConverterException {
         try {
             // Parse and validate the JSON string
-            objectMapper.readTree(pemBpmnModel.getProcess().getProcessData().getContextData());
+            objectMapper.readTree(pemBpmnModel.getProcess().getContextData());
         } catch (Exception e) {
             log.error("Invalid Context Data JSON: " + e.getMessage());
             throw new BpmnConverterException("ConvertToBpmnDefinition", "Invalid Context Data JSON.");
         }
-        return pemBpmnModel.getProcess().getProcessData().getContextData();
+        return pemBpmnModel.getProcess().getContextData();
     }
 
     /* This will add UserTask from System Side into each subprocess. There should be Start Node in subprocess.*/
@@ -427,7 +427,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 connectors.add(createConnector((SequenceFlow) sequeunceFlowElement, bpmnModel));
             }
             log.debug("======= Generated Pem Bpmn Model Connectors successfully.");
-            pemProcess.setProcessData(ProcessData.builder().contextData(getContextDataFromProcess(process)).build());
+            pemProcess.setContextData(getContextDataFromProcess(process));
             log.debug("======= Add ContextData successfully.");
             pemProcess.setNodes(nodes);
             pemProcess.setConnectors(connectors);

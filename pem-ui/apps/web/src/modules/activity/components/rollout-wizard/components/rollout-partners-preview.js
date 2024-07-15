@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Column, TextInput, Checkbox, Accordion, AccordionItem, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
+import { Grid, Column, TextInput, Search, Select, SelectItem, Checkbox, Accordion, AccordionItem, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 
 import './../../style.scss';
 

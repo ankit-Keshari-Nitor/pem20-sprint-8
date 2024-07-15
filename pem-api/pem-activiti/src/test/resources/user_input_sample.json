@@ -144,6 +144,7 @@
         "description": "This process describes the order fulfilment workflow.",
         "userKeys": "user1,user2,user3",
         "roleKeys": "group1,group2",
+        "estimateDays": 10,
         "nodes": [
           {
             "id": "SubStartNode_1",
@@ -161,6 +162,8 @@
             "description": "This process describes the order fulfilment workflow.",
             "userKeys": "user1,user2,user3",
             "roleKeys": "group1,group2",
+            "estimateDays": 100,
+            "showToPartner": false,
             "nodes": [
               {
                 "id": "SubSubStartNode_1",

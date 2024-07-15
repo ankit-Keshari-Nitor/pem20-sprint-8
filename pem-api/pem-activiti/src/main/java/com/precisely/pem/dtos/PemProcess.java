@@ -14,5 +14,5 @@ import java.util.List;
 public class PemProcess {
     private List<Node> nodes;
     private List<Connector> connectors;
-    private ProcessData processData;
+    private String contextData;
 }

@@ -32,4 +32,6 @@ public class Constants {
     public static final String XSLT_FIELD_OUTPUT = "output";
     public static final String XSLT_FIELD_SAMPLE_OUTPUT = "sampleOutput";
     public static final String XSLT_FIELD_TYPE = "type";
+
+    public static final String EXTENSION_ELEMENT_NAME = "name";
 }

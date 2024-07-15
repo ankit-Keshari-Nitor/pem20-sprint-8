@@ -26,8 +26,9 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
+import static com.precisely.pem.converter.AbstractNodeHandler.createConnector;
+import static com.precisely.pem.converter.AbstractNodeHandler.isSubProcess;
 import static com.precisely.pem.dtos.Constants.*;
 
 @Log4j2
@@ -100,6 +101,12 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         List<Node> nodes = pemBpmnModel.getProcess().getNodes();
 
         if (!nodes.isEmpty()) {
+
+            //Merge all SubProcess Connectors into Global List as Activiti framework will accept.
+            List<Connector> subConnectors = new ArrayList<>(pemBpmnModel.getProcess().getConnectors());
+            mergeSubConnectors(nodes, subConnectors);
+            pemBpmnModel.getProcess().setConnectors(subConnectors);
+
             // Create the output JSON structure
             ObjectNode outputJson = objectMapper.createObjectNode();
 
@@ -114,30 +121,32 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             //Maintain all the SequenceFlow resourceIds which are source to each resource like Start, End , UI Dialog
             List<Connector> connectors = pemBpmnModel.getProcess().getConnectors();
             Map<String,List<String>> sourceMap = new HashMap<>();
+            Map<String, Connector> connectorsMap = new HashMap<>();
             for (Connector connector : connectors) {
                 String source = connector.getSource();
                 List<String> connectorIds = sourceMap.getOrDefault(source,new ArrayList<>());
                 connectorIds.add(connector.getId());
                 sourceMap.put(source,connectorIds);
+                connectorsMap.put(connector.getId(),connector);
+            }
+            bpmnConverterRequest.setConnectorsMap(connectorsMap);
+            bpmnConverterRequest.setSourceMap(sourceMap);
+
+            //Map nodeId with each node.
+            Map<String, Node> nodeMap = new HashMap<>();
+            for (Node node : nodes){
+                nodeMap.put(node.getId(),node);
+                if(AbstractNodeHandler.isSubProcess(node.getType())){
+                    appendSubProcessNodesInNodeMap(node.getNodes(),nodeMap);
+                }
             }
 
-            //Map nodeId with each node.
-            Map<String, Node> nodeMap = nodes.stream()
-                    .collect(Collectors.toMap(Node::getId, node -> node));
-
-            //Map nodeId with each node.
-            Map<String, Connector> connectorsMap = connectors.stream()
-                    .collect(Collectors.toMap(Connector::getId, connector -> connector));
-            bpmnConverterRequest.setConnectorsMap(connectorsMap);
-
             SequenceFlowHandler sequenceFlowHandler = new SequenceFlowHandler();
-            bpmnConverterRequest.setSourceMap(sourceMap);
 
             //Mandatory userKeys and roleKeys, each subprocess has startNode present always
             nodes.stream()
                     .filter(node ->
-                            NodeTypes.PARTNER_SUB_PROCESS.getName().equalsIgnoreCase(node.getType()) ||
-                                    NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(node.getType())).forEach(node ->
+                            AbstractNodeHandler.isSubProcess(node.getType())).forEach(node ->
                             addDefaultSystemUserTaskForAllSubProcess(node.getNodes(),connectors, bpmnConverterRequest,node.getUserKeys(),node.getRoleKeys()));
             log.debug("======= Default System User Task For All SubProcess is added Successfully in PemBpmnModel body. ");
             // Process each node through the chain
@@ -167,19 +176,40 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         return null;
     }
 
+    private void appendSubProcessNodesInNodeMap(List<Node> nodes,Map<String, Node> nodeMap) {
+        nodes.forEach(subNode -> {
+            nodeMap.put(subNode.getId(),subNode);
+            if(Objects.nonNull(subNode.getNodes())){
+                appendSubProcessNodesInNodeMap(subNode.getNodes(),nodeMap);
+            }
+        });
+    }
+
+    private void mergeSubConnectors(List<Node> nodes, List<Connector> connectors) {
+        nodes.stream().filter(node -> ( AbstractNodeHandler.isSubProcess(node.getType()) )).forEach(node -> {
+            node.getConnectors().forEach(subConnector -> {
+                subConnector.setParent(node.getId());
+                connectors.add(subConnector);
+            });
+            if (Objects.nonNull(node.getNodes())){
+                mergeSubConnectors(node.getNodes(),connectors);
+            }
+        });
+    }
+
     private void addContextData(BpmnModel bpmnModel, PemBpmnModel pemBpmnModel,BpmnConverterRequest bpmnConverterRequest)throws BpmnConverterException  {
         Process process = bpmnModel.getProcessById(bpmnConverterRequest.getProcessId());
-        process.addExtensionElement(getStringExtensionElement(PROCESS_FIELD_CONTEXT_DATA, validateAndGetContextData(pemBpmnModel)));
+        process.addExtensionElement(addStringExtensionElement(PROCESS_FIELD_CONTEXT_DATA, validateAndGetContextData(pemBpmnModel)));
 
         pemBpmnModel.getProcess().getNodes().forEach(node -> {
             if(NodeTypes.API_NODE.getName().equalsIgnoreCase(node.getType())){
                 //generating {"sampleResponse":<sampledata>} JSON string
                 String resultJsonString = "{\""+API_FIELD_SAMPLE_RESPONSE+"\":"+node.getApi().getSampleResponse()+"}";
-                process.addExtensionElement(getStringExtensionElement(node.getId(),resultJsonString));
+                process.addExtensionElement(addStringExtensionElement(node.getId(),resultJsonString));
             }else if(NodeTypes.XSLT_NODE.getName().equalsIgnoreCase(node.getType())){
                 //generating {"sampleResponse":<sampledata>} JSON string
                 String resultJsonString = "{\""+XSLT_FIELD_SAMPLE_OUTPUT+"\":"+node.getXslt().getSampleOutput()+"}";
-                process.addExtensionElement(getStringExtensionElement(node.getId(),resultJsonString));
+                process.addExtensionElement(addStringExtensionElement(node.getId(),resultJsonString));
             }
         });
     }
@@ -235,8 +265,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
 
                 //add new connector in Connectors List
                 connectors.add(newConnector);
-            }else if(NodeTypes.PARTNER_SUB_PROCESS.getName().equalsIgnoreCase(node.getType()) ||
-                    NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(node.getType())){
+            }else if(isSubProcess(node.getType())){
                 addDefaultSystemUserTaskForAllSubProcess(node.getNodes(),connectors,request, node.getUserKeys(), node.getRoleKeys());
             }
         }
@@ -250,21 +279,44 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 if ((flowElement instanceof ExclusiveGateway) || (flowElement instanceof InclusiveGateway)) {
                     Gateway gateway = (Gateway) flowElement;
                     String gatewayType = nodeMap.get(gateway.getId()).getGatewayType();
-                    ExtensionElement fieldElement = getStringExtensionElement("gatewayType",gatewayType);
+                    ExtensionElement fieldElement = addStringExtensionElement(CustomElementTextType.TYPE.getName(), gatewayType);
                     gateway.addExtensionElement(fieldElement);
                 }
             }
+            //For SubProcess because this will need a recursive
+            addExtensionElementsToSubProcess(nodeMap, process.getFlowElements());
+
         }
     }
 
+    private void addExtensionElementsToSubProcess(Map<String, Node> nodeMap, Collection<FlowElement> subProcessList) {
+        subProcessList.stream().filter(subNode -> subNode instanceof SubProcess).forEach(flowElement -> {
+            SubProcess subProcess = (SubProcess)flowElement;
+            Node subProcessNode =  nodeMap.get(subProcess.getId());
+            ExtensionElement fieldElementType = addStringExtensionElement(CustomElementTextType.TYPE.getName(),subProcessNode.getType());
+            subProcess.addExtensionElement(fieldElementType);
+            if(Objects.nonNull(subProcessNode.getEstimateDays())) {
+                ExtensionElement fieldElement = addStringExtensionElement(CustomElementTextType.ESTIMATE_DAYS.getName(), subProcessNode.getEstimateDays().toString());
+                subProcess.addExtensionElement(fieldElement);
+            }
+            if(NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(subProcessNode.getType())){
+                ExtensionElement fieldElement = addStringExtensionElement(CustomElementTextType.SHOW_TO_PARTNER.getName(), subProcessNode.getShowToPartner().toString());
+                subProcess.addExtensionElement(fieldElement);
+            }
+            if(Objects.nonNull(subProcessNode.getNodes())){
+                addExtensionElementsToSubProcess(nodeMap,subProcess.getFlowElements());
+            }
+        });
+    }
+
     /* activiti:field & activiti:string is name of field added as Extension Elements as per BPMN format. */
-    private ExtensionElement getStringExtensionElement(String name,String value) {
+    private ExtensionElement addStringExtensionElement(String name, String value) {
         ExtensionElement fieldElement = new ExtensionElement();
         fieldElement.setName("activiti:field");
         fieldElement.setNamespacePrefix("activiti");
         ExtensionAttribute attribute = new ExtensionAttribute();
         attribute.setValue(name);
-        attribute.setName("name");
+        attribute.setName(EXTENSION_ELEMENT_NAME);
         fieldElement.addAttribute(attribute);
 
         ExtensionElement stringElement = new ExtensionElement();
@@ -341,6 +393,13 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             List<Node> nodes = new ArrayList<>();
             List<Connector> connectors = new ArrayList<>();
 
+            //Fetch all sequence flow and append in sequenceFlowElements List for all layers of subProcesses using recursive method appendSubProcessesSequenceFlow
+            //Recursive Call
+            process.getFlowElements().stream()
+                    .filter(flowElement -> flowElement instanceof SubProcess)
+                    .forEach(subprocess -> appendSubProcessesSequenceFlow((SubProcess) subprocess));
+            log.debug("======= Generated list of all SubProcessesSequenceFlows and First layer of Sequence Flows successfully.");
+
             /*reverse conversion started for Nodes*/
             for (FlowElement flowElement : process.getFlowElements()) {
                 if(!(flowElement instanceof SequenceFlow)){
@@ -361,12 +420,6 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             //Fetch all sequence flow from first layer of Nodes.
             List<FlowElement> sequenceFlowElements = new ArrayList<>(process.getFlowElements().stream().filter(flowElement -> flowElement instanceof SequenceFlow).toList());
 
-            //Fetch all sequence flow and append in sequenceFlowElements List for all layers of subProcesses using recursive method appendSubProcessesSequenceFlow
-            //Recursive Call
-            process.getFlowElements().stream()
-                    .filter(flowElement -> flowElement instanceof SubProcess)
-                    .forEach(subprocess -> appendSubProcessesSequenceFlow((SubProcess) subprocess, sequenceFlowElements));
-            log.debug("======= Generated list of all SubProcessesSequenceFlows and First layer of Sequence Flows successfully.");
             /*reverse conversion ended for Connectors*/
             for (FlowElement sequeunceFlowElement : sequenceFlowElements){
                 connectors.add(createConnector((SequenceFlow) sequeunceFlowElement, bpmnModel));
@@ -397,7 +450,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         return "";
     }
 
-    private static void appendSubProcessesSequenceFlow(SubProcess subprocess, List<FlowElement> sequenceFlowElements) {
+    private static void appendSubProcessesSequenceFlow(SubProcess subprocess) {
 
         /* System Connectors Change
          * Fetching System Connectors and Update existing Connectors Target.*/
@@ -419,29 +472,13 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
         /*Add all SequenceFlow present in SubProcesses into Main sequenceFlowElements List.*/
         for (FlowElement flowElement : subprocess.getFlowElements()){
             if(flowElement instanceof SequenceFlow){
-                sequenceFlowElements.add(flowElement);
+
             }else if ( flowElement instanceof SubProcess ){
-                appendSubProcessesSequenceFlow((SubProcess) flowElement,sequenceFlowElements);
+                appendSubProcessesSequenceFlow((SubProcess) flowElement);
             }
         }
     }
 
-    private Connector createConnector(SequenceFlow sequenceFlow, BpmnModel bpmnModel) {
-        Connector connector = Connector.builder()
-                .id(sequenceFlow.getId())
-                .source(sequenceFlow.getSourceRef())
-                .target(sequenceFlow.getTargetRef())
-                .condition(sequenceFlow.getConditionExpression())
-                .build();
 
-        List<GraphicInfo> locations = bpmnModel.getFlowLocationMap().get(sequenceFlow.getId());
-        if (locations != null) {
-            List<Diagram> diagrams = locations.stream()
-                    .map(location -> Diagram.builder().x((double) Constants.WIDTH /2).y(((double) Constants.HEIGHT /2)).build())
-                    .collect(Collectors.toList());
-            connector.setDiagram(diagrams);
-        }
-        return connector;
-    }
 
 }

@@ -20,10 +20,10 @@ public class Constants {
     public static final String API_FIELD_METHOD = "method";
     public static final String API_FIELD_REQUEST_CONTENT_TYPE = "requestContentType";
     public static final String API_FIELD_RESPONSE_CONTENT_TYPE = "responseContentType";
-    public static final String API_FIELD_HEADERS = "requestHeaders";
-    public static final String API_FIELD_REQUEST_BODY = "request";
+    public static final String API_FIELD_HEADERS = "headers";
+    public static final String API_FIELD_REQUEST_BODY = "requestBody";
     public static final String API_FIELD_SAMPLE_RESPONSE = "sampleResponse";
-    public static final String API_FIELD_RESPONSE_BODY = "response";
+    public static final String API_FIELD_RESPONSE_BODY = "responseBody";
     public static final String API_FIELD_TYPE = "type";
     public static final String API_FIELD_API_CONFIGURATION = "apiConfiguration";
     //field name used in XSLT Node Handler

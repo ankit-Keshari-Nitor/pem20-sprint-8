@@ -201,7 +201,7 @@
                 ],
                 "connectors": [
                   {
-                    "id": "SequenceFlow12",
+                    "id": "SequenceFlow13",
                     "source": "SubSubSubStartNode_1",
                     "target": "SubSubSubEndNode_1",
                     "condition": "${condition1}",
@@ -218,8 +218,8 @@
                   }
                 ],
                 "diagram": {
-                  "x": 1000,
-                  "y": 1000
+                  "x": 600,
+                  "y": 1500
                 }
               },
               {
@@ -227,7 +227,7 @@
                 "type": "END",
                 "name": "End",
                 "diagram": {
-                  "x": 600,
+                  "x": 900,
                   "y": 1500
                 }
               }
@@ -236,6 +236,22 @@
               {
                 "id": "SequenceFlow11",
                 "source": "SubSubStartNode_1",
+                "target": "SubSubSubProcess_3",
+                "condition": "${condition1}",
+                "diagram": [
+                  {
+                    "x": 100,
+                    "y": 100
+                  },
+                  {
+                    "x": 100,
+                    "y": 100
+                  }
+                ]
+              },
+              {
+                "id": "SequenceFlow12",
+                "source": "SubSubSubProcess_3",
                 "target": "SubSubEndNode_1",
                 "condition": "${condition1}",
                 "diagram": [

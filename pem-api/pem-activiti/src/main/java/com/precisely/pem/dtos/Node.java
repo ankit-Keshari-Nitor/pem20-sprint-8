@@ -29,6 +29,8 @@ public class Node {
     private String gatewayType;
     //Sub Process
     private List<Node> nodes;
+    private Integer estimateDays;
+    private Boolean showToPartner;
     //Call Activiti
     private String targetActivity;
     private List<Variable> inVariables;

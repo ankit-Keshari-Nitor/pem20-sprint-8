@@ -73,7 +73,6 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, showPrevie
           })}
         </Grid>
       ) : (
-        //TODO
         <>
           <div style={{ fontWeight: '600', margin: '1rem', fontSize: '18px' }}>{selectedViewData?.firstName} {selectedViewData?.lastName} Details</div>
           <Tabs>

@@ -175,7 +175,6 @@ export default function RolloutDetails(props) {
                 {rolloutPartnersData.selectedPartnersData.length > 0 && (
                   <>
                     {rolloutPartnersData.selectedPartnersData.map((item) => {
-                      console.log('item', item);
                       return (
                         <Tag className="some-class" type="blue" id={`tag-${item.partnerUniqueId}`}  onClose={() => console.log('ankit')}>
                           {item.firstName + '' + item.lastName}

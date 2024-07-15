@@ -285,7 +285,6 @@ export const fontSize = {
   label: 'Font Size',
   type: 'DropDown',
   options: [
-    { label: '', value: '' },
     { label: '8px', value: '8px' },
     { label: '9px', value: '9px' },
     { label: '10px', value: '10px' },

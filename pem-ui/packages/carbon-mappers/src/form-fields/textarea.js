@@ -40,6 +40,7 @@ const TextArea = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
       labelText={labelText === undefined ? label : labelText}
       defaultValue={valueLabel}
       value={fieldValue}
+      readOnly={readOnly}
       onChange={(e) => {
         previewMode && onChangeHandle(currentPath, e.target.value);
         setFieldValue(e.target.value);

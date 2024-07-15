@@ -18,23 +18,22 @@ import DataTable from './data-table';
 import FileDownload from './file-download';
 
 export const formFields = [
-
   Group,
+  Text,
   TextInput,
   Textarea,
-  Text,
   Password,
-  NumberInput,
-  Select,
-  CheckboxGroup,
   RadioButtonGroup,
+  CheckboxGroup,
+  Select,
   Toggle,
+  NumberInput,
   Link,
   Tooltip,
-  DataTable,
-  DatePicker,
   FileUploader,
   FileDownload,
+  DataTable,
+  DatePicker,
   Accordion,
   Tab
 ];

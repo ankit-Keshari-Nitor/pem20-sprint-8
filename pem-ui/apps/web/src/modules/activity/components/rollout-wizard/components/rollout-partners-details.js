@@ -13,9 +13,8 @@ export default function RolloutPartnersDetails({ handleAddGroups, handleAddAttri
   const [selectedViewType, setSelectedViewType] = useState(null);
 
   const handleDetailsViewClick = (viewData, viewType) => {
-    console.log('viewData, viewType', viewData, viewType);
     setSelectedViewData(viewData);
-    setSelectedViewData(viewType);
+    setSelectedViewType(viewType);
   };
 
   return (

@@ -5,6 +5,9 @@ import RolloutPartnersDetails from './components/rollout-partners-details';
 import RolloutDetails from './components/rollout-details';
 
 const ActivityRolloutModal = (props) => {
+  const today = new Date();
+  let tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
   const { showModal, setShowModal, activityName } = props;
   const [openAddModal, setOpenAddModal] = useState(false);
   const [formErrors, setFormErrors] = useState({});
@@ -13,8 +16,8 @@ const ActivityRolloutModal = (props) => {
   const [rolloutDetails, setRolloutDetails] = useState({
     name: '',
     description: '',
-    dueDate: new Date(),
-    alertDate: new Date(),
+    dueDate: today,
+    alertDate: tomorrow,
     alertInterval: 1,
     rollingOutTo: 'internal_users',
     partnersDetails: ''
@@ -40,7 +43,7 @@ const ActivityRolloutModal = (props) => {
       setFormErrors({ ...formErrors, description: false });
     }
 
-    if (Number(rolloutDetails.alertInterval) > 1 || Number(rolloutDetails.alertInterval) > 99) {
+    if (Number(rolloutDetails.alertInterval) >= 1 && Number(rolloutDetails.alertInterval) <= 99) {
       setFormErrors({ ...formErrors, alertInterval: false });
     }
 
@@ -50,6 +53,12 @@ const ActivityRolloutModal = (props) => {
       if (rolloutPartnersDataLength > 0) {
         setFormErrors({ ...formErrors, partnersDetails: false });
       }
+    }
+
+    let dueDate = new Date(rolloutDetails.dueDate);
+    let alertDate = new Date(rolloutDetails.alertDate);
+    if (alertDate.getTime() > dueDate.getTime()) {
+      setFormErrors({ ...formErrors, alertDate: false });
     }
   }, [rolloutDetails, rolloutPartnersData, formErrors]);
 
@@ -62,7 +71,7 @@ const ActivityRolloutModal = (props) => {
       errors.description = true;
     }
 
-    if (Number(inputValues.alertInterval) < 1 || Number(inputValues.alertInterval) > 99) {
+    if (!(Number(inputValues.alertInterval) >= 1 && Number(inputValues.alertInterval) <= 99)) {
       errors.alertInterval = true;
     }
 
@@ -73,6 +82,13 @@ const ActivityRolloutModal = (props) => {
         errors.partnersDetails = true;
       }
     }
+
+    let dueDate = new Date(inputValues.dueDate);
+    let alertDate = new Date(inputValues.alertDate);
+    if (alertDate.getTime() > dueDate.getTime()) {
+      errors.alertDate = true;
+    }
+
     return errors;
   };
 
@@ -101,7 +117,7 @@ const ActivityRolloutModal = (props) => {
 
   const handleRemovePartners = (selectedPartnersData) => {
     let partnersData = rolloutPartnersData.selectedPartnersData;
-    let data = partnersData.filter(item => !selectedPartnersData.includes(item.partnerUniqueId));
+    let data = partnersData.filter((item) => !selectedPartnersData.includes(item.partnerUniqueId));
     setRolloutPartnersData((prev) => ({ ...prev, selectedPartnersData: [...data] }));
   };
 

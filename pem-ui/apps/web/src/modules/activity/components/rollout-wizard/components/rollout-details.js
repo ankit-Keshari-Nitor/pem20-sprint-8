@@ -171,7 +171,7 @@ export default function RolloutDetails(props) {
                 />
               </>
             ) : (
-              <div className='partners_tags'>
+              <div className="partners_tags">
                 {rolloutPartnersData.selectedPartnersData.length > 0 && (
                   <>
                     {rolloutPartnersData.selectedPartnersData.map((item) => {
@@ -198,7 +198,7 @@ export default function RolloutDetails(props) {
                   <>
                     {rolloutPartnersData.selectedGroupsData.map((item) => {
                       return (
-                        <Tag className="some-class" type="blue" id={`tag-${item.key}`} onClose={() => console.log('ankit')}>
+                        <Tag className="some-class" type="blue" id={`tag-${item.key}`} onClose={() => console.log('test')}>
                           {item.value}
                         </Tag>
                       );

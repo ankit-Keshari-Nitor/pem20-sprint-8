@@ -58,7 +58,7 @@ const ActivityRolloutModal = (props) => {
     let dueDate = new Date(rolloutDetails.dueDate);
     let alertDate = new Date(rolloutDetails.alertDate);
     if (alertDate.getTime() > dueDate.getTime()) {
-      errors.alertDate = false;
+      setFormErrors({ ...formErrors, alertDate: false });
     }
   }, [rolloutDetails, rolloutPartnersData, formErrors]);
 

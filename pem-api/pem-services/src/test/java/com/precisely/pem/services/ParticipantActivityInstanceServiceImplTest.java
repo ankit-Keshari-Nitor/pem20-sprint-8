@@ -302,6 +302,22 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
         assertEquals(PCPT_ACTIVITY_INSTANCE_PROCESS_DATA_NOT_FOUND,exception.getMessage());
     }
 
+    @Test
+    public void evaluatePath_PcptActivityNotStarted_Failure() {
+        PcptActivityInst pcptActivityInst = new PcptActivityInst();
+        when(pcptInstRepo.findById(ArgumentMatchers.anyString())).thenReturn(Optional.of(pcptActivityInst));
+
+        List<String> paths = new ArrayList<>();
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> participantActivityInstServiceImpl.
+                evaluatePaths(TEST_PCPT_ACTIVITY_INSTANCE_KEY,ProcessDataEvaluation
+                        .builder()
+                        .paths(paths)
+                        .build()));
+
+        assertNotNull(exception);
+        assertEquals(PCPT_ACTIVITY_INSTANCE_NOT_STARTED,exception.getMessage());
+    }
+
     private static Map<String, Object>  getMockedProcessVariables() throws IOException {
         String projectBasePath = System.getProperty("user.dir");
         String fullPath = projectBasePath + "\\" + CONTEXT_DATA_FILE_RELATIVE_PATH;

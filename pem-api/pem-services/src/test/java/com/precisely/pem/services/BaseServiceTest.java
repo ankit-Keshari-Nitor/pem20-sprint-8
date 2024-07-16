@@ -67,6 +67,7 @@ public class BaseServiceTest {
     public static final String ACTIVITY_DEFINITION_VERSION_NOT_FOUND = "Activity Definition Version with key '"+TEST_ACTIVITY_DEFN_VERSION_KEY+"' not found. Kindly check the activityDefnVersionKey.";
     public static final String PCPT_ACTIVITY_INSTANCE_NOT_FOUND = "PcptActivityInst with key '"+TEST_PCPT_ACTIVITY_INSTANCE_KEY+"' not found. Kindly check the pcptActivityInstKey.";
     public static final String PCPT_ACTIVITY_INSTANCE_PROCESS_DATA_NOT_FOUND = "Process Data is not found for PcptActivityInst with key " + TEST_PCPT_ACTIVITY_INSTANCE_KEY ;
+    public static final String PCPT_ACTIVITY_INSTANCE_NOT_STARTED = "Pcpt activity instance not started.";
     public static final String ACTIVITY_DEFINITION_VERSION_UPDATED = "Activity Definition Version Updated.";
     public static final String ACTIVITY_DEFINITION_VERSION_REQUIRED_SINGLE_FIELD_TO_UPDATE = "Complete Request Body cannot be empty, please provide atleast one input parameter for update";
     public static final String ACTIVITY_DEFINITION_VERSION_IS_IN_FINAL_DELETE_STATUS = "Activity Definition Version is in FINAL/DELETE status.";

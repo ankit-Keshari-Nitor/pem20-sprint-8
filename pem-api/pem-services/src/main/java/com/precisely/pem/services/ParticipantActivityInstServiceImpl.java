@@ -380,6 +380,10 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
             throw new ResourceNotFoundException("pcptActivityInstKey", "NoDataFound", "PcptActivityInst with key '" + pcptActivityInstKey + "' not found. Kindly check the pcptActivityInstKey.");
         }
 
+        if(Objects.isNull(pcptActivityInst.get().getActivityWorkflowInstKey())){
+            throw new ResourceNotFoundException("activityWorkflowInstKey", "NoDataFound", "Pcpt activity instance not started.");
+        }
+
         ProcessEvaluationResponse response = new ProcessEvaluationResponse();
         List<ProcessEvaluationResponse.Result> processEvaluationResult = new ArrayList<>();
 

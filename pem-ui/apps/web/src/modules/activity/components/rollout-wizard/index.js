@@ -99,8 +99,14 @@ const ActivityRolloutModal = (props) => {
     setRolloutPartnersData((prev) => ({ ...prev, selectedPartnersData: [...selectedPartnersData] }));
   };
 
+  const handleRemovePartners = (selectedPartnersData) => {
+    let partnersData = rolloutPartnersData.selectedPartnersData;
+    let data = partnersData.filter(item => !selectedPartnersData.includes(item.partnerUniqueId));
+    setRolloutPartnersData((prev) => ({ ...prev, selectedPartnersData: [...data] }));
+  };
+
   return (
-    <span className='rollout'>
+    <span className="rollout">
       <GeneralModal
         isOpen={showModal}
         modalLabel={`Activity Rollout -${activityName}`}
@@ -116,6 +122,7 @@ const ActivityRolloutModal = (props) => {
             handleAddGroups={handleAddGroups}
             handleAddAttributes={handleAddAttributes}
             handleAddPartners={handleAddPartners}
+            handleRemovePartners={handleRemovePartners}
             rolloutPartnersData={rolloutPartnersData}
           />
         ) : (

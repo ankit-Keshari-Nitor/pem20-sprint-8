@@ -177,7 +177,7 @@ export default function RolloutDetails(props) {
                     {rolloutPartnersData.selectedPartnersData.map((item) => {
                       return (
                         <Tag className="some-class" type="blue" id={`tag-${item.partnerUniqueId}`}  onClose={() => console.log('ankit')}>
-                          {item.firstName + '' + item.lastName}
+                          {item.firstName + ' ' + item.lastName}
                         </Tag>
                       );
                     })}

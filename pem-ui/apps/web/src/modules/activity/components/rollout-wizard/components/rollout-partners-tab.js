@@ -134,8 +134,7 @@ export default function RolloutTradingTab({ handleAddPartners, handleDetailsView
               );
             })}
         </>
-      )
-      }
-    </Grid >
+      )}
+    </Grid>
   );
 }

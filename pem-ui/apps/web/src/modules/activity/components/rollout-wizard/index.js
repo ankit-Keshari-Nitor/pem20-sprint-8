@@ -132,6 +132,7 @@ const ActivityRolloutModal = (props) => {
             setRolloutDetails={setRolloutDetails}
             handleAddClick={() => setOpenAddModal(true)}
             formErrors={formErrors}
+            handleRemovePartners={handleRemovePartners}
             rolloutPartnersData={rolloutPartnersData}
           />
         )}

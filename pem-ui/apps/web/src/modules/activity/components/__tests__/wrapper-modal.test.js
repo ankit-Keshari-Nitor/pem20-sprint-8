@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import GenericModal from '../../helpers/wrapper-modal';
+import GeneralModal from '../../helpers/wrapper-modal';
 
 describe('GenericModal component', () => {
   it('renders the modal with default props', () => {

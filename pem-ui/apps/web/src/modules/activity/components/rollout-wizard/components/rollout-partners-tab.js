@@ -127,7 +127,7 @@ export default function RolloutTradingTab({ handleAddPartners, handleDetailsView
                         handleDetailsViewClick(item, 'partner');
                       }}
                     >
-                      {item.firstName + ' ' + item.lastName}
+                      {item.nameOfCompany}
                     </span>
                   </div>
                 </Column>

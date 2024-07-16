@@ -177,7 +177,7 @@ export default function RolloutDetails(props) {
                     {rolloutPartnersData.selectedPartnersData.map((item) => {
                       return (
                         <Tag className="some-class" type="blue" filter onClose={() => handleRemovePartners([item.partnerUniqueId])} key={item.partnerUniqueId}>
-                          {item.firstName + ' ' + item.lastName}
+                          {item.nameOfCompany}
                         </Tag>
                       );
                     })}

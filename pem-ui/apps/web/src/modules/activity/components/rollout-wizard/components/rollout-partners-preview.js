@@ -13,6 +13,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
   const [isChecked, setIsChecked] = useState(false);
   const [selectedPartners, setSelectedPartners] = React.useState([]);
   const [selectedPartnersData, setSelectedPartnersData] = React.useState([]);
+  const isRolloutDataAvl = rolloutPartnersData?.selectedPartnersData.length + rolloutPartnersData?.selectedAttributesData.length + rolloutPartnersData?.selectedGroupsData.length;
 
   const handleCheck = (item) => {
     let updatedSelectedPartners;
@@ -67,16 +68,20 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
               value={searchKey}
             />
           </Column>
+
           <Column className="col-margin" lg={8}>
-            <Select id={`preview-select-filter`} labelText="" onChange={setSelectFilter} value={selectFilter}>
+            <Select id={`preview-select-filter`} labelText="" onChange={(e) => setSelectFilter(e.target.value)} value={selectFilter}>
               <SelectItem value="all" text="All" />
-              <SelectItem value="option-1" text="Option 1" />
-              <SelectItem value="option-2" text="Option 2" />
+              <SelectItem value="partners" text="Partners" />
+              <SelectItem value="attributes" text="Attributes" />
+              <SelectItem value="group" text="Groups" />
             </Select>
           </Column>
-          <Column className="select-all-checkbox" lg={8}>
-            <Checkbox id="preview-select_all-partners" labelText="Select All" checked={isChecked} onChange={handleSelectAll} />
-          </Column>
+          {isRolloutDataAvl > 0 && (
+            <Column className="select-all-checkbox" lg={8}>
+              <Checkbox id="preview-select_all-partners" labelText="Select All" checked={isChecked} onChange={handleSelectAll} />
+            </Column>
+          )}
           {selectedPartners.length > 0 && (
             <Column className="col-margin" lg={8}>
               <Button size="sm" className="new-button" renderIcon={TrashCan} onClick={() => handleRemovePartners(selectedPartners)}>

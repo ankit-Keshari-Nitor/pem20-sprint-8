@@ -101,7 +101,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
                   <Column className="col-margin" lg={16}>
                     <Checkbox
                       id={`preview-${item.partnerUniqueId}`}
-                      labelText={item.firstName + '' + item.lastName}
+                      labelText={item.nameOfCompany}
                       checked={selectedPartners.includes(item.partnerUniqueId)}
                       onChange={() => handleCheck(item)}
                     />

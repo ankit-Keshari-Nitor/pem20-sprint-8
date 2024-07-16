@@ -13,7 +13,6 @@ public interface ParticipantActivityInstService {
     MessageResp startActivity(String sponsorContext, String pcptActivityInstKey) throws ResourceNotFoundException, InvalidStatusException;
     ActivityTaskDto getNodeDetails(String sponsorContext, String pcptActivityInstKey, String taskKey) throws Exception;
 
-    MarkAsFinalActivityDefinitionVersionResp submitTask(String sponsorContext, String pcptActivityInstKey, String taskKey, String data) throws Exception;
     ProcessEvaluationResponse evaluatePaths(String pcptActivityInstKey, ProcessDataEvaluation jsonPath) throws Exception;
     public MarkAsFinalActivityDefinitionVersionResp completeNode(String sponsorContext, String pcptActivityInstKey, String taskKey, String data, Boolean isDraft) throws Exception;
 }

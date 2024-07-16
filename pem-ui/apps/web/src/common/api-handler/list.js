@@ -1,23 +1,4 @@
-class ListAPIHandler {
-  static handleResponse(response, itemKey) {
-    if (response.status === 200) {
-      const contentRange = response.headers['content-range'];
-      const paginationData = parseContentRange(contentRange);
-      response.data.forEach((item) => {
-        item.id = item[itemKey];
-      });
-      response.data = {
-        data: response.data,
-        meta: {
-          ...paginationData
-        }
-      };
-    }
-  }
-  static handleRequest(request) {}
-}
-
-function parseContentRange(contentRangeHeader) {
+const parseContentRange = (contentRangeHeader) => {
   if (contentRangeHeader) {
     const regex = /items (\d+)-(\d+)\/(\d+)/;
     const match = contentRangeHeader.match(regex);
@@ -34,6 +15,51 @@ function parseContentRange(contentRangeHeader) {
   }
 
   return {};
+};
+
+class ListAPIHandler {
+  static handleResponse(response, itemKey) {
+    if (response.status === 200) {
+      const contentRange = response.headers['content-range'];
+      const paginationData = parseContentRange(contentRange);
+      response.data.forEach((item) => {
+        item.id = item[itemKey];
+      });
+      response.data = {
+        data: response.data,
+        meta: {
+          ...paginationData
+        }
+      };
+    }
+  }
+  static handleRequest(input, options) {}
+}
+
+class ListAPIHandlerNew {
+  static handleResponse(response, itemKey) {
+    if (response.status === 200) {
+      const paginationData = {
+        totalItems: response.data.pageContent.totalElements,
+        pageSize: response.data.pageContent.size,
+        pageNumber: response.data.pageContent.number
+      };
+      response.data.content.forEach((item) => {
+        item.id = item[itemKey];
+      });
+      response.data = {
+        data: response.data.content,
+        meta: {
+          ...paginationData
+        }
+      };
+    }
+  }
+  static handleRequest(input, options) {
+    
+  }
 }
 
 export default ListAPIHandler;
+
+export { ListAPIHandler, ListAPIHandlerNew };

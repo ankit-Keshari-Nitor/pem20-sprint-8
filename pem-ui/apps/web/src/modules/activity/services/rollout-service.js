@@ -23,12 +23,10 @@ export const getAttributeTypeList = async () => {
 
 // Function to get the Attributes List
 export const getAttributeList = async (selectedAttributeType, searchKey) => {
-  console.log('selectedAttributeType', selectedAttributeType);
   let url = `${API_END_POINTS.ATTRIBUTE_LIST}/${selectedAttributeType}/attributeValues`;
   let dataLoaderConfig = { url, method: API_METHODS.GET };
 
   const response = await new Shell.RestApiService().call(dataLoaderConfig, null, generateOptions());
-  console.log('response', response);
   return response.status === 200 ? response?.data : [];
 };
 

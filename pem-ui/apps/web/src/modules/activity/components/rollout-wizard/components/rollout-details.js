@@ -5,7 +5,7 @@ import { Grid, Column, TextArea, TextInput, DatePicker, DatePickerInput, Button,
 import './../../style.scss';
 
 export default function RolloutDetails(props) {
-  const { rolloutDetails, setRolloutDetails, handleAddClick, formErrors, rolloutPartnersData } = props;
+  const { rolloutDetails, setRolloutDetails, handleAddClick, formErrors, rolloutPartnersData, handleRemovePartners } = props;
   const rolloutPartnersDataLength =
     rolloutPartnersData.selectedGroupsData.length + rolloutPartnersData.selectedAttributesData.length + rolloutPartnersData.selectedPartnersData.length;
 
@@ -148,7 +148,7 @@ export default function RolloutDetails(props) {
               setRolloutDetails((prev) => ({ ...prev, rollingOutTo: value }));
             }}
             value={rolloutDetails.rollingOutTo}
-            //defaultChecked={true}
+          //defaultChecked={true}
           >
             <RadioButton labelText="Partners" value="partners" id="partners" />
             <RadioButton labelText="Internal Users" value="internal_users" id="internal_users" checked />
@@ -176,7 +176,7 @@ export default function RolloutDetails(props) {
                   <>
                     {rolloutPartnersData.selectedPartnersData.map((item) => {
                       return (
-                        <Tag className="some-class" type="blue" id={`tag-${item.partnerUniqueId}`} onClose={() => console.log('test')}>
+                        <Tag className="some-class" type="blue" filter onClose={() => handleRemovePartners([item.partnerUniqueId])} key={item.partnerUniqueId}>
                           {item.firstName + ' ' + item.lastName}
                         </Tag>
                       );
@@ -187,7 +187,7 @@ export default function RolloutDetails(props) {
                   <>
                     {rolloutPartnersData.selectedAttributesData.map((item) => {
                       return (
-                        <Tag className="some-class" type="blue" id={`tag-${item.attributeTypeKey}`} onClose={() => console.log('test')}>
+                        <Tag className="some-class" type="blue" id={`tag-${item.attributeTypeKey}`} onClose={() => console.log('ankit')}>
                           {item.attrValue}
                         </Tag>
                       );

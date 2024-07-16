@@ -180,21 +180,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
                         <strong>Street address and PO Box </strong>
                       </div>
                       <div>{selectedViewData?.streetAddress ? selectedViewData?.streetAddress : 'None'}</div>
-                      <div>
-                        <strong>City </strong>
-                      </div>
-                      <div>{selectedViewData?.city ? selectedViewData?.city : 'None'}</div>
-                      <div>
-                        <strong>Country/Region </strong>
-                      </div>
-                      <div>{selectedViewData?.country ? selectedViewData?.country : 'None'}</div>
-                      <div>
-                        <strong>State/Province </strong>
-                      </div>
-                      <div>{selectedViewData?.state ? selectedViewData?.state : 'None'}</div>
-                      <div>
-                        <strong>Zip / Postal Code</strong>
-                      </div>
+                      <div><strong>Zip / Postal Code</strong></div>
                       <div>{selectedViewData?.zipCode ? selectedViewData?.zipCode : 'None'}</div>
                       <div>
                         <strong>Headquaters Phone</strong>
@@ -216,40 +202,48 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
                         <strong>User ID (Email)</strong>
                       </div>
                       <div>{selectedViewData?.userId ? selectedViewData?.userId : 'None'}</div>
-                      <div>
-                        <strong>Given name</strong>
-                      </div>
+                      <div><strong>Given name</strong></div>
                       <div>{selectedViewData?.firstName ? selectedViewData?.firstName : 'None'}</div>
-                      <div>
-                        <strong>Surname</strong>
-                      </div>
+                      <div><strong>Surname</strong></div>
                       <div>{selectedViewData?.lastName ? selectedViewData?.lastName : 'None'}</div>
-                      <div>
-                        <strong>Business role/Title </strong>
-                      </div>
+                      <div><strong>Business role/Title </strong></div>
                       <div>{'None'}</div>
-                      <div>
-                        <strong>Alternate email</strong>
-                      </div>
+                      <div><strong>Alternate email</strong></div>
                       <div>{'None'}</div>
-                      <div>
-                        <strong>Phone (Office)</strong>
-                      </div>
+                      <div><strong>Phone (Office)</strong></div>
                       <div>{selectedViewData?.officePhone ? selectedViewData?.officePhone : 'None'}</div>
-                      <div>
-                        <strong>Phone (Mobile)</strong>
-                      </div>
+                      <div><strong>Phone (Mobile)</strong></div>
                       <div>{'None'}</div>
-                      <div>
-                        <strong>Other contact information</strong>
-                      </div>
+                      <div><strong>Other contact information</strong></div>
                       <div>{'None'}</div>
                     </div>
                   </AccordionItem>
                 </Accordion>
               </TabPanel>
               <TabPanel>
-                <div>Administrators</div>
+                <div>
+                  <div style={{ border: '1px solid red', background: '', marginInlineEnd: '20rem' }}>
+                    <div style={{ marginLeft: '3.5rem', marginTop: '1.5rem' }}>
+                      <div><strong>Given name</strong></div>
+                      <div>{selectedViewData?.firstName ? selectedViewData?.firstName : 'None'}</div>
+                      <div><strong>Surname</strong></div>
+                      <div>{selectedViewData?.lastName ? selectedViewData?.lastName : 'None'}</div>
+                      <div><strong>Business role/Title </strong></div>
+                      <div>{'None'}</div>
+                      <div><strong>Alternate email</strong></div>
+                      <div>{'None'}</div>
+                      <div><strong>Phone (Office)</strong></div>
+                      <div>{selectedViewData?.officePhone ? selectedViewData?.officePhone : 'None'}</div>
+                      <div><strong>Phone (Mobile)</strong></div>
+                      <div>{'None'}</div>
+                      <div><strong>Other contact info</strong></div>
+                      <div>{'None'}</div>
+                      <div><strong>Comments</strong></div>
+                      <div>{'None'}</div>
+                    </div>
+                  </div>
+
+                </div>
               </TabPanel>
               <TabPanel>
                 <div>Users</div>

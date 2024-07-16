@@ -40,6 +40,16 @@ export const getPartnerList = async (param) => {
   return response.status ? response?.data : [];
 };
 
+// Function to get the Partners Users List
+export const getPartnerUserList = async (param, partnerId) => {
+  let url = `${API_END_POINTS.PARTNERS_LIST}${partnerId}/users/`;
+
+  let dataLoaderConfig = { url, method: API_METHODS.GET };
+
+  const response = await new Shell.RestApiService().call(dataLoaderConfig, null, generateOptions(param));
+  return response.status ? response?.data : [];
+};
+
 // Function to get the Group List
 export const getGroupList = async (selectedAttributeType) => {
   let url = `${API_END_POINTS.ATTRIBUTE_TYPES}`;

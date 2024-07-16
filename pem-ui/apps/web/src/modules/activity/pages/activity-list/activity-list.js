@@ -18,7 +18,8 @@ import ActivityTestModal from '../../components/test-wizard';
 
 import ActivityVersionList from '../activity-version-list/activity-version-list.js';
 import ActivityVersionsSideDrawer from '../../components/activity-sidedrawer/activity-sidedrawer.js';
-import DataTableComponent from '../../components/datatable-component';
+
+import ActivityDataTableComponent from '../../components/datatable-component/index.js';
 
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
@@ -240,7 +241,7 @@ export default function ActivityList() {
           />
         </div>
       </div>
-      <DataTableComponent
+      <ActivityDataTableComponent
         headers={ACTIVITY_LIST_COLUMNS}
         rows={rows}
         sortDir={sortDir}

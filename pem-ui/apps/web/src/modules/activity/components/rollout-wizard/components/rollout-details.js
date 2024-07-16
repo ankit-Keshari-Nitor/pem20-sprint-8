@@ -147,11 +147,12 @@ export default function RolloutDetails(props) {
             onChange={(value) => {
               setRolloutDetails((prev) => ({ ...prev, rollingOutTo: value }));
             }}
-            value={rolloutDetails.rollingOutTo}
+            valueSelected={rolloutDetails.rollingOutTo}
+          //value={rolloutDetails.rollingOutTo}
           //defaultChecked={true}
           >
             <RadioButton labelText="Partners" value="partners" id="partners" />
-            <RadioButton labelText="Internal Users" value="internal_users" id="internal_users" checked />
+            <RadioButton labelText="Internal Users" value="internal_users" id="internal_users" />
           </RadioButtonGroup>
         </Column>
         {/*  Partner, Groups and Attributes */}

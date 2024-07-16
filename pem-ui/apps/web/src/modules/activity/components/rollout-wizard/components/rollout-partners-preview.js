@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { Grid, Column, Search, Select, SelectItem, Checkbox, Accordion, AccordionItem, Tabs, TabList, Tab, TabPanels, TabPanel, Button } from '@carbon/react';
+import React, { useState, useEffect } from 'react';
+import { Grid, Column, Search, Select, SelectItem, Checkbox, Accordion, AccordionItem, Tabs, TabList, Tab, TabPanels, TabPanel, Button, RadioButtonGroup, RadioButton } from '@carbon/react';
+
+import * as RolloutService from '../../../services/rollout-service';
 
 import './../../style.scss';
 
@@ -14,6 +16,21 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
   const [selectedPartners, setSelectedPartners] = React.useState([]);
   const [selectedPartnersData, setSelectedPartnersData] = React.useState([]);
   const isRolloutDataAvl = rolloutPartnersData?.selectedPartnersData.length + rolloutPartnersData?.selectedAttributesData.length + rolloutPartnersData?.selectedGroupsData.length;
+
+  const [partnerUserList, setPartnerUserList] = useState([])
+  const [selectedPartnerUser, setSelectedPartnerUser] = useState(null);
+
+  useEffect(() => {
+    if (selectedViewData?.partnerKey !== undefined) {
+      getPartnerUserList(selectedViewData.partnerKey)
+    }
+  }, [selectedViewData])
+
+  useEffect(() => {
+    if (partnerUserList.length > 0) {
+      setSelectedPartnerUser(partnerUserList[0]);
+    }
+  }, [partnerUserList]);
 
   const handleCheck = (item) => {
     let updatedSelectedPartners;
@@ -45,6 +62,17 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
       setSelectedPartnersData([...rolloutPartnersData?.selectedPartnersData]);
       setIsChecked(true);
     }
+  };
+
+  const getPartnerUserList = async (partnerId) => {
+    let param = {};
+    const response = await RolloutService.getPartnerUserList(param, partnerId);
+    setPartnerUserList(response);
+  };
+
+  const handleRadioChange = (value) => {
+    const partner = partnerUserList.find((item) => item.userName === value);
+    setSelectedPartnerUser(partner);
   };
 
   return (
@@ -189,7 +217,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
                       <div>
                         <strong>Website</strong>
                       </div>
-                      <div>{'None'}</div>
+                      <div>{selectedViewData?.website ? selectedViewData?.website : 'None'}</div>
                       <div>
                         <strong>Invite Status</strong>
                       </div>
@@ -221,32 +249,62 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
                 </Accordion>
               </TabPanel>
               <TabPanel>
-                <div>
-                  <div style={{ border: '1px solid red', background: '', marginInlineEnd: '20rem' }}>
-                    <div style={{ marginLeft: '3.5rem', marginTop: '1.5rem' }}>
-                      <div><strong>Given name</strong></div>
-                      <div>{selectedViewData?.firstName ? selectedViewData?.firstName : 'None'}</div>
-                      <div><strong>Surname</strong></div>
-                      <div>{selectedViewData?.lastName ? selectedViewData?.lastName : 'None'}</div>
-                      <div><strong>Business role/Title </strong></div>
-                      <div>{'None'}</div>
-                      <div><strong>Alternate email</strong></div>
-                      <div>{'None'}</div>
-                      <div><strong>Phone (Office)</strong></div>
-                      <div>{selectedViewData?.officePhone ? selectedViewData?.officePhone : 'None'}</div>
-                      <div><strong>Phone (Mobile)</strong></div>
-                      <div>{'None'}</div>
-                      <div><strong>Other contact info</strong></div>
-                      <div>{'None'}</div>
-                      <div><strong>Comments</strong></div>
-                      <div>{'None'}</div>
-                    </div>
+                <div className="details-container">
+                  <div>
+                    <div><strong>Given name</strong></div>
+                    <div>{selectedPartnerUser?.firstName ? selectedPartnerUser.firstName : 'None'}</div>
+                    <div><strong>Surname</strong></div>
+                    <div>{selectedPartnerUser?.lastName ? selectedPartnerUser.lastName : 'None'}</div>
+                    <div><strong>Business role/Title </strong></div>
+                    <div>{selectedPartnerUser?.businessRole ? selectedPartnerUser.businessRole : 'None'}</div>
+                    <div><strong>Alternate email</strong></div>
+                    <div>{'None'}</div>
+                    <div><strong>Phone (Office)</strong></div>
+                    <div>{selectedPartnerUser?.officePhone ? selectedPartnerUser.officePhone : 'None'}</div>
+                    <div><strong>Phone (Mobile)</strong></div>
+                    <div>{selectedPartnerUser?.mobilePhone ? selectedPartnerUser.mobilePhone : 'None'}</div>
+                    <div><strong>Other contact info</strong></div>
+                    <div>{selectedPartnerUser?.furtherContacts ? selectedPartnerUser.furtherContacts : 'None'}</div>
+                    <div><strong>Comments</strong></div>
+                    <div>{selectedPartnerUser?.comments ? selectedPartnerUser.comments : 'None'}</div>
                   </div>
-
+                  <div>
+                    <RadioButtonGroup valueSelected={selectedPartnerUser?.userName} name="partner-admin" orientation="vertical" onChange={handleRadioChange}>
+                      {partnerUserList.length > 0 && partnerUserList.map((item, idx) => (
+                        <RadioButton key={idx} labelText={item.userName} value={item.userName} />
+                      ))}
+                    </RadioButtonGroup>
+                  </div>
                 </div>
               </TabPanel>
               <TabPanel>
-                <div>Users</div>
+                <div className="details-container">
+                  <div>
+                    <div><strong>Given name</strong></div>
+                    <div>{selectedPartnerUser?.firstName ? selectedPartnerUser.firstName : 'None'}</div>
+                    <div><strong>Surname</strong></div>
+                    <div>{selectedPartnerUser?.lastName ? selectedPartnerUser.lastName : 'None'}</div>
+                    <div><strong>Business role/Title </strong></div>
+                    <div>{selectedPartnerUser?.businessRole ? selectedPartnerUser.businessRole : 'None'}</div>
+                    <div><strong>Alternate email</strong></div>
+                    <div>{'None'}</div>
+                    <div><strong>Phone (Office)</strong></div>
+                    <div>{selectedPartnerUser?.officePhone ? selectedPartnerUser.officePhone : 'None'}</div>
+                    <div><strong>Phone (Mobile)</strong></div>
+                    <div>{selectedPartnerUser?.mobilePhone ? selectedPartnerUser.mobilePhone : 'None'}</div>
+                    <div><strong>Other contact info</strong></div>
+                    <div>{selectedPartnerUser?.furtherContacts ? selectedPartnerUser.furtherContacts : 'None'}</div>
+                    <div><strong>Comments</strong></div>
+                    <div>{selectedPartnerUser?.comments ? selectedPartnerUser.comments : 'None'}</div>
+                  </div>
+                  <div>
+                    <RadioButtonGroup valueSelected={selectedPartnerUser?.userName} name="partner-user" orientation="vertical" onChange={handleRadioChange}>
+                      {partnerUserList.length > 0 && partnerUserList.map((item, idx) => (
+                        <RadioButton key={idx} labelText={item.userName} value={item.userName} />
+                      ))}
+                    </RadioButtonGroup>
+                  </div>
+                </div>
               </TabPanel>
             </TabPanels>
           </Tabs>

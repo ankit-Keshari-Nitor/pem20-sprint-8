@@ -138,3 +138,20 @@
 .partner-checkbox-label:hover {
   text-decoration: underline;
 }
+
+.details-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  /* Align items to the top */
+  margin: 1rem;
+}
+
+.details-container>div {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.details-container>div:last-child {
+  margin-right: 0;
+}

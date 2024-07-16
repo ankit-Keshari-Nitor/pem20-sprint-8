@@ -3,7 +3,7 @@ import { CrossIcon } from '../../icons';
 import { TableContainer } from '@carbon/react';
 import './activity-version-list.scss';
 
-import DataTableComponent from '../../components/datatable-component';
+import ActivityDataTableComponent from '../../components/datatable-component/index.js';
 
 import GeneralModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
@@ -154,7 +154,7 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
         </div>
       </div>
       <TableContainer>
-        <DataTableComponent
+        <ActivityDataTableComponent
           headers={ACTIVITY_VERSION_COLUMNS}
           rows={versionRows}
           sortDir={sortDir}

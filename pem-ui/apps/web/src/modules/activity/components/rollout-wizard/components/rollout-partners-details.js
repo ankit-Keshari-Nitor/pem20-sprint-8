@@ -7,7 +7,7 @@ import RolloutPartnersPreview from './rollout-partners-preview';
 
 import './../../style.scss';
 
-export default function RolloutPartnersDetails({ handleAddGroups, handleAddAttributes, handleAddPartners, rolloutPartnersData }) {
+export default function RolloutPartnersDetails({ handleAddGroups, handleAddAttributes, handleAddPartners, rolloutPartnersData, handleRemovePartners }) {
   const [showPreview, setShowPreview] = useState(true);
   const [selectedViewData, setSelectedViewData] = useState(null);
   const [selectedViewType, setSelectedViewType] = useState(null);
@@ -36,7 +36,7 @@ export default function RolloutPartnersDetails({ handleAddGroups, handleAddAttri
         <RightArrow />
       </Column>
       <Column lg={7} className="partners-details-view">
-        <RolloutPartnersPreview onClose={handleOnClose} rolloutPartnersData={rolloutPartnersData} showPreview={showPreview} selectedViewData={selectedViewData} selectedViewType={selectedViewType} />
+        <RolloutPartnersPreview onClose={handleOnClose} rolloutPartnersData={rolloutPartnersData} showPreview={showPreview} selectedViewData={selectedViewData} selectedViewType={selectedViewType} handleRemovePartners={handleRemovePartners} />
       </Column>
     </Grid>
   );

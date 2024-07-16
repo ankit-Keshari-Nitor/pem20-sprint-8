@@ -1,20 +1,57 @@
 import React, { useState } from 'react';
-import { Grid, Column, Search, Select, SelectItem, Checkbox, Accordion, AccordionItem, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
+import { Grid, Column, Search, Select, SelectItem, Checkbox, Accordion, AccordionItem, Tabs, TabList, Tab, TabPanels, TabPanel, Button } from '@carbon/react';
 
 import './../../style.scss';
 
 import { CrossIcon } from '../../../icons';
+import { TrashCan } from '@carbon/icons-react';
 
-export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, showPreview, selectedViewData, selectedViewType }) {
+export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, showPreview, selectedViewData, selectedViewType, handleRemovePartners }) {
   const [searchKey, setSearchKey] = useState('');
   const [selectFilter, setSelectFilter] = useState('all');
+
+  const [isChecked, setIsChecked] = useState(false);
+  const [selectedPartners, setSelectedPartners] = React.useState([]);
+  const [selectedPartnersData, setSelectedPartnersData] = React.useState([]);
+
+  const handleCheck = (item) => {
+    let updatedSelectedPartners;
+    let updatedSelectedPartnersData;
+
+    if (!selectedPartners.includes(item.partnerUniqueId)) {
+      updatedSelectedPartners = [...selectedPartners, item.partnerUniqueId];
+      updatedSelectedPartnersData = [...selectedPartnersData, item];
+    } else {
+      updatedSelectedPartners = selectedPartners.filter((e) => e !== item.partnerUniqueId);
+      updatedSelectedPartnersData = selectedPartnersData.filter((e) => e.partnerUniqueId !== item.partnerUniqueId);
+    }
+
+    setSelectedPartners(updatedSelectedPartners);
+    setSelectedPartnersData(updatedSelectedPartnersData);
+
+    // Update the "Select All" checkbox state
+    setIsChecked(updatedSelectedPartners.length === rolloutPartnersData?.selectedPartnersData.length);
+  };
+
+  const handleSelectAll = () => {
+    if (isChecked) {
+      setSelectedPartners([]);
+      setSelectedPartnersData([]);
+      setIsChecked(false);
+    } else {
+      const keys = rolloutPartnersData?.selectedPartnersData.map((e) => e.partnerUniqueId);
+      setSelectedPartners([...keys]);
+      setSelectedPartnersData([...rolloutPartnersData?.selectedPartnersData]);
+      setIsChecked(true);
+    }
+  };
 
   return (
     <>
       {showPreview ? (
         <Grid className="define-grid">
           <Column className="col-margin" lg={16}>
-            <p id={`group-list-label`} className="rollout-list-text">
+            <p id={`preview-group-list-label`} className="rollout-list-text">
               Preview
             </p>
           </Column>
@@ -37,42 +74,69 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
               <SelectItem value="option-2" text="Option 2" />
             </Select>
           </Column>
-          <Column className="col-margin" lg={16}>
-            <p id={`group-list-label`} className="rollout-list-text">
-              Partners
-            </p>
+          <Column className="select-all-checkbox" lg={8}>
+            <Checkbox id="preview-select_all-partners" labelText="Select All" checked={isChecked} onChange={handleSelectAll} />
           </Column>
-          {rolloutPartnersData?.selectedPartnersData.map((item) => {
-            return (
+          {selectedPartners.length > 0 && (
+            <Column className="col-margin" lg={8}>
+              <Button size="sm" className="new-button" renderIcon={TrashCan} onClick={() => handleRemovePartners(selectedPartners)}>
+                Delete
+              </Button>
+            </Column>
+          )}
+          {rolloutPartnersData?.selectedPartnersData.length > 0 && (
+            <>
               <Column className="col-margin" lg={16}>
-                <Checkbox id={`preview-${item.partnerUniqueId}`} labelText={item.firstName + '' + item.lastName} />
+                <p id={`preview-group-list-label`} className="rollout-list-text">
+                  Partners
+                </p>
               </Column>
-            );
-          })}
-          <Column className="col-margin" lg={16}>
-            <p id={`group-list-label`} className="rollout-list-text">
-              Attributes
-            </p>
-          </Column>
-          {rolloutPartnersData?.selectedAttributesData.map((item) => {
-            return (
+              {rolloutPartnersData?.selectedPartnersData.map((item) => {
+                return (
+                  <Column className="col-margin" lg={16}>
+                    <Checkbox
+                      id={`preview-${item.partnerUniqueId}`}
+                      labelText={item.firstName + '' + item.lastName}
+                      checked={selectedPartners.includes(item.partnerUniqueId)}
+                      onChange={() => handleCheck(item)}
+                    />
+                  </Column>
+                );
+              })}
+            </>
+          )}
+          {rolloutPartnersData?.selectedAttributesData.length > 0 && (
+            <>
               <Column className="col-margin" lg={16}>
-                <Checkbox id={`preview-${item.attributeTypeKey}`} labelText={item.attrValue} />
+                <p id={`group-list-label`} className="rollout-list-text">
+                  Attributes
+                </p>
               </Column>
-            );
-          })}
-          <Column className="col-margin" lg={16}>
-            <p id={`group-list-label`} className="rollout-list-text">
-              Group
-            </p>
-          </Column>
-          {rolloutPartnersData?.selectedGroupsData.map((item) => {
-            return (
+              {rolloutPartnersData?.selectedAttributesData.map((item) => {
+                return (
+                  <Column className="col-margin" lg={16}>
+                    <Checkbox id={`preview-${item.attributeTypeKey}`} labelText={item.attrValue} />
+                  </Column>
+                );
+              })}
+            </>
+          )}
+          {rolloutPartnersData?.selectedGroupsData.length > 0 && (
+            <>
               <Column className="col-margin" lg={16}>
-                <Checkbox id={`preview-${item.key}`} labelText={item.value} />
+                <p id={`group-list-label`} className="rollout-list-text">
+                  Group
+                </p>
               </Column>
-            );
-          })}
+              {rolloutPartnersData?.selectedGroupsData.map((item) => {
+                return (
+                  <Column className="col-margin" lg={16}>
+                    <Checkbox id={`preview-${item.key}`} labelText={item.value} />
+                  </Column>
+                );
+              })}
+            </>
+          )}
         </Grid>
       ) : (
         <>
@@ -93,49 +157,87 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
             <TabPanels>
               <TabPanel>
                 <Accordion>
-                  <AccordionItem title='Partner Organization Information'>
+                  <AccordionItem title="Partner Organization Information">
                     <div style={{ marginLeft: '5rem' }}>
-                      <div><strong>Partner Key</strong></div>
+                      <div>
+                        <strong>Partner Key</strong>
+                      </div>
                       <div>{selectedViewData?.partnerKey ? selectedViewData?.partnerKey : 'None'}</div>
-                      <div><strong>Partner Unique ID</strong></div>
+                      <div>
+                        <strong>Partner Unique ID</strong>
+                      </div>
                       <div>{selectedViewData?.partnerUniqueId ? selectedViewData?.partnerUniqueId : 'None'}</div>
-                      <div><strong>Name of Company</strong></div>
+                      <div>
+                        <strong>Name of Company</strong>
+                      </div>
                       <div>{selectedViewData?.nameOfCompany ? selectedViewData?.nameOfCompany : 'None'}</div>
-                      <div><strong>Street address and PO Box </strong></div>
+                      <div>
+                        <strong>Street address and PO Box </strong>
+                      </div>
                       <div>{selectedViewData?.streetAddress ? selectedViewData?.streetAddress : 'None'}</div>
-                      <div><strong>City </strong></div>
+                      <div>
+                        <strong>City </strong>
+                      </div>
                       <div>{selectedViewData?.city ? selectedViewData?.city : 'None'}</div>
-                      <div><strong>Country/Region </strong></div>
+                      <div>
+                        <strong>Country/Region </strong>
+                      </div>
                       <div>{selectedViewData?.country ? selectedViewData?.country : 'None'}</div>
-                      <div><strong>State/Province </strong></div>
+                      <div>
+                        <strong>State/Province </strong>
+                      </div>
                       <div>{selectedViewData?.state ? selectedViewData?.state : 'None'}</div>
-                      <div><strong>Zip / Postal Code</strong></div>
+                      <div>
+                        <strong>Zip / Postal Code</strong>
+                      </div>
                       <div>{selectedViewData?.zipCode ? selectedViewData?.zipCode : 'None'}</div>
-                      <div><strong>Headquaters Phone</strong></div>
+                      <div>
+                        <strong>Headquaters Phone</strong>
+                      </div>
                       <div>{selectedViewData?.headOfficePhone ? selectedViewData?.headOfficePhone : 'None'}</div>
-                      <div><strong>Website</strong></div>
+                      <div>
+                        <strong>Website</strong>
+                      </div>
                       <div>{'None'}</div>
-                      <div><strong>Invite Status</strong></div>
+                      <div>
+                        <strong>Invite Status</strong>
+                      </div>
                       <div>{selectedViewData?.status?.display ? selectedViewData?.status?.display : 'None'}</div>
                     </div>
                   </AccordionItem>
-                  <AccordionItem title='Account Information'>
+                  <AccordionItem title="Account Information">
                     <div style={{ marginLeft: '5rem' }}>
-                      <div><strong>User ID (Email)</strong></div>
+                      <div>
+                        <strong>User ID (Email)</strong>
+                      </div>
                       <div>{selectedViewData?.userId ? selectedViewData?.userId : 'None'}</div>
-                      <div><strong>Given name</strong></div>
+                      <div>
+                        <strong>Given name</strong>
+                      </div>
                       <div>{selectedViewData?.firstName ? selectedViewData?.firstName : 'None'}</div>
-                      <div><strong>Surname</strong></div>
+                      <div>
+                        <strong>Surname</strong>
+                      </div>
                       <div>{selectedViewData?.lastName ? selectedViewData?.lastName : 'None'}</div>
-                      <div><strong>Business role/Title </strong></div>
+                      <div>
+                        <strong>Business role/Title </strong>
+                      </div>
                       <div>{'None'}</div>
-                      <div><strong>Alternate email</strong></div>
+                      <div>
+                        <strong>Alternate email</strong>
+                      </div>
                       <div>{'None'}</div>
-                      <div><strong>Phone (Office)</strong></div>
+                      <div>
+                        <strong>Phone (Office)</strong>
+                      </div>
                       <div>{selectedViewData?.officePhone ? selectedViewData?.officePhone : 'None'}</div>
-                      <div><strong>Phone (Mobile)</strong></div>
+                      <div>
+                        <strong>Phone (Mobile)</strong>
+                      </div>
                       <div>{'None'}</div>
-                      <div><strong>Other contact information</strong></div>
+                      <div>
+                        <strong>Other contact information</strong>
+                      </div>
                       <div>{'None'}</div>
                     </div>
                   </AccordionItem>
@@ -150,8 +252,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
             </TabPanels>
           </Tabs>
         </>
-      )
-      }
+      )}
     </>
   );
 }

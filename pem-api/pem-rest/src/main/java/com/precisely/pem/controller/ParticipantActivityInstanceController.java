@@ -118,7 +118,7 @@ public class ParticipantActivityInstanceController {
         return new ResponseEntity<>(messageResp, HttpStatus.OK);
     }
 
-    @Operation(summary = "Get Task details for specific task")
+    @Operation(summary = "Get Task details for specific task [DO NOT USE]")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
                     @Content(schema = @Schema(implementation = ActivityTaskDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
@@ -135,12 +135,12 @@ public class ParticipantActivityInstanceController {
     })
     @GetMapping("/{pcptActivityInstKey}/tasks/{taskKey}")
     public ResponseEntity<ActivityTaskDto> getTaskDetails(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "pcptActivityInstKey")String pcptActivityInstKey, @PathVariable(value = "taskKey")String taskKey) throws Exception{
-        ActivityTaskDto ActivitytaskDTO = participantActivityInstService.getTaskDetails(sponsorContext,pcptActivityInstKey,taskKey);
+        ActivityTaskDto ActivitytaskDTO = participantActivityInstService.getNodeDetails(sponsorContext,pcptActivityInstKey,taskKey);
         return new ResponseEntity<>(ActivitytaskDTO,HttpStatus.OK);
 
     }
 
-    @Operation(summary = "Submit/Resume activity for form node")
+    @Operation(summary = "Submit/Resume activity for form node [DO NOT USE]")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
                     @Content(schema = @Schema(implementation = ParticipantActivityInstResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
@@ -159,7 +159,82 @@ public class ParticipantActivityInstanceController {
     public ResponseEntity<MarkAsFinalActivityDefinitionVersionResp> submitTask(@PathVariable(value = "sponsorContext")String sponsorContext,
                                                                                @PathVariable(value = "pcptActivityInstKey")String pcptActivityInstKey,
                                                                                @PathVariable(value = "taskKey")String taskKey, @RequestBody String data) throws Exception{
-        MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersionResp = participantActivityInstService.submitTask(sponsorContext,pcptActivityInstKey,taskKey,data);
+        // TODO : Do we required this api?
+        //MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersionResp = participantActivityInstService.completeNode(sponsorContext,pcptActivityInstKey,taskKey,data);
+        return new ResponseEntity<>(null,HttpStatus.OK);
+
+    }
+
+    @Operation(summary = "Get Node details for specific Node")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ActivityTaskDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityTaskDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "400", description = "Exception in getting the Participant Activity Instance", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "404", description = "There is no Participant Activity Instance", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "422", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)})
+    })
+    @GetMapping("/{pcptActivityInstKey}/nodes/{nodeKey}")
+    public ResponseEntity<ActivityTaskDto> getNodeDetails(@PathVariable(value = "sponsorContext")String sponsorContext,
+                                                          @PathVariable(value = "pcptActivityInstKey")String pcptActivityInstKey,
+                                                          @PathVariable(value = "nodeKey")String nodeKey) throws Exception{
+        ActivityTaskDto ActivitytaskDTO = participantActivityInstService.getNodeDetails(sponsorContext,pcptActivityInstKey,nodeKey);
+        return new ResponseEntity<>(ActivitytaskDTO,HttpStatus.OK);
+
+    }
+
+    @Operation(summary = "Submit activity for form node")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ParticipantActivityInstResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ParticipantActivityInstResp.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "400", description = "Exception in getting the Participant Activity Instance", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "404", description = "There is no Participant Activity Instance", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "422", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)})
+    })
+
+    @PostMapping("/{pcptActivityInstKey}/nodes/{nodeKey}/actions/submit")
+    public ResponseEntity<MarkAsFinalActivityDefinitionVersionResp> submitNode(@PathVariable(value = "sponsorContext")String sponsorContext,
+                                                                               @PathVariable(value = "pcptActivityInstKey")String pcptActivityInstKey,
+                                                                               @PathVariable(value = "nodeKey")String nodeKey, @RequestBody String data) throws Exception{
+        MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersionResp = participantActivityInstService.completeNode(sponsorContext,pcptActivityInstKey,nodeKey,data,false);
+        return new ResponseEntity<>(markAsFinalActivityDefinitionVersionResp,HttpStatus.OK);
+
+    }
+
+    @Operation(summary = "Save activity for form node")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ParticipantActivityInstResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ParticipantActivityInstResp.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "400", description = "Exception in getting the Participant Activity Instance", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "404", description = "There is no Participant Activity Instance", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "422", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)})
+    })
+
+    @PostMapping("/{pcptActivityInstKey}/nodes/{nodeKey}/actions/save")
+    public ResponseEntity<MarkAsFinalActivityDefinitionVersionResp> saveNode(@PathVariable(value = "sponsorContext")String sponsorContext,
+                                                                               @PathVariable(value = "pcptActivityInstKey")String pcptActivityInstKey,
+                                                                               @PathVariable(value = "nodeKey")String nodeKey, @RequestBody String data) throws Exception{
+        MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersionResp = participantActivityInstService.completeNode(sponsorContext,pcptActivityInstKey,nodeKey,data,true);
         return new ResponseEntity<>(markAsFinalActivityDefinitionVersionResp,HttpStatus.OK);
 
     }

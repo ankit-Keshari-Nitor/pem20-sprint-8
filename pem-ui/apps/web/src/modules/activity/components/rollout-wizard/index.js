@@ -55,12 +55,6 @@ const ActivityRolloutModal = (props) => {
         setFormErrors({ ...formErrors, partnersDetails: false });
       }
     }
-
-    let dueDate = new Date(rolloutDetails.dueDate);
-    let alertDate = new Date(rolloutDetails.alertDate);
-    if (alertDate.getTime() > dueDate.getTime()) {
-      setFormErrors({ ...formErrors, alertDate: false });
-    }
   }, [rolloutDetails, rolloutPartnersData, formErrors]);
 
   const validateValues = (inputValues) => {
@@ -83,13 +77,6 @@ const ActivityRolloutModal = (props) => {
         errors.partnersDetails = true;
       }
     }
-
-    let dueDate = new Date(inputValues.dueDate);
-    let alertDate = new Date(inputValues.alertDate);
-    if (alertDate.getTime() > dueDate.getTime()) {
-      errors.alertDate = true;
-    }
-
     return errors;
   };
 

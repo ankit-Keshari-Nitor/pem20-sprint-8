@@ -1,6 +1,5 @@
 package com.precisely.pem.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.precisely.pem.dtos.requests.ProcessDataEvaluation;
@@ -15,22 +14,18 @@ import com.precisely.pem.service.PEMActivitiService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -319,11 +314,10 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
     }
 
     private static Map<String, Object>  getMockedProcessVariables() throws IOException {
-        String projectBasePath = System.getProperty("user.dir");
-        String fullPath = projectBasePath + "\\" + CONTEXT_DATA_FILE_RELATIVE_PATH;
-
-        String contextDatJson = new String(Files.readAllBytes(Paths.get(fullPath)));
+        ClassPathResource classPathResource = new ClassPathResource(CONTEXT_DATA_SAMPLE_JSON);
+        Path filePath = Paths.get(classPathResource.getURI());
+        String contextDataJson = new String(Files.readAllBytes(filePath));
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(contextDatJson, new TypeReference<HashMap<String, Object>>() {});
+        return objectMapper.readValue(contextDataJson, new TypeReference<HashMap<String, Object>>() {});
     }
 }

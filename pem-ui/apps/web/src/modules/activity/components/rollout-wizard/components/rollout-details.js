@@ -9,6 +9,14 @@ export default function RolloutDetails(props) {
   const rolloutPartnersDataLength =
     rolloutPartnersData.selectedGroupsData.length + rolloutPartnersData.selectedAttributesData.length + rolloutPartnersData.selectedPartnersData.length;
 
+
+  const getMinDate = (daysToAdd = 0, alertDate) => {
+    const date = alertDate ? new Date(alertDate) : new Date();
+    date.setDate(date.getDate() + daysToAdd);
+    return date.toLocaleDateString('en-US');
+  };
+
+
   return (
     <>
       <Grid className="define-grid">
@@ -19,9 +27,9 @@ export default function RolloutDetails(props) {
             required
             pattern="/^[^&<>'.{}]+$/i"
             data-testid="name"
-            labelText="Name (required)"
+            labelText="Name (mandatory)"
             placeholder={'Enter Name'}
-            invalidText={'Name is required.'}
+            invalidText={'Name is a mandatory field.'}
             invalid={formErrors.name}
             value={rolloutDetails.name}
             onChange={(e) => setRolloutDetails((prev) => ({ ...prev, name: e.target.value }))}
@@ -54,20 +62,18 @@ export default function RolloutDetails(props) {
         </Column>
         {/*  Due Date */}
         <Column className="col-margin" lg={4}>
-          <DatePicker
-            datePickerType="single"
-            value={rolloutDetails.dueDate}
-            minDate={new Date().setDate(new Date().getDate())}
+          <DatePicker datePickerType="single"
+            minDate={getMinDate(0)}
+            value={new Date(rolloutDetails.dueDate).toLocaleDateString('en-US')}
             onChange={(e) =>
               setRolloutDetails((prev) => ({
                 ...prev,
-                dueDate: e.target.value
+                dueDate: e
               }))
             }
           >
             <DatePickerInput
-              id="due_date"
-              data-testid="due-date"
+              placeholder="mm/dd/yyyy"
               labelText={
                 <>
                   Due Date&nbsp;
@@ -76,23 +82,23 @@ export default function RolloutDetails(props) {
                   </Tooltip>
                 </>
               }
-              placeholder="mm/dd/yyyy"
-              size="md"
-            />
+              id="due-date"
+              size="md" />
           </DatePicker>
         </Column>
         {/*  Alert Date */}
         <Column className="col-margin" lg={4}>
           <DatePicker
             datePickerType="single"
-            value={rolloutDetails.alertDate}
-            minDate={new Date().setDate(new Date().getDate() + 2)}
+            value={new Date(rolloutDetails.alertDate).toLocaleDateString('en-US')}
+            minDate={getMinDate(1, rolloutDetails.dueDate)}
             onChange={(e) =>
               setRolloutDetails((prev) => ({
                 ...prev,
-                alertDate: e.target.value
+                alertDate: e
               }))
             }
+
           >
             <DatePickerInput
               id="alert_date"
@@ -163,8 +169,8 @@ export default function RolloutDetails(props) {
                 <TextArea
                   id="partners_rollout"
                   data-testid="partners_rollout"
-                  labelText="Partner, Groups and Attributes (required)"
-                  invalidText={'Partner, Groups and Attributes are required'}
+                  labelText="Partner, Groups and Attributes (mandatory)"
+                  invalidText={'Partner, Groups and Attributes are mandatory'}
                   invalid={formErrors.partnersDetails}
                   required
                   placeholder={'Click on add button to Partners, Attributes and Groups '}
@@ -188,7 +194,7 @@ export default function RolloutDetails(props) {
                   <>
                     {rolloutPartnersData.selectedAttributesData.map((item) => {
                       return (
-                        <Tag className="some-class" type="blue" id={`tag-${item.attributeTypeKey}`} onClose={() => console.log('ankit')}>
+                        <Tag className="some-class" type="blue" filter onClose={() => handleRemovePartners([item.attributeUniqueId])} key={item.attributeUniqueId}>
                           {item.attrValue}
                         </Tag>
                       );
@@ -199,7 +205,7 @@ export default function RolloutDetails(props) {
                   <>
                     {rolloutPartnersData.selectedGroupsData.map((item) => {
                       return (
-                        <Tag className="some-class" type="blue" id={`tag-${item.key}`} onClose={() => console.log('test')}>
+                        <Tag className="some-class" type="blue" filter onClose={() => handleRemovePartners([item.groupUniqueId])} key={item.groupUniqueId} >
                           {item.value}
                         </Tag>
                       );
@@ -213,7 +219,7 @@ export default function RolloutDetails(props) {
             </Button>
           </Column>
         )}
-      </Grid>
+      </Grid >
     </>
   );
 }

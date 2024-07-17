@@ -71,7 +71,7 @@ export default function RolloutDetails(props) {
                   <span className="show-code-title">Show Code</span>
                 </div>
                 <div className="context-data-code-container">
-                  <span className="context-data-code">Context Data Mapping View Show here</span>
+                  <span className="context-data-code">{rolloutDetails.contextData}</span>
                 </div>
               </div>
             </Column>

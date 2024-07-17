@@ -20,7 +20,8 @@ const ActivityRolloutModal = (props) => {
     alertDate: tomorrow,
     alertInterval: 1,
     rollingOutTo: 'internal_users',
-    partnersDetails: ''
+    partnersDetails: '',
+    contextData: 'Context Data'
   });
 
   // Final Submit

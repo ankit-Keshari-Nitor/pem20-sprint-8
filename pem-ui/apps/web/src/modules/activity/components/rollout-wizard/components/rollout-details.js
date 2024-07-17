@@ -190,7 +190,7 @@ export default function RolloutDetails(props) {
                   id="partners_rollout"
                   data-testid="partners_rollout"
                   labelText="Partner, Groups and Attributes (mandatory)"
-                  invalidText={'Partner, Groups and Attributes are mandatory'}
+                  invalidText={'None of the Trading Partners is selected.'}
                   invalid={formErrors.partnersDetails}
                   required
                   placeholder={'Click on add button to Partners, Attributes and Groups '}

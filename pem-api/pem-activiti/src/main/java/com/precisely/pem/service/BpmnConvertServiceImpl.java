@@ -74,16 +74,18 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     /*This method will accept bmn xml definition in Blob and convert into pem bpmn json and return InputStreamResource which will be return to UI.*/
     @Override
     public InputStreamResource getPemBpmnJsonData(Blob activityDefnData) throws SQLException, XMLStreamException, IOException {
+        PemBpmnModel pemBpmnModel = getPemBpmnModel(activityDefnData);
+        String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(pemBpmnModel);
+        InputStream bpmnModelToJsonStream = new ByteArrayInputStream(jsonString.getBytes());
+        return new InputStreamResource(bpmnModelToJsonStream);
+    }
+
+    public PemBpmnModel getPemBpmnModel(Blob activityDefnData) throws SQLException, XMLStreamException {
         BpmnModel bpmnModel = getBpmnModel(activityDefnData);
 
         //This will convert BPMN Model into PemBpmnModel object.
         log.debug("Conversion of Bpmn Model into Pem Bpmn Model started.");
-        PemBpmnModel pemBpmnModel = convertToPemProcess(bpmnModel, BpmnConverterRequest.builder().build());
-
-        String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(pemBpmnModel);
-        InputStream bpmnModelToJsonStream = new ByteArrayInputStream(jsonString.getBytes());
-
-        return new InputStreamResource(bpmnModelToJsonStream);
+        return convertToPemProcess(bpmnModel, BpmnConverterRequest.builder().build());
     }
 
     @Override
@@ -217,12 +219,12 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     private String validateAndGetContextData(PemBpmnModel pemBpmnModel) throws BpmnConverterException {
         try {
             // Parse and validate the JSON string
-            objectMapper.readTree(pemBpmnModel.getProcess().getProcessData().getContextData());
+            objectMapper.readTree(pemBpmnModel.getProcess().getContextData());
         } catch (Exception e) {
             log.error("Invalid Context Data JSON: " + e.getMessage());
             throw new BpmnConverterException("ConvertToBpmnDefinition", "Invalid Context Data JSON.");
         }
-        return pemBpmnModel.getProcess().getProcessData().getContextData();
+        return pemBpmnModel.getProcess().getContextData();
     }
 
     /* This will add UserTask from System Side into each subprocess. There should be Start Node in subprocess.*/
@@ -425,7 +427,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
                 connectors.add(createConnector((SequenceFlow) sequeunceFlowElement, bpmnModel));
             }
             log.debug("======= Generated Pem Bpmn Model Connectors successfully.");
-            pemProcess.setProcessData(ProcessData.builder().contextData(getContextDataFromProcess(process)).build());
+            pemProcess.setContextData(getContextDataFromProcess(process));
             log.debug("======= Add ContextData successfully.");
             pemProcess.setNodes(nodes);
             pemProcess.setConnectors(connectors);

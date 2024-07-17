@@ -24,10 +24,10 @@
       "ciphers": {
         "cipher": [
           {
-            "name": ""
+            "name": "cipher1"
           },
           {
-            "name": ""
+            "name": "cipher2"
           }
         ]
       },

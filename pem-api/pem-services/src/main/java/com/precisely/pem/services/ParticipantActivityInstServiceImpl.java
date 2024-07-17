@@ -2,8 +2,13 @@ package com.precisely.pem.services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ReadContext;
+import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
 import com.precisely.pem.commonUtil.PcptInstProgress;
 import com.precisely.pem.commonUtil.PcptInstStatus;
+import com.precisely.pem.dtos.requests.ProcessDataEvaluation;
 import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityInstStatsDto;
 import com.precisely.pem.dtos.shared.PaginationPcptInstDto;
@@ -14,6 +19,7 @@ import com.precisely.pem.exceptionhandler.ParamMissingException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.*;
 import com.precisely.pem.repositories.*;
+import com.precisely.pem.service.BpmnConvertService;
 import com.precisely.pem.service.PEMActivitiService;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -31,12 +37,7 @@ import java.sql.Blob;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,6 +62,10 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
     private ActivityDefnVersionRepo activityDefnVersionRepo;
     @Autowired
     private ActivityDefnRepo activityDefnRepo;
+    @Autowired
+    private ActivityDefnDataRepo activityDefnDataRepo;
+    @Autowired
+    private BpmnConvertService bpmnConvertService;
 
     @Autowired
     ActivityProcDefRepo activityProcDefRepo;
@@ -355,7 +360,7 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
         if(Objects.isNull(activityProcDefList) || activityProcDefList.isEmpty()){
             throw new ResourceNotFoundException("ActivityProcDefListEmpty", "The activity process definition not found.");
         }
-        String processInstanceId = pemActivitiService.startProcessInstanceById(activityProcDefList.get(0).getId(),null, contextData);
+        String processInstanceId = pemActivitiService.startProcessInstanceById(activityProcDefList.get(0).getId(),null,contextData);
         log.info("processInstanceId = "+processInstanceId);
         if(Objects.isNull(processInstanceId)){
             throw new ResourceNotFoundException("CouldNotStartInstance", "The participant activity instance could not be started. Kindly check.");
@@ -363,10 +368,43 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
         pcptActivityInst.setActivityWorkflowInstKey(processInstanceId);
         pcptActivityInst.setPcptInstStatus(PcptInstStatus.STARTED.getPcptInstStatus());
         pcptInstRepo.save(pcptActivityInst);
-
         return MessageResp.builder()
                 .response("SUCCESS")
                 .build();
+    }
+
+    @Override
+    public ProcessEvaluationResponse evaluatePaths(String pcptActivityInstKey, ProcessDataEvaluation jsonPath) throws Exception {
+        Optional<PcptActivityInst> pcptActivityInst = pcptInstRepo.findById(pcptActivityInstKey);
+        if (pcptActivityInst.isEmpty()) {
+            throw new ResourceNotFoundException("pcptActivityInstKey", "NoDataFound", "PcptActivityInst with key '" + pcptActivityInstKey + "' not found. Kindly check the pcptActivityInstKey.");
+        }
+
+        if(Objects.isNull(pcptActivityInst.get().getActivityWorkflowInstKey())){
+            throw new ResourceNotFoundException("activityWorkflowInstKey", "NoDataFound", "Pcpt activity instance not started.");
+        }
+
+        ProcessEvaluationResponse response = new ProcessEvaluationResponse();
+        List<ProcessEvaluationResponse.Result> processEvaluationResult = new ArrayList<>();
+
+        Map<String,Object> processVars = pemActivitiService.getProcessVariables(pcptActivityInst.get().getActivityWorkflowInstKey());
+        ObjectMapper mapper = new ObjectMapper();
+        String processDataString = mapper.writeValueAsString(processVars);
+        if (Objects.isNull(processVars) || processVars.isEmpty()){
+            throw new ResourceNotFoundException("ProcessData", "NoDataFound","Process Data is not found for PcptActivityInst with key " + pcptActivityInstKey );
+        }
+        Configuration conf = Configuration.defaultConfiguration();
+        conf.jsonProvider( new JsonOrgJsonProvider());
+        ReadContext ctx = JsonPath.using(conf).parse(processDataString);
+
+        for(String path : jsonPath.getPaths()){
+            ProcessEvaluationResponse.Result result = new ProcessEvaluationResponse.Result();
+            result.setPath(path);
+            result.setValue(ctx.read(path));
+            processEvaluationResult.add(result);
+        }
+        response.setProcessEvaluationResult(processEvaluationResult);
+        return response;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.precisely.pem.controller;
 import com.precisely.pem.commonUtil.PcptInstProgress;
 import com.precisely.pem.commonUtil.PcptInstStatus;
 import com.precisely.pem.commonUtil.SortDirection;
+import com.precisely.pem.dtos.requests.ProcessDataEvaluation;
 import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.exceptionhandler.ErrorResponseDto;
 import com.precisely.pem.exceptionhandler.InvalidStatusException;
@@ -15,7 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -236,5 +237,27 @@ public class ParticipantActivityInstanceController {
         MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersionResp = participantActivityInstService.completeNode(sponsorContext,pcptActivityInstKey,nodeKey,data,true);
         return new ResponseEntity<>(markAsFinalActivityDefinitionVersionResp,HttpStatus.OK);
 
+    }
+
+    @Operation(summary = "Evaluate Path from Pcpt Activity Instance Context Data")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ProcessEvaluationResponse.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ProcessEvaluationResponse.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "400", description = "Pcpt Activity Instance not found", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+    })
+    @PostMapping( value = "/{pcptActivityInstKey}/actions/evaluatePaths" ,consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<ProcessEvaluationResponse> evaluatePaths(@PathVariable(value = "sponsorContext")String sponsorContext, @RequestBody ProcessDataEvaluation jsonPath, @PathVariable(value = "pcptActivityInstKey")String pcptActivityInstKey) throws Exception {
+        if(log.isEnabled(Level.INFO))
+            log.info("evaluatePaths: Starts");
+        ProcessEvaluationResponse activityContextData = participantActivityInstService.evaluatePaths(pcptActivityInstKey,jsonPath);
+        return  ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(activityContextData);
     }
 }

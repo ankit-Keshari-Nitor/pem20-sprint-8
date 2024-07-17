@@ -14,10 +14,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -47,6 +52,7 @@ public class BaseServiceTest {
     public static final String TEST_NAME = "test";
     public static final String TEST_ACTIVITY_INSTANCE_KEY = "test_activity_instance_key";
     public static final String TEST_PCPT_ACTIVITY_INSTANCE_KEY = "test_pcpt_activity_instance_key";
+    public static final String TEST_ACTIVITY_WORK_FLOW_INSTANCE_KEY = "activity_work_flow_inst_key";
     public static final String TEST_PARTNER_KEY = "test_partner_key";
     public static final String TEST_PARTNER_NAME = "test_partner_name";
     public static final String TEST_CURRENT_TASK_NAME = "test_current_task_name";
@@ -59,10 +65,16 @@ public class BaseServiceTest {
     public static final String ACTIVITY_DEFINITION_ALREADY_DELETED = "Activity Definition with key '" + TEST_ACTIVITY_DEFN_KEY + "' is already in Deleted state.";
     public static final String ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND = "Activity Definition Version Data with key '"+TEST_ACTIVITY_DEFN_VERSION_DATA_KEY+"' not found. Kindly check the activityDefnDataKey.";
     public static final String ACTIVITY_DEFINITION_VERSION_NOT_FOUND = "Activity Definition Version with key '"+TEST_ACTIVITY_DEFN_VERSION_KEY+"' not found. Kindly check the activityDefnVersionKey.";
+    public static final String PCPT_ACTIVITY_INSTANCE_NOT_FOUND = "PcptActivityInst with key '"+TEST_PCPT_ACTIVITY_INSTANCE_KEY+"' not found. Kindly check the pcptActivityInstKey.";
+    public static final String PCPT_ACTIVITY_INSTANCE_PROCESS_DATA_NOT_FOUND = "Process Data is not found for PcptActivityInst with key " + TEST_PCPT_ACTIVITY_INSTANCE_KEY ;
+    public static final String PCPT_ACTIVITY_INSTANCE_NOT_STARTED = "Pcpt activity instance not started.";
     public static final String ACTIVITY_DEFINITION_VERSION_UPDATED = "Activity Definition Version Updated.";
     public static final String ACTIVITY_DEFINITION_VERSION_REQUIRED_SINGLE_FIELD_TO_UPDATE = "Complete Request Body cannot be empty, please provide atleast one input parameter for update";
     public static final String ACTIVITY_DEFINITION_VERSION_IS_IN_FINAL_DELETE_STATUS = "Activity Definition Version is in FINAL/DELETE status.";
     public static final String ACTIVITY_DEFN_KEY_WHICH_IS_ALREADY_IN_DELETED_STATE = "Cannot Update Activity Definition with key '"+TEST_ACTIVITY_DEFN_KEY+"' which is already in Deleted state.";
+    public static final String TEST_CONTEXT_DATA_FIELD = "TEST_FTP_NETMAP";
+
+    public static final String CONTEXT_DATA_FILE_RELATIVE_PATH = "..\\pem-activiti\\src\\test\\resources\\context_data_sample.json";
 
     @Mock
     protected ActivityDefnRepo activityDefnRepo;

@@ -1,7 +1,9 @@
 package com.precisely.pem.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.precisely.pem.commonUtil.PcptInstStatus;
+import com.precisely.pem.dtos.requests.ProcessDataEvaluation;
 import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.PcptActivityInstDto;
 import com.precisely.pem.dtos.shared.TenantContext;
@@ -12,18 +14,19 @@ import com.precisely.pem.repositories.ActivityProcDefRepo;
 import com.precisely.pem.service.PEMActivitiService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 
 import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Blob;
 import java.time.LocalDateTime;
+import java.util.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -38,8 +41,6 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
 
     @InjectMocks
     protected ParticipantActivityInstServiceImpl participantActivityInstServiceImpl;
-    @Mock
-    private ObjectMapper objectMapper;
     @Mock
     private ActivityProcDefRepo activityProcDefRepo;
     @Mock
@@ -241,5 +242,88 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
         Map<String, Object> expectedVariables = new HashMap<>();
         expectedVariables.put("draft", data);
         verify(pemActivitiService).setTaskVariables(nodeKey, expectedVariables);
+    }
+
+    @Test
+    public void evaluatePath_Success() throws Exception {
+        PcptActivityInst pcptActivityInst = new PcptActivityInst();
+        pcptActivityInst.setActivityWorkflowInstKey(TEST_ACTIVITY_WORK_FLOW_INSTANCE_KEY);
+        when(pcptInstRepo.findById(ArgumentMatchers.anyString())).thenReturn(Optional.of(pcptActivityInst));
+
+        when(pemActivitiService.getProcessVariables(ArgumentMatchers.anyString())).thenReturn(getMockedProcessVariables());
+
+        List<String> paths = new ArrayList<>();
+        paths.add("$.applications.SSP.FTP_Netmap");
+        paths.add("$.applications.SSP.ciphers.cipher[*]");
+        paths.add("$.applications.SponsorConfigurations.CustomProtocols.protocol[?(@._name == 'http-protocol')]");
+        ProcessEvaluationResponse response = participantActivityInstServiceImpl.evaluatePaths(TEST_PCPT_ACTIVITY_INSTANCE_KEY,
+                ProcessDataEvaluation
+                        .builder()
+                        .paths(paths)
+                        .build());
+
+        assertEquals(TEST_CONTEXT_DATA_FIELD, response.getProcessEvaluationResult().get(0).getValue());
+        assertNotNull(response.getProcessEvaluationResult().get(1).getValue());
+        assertNotNull(response.getProcessEvaluationResult().get(2).getValue());
+
+    }
+
+    @Test
+    public void evaluatePath_PcptInstanceKeyNotFound_Failure() {
+
+        when(pcptInstRepo.findById(ArgumentMatchers.anyString())).thenReturn(Optional.empty());
+
+        List<String> paths = new ArrayList<>();
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> participantActivityInstServiceImpl.
+                evaluatePaths(TEST_PCPT_ACTIVITY_INSTANCE_KEY,ProcessDataEvaluation
+                        .builder()
+                        .paths(paths)
+                        .build()));
+
+        assertNotNull(exception);
+        assertEquals(PCPT_ACTIVITY_INSTANCE_NOT_FOUND,exception.getMessage());
+    }
+
+    @Test
+    public void evaluatePath_ProcessDataNotFound_Failure() {
+        PcptActivityInst pcptActivityInst = new PcptActivityInst();
+        pcptActivityInst.setActivityWorkflowInstKey(TEST_ACTIVITY_WORK_FLOW_INSTANCE_KEY);
+        when(pcptInstRepo.findById(ArgumentMatchers.anyString())).thenReturn(Optional.of(pcptActivityInst));
+
+        when(pemActivitiService.getProcessVariables(ArgumentMatchers.anyString())).thenReturn(null );
+        List<String> paths = new ArrayList<>();
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> participantActivityInstServiceImpl.
+                evaluatePaths(TEST_PCPT_ACTIVITY_INSTANCE_KEY,ProcessDataEvaluation
+                        .builder()
+                        .paths(paths)
+                        .build()));
+
+        assertNotNull(exception);
+        assertEquals(PCPT_ACTIVITY_INSTANCE_PROCESS_DATA_NOT_FOUND,exception.getMessage());
+    }
+
+    @Test
+    public void evaluatePath_PcptActivityNotStarted_Failure() {
+        PcptActivityInst pcptActivityInst = new PcptActivityInst();
+        when(pcptInstRepo.findById(ArgumentMatchers.anyString())).thenReturn(Optional.of(pcptActivityInst));
+
+        List<String> paths = new ArrayList<>();
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> participantActivityInstServiceImpl.
+                evaluatePaths(TEST_PCPT_ACTIVITY_INSTANCE_KEY,ProcessDataEvaluation
+                        .builder()
+                        .paths(paths)
+                        .build()));
+
+        assertNotNull(exception);
+        assertEquals(PCPT_ACTIVITY_INSTANCE_NOT_STARTED,exception.getMessage());
+    }
+
+    private static Map<String, Object>  getMockedProcessVariables() throws IOException {
+        String projectBasePath = System.getProperty("user.dir");
+        String fullPath = projectBasePath + "\\" + CONTEXT_DATA_FILE_RELATIVE_PATH;
+
+        String contextDatJson = new String(Files.readAllBytes(Paths.get(fullPath)));
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(contextDatJson, new TypeReference<HashMap<String, Object>>() {});
     }
 }

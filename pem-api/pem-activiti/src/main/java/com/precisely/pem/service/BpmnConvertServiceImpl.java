@@ -74,16 +74,18 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     /*This method will accept bmn xml definition in Blob and convert into pem bpmn json and return InputStreamResource which will be return to UI.*/
     @Override
     public InputStreamResource getPemBpmnJsonData(Blob activityDefnData) throws SQLException, XMLStreamException, IOException {
+        PemBpmnModel pemBpmnModel = getPemBpmnModel(activityDefnData);
+        String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(pemBpmnModel);
+        InputStream bpmnModelToJsonStream = new ByteArrayInputStream(jsonString.getBytes());
+        return new InputStreamResource(bpmnModelToJsonStream);
+    }
+
+    public PemBpmnModel getPemBpmnModel(Blob activityDefnData) throws SQLException, XMLStreamException {
         BpmnModel bpmnModel = getBpmnModel(activityDefnData);
 
         //This will convert BPMN Model into PemBpmnModel object.
         log.debug("Conversion of Bpmn Model into Pem Bpmn Model started.");
-        PemBpmnModel pemBpmnModel = convertToPemProcess(bpmnModel, BpmnConverterRequest.builder().build());
-
-        String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(pemBpmnModel);
-        InputStream bpmnModelToJsonStream = new ByteArrayInputStream(jsonString.getBytes());
-
-        return new InputStreamResource(bpmnModelToJsonStream);
+        return convertToPemProcess(bpmnModel, BpmnConverterRequest.builder().build());
     }
 
     @Override

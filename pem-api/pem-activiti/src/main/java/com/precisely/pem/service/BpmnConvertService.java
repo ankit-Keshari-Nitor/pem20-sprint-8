@@ -2,7 +2,6 @@ package com.precisely.pem.service;
 
 import com.precisely.pem.converter.NodeHandler;
 import com.precisely.pem.dtos.BpmnConverterRequest;
-import com.precisely.pem.dtos.PemBpmnModel;
 import com.precisely.pem.exceptionhandler.BpmnConverterException;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.Process;

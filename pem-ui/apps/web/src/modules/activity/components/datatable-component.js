@@ -32,7 +32,7 @@ const ActivityDataTableComponent = ({
   showDrawer = false
 }) => {
   // Generate action items based on the activity status
-  const renderActionItem = (status, id, versionKey) => {
+  const renderActionItem = (status, id, versionKey, isDefault) => {
     switch (status) {
       case 'DRAFT':
         return (
@@ -48,6 +48,7 @@ const ActivityDataTableComponent = ({
           </div>
         );
       case 'FINAL':
+        if (isDefault === undefined || isDefault) {
         return (
           <div className='tbody-wrapper'>
             <Button kind="tertiary" size="sm" className={showDrawer ? 'action-item-drawer' : 'action-item'} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.ROLLOUT, id)}>
@@ -55,6 +56,9 @@ const ActivityDataTableComponent = ({
             </Button>
           </div>
         );
+      }else {
+        return <div></div>
+      }
       case 'DELETE':
         return (
           <div className='tbody-wrapper'>
@@ -212,7 +216,7 @@ const ActivityDataTableComponent = ({
                         {row.cells.map((cell) => (
                           <TableCell key={cell.id}>
                             {cell.info.header === 'action'
-                              ? renderActionItem(statusCell.value, row.id, versionKeyCell.value)
+                              ? renderActionItem(statusCell.value, row.id, versionKeyCell.value, isDefault?.value)
                               : cell.info.header === 'ellipsis'
                                 ? renderEllipsisMenu(row.id, statusCell.value, isDefault?.value, versionName?.value)
                                 : cell.info.header === 'status'

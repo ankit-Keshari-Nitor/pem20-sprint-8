@@ -3,7 +3,7 @@ import { Grid, Column, Checkbox, Select, SelectItem, Button, Search } from '@car
 import * as RolloutService from '../../../services/rollout-service';
 import './../../style.scss';
 
-export default function RolloutAttributeTab({ handleAddAttributes, handleDetailsViewClick }) {
+export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttributes, handleDetailsViewClick }) {
   const [attributeTypeList, setAttributeTypeList] = useState([]);
   const [selectedAttributeType, setSelectedAttributeType] = useState('');
   const [attributeList, setAttributeList] = useState([]);
@@ -12,6 +12,16 @@ export default function RolloutAttributeTab({ handleAddAttributes, handleDetails
   const [isChecked, setIsChecked] = useState(false);
   const [selectedAttributes, setSelectedAttributes] = React.useState([]);
   const [selectedAttributesData, setSelectedAttributesData] = React.useState([]);
+
+  useEffect(() => {
+    if (rolloutPartnersData.selectedAttributesData.length > 0) {
+      const attributeValueKeys = rolloutPartnersData.selectedAttributesData.map((item) => item.attributeValueKey);
+      if (attributeList.length === attributeValueKeys.length) {
+        setIsChecked(true);
+      }
+      setSelectedAttributes([...attributeValueKeys]);
+    }
+  }, [attributeList]);
 
   // Function to get the attributes types list
   const getAttributeTypes = async () => {

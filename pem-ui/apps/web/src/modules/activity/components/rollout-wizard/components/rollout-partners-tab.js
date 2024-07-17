@@ -4,7 +4,7 @@ import * as RolloutService from '../../../services/rollout-service';
 import { Add } from '@carbon/icons-react';
 import './../../style.scss';
 
-export default function RolloutTradingTab({ handleAddPartners, handleDetailsViewClick }) {
+export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartners, handleDetailsViewClick }) {
   const [selectedPartnerType, setSelectedPartnerType] = useState('company-id');
   const [partnerList, setPartnerList] = useState([]);
   const [searchKey, setSearchKey] = useState('');
@@ -12,6 +12,16 @@ export default function RolloutTradingTab({ handleAddPartners, handleDetailsView
   const [isChecked, setIsChecked] = useState(false);
   const [selectedPartners, setSelectedPartners] = React.useState([]);
   const [selectedPartnersData, setSelectedPartnersData] = React.useState([]);
+
+  useEffect(() => {
+    if (rolloutPartnersData.selectedPartnersData.length > 0) {
+      const partnerUniqueIds = rolloutPartnersData.selectedPartnersData.map((item) => item.partnerUniqueId);
+      if (partnerList.length === partnerUniqueIds.length) {
+        setIsChecked(true);
+      } 
+      setSelectedPartners([...partnerUniqueIds]);
+    }
+  }, [partnerList]);
 
   useEffect(() => {
     getTradingPartnerList(selectedPartnerType, searchKey);

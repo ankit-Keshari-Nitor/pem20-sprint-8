@@ -26,6 +26,7 @@ export default function RolloutPartnersDetails({ handleAddGroups, handleAddAttri
     <Grid className="partners-details-view-container">
       <Column lg={7} className="partners-details-view">
         <RolloutPartnersWizard
+          rolloutPartnersData={rolloutPartnersData}
           handleAddGroups={handleAddGroups}
           handleAddAttributes={handleAddAttributes}
           handleAddPartners={handleAddPartners}

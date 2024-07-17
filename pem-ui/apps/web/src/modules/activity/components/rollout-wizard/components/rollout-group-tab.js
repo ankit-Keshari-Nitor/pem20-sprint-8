@@ -4,7 +4,7 @@ import * as RolloutService from '../../../services/rollout-service';
 
 import './../../style.scss';
 
-export default function RolloutGroupTab({ handleAddGroups, handleDetailsViewClick }) {
+export default function RolloutGroupTab({ rolloutPartnersData, handleAddGroups, handleDetailsViewClick }) {
   const [groupList, setGroupList] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
   const [selectedGroups, setSelectedGroups] = React.useState([]);

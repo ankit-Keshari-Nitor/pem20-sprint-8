@@ -11,13 +11,11 @@ export default function RolloutDetails(props) {
     rolloutPartnersData.selectedGroupsData.length + rolloutPartnersData.selectedAttributesData.length + rolloutPartnersData.selectedPartnersData.length;
   const [showContextData, setShowContextData] = useState(false);
 
-
   const getMinDate = (daysToAdd = 0, alertDate) => {
     const date = alertDate ? new Date(alertDate) : new Date();
     date.setDate(date.getDate() + daysToAdd);
     return date.toLocaleDateString('en-US');
   };
-
 
   return (
     <>
@@ -83,7 +81,8 @@ export default function RolloutDetails(props) {
         <Column className="col-margin" lg={16}></Column>
         {/*  Due Date */}
         <Column className="col-margin" lg={4}>
-          <DatePicker datePickerType="single"
+          <DatePicker
+            datePickerType="single"
             minDate={getMinDate(0)}
             value={new Date(rolloutDetails.dueDate).toLocaleDateString('en-US')}
             onChange={(e) =>
@@ -104,7 +103,8 @@ export default function RolloutDetails(props) {
                 </>
               }
               id="due-date"
-              size="md" />
+              size="md"
+            />
           </DatePicker>
         </Column>
         {/*  Alert Date */}
@@ -119,7 +119,6 @@ export default function RolloutDetails(props) {
                 alertDate: e
               }))
             }
-
           >
             <DatePickerInput
               id="alert_date"
@@ -226,7 +225,7 @@ export default function RolloutDetails(props) {
                   <>
                     {rolloutPartnersData.selectedGroupsData.map((item) => {
                       return (
-                        <Tag className="some-class" type="blue" filter onClose={() => handleRemovePartners([item.groupUniqueId])} key={item.groupUniqueId} >
+                        <Tag className="some-class" type="blue" filter onClose={() => handleRemovePartners([item.groupUniqueId])} key={item.groupUniqueId}>
                           {item.value}
                         </Tag>
                       );
@@ -236,11 +235,11 @@ export default function RolloutDetails(props) {
               </div>
             )}
             <Button className="add-button" kind="secondary" onClick={handleAddClick}>
-              Add
+              {rolloutPartnersDataLength === 0 ? 'Add' : 'Edit'}
             </Button>
           </Column>
         )}
-      </Grid >
+      </Grid>
     </>
   );
 }

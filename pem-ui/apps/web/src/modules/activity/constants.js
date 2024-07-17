@@ -10,7 +10,8 @@ export const API_END_POINTS = {
   ACTIVITY_DEFINITION_VERSION: '/sponsors/{sponsorContext}/v2/activityDefinitions/{activityDefnKey}/version',
   ATTRIBUTE_TYPES: '/rest/sponsors/b2b/attributetypes/',
   ATTRIBUTE_LIST: '/rest/sponsors/b2b/attributetypes',
-  PARTNERS_LIST: '/rest/sponsors/b2b/partners/'
+  PARTNERS_LIST: '/rest/sponsors/b2b/partners/',
+  ACTIVITY_DEFINITION_ROLLOUT: '/sponsors/cashbank//v2/activityInstances'
 };
 
 export const API_METHODS = {

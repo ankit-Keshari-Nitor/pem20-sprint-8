@@ -58,3 +58,24 @@ export const getGroupList = async (selectedAttributeType) => {
   const response = await new Shell.RestApiService().call(dataLoaderConfig, null, generateOptions());
   return response.status ? response?.data : [];
 };
+
+// Function to rollout Activity
+export const rolloutActivity = async (activityDefnVersionKey, rolloutData, rolloutPartnersData) => {
+  let url = `${API_END_POINTS.ACTIVITY_DEFINITION_ROLLOUT}`;
+  let dataLoaderConfig = { url, method: API_METHODS.POST };
+  let data = {
+    activityDefnVersionKey: activityDefnVersionKey,
+    name: rolloutData.name,
+    description: rolloutData.description,
+    alertStartDate: rolloutData.alertDate,
+    alertInterval: rolloutData.alertInterval,
+    dueDate: rolloutData.dueDate,
+    partners: [],
+    contextData: '',
+    rolloutInternally: true,
+    attributeValues: [],
+    attributeGroups: []
+  };
+  const response = await new Shell.RestApiService().call(dataLoaderConfig, data, generateOptions());
+  return response.status ? response?.data : [];
+};

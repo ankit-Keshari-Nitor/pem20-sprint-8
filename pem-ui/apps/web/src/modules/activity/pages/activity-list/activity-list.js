@@ -289,8 +289,8 @@ export default function ActivityList() {
         <ActivityRolloutModal
           showModal={showRolloutModal}
           setShowModal={() => setShowRolloutModal(false)}
-          activityDefKey={selectedActivity ? selectedActivity.activityDefnKey : ''}
-          activityVerKey={selectedActivity ? selectedActivity.activityDefnVersionKey : ''}
+          activityDefnKey={selectedActivity ? selectedActivity.activityDefnKey : ''}
+          activityDefnVersionKey={selectedActivity ? selectedActivity.activityDefnVersionKey : ''}
           activityName={selectedActivity ? selectedActivity.name : ''}
         />
       )}

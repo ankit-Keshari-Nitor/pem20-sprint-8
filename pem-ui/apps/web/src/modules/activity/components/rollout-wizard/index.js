@@ -3,12 +3,14 @@ import GeneralModal from '../../helpers/wrapper-modal';
 
 import RolloutPartnersDetails from './components/rollout-partners-details';
 import RolloutDetails from './components/rollout-details';
+import * as RolloutService from '../../services/rollout-service';
 
 const ActivityRolloutModal = (props) => {
+  const { showModal, setShowModal, activityName, activityDefnKey, activityDefnVersionKey } = props;
+
   const today = new Date();
   let tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
-  const { showModal, setShowModal, activityName } = props;
   const [openAddModal, setOpenAddModal] = useState(false);
   const [formErrors, setFormErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -25,9 +27,9 @@ const ActivityRolloutModal = (props) => {
   });
 
   // Final Submit
-  const handleActivityRollout = () => {
+  const handleActivityRollout = async () => {
     //todo - get all data and call rollout/create instance api from here -- close dialog once done
-    console.log('rolloutDetails', rolloutDetails);
+    const response = await RolloutService.rolloutActivity(activityDefnVersionKey, rolloutDetails, rolloutPartnersData);
   };
 
   useEffect(() => {

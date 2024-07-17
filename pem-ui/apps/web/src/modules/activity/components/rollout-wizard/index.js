@@ -124,7 +124,7 @@ const ActivityRolloutModal = (props) => {
 
   return (
     <>
-      <span className="rollout">
+      <span id="rollout">
         <GeneralModal
           isOpen={showModal}
           modalLabel={`Activity Rollout -${activityName}`}

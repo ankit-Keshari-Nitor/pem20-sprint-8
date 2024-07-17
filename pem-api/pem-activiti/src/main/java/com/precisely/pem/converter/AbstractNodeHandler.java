@@ -1,16 +1,18 @@
 package com.precisely.pem.converter;
 
-import com.fasterxml.jackson.databind.JsonNode;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.precisely.pem.dtos.BpmnConverterRequest;
-import com.precisely.pem.dtos.Node;
+import com.precisely.pem.dtos.*;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.GraphicInfo;
+import org.activiti.bpmn.model.SequenceFlow;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Log4j2
 public abstract class AbstractNodeHandler implements NodeHandler{
@@ -46,4 +48,26 @@ public abstract class AbstractNodeHandler implements NodeHandler{
         }
     }
 
+    public static boolean isSubProcess(String type) {
+        return NodeTypes.PARTNER_SUB_PROCESS.getName().equalsIgnoreCase(type) || NodeTypes.SYSTEM_SUB_PROCESS.getName().equalsIgnoreCase(type)
+                || NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(type);
+    }
+
+    public static Connector createConnector(SequenceFlow sequenceFlow, BpmnModel bpmnModel) {
+        Connector connector = Connector.builder()
+                .id(sequenceFlow.getId())
+                .source(sequenceFlow.getSourceRef())
+                .target(sequenceFlow.getTargetRef())
+                .condition(sequenceFlow.getConditionExpression())
+                .build();
+
+        List<GraphicInfo> locations = bpmnModel.getFlowLocationMap().get(sequenceFlow.getId());
+        if (locations != null) {
+            List<Diagram> diagrams = locations.stream()
+                    .map(location -> Diagram.builder().x((double) Constants.WIDTH /2).y(((double) Constants.HEIGHT /2)).build())
+                    .collect(Collectors.toList());
+            connector.setDiagram(diagrams);
+        }
+        return connector;
+    }
 }

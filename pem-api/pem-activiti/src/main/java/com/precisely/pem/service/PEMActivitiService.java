@@ -53,20 +53,14 @@ public interface PEMActivitiService {
      */
     String startProcessInstanceById(String processDefinitionId, String businessKey, Map<String, Object> variables);
 
-    /**
-     * Completes a task identified by the given task ID.
-     *
-     * @param taskId the ID of the task to complete
-     */
-    void completeTask(String taskId);
 
     /**
-     * Completes a task identified by the given task ID.
+     * Completes a node identified by the given task ID.
      *
      * @param taskId the ID of the task to complete
      * @param input data the ID of the task to complete
      */
-    void completeUserTask(String taskId, String input) throws Exception;
+    void completeUserNode(String taskId, String input) throws Exception;
 
     /**
      * Claims a task for a specific user.
@@ -172,7 +166,7 @@ public interface PEMActivitiService {
      * @param taskId the ID of the task to retrieve variables from
      * @return a TaskDTO associated with the specified task
      */
-    TaskDTO getTaskDetails(String taskId) throws Exception;
+    TaskDTO getUserNodeDetails(String taskId) throws Exception;
 
     /**
      * Retrieves the variables associated with a specific task.
@@ -181,6 +175,14 @@ public interface PEMActivitiService {
      * @return a map of variables associated with the specified task
      */
     Map<String, Object> getTaskVariables(String taskId);
+
+    /**
+     * Retrieves the variables associated with a specific task.
+     *
+     * @param processId the ID of the task to retrieve variables from
+     * @return a map of variables associated with the specified task
+     */
+    Map<String, Object> getProcessVariables(String processId);
 
     /**
      * Sets the variables for a specific task.

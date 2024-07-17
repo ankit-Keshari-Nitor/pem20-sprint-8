@@ -74,6 +74,7 @@ public class ActivityInstServiceImpl implements ActivityInstService{
     @Autowired
     private ModelMapper mapper;
 
+
     @Override
     @Transactional
     public ActivityInstResp createActivityInstance(String sponsorContext, ActivityInstReq activityInstReq) throws ResourceNotFoundException, SQLException, JsonProcessingException, JSONException, InvalidStatusException {

@@ -6,7 +6,7 @@
     "nodes": [
       {
         "id": "StartNode_1",
-        "type": "startEvent",
+        "type": "START",
         "name": "Start",
         "diagram": {
           "x": 200,
@@ -15,7 +15,7 @@
       },
       {
         "id": "EndNode_1",
-        "type": "endEvent",
+        "type": "END",
         "name": "End",
         "diagram": {
           "x": 2500,
@@ -24,7 +24,7 @@
       },
       {
         "id": "EndNode_2",
-        "type": "endEvent",
+        "type": "END",
         "name": "End",
         "diagram": {
           "x": 1000,
@@ -33,7 +33,7 @@
       },
       {
         "id": "FormNode_1",
-        "type": "form",
+        "type": "FORM",
         "name": "User Task Node",
         "userKeys": "user1,user2,user3",
         "roleKeys": "group1,group2",
@@ -46,7 +46,7 @@
       },
       {
         "id": "linkActivity1",
-        "type": "linkActivity",
+        "type": "CALL_ACTIVITY",
         "name": "Activity A calling B",
         "targetActivity": "targetActivityId",
         "inVariables": [
@@ -68,7 +68,7 @@
       },
       {
         "id": "apiNode1",
-        "type": "api",
+        "type": "API",
         "name": "API Node",
         "description": "apiNode-Task to Call user list.",
         "api": {
@@ -90,7 +90,7 @@
       },
       {
         "id": "apiNode2",
-        "type": "api",
+        "type": "API",
         "name": "API Node",
         "description": "apiNode-Task to Call user list.",
         "api": {
@@ -113,7 +113,7 @@
       {
         "id": "xsltNode1",
         "name": "XSLT Node",
-        "type": "xslt",
+        "type": "XSLT",
         "description": "xsltNode- task",
         "xslt": {
           "input": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<catalog>\n  <cd>\n    <title>Empire Burlesque</title>\n    <artist>Bob Dylan</artist>\n    <country>USA</country>\n    <company>Columbia</company>\n    <price>10.90</price>\n    <year>1985</year>\n  </cd>\n</catalog>",
@@ -129,7 +129,7 @@
       {
         "id": "gateway1",
         "name": "Gateway node",
-        "type": "gateway",
+        "type": "GATEWAY",
         "gatewayType": "branchStart",
         "description": "Gateway Description.",
         "diagram": {
@@ -139,15 +139,16 @@
       },
       {
         "id": "SubProcess_1",
-        "type": "PartnerTask",
+        "type": "PARTNER",
         "name": "My Process To call API",
         "description": "This process describes the order fulfilment workflow.",
         "userKeys": "user1,user2,user3",
         "roleKeys": "group1,group2",
+        "estimateDays": 10,
         "nodes": [
           {
             "id": "SubStartNode_1",
-            "type": "startEvent",
+            "type": "START",
             "name": "Start",
             "diagram": {
               "x": 300,
@@ -156,15 +157,17 @@
           },
           {
             "id": "SubSubProcess_2",
-            "type": "SponsorTask",
+            "type": "SPONSOR",
             "name": "Sub Process Node",
             "description": "This process describes the order fulfilment workflow.",
             "userKeys": "user1,user2,user3",
             "roleKeys": "group1,group2",
+            "estimateDays": 100,
+            "showToPartner": false,
             "nodes": [
               {
                 "id": "SubSubStartNode_1",
-                "type": "startEvent",
+                "type": "START",
                 "name": "Start",
                 "diagram": {
                   "x": 300,
@@ -172,13 +175,95 @@
                 }
               },
               {
-                "id": "SubSubEndNode_1",
-                "type": "endEvent",
-                "name": "End",
+                "id": "SubSubSubProcess_3",
+                "type": "SYSTEM",
+                "name": "Sub Process Node",
+                "description": "This process describes the order fulfilment workflow.",
+                "nodes": [
+                  {
+                    "id": "SubSubSubStartNode_1",
+                    "type": "START",
+                    "name": "Start",
+                    "diagram": {
+                      "x": 300,
+                      "y": 2000
+                    }
+                  },
+                  {
+                    "id": "SubSubSubEndNode_1",
+                    "type": "END",
+                    "name": "End",
+                    "diagram": {
+                      "x": 600,
+                      "y": 2000
+                    }
+                  }
+                ],
+                "connectors": [
+                  {
+                    "id": "SequenceFlow13",
+                    "source": "SubSubSubStartNode_1",
+                    "target": "SubSubSubEndNode_1",
+                    "condition": "${condition1}",
+                    "diagram": [
+                      {
+                        "x": 100,
+                        "y": 100
+                      },
+                      {
+                        "x": 100,
+                        "y": 100
+                      }
+                    ]
+                  }
+                ],
                 "diagram": {
                   "x": 600,
                   "y": 1500
                 }
+              },
+              {
+                "id": "SubSubEndNode_1",
+                "type": "END",
+                "name": "End",
+                "diagram": {
+                  "x": 900,
+                  "y": 1500
+                }
+              }
+            ],
+            "connectors": [
+              {
+                "id": "SequenceFlow11",
+                "source": "SubSubStartNode_1",
+                "target": "SubSubSubProcess_3",
+                "condition": "${condition1}",
+                "diagram": [
+                  {
+                    "x": 100,
+                    "y": 100
+                  },
+                  {
+                    "x": 100,
+                    "y": 100
+                  }
+                ]
+              },
+              {
+                "id": "SequenceFlow12",
+                "source": "SubSubSubProcess_3",
+                "target": "SubSubEndNode_1",
+                "condition": "${condition1}",
+                "diagram": [
+                  {
+                    "x": 100,
+                    "y": 100
+                  },
+                  {
+                    "x": 100,
+                    "y": 100
+                  }
+                ]
               }
             ],
             "diagram": {
@@ -188,12 +273,46 @@
           },
           {
             "id": "SubEndNode_1",
-            "type": "endEvent",
+            "type": "END",
             "name": "End",
             "diagram": {
               "x": 1500,
               "y": 1000
             }
+          }
+        ],
+        "connectors": [
+          {
+            "id": "SequenceFlow9",
+            "source": "SubStartNode_1",
+            "target": "SubSubProcess_2",
+            "condition": "${condition1}",
+            "diagram": [
+              {
+                "x": 100,
+                "y": 100
+              },
+              {
+                "x": 100,
+                "y": 100
+              }
+            ]
+          },
+          {
+            "id": "SequenceFlow10",
+            "source": "SubSubProcess_2",
+            "target": "SubEndNode_1",
+            "condition": "${condition1}",
+            "diagram": [
+              {
+                "x": 100,
+                "y": 100
+              },
+              {
+                "x": 100,
+                "y": 100
+              }
+            ]
           }
         ],
         "diagram": {
@@ -284,54 +403,6 @@
         ]
       },
       {
-        "id": "SequenceFlow9",
-        "source": "SubStartNode_1",
-        "target": "SubSubProcess_2",
-        "condition": "${condition1}",
-        "diagram": [
-          {
-            "x": 100,
-            "y": 100
-          },
-          {
-            "x": 100,
-            "y": 100
-          }
-        ]
-      },
-      {
-        "id": "SequenceFlow10",
-        "source": "SubSubProcess_2",
-        "target": "SubEndNode_1",
-        "condition": "${condition1}",
-        "diagram": [
-          {
-            "x": 100,
-            "y": 100
-          },
-          {
-            "x": 100,
-            "y": 100
-          }
-        ]
-      },
-      {
-        "id": "SequenceFlow11",
-        "source": "SubSubStartNode_1",
-        "target": "SubSubEndNode_1",
-        "condition": "${condition1}",
-        "diagram": [
-          {
-            "x": 100,
-            "y": 100
-          },
-          {
-            "x": 100,
-            "y": 100
-          }
-        ]
-      },
-      {
         "id": "SequenceFlow3",
         "source": "SubProcess_1",
         "target": "apiNode1",
@@ -380,8 +451,6 @@
         ]
       }
     ],
-    "processData":{
-      "contextData":"{\"applications\":{\"QA_B2BISFG\":{\"__text\":\"SAMPLE_QA_B2BISFG\",\"_type\":\"APIConfig\"},\"SSP\":{\"Policy\":{\"FTP_Policy\":\"\",\"HTTPS_Policy\":\"\",\"FTPS_Policy\":\"\",\"HTTP_Policy\":\"\",\"CD_Policy\":\"\",\"SFTP_Policy\":\"\"},\"SystemCert\":\"\",\"FTP_Netmap\":\"TEST_FTP_NETMAP\",\"TrustStore\":\"\",\"KeyStore\":\"\",\"SecuritySetting\":\"\",\"SFTP_Netmap\":\"SFTP_TEST\",\"CD_Netmap\":\"CMCD_Netmap\",\"FTPS_Netmap\":\"FTPS_NETMAP\",\"ciphers\":{\"cipher\":[{\"name\":\"\"},{\"name\":\"\"}]},\"Enable\":false,\"HTTP_Netmap\":\"TEST_HTTP_NETMAP\",\"HTTPS_Netmap\":\"HTTPS_NETMAP\",\"ClientAuthentication\":\"\"},\"PR\":{\"__text\":\"SAMPLE_PR\",\"_type\":\"Harsh\"},\"Prod_CM\":{\"__text\":\"SAMPLE_PROD_CM\",\"_type\":\"APIConfig\"},\"Scripts\":{\"FileDrop\":\"\",\"password\":\"\",\"User\":\"\",\"Server\":\"\",\"localFile\":false,\"Port\":22,\"pemKey\":false,\"PGP\":\"\",\"Prod_Server\":\"\"},\"Prod_B2BISFG\":{\"__text\":\"SAMPLE_PROD_B2BISFG\",\"_type\":\"APIConfig\"},\"Prod_B2BISFGHTTP\":{\"__text\":\"SAMPLE_PROD_B2BISFGHTTP\",\"_type\":\"APIConfig\"},\"PEM\":{\"__text\":\"SAMPLE_PEM\",\"_type\":\"APIConfig\"},\"QA_CM\":{\"__text\":\"SAMPLE_QA_CM\",\"_type\":\"APIConfig\"},\"SponsorConfigurations\":{\"AS2\":\"\",\"S3\":\"\",\"prod_codelistVersion_pcm\":\"|||1\",\"RCT\":\"\",\"FTP\":\"\",\"codelist\":\"SFG_FileType\",\"CustomProtocols\":{\"protocol\":[{\"_name\":\"http-protocol\",\"_value\":\"HTTPS\",\"_bp\":\"AFTRouteViaHTTP\"},{\"_name\":\"\",\"_value\":\"HTTPS\"}]},\"prod_codelist\":\"SFG_FileType\",\"Inbound_Envelope_EDIFACT\":{\"_type\":\"activityfiles\"},\"FileRoute\":false,\"codelistVersion\":\"%7C%7C%7C1\",\"codelistVersion_pcm\":\"|||1\",\"Prod_Customer_IPs\":{\"Outbound\":\"\",\"Inbound\":\"\"},\"CD\":\"\",\"ImplementationGuides\":{\"_type\":\"activityfiles\"},\"prod_codelistVersion\":\"%7C%7C%7C1\",\"SFTP\":\"\",\"SFG_Community\":\"CM_PEMCommunity\",\"Outbound_Envelope_EDIFACT\":{\"_type\":\"activityfiles\"},\"Inbound_Envelope_X12\":{\"_type\":\"activityfiles\"},\"NonProd_Customer_IPs\":{\"Outbound\":\"10.0.0.20-10.0.0.30\",\"Inbound\":\"10.0.0.1-10.0.0.10\"},\"FTPS\":\"\",\"Filegateway\":\"\",\"PGP\":\"\",\"Outbound_Envelope_X12\":{\"_type\":\"activityfiles\"},\"NativePGP\":false,\"UserAccount\":{\"AuthenticationHost\":\"\",\"AuthenticationType\":\"Local\",\"LDAPProvisioningEnabled\":false}},\"QA_B2BISFGHTTP\":{\"__text\":\"SAMPLE_QA_B2BISFGHTTP\",\"_type\":\"APIConfig\"}}}\n"
-    }
+    "contextData": "{\"applications\":{\"QA_B2BISFG\":{\"__text\":\"SAMPLE_QA_B2BISFG\",\"_type\":\"APIConfig\"},\"SSP\":{\"Policy\":{\"FTP_Policy\":\"\",\"HTTPS_Policy\":\"\",\"FTPS_Policy\":\"\",\"HTTP_Policy\":\"\",\"CD_Policy\":\"\",\"SFTP_Policy\":\"\"},\"SystemCert\":\"\",\"FTP_Netmap\":\"TEST_FTP_NETMAP\",\"TrustStore\":\"\",\"KeyStore\":\"\",\"SecuritySetting\":\"\",\"SFTP_Netmap\":\"SFTP_TEST\",\"CD_Netmap\":\"CMCD_Netmap\",\"FTPS_Netmap\":\"FTPS_NETMAP\",\"ciphers\":{\"cipher\":[{\"name\":\"\"},{\"name\":\"\"}]},\"Enable\":false,\"HTTP_Netmap\":\"TEST_HTTP_NETMAP\",\"HTTPS_Netmap\":\"HTTPS_NETMAP\",\"ClientAuthentication\":\"\"},\"PR\":{\"__text\":\"SAMPLE_PR\",\"_type\":\"Harsh\"},\"Prod_CM\":{\"__text\":\"SAMPLE_PROD_CM\",\"_type\":\"APIConfig\"},\"Scripts\":{\"FileDrop\":\"\",\"password\":\"\",\"User\":\"\",\"Server\":\"\",\"localFile\":false,\"Port\":22,\"pemKey\":false,\"PGP\":\"\",\"Prod_Server\":\"\"},\"Prod_B2BISFG\":{\"__text\":\"SAMPLE_PROD_B2BISFG\",\"_type\":\"APIConfig\"},\"Prod_B2BISFGHTTP\":{\"__text\":\"SAMPLE_PROD_B2BISFGHTTP\",\"_type\":\"APIConfig\"},\"PEM\":{\"__text\":\"SAMPLE_PEM\",\"_type\":\"APIConfig\"},\"QA_CM\":{\"__text\":\"SAMPLE_QA_CM\",\"_type\":\"APIConfig\"},\"SponsorConfigurations\":{\"AS2\":\"\",\"S3\":\"\",\"prod_codelistVersion_pcm\":\"|||1\",\"RCT\":\"\",\"FTP\":\"\",\"codelist\":\"SFG_FileType\",\"CustomProtocols\":{\"protocol\":[{\"_name\":\"http-protocol\",\"_value\":\"HTTPS\",\"_bp\":\"AFTRouteViaHTTP\"},{\"_name\":\"\",\"_value\":\"HTTPS\"}]},\"prod_codelist\":\"SFG_FileType\",\"Inbound_Envelope_EDIFACT\":{\"_type\":\"activityfiles\"},\"FileRoute\":false,\"codelistVersion\":\"%7C%7C%7C1\",\"codelistVersion_pcm\":\"|||1\",\"Prod_Customer_IPs\":{\"Outbound\":\"\",\"Inbound\":\"\"},\"CD\":\"\",\"ImplementationGuides\":{\"_type\":\"activityfiles\"},\"prod_codelistVersion\":\"%7C%7C%7C1\",\"SFTP\":\"\",\"SFG_Community\":\"CM_PEMCommunity\",\"Outbound_Envelope_EDIFACT\":{\"_type\":\"activityfiles\"},\"Inbound_Envelope_X12\":{\"_type\":\"activityfiles\"},\"NonProd_Customer_IPs\":{\"Outbound\":\"10.0.0.20-10.0.0.30\",\"Inbound\":\"10.0.0.1-10.0.0.10\"},\"FTPS\":\"\",\"Filegateway\":\"\",\"PGP\":\"\",\"Outbound_Envelope_X12\":{\"_type\":\"activityfiles\"},\"NativePGP\":false,\"UserAccount\":{\"AuthenticationHost\":\"\",\"AuthenticationType\":\"Local\",\"LDAPProvisioningEnabled\":false}},\"QA_B2BISFGHTTP\":{\"__text\":\"SAMPLE_QA_B2BISFGHTTP\",\"_type\":\"APIConfig\"}}}\n"
   }
 }

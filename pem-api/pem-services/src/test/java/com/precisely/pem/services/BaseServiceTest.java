@@ -59,6 +59,7 @@ public class BaseServiceTest {
     public static final String TEST_BPMN_PROCESS_ID = "test_bomn_process_id";
     public static final String TEST_CONTEXT_DATA = "{\"app\":\"name\"}";
     public static final String SAMPLE_DATA = "Test Blob Data";
+    public static final String CONTEXT_DATA_SAMPLE_JSON = "context_data_sample.json";
 
     //Response Messages
     public static final String ACTIVITY_DEFINITION_NOT_FOUND = "Activity Definition with key '"+TEST_ACTIVITY_DEFN_KEY+"' not found. Kindly check the activityDefnKey.";

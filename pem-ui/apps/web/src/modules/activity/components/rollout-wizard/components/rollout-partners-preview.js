@@ -15,23 +15,29 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
   const [isChecked, setIsChecked] = useState(false);
   const [selectedPartners, setSelectedPartners] = React.useState([]);
   const [selectedPartnersData, setSelectedPartnersData] = React.useState([]);
-  const isRolloutDataAvl = rolloutPartnersData?.selectedPartnersData.length + rolloutPartnersData?.selectedAttributesData.length + rolloutPartnersData?.selectedGroupsData.length;
 
   const [partnerUserList, setPartnerUserList] = useState([])
   const [selectedPartnerUser, setSelectedPartnerUser] = useState(null);
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
+  // Determine if rollout data is available
+  const isRolloutDataAvl = rolloutPartnersData?.selectedPartnersData.length + rolloutPartnersData?.selectedAttributesData.length + rolloutPartnersData?.selectedGroupsData.length;
+
+  // Effect to reset tab index and clear partner user list when selectedViewData changes
   useEffect(() => {
-    if (selectedViewData?.partnerKey !== undefined) {
-      getPartnerUserList(selectedViewData.partnerKey)
-    }
-  }, [selectedViewData])
+    setSelectedTabIndex(0);
+    setPartnerUserList([]);
+    setSelectedPartnerUser(null)
+  }, [selectedViewData]);
 
+  // Effect to set the first user as the selected partner user when the partner user list changes
   useEffect(() => {
     if (partnerUserList.length > 0) {
       setSelectedPartnerUser(partnerUserList[0]);
     }
   }, [partnerUserList]);
 
+  // Handle checkbox selection for partners
   const handleCheck = (item) => {
     let updatedSelectedPartners;
     let updatedSelectedPartnersData;
@@ -51,6 +57,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
     setIsChecked(updatedSelectedPartners.length === rolloutPartnersData?.selectedPartnersData.length);
   };
 
+  // Handle "Select All" checkbox
   const handleSelectAll = () => {
     if (isChecked) {
       setSelectedPartners([]);
@@ -64,15 +71,32 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
     }
   };
 
-  const getPartnerUserList = async (partnerId) => {
+  // Fetch partner user list based on role and partner ID
+  const getPartnerUserList = async (participantRole, partnerId) => {
     let param = {};
+    participantRole !== '' ? param.participantRole = participantRole : param = {}
     const response = await RolloutService.getPartnerUserList(param, partnerId);
     setPartnerUserList(response);
   };
 
+  // Handle radio button change
   const handleRadioChange = (value) => {
     const partner = partnerUserList.find((item) => item.userName === value);
     setSelectedPartnerUser(partner);
+  };
+
+  const handleTabChange = async (index) => {
+    setSelectedTabIndex(index.selectedIndex);
+    setPartnerUserList([]);
+    setSelectedPartnerUser(null)
+    if (index.selectedIndex === 1) {
+      // Fetch administrators data
+      await getPartnerUserList('PARTNER_ADMIN', selectedViewData.partnerKey);
+    } else if (index.selectedIndex === 2) {
+      // Fetch users data
+      await getPartnerUserList('', selectedViewData.partnerKey);
+    }
+
   };
 
   return (
@@ -175,13 +199,13 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '1rem' }}>
             <div style={{ fontWeight: '600', fontSize: '18px' }}>
-              {selectedViewData?.firstName} {selectedViewData?.lastName} Details
+              {selectedViewData?.nameOfCompany} Details
             </div>
             <div className="close-icon" aria-label="close" onClick={onClose}>
               <CrossIcon />
             </div>
           </div>
-          <Tabs>
+          <Tabs selectedIndex={selectedTabIndex} onChange={handleTabChange}>
             <TabList aria-label="List of tabs">
               <Tab>Organization</Tab>
               <Tab>Administrators</Tab>

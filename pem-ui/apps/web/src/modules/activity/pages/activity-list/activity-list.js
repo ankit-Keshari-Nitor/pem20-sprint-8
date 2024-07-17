@@ -292,6 +292,7 @@ export default function ActivityList() {
           activityDefnKey={selectedActivity ? selectedActivity.activityDefnKey : ''}
           activityDefnVersionKey={selectedActivity ? selectedActivity.activityDefnVersionKey : ''}
           activityName={selectedActivity ? selectedActivity.name : ''}
+          fetchAndSetData={fetchAndSetData}
         />
       )}
     </>

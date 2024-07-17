@@ -37,7 +37,7 @@ export const getPartnerList = async (param) => {
   let dataLoaderConfig = { url, method: API_METHODS.GET };
 
   const response = await new Shell.RestApiService().call(dataLoaderConfig, null, generateOptions(param));
-  return response.status ? response?.data : [];
+  return response.status === 200 ? response?.data : [];
 };
 
 // Function to get the Partners Users List
@@ -47,7 +47,7 @@ export const getPartnerUserList = async (param, partnerId) => {
   let dataLoaderConfig = { url, method: API_METHODS.GET };
 
   const response = await new Shell.RestApiService().call(dataLoaderConfig, null, generateOptions(param));
-  return response.status ? response?.data : [];
+  return response.status === 200 ? response?.data : [];
 };
 
 // Function to get the Group List
@@ -56,7 +56,7 @@ export const getGroupList = async (selectedAttributeType) => {
   let dataLoaderConfig = { url, method: API_METHODS.GET };
 
   const response = await new Shell.RestApiService().call(dataLoaderConfig, null, generateOptions());
-  return response.status ? response?.data : [];
+  return response.status === 200 ? response?.data : [];
 };
 
 // Function to rollout Activity
@@ -71,11 +71,11 @@ export const rolloutActivity = async (activityDefnVersionKey, rolloutData, rollo
     alertInterval: rolloutData.alertInterval,
     dueDate: rolloutData.dueDate,
     partners: [],
-    contextData: '',
-    rolloutInternally: true,
+    contextData: rolloutData.contextData,
+    rolloutInternally: rolloutData.rollingOutTo === 'internal_users' ? true : false,
     attributeValues: [],
     attributeGroups: []
   };
   const response = await new Shell.RestApiService().call(dataLoaderConfig, data, generateOptions());
-  return response.status ? response?.data : [];
+  return response.status === 201 ? true : false;
 };

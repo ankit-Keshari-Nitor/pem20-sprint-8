@@ -291,3 +291,6 @@ export const OPERATIONS = {
   CREATE_NEW_VERSION: 'create_new_version',
   TEST: 'test'
 };
+
+export const DUMMY_CONTEXT_DATA =
+  '{\n\t"ContextData": {\n\t\t"ProvisioningRequest": {\n\t\t\t"RequestType": "ProvisioningRequest",\n\t\t\t"ResourceType": "CODELIST",\n\t\t\t"SubResourceType": "CodeList",\n\t\t\t"ConfigType": "PROD",\n\t\t\t"ResourceKey": "b7f18eb4-b32f-406a-af16-ebb3ce0d0b34",\n\t\t\t"PartnerKey": "9bf632dc-01a4-4dd9-9302-bc9bc4e5d30d",\n\t\t\t"SponsorKey": "761044dd-adea-404d-9ee2-5d7654de7137"\n\t\t},\n\t\t"Topology": {\n\t\t\t"Applications": {\n\t\t\t\t"SFTP": {\n\t\t\t\t\t"_type": "APIConfig",\n\t\t\t\t\t"__text": "d6314576-8aaa-4bd6-8a23-7ccf79f6ec13"\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}';

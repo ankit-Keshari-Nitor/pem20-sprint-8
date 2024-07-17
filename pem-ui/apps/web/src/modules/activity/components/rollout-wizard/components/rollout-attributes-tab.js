@@ -16,12 +16,14 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
   useEffect(() => {
     if (rolloutPartnersData.selectedAttributesData.length > 0) {
       const attributeValueKeys = rolloutPartnersData.selectedAttributesData.map((item) => item.attributeValueKey);
-      if (attributeList.length === attributeValueKeys.length) {
+      if (attributeList.length === attributeValueKeys.length && attributeValueKeys.length > 0) {
         setIsChecked(true);
+      } else {
+        setIsChecked(false);
       }
       setSelectedAttributes([...attributeValueKeys]);
     }
-  }, [attributeList]);
+  }, [attributeList, rolloutPartnersData]);
 
   // Function to get the attributes types list
   const getAttributeTypes = async () => {

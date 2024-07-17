@@ -14,14 +14,14 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
   const [selectedPartnersData, setSelectedPartnersData] = React.useState([]);
 
   useEffect(() => {
-    if (rolloutPartnersData.selectedPartnersData.length > 0) {
-      const partnerUniqueIds = rolloutPartnersData.selectedPartnersData.map((item) => item.partnerUniqueId);
-      if (partnerList.length === partnerUniqueIds.length) {
-        setIsChecked(true);
-      } 
-      setSelectedPartners([...partnerUniqueIds]);
+    const partnerUniqueIds = rolloutPartnersData.selectedPartnersData.map((item) => item.partnerUniqueId);
+    if (partnerList.length === partnerUniqueIds.length && partnerUniqueIds.length > 0) {
+      setIsChecked(true);
+    } else {
+      setIsChecked(false);
     }
-  }, [partnerList]);
+    setSelectedPartners([...partnerUniqueIds]);
+  }, [partnerList, rolloutPartnersData]);
 
   useEffect(() => {
     getTradingPartnerList(selectedPartnerType, searchKey);

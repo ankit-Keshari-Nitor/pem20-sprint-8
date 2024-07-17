@@ -4,9 +4,12 @@ import GeneralModal from '../../helpers/wrapper-modal';
 import RolloutPartnersDetails from './components/rollout-partners-details';
 import RolloutDetails from './components/rollout-details';
 import * as RolloutService from '../../services/rollout-service';
+import { DUMMY_CONTEXT_DATA } from '../../constants';
+import WrapperNotification from './../../helpers/wrapper-notification-toast';
 
 const ActivityRolloutModal = (props) => {
-  const { showModal, setShowModal, activityName, activityDefnKey, activityDefnVersionKey } = props;
+  const { showModal, setShowModal, activityName, activityDefnKey, activityDefnVersionKey, fetchAndSetData } = props;
+  const [notificationProps, setNotificationProps] = useState(null);
 
   const today = new Date();
   let tomorrow = new Date(today);
@@ -23,13 +26,21 @@ const ActivityRolloutModal = (props) => {
     alertInterval: 1,
     rollingOutTo: 'internal_users',
     partnersDetails: '',
-    contextData: 'Context Data'
+    contextData: DUMMY_CONTEXT_DATA
   });
 
   // Final Submit
   const handleActivityRollout = async () => {
-    //todo - get all data and call rollout/create instance api from here -- close dialog once done
     const response = await RolloutService.rolloutActivity(activityDefnVersionKey, rolloutDetails, rolloutPartnersData);
+    setNotificationProps({
+      open: true,
+      title: response ? 'Success - ' : 'Error - ',
+      subtitle: response ? 'Action completed successfully!' : `Action not completed successfully!`,
+      kind: response ? 'success' : 'error',
+      onCloseButtonClick: () => setNotificationProps(null)
+    });
+    fetchAndSetData();
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -112,38 +123,42 @@ const ActivityRolloutModal = (props) => {
   };
 
   return (
-    <span className="rollout">
-      <GeneralModal
-        isOpen={showModal}
-        modalLabel={`Activity Rollout -${activityName}`}
-        modalHeading={openAddModal ? 'Adding Partners' : 'Details'}
-        secondaryButtonText={openAddModal ? 'Back to Details' : 'Cancel'}
-        primaryButtonText={openAddModal ? 'Save' : 'Rollout'}
-        onPrimaryButtonClick={handleRolloutSubmit}
-        onSecondaryButtonClick={() => (openAddModal ? handleBackToDetails() : setShowModal(false))}
-        onRequestClose={() => setShowModal(false)}
-      >
-        {openAddModal ? (
-          <RolloutPartnersDetails
-            handleAddGroups={handleAddGroups}
-            handleAddAttributes={handleAddAttributes}
-            handleAddPartners={handleAddPartners}
-            handleRemovePartners={handleRemovePartners}
-            rolloutPartnersData={rolloutPartnersData}
-          />
-        ) : (
-          <RolloutDetails
-            {...props}
-            rolloutDetails={rolloutDetails}
-            setRolloutDetails={setRolloutDetails}
-            handleAddClick={() => setOpenAddModal(true)}
-            formErrors={formErrors}
-            handleRemovePartners={handleRemovePartners}
-            rolloutPartnersData={rolloutPartnersData}
-          />
-        )}
-      </GeneralModal>
-    </span>
+    <>
+      <span className="rollout">
+        <GeneralModal
+          isOpen={showModal}
+          modalLabel={`Activity Rollout -${activityName}`}
+          modalHeading={openAddModal ? 'Adding Partners' : 'Details'}
+          secondaryButtonText={openAddModal ? 'Back to Details' : 'Cancel'}
+          primaryButtonText={openAddModal ? 'Save' : 'Rollout'}
+          onPrimaryButtonClick={handleRolloutSubmit}
+          onSecondaryButtonClick={() => (openAddModal ? handleBackToDetails() : setShowModal(false))}
+          onRequestClose={() => setShowModal(false)}
+        >
+          {openAddModal ? (
+            <RolloutPartnersDetails
+              handleAddGroups={handleAddGroups}
+              handleAddAttributes={handleAddAttributes}
+              handleAddPartners={handleAddPartners}
+              handleRemovePartners={handleRemovePartners}
+              rolloutPartnersData={rolloutPartnersData}
+            />
+          ) : (
+            <RolloutDetails
+              {...props}
+              rolloutDetails={rolloutDetails}
+              setRolloutDetails={setRolloutDetails}
+              handleAddClick={() => setOpenAddModal(true)}
+              formErrors={formErrors}
+              handleRemovePartners={handleRemovePartners}
+              rolloutPartnersData={rolloutPartnersData}
+            />
+          )}
+        </GeneralModal>
+      </span>
+      {/* Notification toast */}
+      {notificationProps && notificationProps.open && <WrapperNotification {...notificationProps} />}
+    </>
   );
 };
 

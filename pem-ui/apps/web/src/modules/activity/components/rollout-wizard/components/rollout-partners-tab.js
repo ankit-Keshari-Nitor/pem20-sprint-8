@@ -25,9 +25,9 @@ export default function RolloutTradingTab({ handleAddPartners, handleDetailsView
 
   const getTradingPartnerList = async (type, searchKey) => {
     let param = {};
-    if (type === 'user-id' && searchKey != '') {
+    if (type === 'user-id' && searchKey !== '') {
       param = { userId: `con:${searchKey}` };
-    } else if (type === 'company-id' && searchKey != '') {
+    } else if (type === 'company-id' && searchKey !== '') {
       param = { searchText: searchKey };
     }
     const response = await RolloutService.getPartnerList(param);

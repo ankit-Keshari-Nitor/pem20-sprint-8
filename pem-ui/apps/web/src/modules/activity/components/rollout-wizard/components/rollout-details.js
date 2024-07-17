@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Information } from '@carbon/icons-react';
 import { Grid, Column, TextArea, TextInput, DatePicker, DatePickerInput, Button, Tooltip, RadioButtonGroup, RadioButton, Tag } from '@carbon/react';
 
 import './../../style.scss';
+import { EllipsisIcon } from '../../../icons';
 
 export default function RolloutDetails(props) {
   const { rolloutDetails, setRolloutDetails, handleAddClick, formErrors, rolloutPartnersData, handleRemovePartners } = props;
   const rolloutPartnersDataLength =
     rolloutPartnersData.selectedGroupsData.length + rolloutPartnersData.selectedAttributesData.length + rolloutPartnersData.selectedPartnersData.length;
+  const [showContextData, setShowContextData] = useState(false);
 
 
   const getMinDate = (daysToAdd = 0, alertDate) => {
@@ -56,10 +58,29 @@ export default function RolloutDetails(props) {
         </Column>
         {/*   Click to check Context Data Button */}
         <Column className="col-margin" lg={16}>
-          <Button kind="tertiary" size="md">
-            View Context Data
+          <Button kind="tertiary" size="md" onClick={() => setShowContextData((prev) => !prev)}>
+            {showContextData ? 'Hide Context Data' : 'View Context Data'}
           </Button>
         </Column>
+        {/*   Context Data Code */}
+        {showContextData && (
+          <>
+            <Column className="col-margin" lg={11}>
+              <div className="context-data-view">
+                <div className="show-code-container">
+                  <span className="show-code-title">Show Code</span>
+                </div>
+                <div className="context-data-code-container">
+                  <span className="context-data-code">Context Data Mapping View Show here</span>
+                </div>
+              </div>
+            </Column>
+            <Column lg={1}>
+              <Button kind="secondary" className="context-selection-icon" renderIcon={EllipsisIcon}></Button>
+            </Column>
+          </>
+        )}
+        <Column className="col-margin" lg={16}></Column>
         {/*  Due Date */}
         <Column className="col-margin" lg={4}>
           <DatePicker datePickerType="single"
@@ -154,8 +175,8 @@ export default function RolloutDetails(props) {
               setRolloutDetails((prev) => ({ ...prev, rollingOutTo: value }));
             }}
             valueSelected={rolloutDetails.rollingOutTo}
-          //value={rolloutDetails.rollingOutTo}
-          //defaultChecked={true}
+            //value={rolloutDetails.rollingOutTo}
+            //defaultChecked={true}
           >
             <RadioButton labelText="Partners" value="partners" id="partners" />
             <RadioButton labelText="Internal Users" value="internal_users" id="internal_users" />

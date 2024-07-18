@@ -30,7 +30,7 @@ const routes = [
     path: 'settings',
     breadcrumb: null,
     group: true,
-    children: [...ApiConfigurationRoutes, ...CustomFieldRoutes]
+    children: [...ApiConfigurationRoutes]
   }
 ];
 

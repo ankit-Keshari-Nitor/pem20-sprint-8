@@ -6,7 +6,7 @@ import App from './App';
 //import reportWebVitals from './reportWebVitals';
 
 initI18n({
-  ns: ['shell', 'common', 'pem', 'mod-partner', 'mod-sponsor-user', 'mod-activity-definition'],
+  ns: ['shell', 'common', 'pem', 'mod-partner', 'mod-sponsor-user', 'mod-activity-definition', 'mod-file', 'mod-apic'],
   defaultNS: 'pem'
 });
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -20,7 +20,3 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 //reportWebVitals();
-
-require('react-dom');
-window.React2 = require('react');
-console.log(window.React1 === window.React2);

@@ -9,9 +9,18 @@ const ActivityDefinition = {
   Edit: React.lazy(() => import('./pages/activity-definition'))
 };
 
+const sideNavConfig = [
+  {
+    label: 'pem:sideNav.definitions',
+    to: '/activities/definitions',
+    title: 'pem:sideNav.definitions',
+    resourceKey: 'DEFINITIONS.VIEW'
+  },
+];
+
 const routes = [
   {
-    path: '/activities',
+    path: '/definitions',
     breadcrumb: 'mod-activity-definition:breadcrumb.definitions',
     resourceKey: 'DEFINITIONS.VIEW',
     element: (
@@ -50,4 +59,6 @@ const routes = [
   }
 ];
 
-export { routes };
+const modals = [];
+
+export { routes, sideNavConfig, modals };

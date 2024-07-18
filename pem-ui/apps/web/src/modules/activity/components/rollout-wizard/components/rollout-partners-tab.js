@@ -110,16 +110,36 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
         </Column>
       ) : (
         <>
-          <Column className="select-all-checkbox" lg={8}>
-            <Checkbox id="select_all-partners" labelText="Select All" checked={isChecked} onChange={handleSelectAll} />
-          </Column>
-          {selectedPartners.length > 0 && (
-            <Column className="col-margin" lg={8}>
-              <Button size="sm" className="new-button" renderIcon={Add} onClick={() => handleAddPartners(selectedPartnersData)}>
-                Add
-              </Button>
-            </Column>
-          )}
+          {partnerList && rolloutPartnersData?.selectedPartnersData &&
+            partnerList.filter(
+              (item) =>
+                !rolloutPartnersData.selectedPartnersData.some(
+                  (selectedItem) => selectedItem.partnerUniqueId === item.partnerUniqueId
+                )
+            ).length > 0 && (
+              <>
+                <Column className="select-all-checkbox" lg={8}>
+                  <Checkbox
+                    id="select_all-partners"
+                    labelText="Select All"
+                    checked={isChecked}
+                    onChange={handleSelectAll}
+                  />
+                </Column>
+                {selectedPartners.length > 0 && (
+                  <Column className="col-margin" lg={8}>
+                    <Button
+                      size="sm"
+                      className="new-button"
+                      renderIcon={Add}
+                      onClick={() => handleAddPartners(selectedPartnersData)}
+                    >
+                      Add
+                    </Button>
+                  </Column>
+                )}
+              </>
+            )}
           {partnerList &&
             partnerList
               .filter(

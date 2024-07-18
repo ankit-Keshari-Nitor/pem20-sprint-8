@@ -121,29 +121,36 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
             </Column>
           )}
           {partnerList &&
-            partnerList.map((item) => {
-              return (
-                <Column className="col-margin" lg={16}>
-                  <div className="partners-data-item">
-                    <Checkbox
-                      id={item.partnerUniqueId}
-                      labelText=""
-                      checked={selectedPartners.includes(item.partnerUniqueId)}
-                      onChange={() => handleCheck(item)}
-                      className="checkbox-input"
-                    />
-                    <span
-                      className="partner-checkbox-label"
-                      onClick={() => {
-                        handleDetailsViewClick(item, 'partner');
-                      }}
-                    >
-                      {capitalizeFirstLetter(item.nameOfCompany)}
-                    </span>
-                  </div>
-                </Column>
-              );
-            })}
+            partnerList
+              .filter(
+                (item) =>
+                  !rolloutPartnersData?.selectedPartnersData.some(
+                    (selectedItem) => selectedItem.partnerUniqueId === item.partnerUniqueId
+                  )
+              )
+              .map((item) => {
+                return (
+                  <Column className="col-margin" lg={16} key={item.partnerUniqueId}>
+                    <div className="partners-data-item">
+                      <Checkbox
+                        id={item.partnerUniqueId}
+                        labelText=""
+                        checked={selectedPartners.includes(item.partnerUniqueId)}
+                        onChange={() => handleCheck(item)}
+                        className="checkbox-input"
+                      />
+                      <span
+                        className="partner-checkbox-label"
+                        onClick={() => {
+                          handleDetailsViewClick(item, 'partner');
+                        }}
+                      >
+                        {capitalizeFirstLetter(item.nameOfCompany)}
+                      </span>
+                    </div>
+                  </Column>
+                );
+              })}
         </>
       )}
     </Grid>

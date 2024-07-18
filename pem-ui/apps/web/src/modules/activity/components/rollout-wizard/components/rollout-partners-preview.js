@@ -165,9 +165,12 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
                   Partners
                 </p>
               </Column>
-              {rolloutPartnersData?.selectedPartnersData.map((item) => {
-                return (
-                  <Column className="col-margin" lg={16}>
+              {rolloutPartnersData?.selectedPartnersData
+                .filter((item, index, self) =>
+                  index === self.findIndex(t => t.partnerUniqueId === item.partnerUniqueId)
+                )
+                .map((item) => (
+                  <Column className="col-margin" lg={16} key={item.partnerUniqueId}>
                     <Checkbox
                       id={`preview-${item.partnerUniqueId}`}
                       labelText={capitalizeFirstLetter(item.nameOfCompany)}
@@ -175,8 +178,8 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
                       onChange={() => handleCheck(item)}
                     />
                   </Column>
-                );
-              })}
+                ))
+              }
             </>
           )}
           {rolloutPartnersData?.selectedAttributesData.length > 0 && (

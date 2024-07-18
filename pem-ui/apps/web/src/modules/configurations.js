@@ -1,7 +1,7 @@
 import { sideNavConfig as fileSideNavConfig } from './File';
 import { sideNavConfig as apiConfigurationSideNavConfig } from './ApiConfiguration';
 //import { sideNavConfig as customFieldSideNavConfig } from './CustomField';
-//import { sideNavConfig as activitiesSideNavConfig } from './activity';
+import { sideNavConfig as activitiesSideNavConfig } from './activity';
 
 // import { sideNavConfig as pocSideNavConfig } from '@b2bi/poc';
 
@@ -36,7 +36,7 @@ const sideNavConfig = [
     title: 'pem:sideNav.divisions',
     resourceKey: 'DIVISIONS.VIEW'
   },
-  //...activitiesSideNavConfig,
+  ...activitiesSideNavConfig,
   ...fileSideNavConfig,
   ...apiConfigurationSideNavConfig
   //...customFieldSideNavConfig

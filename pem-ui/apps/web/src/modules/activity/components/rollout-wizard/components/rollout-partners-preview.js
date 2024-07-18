@@ -31,8 +31,8 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
   const [selectFilter, setSelectFilter] = useState('all');
 
   const [isChecked, setIsChecked] = useState(false);
-  const [selectedPartners, setSelectedPartners] = React.useState([]);
-  const [selectedPartnersData, setSelectedPartnersData] = React.useState([]);
+  const [selectedPartners, setSelectedPartners] = useState([]);
+  const [selectedPartnersData, setSelectedPartnersData] = useState([]);
 
   const [partnerUserList, setPartnerUserList] = useState([]);
   const [selectedPartnerUser, setSelectedPartnerUser] = useState(null);
@@ -148,7 +148,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
           </Column>
           {isRolloutDataAvl > 0 && (
             <Column className="select-all-checkbox" lg={8}>
-              <Checkbox id="preview-select_all-partners" labelText="Select All" checked={isChecked} onChange={handleSelectAll} />
+              <Checkbox id="preview-select_all-partners" labelText="Select All" onChange={handleSelectAll} checked={isChecked} />
             </Column>
           )}
           {isRolloutDataAvl > 0 && (
@@ -189,13 +189,11 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
                   Attributes
                 </p>
               </Column>
-              {rolloutPartnersData?.selectedAttributesData.map((item) => {
-                return (
-                  <Column className="col-margin" lg={16}>
-                    <Checkbox id={`preview-${item.attributeTypeKey}`} labelText={item.attrValue} />
-                  </Column>
-                );
-              })}
+              {rolloutPartnersData?.selectedAttributesData.map((item) => (
+                <Column className="col-margin" lg={16} key={item.attributeTypeKey}>
+                  <Checkbox id={`preview-${item.attributeTypeKey}`} labelText={item.attrValue} />
+                </Column>
+              ))}
             </>
           )}
           {rolloutPartnersData?.selectedGroupsData.length > 0 && (
@@ -205,13 +203,11 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
                   Group
                 </p>
               </Column>
-              {rolloutPartnersData?.selectedGroupsData.map((item) => {
-                return (
-                  <Column className="col-margin" lg={16}>
-                    <Checkbox id={`preview-${item.key}`} labelText={item.value} />
-                  </Column>
-                );
-              })}
+              {rolloutPartnersData?.selectedGroupsData.map((item) => (
+                <Column className="col-margin" lg={16} key={item.key}>
+                  <Checkbox id={`preview-${item.key}`} labelText={item.value} />
+                </Column>
+              ))}
             </>
           )}
         </Grid>

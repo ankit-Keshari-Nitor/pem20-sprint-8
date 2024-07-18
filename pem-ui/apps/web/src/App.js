@@ -46,35 +46,23 @@ axios.defaults.headers.common['Accept'] = 'application/json';
 function App() {
   return (
     <Shell.EnvironmentProvider config={{}}>
-      <Shell.ApplicationInfoProvider>
-        <Shell.AuthProvider handler={AppAuthHandler()}>
-          <Shell.ConfigurationProvider
-            locales={Shell.SupportedLocales}
-            locale={'en_US'}
-            sideNavConfig={
-              [
-                /*...sideNavConfig, ...Shell.sideNavConfig*/
-              ]
-            }
-            headerMenuList={
-              [
-                /*...headerMenuList */
-                /*, ...Shell.headerMenuList*/
-              ]
-            }
-          >
-            <Shell.ResourceProvider resourceMappings={{}}>
-              <Shell.ModalProvider modals={{}}>
-                <Shell.NotificationProvider>
-                  <AppConfiguration>
-                    <Shell.RouterProvider routes={routes} />
-                  </AppConfiguration>
-                </Shell.NotificationProvider>
-              </Shell.ModalProvider>
-            </Shell.ResourceProvider>
-          </Shell.ConfigurationProvider>
-        </Shell.AuthProvider>
-      </Shell.ApplicationInfoProvider>
+      <Shell.DataServiceProvider>
+        <Shell.ApplicationInfoProvider>
+          <Shell.AuthProvider handler={AppAuthHandler()}>
+            <Shell.ConfigurationProvider locales={Shell.SupportedLocales} locale={'en_US'}>
+              <Shell.ResourceProvider resourceMappings={{}}>
+                <Shell.ModalProvider modals={[]}>
+                  <Shell.NotificationProvider>
+                    <AppConfiguration>
+                      <Shell.RouterProvider routes={routes} />
+                    </AppConfiguration>
+                  </Shell.NotificationProvider>
+                </Shell.ModalProvider>
+              </Shell.ResourceProvider>
+            </Shell.ConfigurationProvider>
+          </Shell.AuthProvider>
+        </Shell.ApplicationInfoProvider>
+      </Shell.DataServiceProvider>
     </Shell.EnvironmentProvider>
   );
 }

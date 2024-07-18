@@ -1,5 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Column, Search, Select, SelectItem, Checkbox, Accordion, AccordionItem, Tabs, TabList, Tab, TabPanels, TabPanel, Button, RadioButtonGroup, RadioButton } from '@carbon/react';
+import {
+  Grid,
+  Column,
+  Search,
+  Select,
+  SelectItem,
+  Checkbox,
+  Accordion,
+  AccordionItem,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+  Button,
+  RadioButtonGroup,
+  RadioButton
+} from '@carbon/react';
 
 import * as RolloutService from '../../../services/rollout-service';
 
@@ -16,7 +33,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
   const [selectedPartners, setSelectedPartners] = React.useState([]);
   const [selectedPartnersData, setSelectedPartnersData] = React.useState([]);
 
-  const [partnerUserList, setPartnerUserList] = useState([])
+  const [partnerUserList, setPartnerUserList] = useState([]);
   const [selectedPartnerUser, setSelectedPartnerUser] = useState(null);
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
@@ -27,7 +44,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
   useEffect(() => {
     setSelectedTabIndex(0);
     setPartnerUserList([]);
-    setSelectedPartnerUser(null)
+    setSelectedPartnerUser(null);
   }, [selectedViewData]);
 
   // Effect to set the first user as the selected partner user when the partner user list changes
@@ -74,7 +91,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
   // Fetch partner user list based on role and partner ID
   const getPartnerUserList = async (participantRole, partnerId) => {
     let param = {};
-    participantRole !== '' ? param.participantRole = participantRole : param = {}
+    participantRole !== '' ? (param.participantRole = participantRole) : (param = {});
     const response = await RolloutService.getPartnerUserList(param, partnerId);
     setPartnerUserList(response);
   };
@@ -88,7 +105,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
   const handleTabChange = async (index) => {
     setSelectedTabIndex(index.selectedIndex);
     setPartnerUserList([]);
-    setSelectedPartnerUser(null)
+    setSelectedPartnerUser(null);
     if (index.selectedIndex === 1) {
       // Fetch administrators data
       await getPartnerUserList('PARTNER_ADMIN', selectedViewData.partnerKey);
@@ -96,7 +113,6 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
       // Fetch users data
       await getPartnerUserList('', selectedViewData.partnerKey);
     }
-
   };
 
   return (
@@ -198,9 +214,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
       ) : (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '1rem' }}>
-            <div style={{ fontWeight: '600', fontSize: '18px' }}>
-              {selectedViewData?.nameOfCompany} Details
-            </div>
+            <div style={{ fontWeight: '600', fontSize: '18px' }}>{selectedViewData?.nameOfCompany} Details</div>
             <div className="close-icon" aria-label="close" onClick={onClose}>
               <CrossIcon />
             </div>
@@ -232,7 +246,9 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
                         <strong>Street address and PO Box </strong>
                       </div>
                       <div>{selectedViewData?.streetAddress ? selectedViewData?.streetAddress : 'None'}</div>
-                      <div><strong>Zip / Postal Code</strong></div>
+                      <div>
+                        <strong>Zip / Postal Code</strong>
+                      </div>
                       <div>{selectedViewData?.zipCode ? selectedViewData?.zipCode : 'None'}</div>
                       <div>
                         <strong>Headquaters Phone</strong>
@@ -254,19 +270,33 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
                         <strong>User ID (Email)</strong>
                       </div>
                       <div>{selectedViewData?.userId ? selectedViewData?.userId : 'None'}</div>
-                      <div><strong>Given name</strong></div>
+                      <div>
+                        <strong>Given name</strong>
+                      </div>
                       <div>{selectedViewData?.firstName ? selectedViewData?.firstName : 'None'}</div>
-                      <div><strong>Surname</strong></div>
+                      <div>
+                        <strong>Surname</strong>
+                      </div>
                       <div>{selectedViewData?.lastName ? selectedViewData?.lastName : 'None'}</div>
-                      <div><strong>Business role/Title </strong></div>
+                      <div>
+                        <strong>Business role/Title </strong>
+                      </div>
                       <div>{'None'}</div>
-                      <div><strong>Alternate email</strong></div>
+                      <div>
+                        <strong>Alternate email</strong>
+                      </div>
                       <div>{'None'}</div>
-                      <div><strong>Phone (Office)</strong></div>
+                      <div>
+                        <strong>Phone (Office)</strong>
+                      </div>
                       <div>{selectedViewData?.officePhone ? selectedViewData?.officePhone : 'None'}</div>
-                      <div><strong>Phone (Mobile)</strong></div>
+                      <div>
+                        <strong>Phone (Mobile)</strong>
+                      </div>
                       <div>{'None'}</div>
-                      <div><strong>Other contact information</strong></div>
+                      <div>
+                        <strong>Other contact information</strong>
+                      </div>
                       <div>{'None'}</div>
                     </div>
                   </AccordionItem>
@@ -275,28 +305,42 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
               <TabPanel>
                 <div className="details-container">
                   <div>
-                    <div><strong>Given name</strong></div>
+                    <div>
+                      <strong>Given name</strong>
+                    </div>
                     <div>{selectedPartnerUser?.firstName ? selectedPartnerUser.firstName : 'None'}</div>
-                    <div><strong>Surname</strong></div>
+                    <div>
+                      <strong>Surname</strong>
+                    </div>
                     <div>{selectedPartnerUser?.lastName ? selectedPartnerUser.lastName : 'None'}</div>
-                    <div><strong>Business role/Title </strong></div>
+                    <div>
+                      <strong>Business role/Title </strong>
+                    </div>
                     <div>{selectedPartnerUser?.businessRole ? selectedPartnerUser.businessRole : 'None'}</div>
-                    <div><strong>Alternate email</strong></div>
+                    <div>
+                      <strong>Alternate email</strong>
+                    </div>
                     <div>{'None'}</div>
-                    <div><strong>Phone (Office)</strong></div>
+                    <div>
+                      <strong>Phone (Office)</strong>
+                    </div>
                     <div>{selectedPartnerUser?.officePhone ? selectedPartnerUser.officePhone : 'None'}</div>
-                    <div><strong>Phone (Mobile)</strong></div>
+                    <div>
+                      <strong>Phone (Mobile)</strong>
+                    </div>
                     <div>{selectedPartnerUser?.mobilePhone ? selectedPartnerUser.mobilePhone : 'None'}</div>
-                    <div><strong>Other contact info</strong></div>
+                    <div>
+                      <strong>Other contact info</strong>
+                    </div>
                     <div>{selectedPartnerUser?.furtherContacts ? selectedPartnerUser.furtherContacts : 'None'}</div>
-                    <div><strong>Comments</strong></div>
+                    <div>
+                      <strong>Comments</strong>
+                    </div>
                     <div>{selectedPartnerUser?.comments ? selectedPartnerUser.comments : 'None'}</div>
                   </div>
                   <div>
                     <RadioButtonGroup valueSelected={selectedPartnerUser?.userName} name="partner-admin" orientation="vertical" onChange={handleRadioChange}>
-                      {partnerUserList.length > 0 && partnerUserList.map((item, idx) => (
-                        <RadioButton key={idx} labelText={item.userName} value={item.userName} />
-                      ))}
+                      {partnerUserList.length > 0 && partnerUserList.map((item, idx) => <RadioButton key={idx} labelText={item.userName} value={item.userName} />)}
                     </RadioButtonGroup>
                   </div>
                 </div>
@@ -304,28 +348,42 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
               <TabPanel>
                 <div className="details-container">
                   <div>
-                    <div><strong>Given name</strong></div>
+                    <div>
+                      <strong>Given name</strong>
+                    </div>
                     <div>{selectedPartnerUser?.firstName ? selectedPartnerUser.firstName : 'None'}</div>
-                    <div><strong>Surname</strong></div>
+                    <div>
+                      <strong>Surname</strong>
+                    </div>
                     <div>{selectedPartnerUser?.lastName ? selectedPartnerUser.lastName : 'None'}</div>
-                    <div><strong>Business role/Title </strong></div>
+                    <div>
+                      <strong>Business role/Title </strong>
+                    </div>
                     <div>{selectedPartnerUser?.businessRole ? selectedPartnerUser.businessRole : 'None'}</div>
-                    <div><strong>Alternate email</strong></div>
+                    <div>
+                      <strong>Alternate email</strong>
+                    </div>
                     <div>{'None'}</div>
-                    <div><strong>Phone (Office)</strong></div>
+                    <div>
+                      <strong>Phone (Office)</strong>
+                    </div>
                     <div>{selectedPartnerUser?.officePhone ? selectedPartnerUser.officePhone : 'None'}</div>
-                    <div><strong>Phone (Mobile)</strong></div>
+                    <div>
+                      <strong>Phone (Mobile)</strong>
+                    </div>
                     <div>{selectedPartnerUser?.mobilePhone ? selectedPartnerUser.mobilePhone : 'None'}</div>
-                    <div><strong>Other contact info</strong></div>
+                    <div>
+                      <strong>Other contact info</strong>
+                    </div>
                     <div>{selectedPartnerUser?.furtherContacts ? selectedPartnerUser.furtherContacts : 'None'}</div>
-                    <div><strong>Comments</strong></div>
+                    <div>
+                      <strong>Comments</strong>
+                    </div>
                     <div>{selectedPartnerUser?.comments ? selectedPartnerUser.comments : 'None'}</div>
                   </div>
                   <div>
                     <RadioButtonGroup valueSelected={selectedPartnerUser?.userName} name="partner-user" orientation="vertical" onChange={handleRadioChange}>
-                      {partnerUserList.length > 0 && partnerUserList.map((item, idx) => (
-                        <RadioButton key={idx} labelText={item.userName} value={item.userName} />
-                      ))}
+                      {partnerUserList.length > 0 && partnerUserList.map((item, idx) => <RadioButton key={idx} labelText={item.userName} value={item.userName} />)}
                     </RadioButtonGroup>
                   </div>
                 </div>

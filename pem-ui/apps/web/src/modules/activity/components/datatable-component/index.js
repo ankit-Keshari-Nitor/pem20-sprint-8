@@ -1,5 +1,5 @@
 import React from 'react';
-import { ACTION_COLUMN_KEYS } from '../../constants';
+import { ACTION_COLUMN_KEYS, capitalizeFirstLetter } from '../../constants';
 import {
   Button,
   DataTable,
@@ -119,9 +119,6 @@ const ActivityDataTableComponent = ({
       <span className="information-text">{value}</span>
     </div>
   );
-
-  // Capitalize the first letter of a string
-  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 
   // Render status tag
   const renderTag = (status) => {

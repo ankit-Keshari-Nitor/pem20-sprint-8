@@ -51,21 +51,21 @@ const ActivityRolloutModal = (props) => {
 
   useEffect(() => {
     if (rolloutDetails.name.length > 0) {
-      setFormErrors({ ...formErrors, name: false });
+      setFormErrors((prev) => ({ ...prev, name: false }));
     }
     if (rolloutDetails.description.length > 20) {
-      setFormErrors({ ...formErrors, description: false });
+      setFormErrors((prev) => ({ ...prev, description: false }));
     }
 
     if (Number(rolloutDetails.alertInterval) >= 1 && Number(rolloutDetails.alertInterval) <= 99) {
-      setFormErrors({ ...formErrors, alertInterval: false });
+      setFormErrors((prev) => ({ ...prev, alertInterval: false }));
     }
 
     if (rolloutDetails.rollingOutTo === 'partners') {
       let rolloutPartnersDataLength =
         rolloutPartnersData.selectedGroupsData.length + rolloutPartnersData.selectedAttributesData.length + rolloutPartnersData.selectedPartnersData.length;
       if (rolloutPartnersDataLength > 0) {
-        setFormErrors({ ...formErrors, partnersDetails: false });
+        setFormErrors((prev) => ({ ...prev, partnersDetails: false }));
       }
     }
   }, [rolloutDetails, rolloutPartnersData, formErrors]);

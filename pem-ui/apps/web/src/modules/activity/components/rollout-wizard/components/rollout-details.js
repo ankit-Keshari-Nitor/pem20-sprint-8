@@ -193,6 +193,7 @@ export default function RolloutDetails(props) {
                   invalidText={'None of the Trading Partners is selected.'}
                   invalid={formErrors.partnersDetails}
                   required
+                  readOnly
                   placeholder={'Click on add button to Partners, Attributes and Groups '}
                   rows={3}
                 />

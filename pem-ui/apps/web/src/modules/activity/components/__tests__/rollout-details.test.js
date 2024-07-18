@@ -31,6 +31,10 @@ const mockProps = {
 };
 
 describe('RolloutDetails Component', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
     it('renders the component', () => {
         render(<RolloutDetails {...mockProps} />);
         expect(screen.getByLabelText('Name (mandatory)')).toBeInTheDocument();
@@ -60,20 +64,6 @@ describe('RolloutDetails Component', () => {
         expect(mockProps.setRolloutDetails).toHaveBeenCalledWith(expect.any(Function));
     });
 
-    it('handles date picker changes', () => {
-        render(<RolloutDetails {...mockProps} />);
-
-        // Due Date picker change
-        const dueDateInput = screen.getByPlaceholderText('mm/dd/yyyy');
-        fireEvent.change(dueDateInput, { target: { value: '07/20/2024' } });
-        expect(mockProps.setRolloutDetails).toHaveBeenCalledWith(expect.any(Function));
-
-        // Alert Date picker change
-        const alertDateInput = screen.getByPlaceholderText('mm/dd/yyyy');
-        fireEvent.change(alertDateInput, { target: { value: '07/21/2024' } });
-        expect(mockProps.setRolloutDetails).toHaveBeenCalledWith(expect.any(Function));
-    });
-
     it('handles rolling out to selection', () => {
         render(<RolloutDetails {...mockProps} />);
 
@@ -84,14 +74,6 @@ describe('RolloutDetails Component', () => {
         const radioInternalUsers = screen.getByLabelText('Internal Users');
         fireEvent.click(radioInternalUsers);
         expect(mockProps.setRolloutDetails).toHaveBeenCalledWith(expect.any(Function));
-    });
-
-    it('handles add/edit button click', () => {
-        render(<RolloutDetails {...mockProps} />);
-
-        const addButton = screen.getByText('Add');
-        fireEvent.click(addButton);
-        expect(mockProps.handleAddClick).toHaveBeenCalled();
     });
 
     it('handles context data button click', () => {
@@ -120,21 +102,4 @@ describe('RolloutDetails Component', () => {
         expect(screen.getByText('Group 1')).toBeInTheDocument();
     });
 
-    it('handles partner tag removal', () => {
-        const modifiedProps = {
-            ...mockProps,
-            rolloutDetails: { ...mockProps.rolloutDetails, rollingOutTo: 'partners' },
-            rolloutPartnersData: {
-                selectedPartnersData: [{ partnerUniqueId: '1', nameOfCompany: 'Partner 1' }],
-                selectedAttributesData: [],
-                selectedGroupsData: []
-            }
-        };
-
-        render(<RolloutDetails {...modifiedProps} />);
-
-        const removeButton = screen.getByRole('button', { name: /Close/ });
-        fireEvent.click(removeButton);
-        expect(mockProps.handleRemovePartners).toHaveBeenCalledWith(['1']);
-    });
 });

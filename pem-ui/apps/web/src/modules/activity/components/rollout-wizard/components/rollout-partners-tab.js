@@ -82,6 +82,13 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
     }
   };
 
+  const filteredPartnerList = partnerList.filter(
+    (item) =>
+      !rolloutPartnersData?.selectedPartnersData.some(
+        (selectedItem) => selectedItem.partnerUniqueId === item.partnerUniqueId
+      )
+  );
+
   return (
     <Grid className="define-grid">
       <Column className="col-margin" lg={8}>
@@ -102,7 +109,7 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
           <SelectItem value="user-id" text="User ID (Email)" />
         </Select>
       </Column>
-      {partnerList && partnerList.length === 0 ? (
+      {partnerList.length === 0 || filteredPartnerList.length === 0 ? (
         <Column className="col-margin" lg={16}>
           <p id={`attribute-list-label`} className="no-data-display-text">
             No Data to Display
@@ -110,67 +117,49 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
         </Column>
       ) : (
         <>
-          {partnerList && rolloutPartnersData?.selectedPartnersData &&
-            partnerList.filter(
-              (item) =>
-                !rolloutPartnersData.selectedPartnersData.some(
-                  (selectedItem) => selectedItem.partnerUniqueId === item.partnerUniqueId
-                )
-            ).length > 0 && (
-              <>
-                <Column className="select-all-checkbox" lg={8}>
+          <Column className="select-all-checkbox" lg={8}>
+            <Checkbox
+              id="select_all-partners"
+              labelText="Select All"
+              checked={isChecked}
+              onChange={handleSelectAll}
+            />
+          </Column>
+          {selectedPartners.length > 0 && (
+            <Column className="col-margin" lg={8}>
+              <Button
+                size="sm"
+                className="new-button"
+                renderIcon={Add}
+                onClick={() => handleAddPartners(selectedPartnersData)}
+              >
+                Add
+              </Button>
+            </Column>
+          )}
+          {filteredPartnerList.map((item) => {
+            return (
+              <Column className="col-margin" lg={16} key={item.partnerUniqueId}>
+                <div className="partners-data-item">
                   <Checkbox
-                    id="select_all-partners"
-                    labelText="Select All"
-                    checked={isChecked}
-                    onChange={handleSelectAll}
+                    id={item.partnerUniqueId}
+                    labelText=""
+                    checked={selectedPartners.includes(item.partnerUniqueId)}
+                    onChange={() => handleCheck(item)}
+                    className="checkbox-input"
                   />
-                </Column>
-                {selectedPartners.length > 0 && (
-                  <Column className="col-margin" lg={8}>
-                    <Button
-                      size="sm"
-                      className="new-button"
-                      renderIcon={Add}
-                      onClick={() => handleAddPartners(selectedPartnersData)}
-                    >
-                      Add
-                    </Button>
-                  </Column>
-                )}
-              </>
-            )}
-          {partnerList &&
-            partnerList
-              .filter(
-                (item) =>
-                  !rolloutPartnersData?.selectedPartnersData.some(
-                    (selectedItem) => selectedItem.partnerUniqueId === item.partnerUniqueId
-                  )
-              )
-              .map((item) => {
-                return (
-                  <Column className="col-margin" lg={16} key={item.partnerUniqueId}>
-                    <div className="partners-data-item">
-                      <Checkbox
-                        id={item.partnerUniqueId}
-                        labelText=""
-                        checked={selectedPartners.includes(item.partnerUniqueId)}
-                        onChange={() => handleCheck(item)}
-                        className="checkbox-input"
-                      />
-                      <span
-                        className="partner-checkbox-label"
-                        onClick={() => {
-                          handleDetailsViewClick(item, 'partner');
-                        }}
-                      >
-                        {capitalizeFirstLetter(item.nameOfCompany)}
-                      </span>
-                    </div>
-                  </Column>
-                );
-              })}
+                  <span
+                    className="partner-checkbox-label"
+                    onClick={() => {
+                      handleDetailsViewClick(item, 'partner');
+                    }}
+                  >
+                    {capitalizeFirstLetter(item.nameOfCompany)}
+                  </span>
+                </div>
+              </Column>
+            );
+          })}
         </>
       )}
     </Grid>

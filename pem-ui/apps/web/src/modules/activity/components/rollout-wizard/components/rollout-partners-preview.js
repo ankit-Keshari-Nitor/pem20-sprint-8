@@ -151,7 +151,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
               <Checkbox id="preview-select_all-partners" labelText="Select All" checked={isChecked} onChange={handleSelectAll} />
             </Column>
           )}
-          {selectedPartners.length > 0 && (
+          {isRolloutDataAvl > 0 && (
             <Column className="col-margin" lg={8}>
               <Button size="sm" className="new-button" renderIcon={TrashCan} onClick={() => handleRemovePartners(selectedPartners)}>
                 Delete

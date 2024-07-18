@@ -5,10 +5,12 @@ import com.precisely.pem.dtos.requests.ActivityInstReq;
 import com.precisely.pem.dtos.responses.ActivityInstListResp;
 import com.precisely.pem.dtos.responses.ActivityInstPagnResp;
 import com.precisely.pem.dtos.responses.ActivityInstResp;
+import com.precisely.pem.dtos.responses.ActivityInstStatsResp;
 import com.precisely.pem.exceptionhandler.InvalidStatusException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import org.json.JSONException;
 
+import javax.xml.stream.XMLStreamException;
 import java.sql.SQLException;
 
 public interface ActivityInstService {
@@ -17,4 +19,6 @@ public interface ActivityInstService {
     ActivityInstListResp getInstanceByKey(String sponsorContext, String activityInstKey) throws ResourceNotFoundException;
 
     ActivityInstPagnResp getAllInstanceList(String sponsorContext, String name, String description, String instStatus, String activityDefnVersionKey, String partnerKey, Boolean activityStats, int pageNo, int pageSize, String s, String s1) throws ResourceNotFoundException;
+
+    ActivityInstStatsResp getActivityInstStatsByKey(String sponsorContext, String activityInstKey) throws ResourceNotFoundException, XMLStreamException, SQLException;
 }

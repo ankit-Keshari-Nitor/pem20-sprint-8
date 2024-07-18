@@ -24,6 +24,7 @@ import './../../style.scss';
 
 import { CrossIcon } from '../../../icons';
 import { TrashCan } from '@carbon/icons-react';
+import { capitalizeFirstLetter } from '../../../constants';
 
 export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, showPreview, selectedViewData, selectedViewType, handleRemovePartners }) {
   const [searchKey, setSearchKey] = useState('');
@@ -169,7 +170,7 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
                   <Column className="col-margin" lg={16}>
                     <Checkbox
                       id={`preview-${item.partnerUniqueId}`}
-                      labelText={item.nameOfCompany}
+                      labelText={capitalizeFirstLetter(item.nameOfCompany)}
                       checked={selectedPartners.includes(item.partnerUniqueId)}
                       onChange={() => handleCheck(item)}
                     />

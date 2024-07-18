@@ -4,6 +4,7 @@ import { Grid, Column, TextArea, TextInput, DatePicker, DatePickerInput, Button,
 
 import './../../style.scss';
 import { EllipsisIcon } from '../../../icons';
+import { capitalizeFirstLetter } from '../../../constants';
 
 export default function RolloutDetails(props) {
   const { rolloutDetails, setRolloutDetails, handleAddClick, formErrors, rolloutPartnersData, handleRemovePartners } = props;
@@ -205,7 +206,7 @@ export default function RolloutDetails(props) {
                     {rolloutPartnersData.selectedPartnersData.map((item) => {
                       return (
                         <Tag className="some-class" type="blue" filter onClose={() => handleRemovePartners([item.partnerUniqueId])} key={item.partnerUniqueId}>
-                          {item.nameOfCompany}
+                          {capitalizeFirstLetter(item.nameOfCompany)}
                         </Tag>
                       );
                     })}

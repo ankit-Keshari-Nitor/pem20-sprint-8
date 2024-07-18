@@ -3,6 +3,7 @@ import { Grid, Column, Checkbox, Select, SelectItem, Button, Search } from '@car
 import * as RolloutService from '../../../services/rollout-service';
 import { Add } from '@carbon/icons-react';
 import './../../style.scss';
+import { capitalizeFirstLetter } from '../../../constants';
 
 export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartners, handleDetailsViewClick }) {
   const [selectedPartnerType, setSelectedPartnerType] = useState('company-id');
@@ -137,7 +138,7 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
                         handleDetailsViewClick(item, 'partner');
                       }}
                     >
-                      {item.nameOfCompany}
+                      {capitalizeFirstLetter(item.nameOfCompany)}
                     </span>
                   </div>
                 </Column>

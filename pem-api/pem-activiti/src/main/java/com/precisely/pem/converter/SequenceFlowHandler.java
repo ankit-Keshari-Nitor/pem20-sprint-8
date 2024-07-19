@@ -29,11 +29,8 @@ public class SequenceFlowHandler {
 
         // Add dockers
         ArrayNode dockersArray = connectorJson.putArray("dockers");
-
-        List<Diagram> diagrams = connectorNode.getDiagram();
-        for(Diagram connectorDiagram : diagrams){
-            dockersArray.add(objectMapper.createObjectNode().put("x", connectorDiagram.getX()).put("y", connectorDiagram.getY()));
-        }
+        dockersArray.add(objectMapper.createObjectNode().put("x", CONNECTOR_X).put("y", CONNECTOR_Y));
+        dockersArray.add(objectMapper.createObjectNode().put("x", CONNECTOR_X).put("y", CONNECTOR_Y));
 
         // Add outgoing
         connectorJson.putArray("outgoing").addObject().put("resourceId", connectorNode.getSource().trim());

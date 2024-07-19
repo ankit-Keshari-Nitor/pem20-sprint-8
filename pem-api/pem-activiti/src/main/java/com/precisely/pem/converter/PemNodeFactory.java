@@ -4,11 +4,13 @@ import com.precisely.pem.dtos.*;
 import lombok.extern.log4j.Log4j2;
 import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
+import static com.precisely.pem.converter.AbstractNodeHandler.createConnector;
 import static com.precisely.pem.dtos.Constants.*;
 
 @Log4j2
@@ -124,21 +126,31 @@ public class PemNodeFactory {
         node.setId(gateway.getId());
         node.setName(gateway.getName());
         node.setDescription(gateway.getDocumentation());
-        node.setGatewayType(getGatewayType(gateway));
+        node.setGatewayType(getExtensionElementsText(gateway, CustomElementTextType.TYPE));
         node.setType(NodeTypes.EXCLUSIVE_GATEWAY.getName());
         return node;
     }
 
-    private static String getGatewayType(Gateway gateway) {
+    //We have to make sure whatever order we have added the ExtensionElements in getStringExtensionElement, with that same index we call this method to get its ElementText.
+    private static String getExtensionElementsText(FlowElement flowElement, CustomElementTextType customElementTextType) {
         try {
-            Map<String,List<ExtensionElement>> extensions = gateway.getExtensionElements();
-            if(Objects.nonNull(extensions.get("activiti:field")) && !extensions.get("activiti:field").isEmpty()){
-                return gateway.getExtensionElements().get("activiti:field").get(0).getChildElements().get("activiti:string").get(0).getElementText();
-            }else {
-                return gateway.getExtensionElements().get("field").get(0).getChildElements().get("string").get(0).getElementText();
+            Map<String,List<ExtensionElement>> extensions = flowElement.getExtensionElements();
+            String fieldPrefix = "activiti:field";
+            String stringPrefix = "activiti:string";
+            if(Objects.isNull(extensions.get("activiti:field")) && extensions.get("activiti:field").isEmpty()){
+                fieldPrefix = "field";
+                stringPrefix = "string";
+            }
+
+            for (ExtensionElement extensionElement : extensions.get(fieldPrefix)) {
+                Map<String,List<ExtensionAttribute>> attributes = extensionElement.getAttributes();
+                String name = attributes.get(EXTENSION_ELEMENT_NAME).get(0).getValue();
+                if (customElementTextType.getName().equalsIgnoreCase(name)){
+                    return extensionElement.getChildElements().get(stringPrefix).get(0).getElementText();
+                }
             }
         }catch (Exception exception){
-            log.error("Gateway Type read failed {}", gateway.getId());
+            log.error("{} FlowElement ElementText read failed", flowElement.getId());
         }
         return null;
     }
@@ -149,10 +161,16 @@ public class PemNodeFactory {
         SubProcess subProcess = (SubProcess) subFlowElement;
         node.setId(subProcess.getId());
         node.setName(subProcess.getName());
+        node.setType(getExtensionElementsText(subProcess,CustomElementTextType.TYPE));// we have always added Type as first element in addExtensionElementsToSubProcess.
+        node.setDescription(subProcess.getDocumentation());
 
-        //get Type of Sub Process from documentation field, which was appended during generate SubProcess BPMN definition
-        setTypeAndDocumentation(subProcess, node);
+        String estimateDays = getExtensionElementsText(subProcess,CustomElementTextType.ESTIMATE_DAYS);
+        node.setEstimateDays(StringUtils.isNumeric(estimateDays) ? Integer.parseInt(estimateDays) : null );
+        if (NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(node.getType())){
+            node.setShowToPartner(Boolean.parseBoolean(getExtensionElementsText(subProcess,CustomElementTextType.SHOW_TO_PARTNER)));
+        }
 
+        List<Connector> connectors = new ArrayList<>();
         for (FlowElement sub : subProcess.getFlowElements()) {
 
             if(sub instanceof UserTask){
@@ -162,6 +180,11 @@ public class PemNodeFactory {
                     node.setRoleKeys(String.join(",", ((UserTask)sub).getCandidateGroups()));
                     continue;
                 }
+            }
+            //For SubProcess we need to add Connectors at time of NodeConversion into each SubProcess node itself.
+            if(sub instanceof SequenceFlow sequenceFlow){
+                assert bpmnConverterRequest.getBpmnModel() != null;
+                connectors.add(createConnector(sequenceFlow,bpmnConverterRequest.getBpmnModel()));
             }
 
             //Recursive Call which creates SubNode again.
@@ -176,7 +199,7 @@ public class PemNodeFactory {
                 nodes.add(subNode);
             }
         }
-
+        node.setConnectors(connectors);
         node.setNodes(nodes);
         return node;
     }

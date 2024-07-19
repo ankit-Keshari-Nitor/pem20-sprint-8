@@ -32,7 +32,7 @@ const ActivityDataTableComponent = ({
   showDrawer = false
 }) => {
   // Generate action items based on the activity status
-  const renderActionItem = (status, id, versionKey) => {
+  const renderActionItem = (status, id, versionKey, isDefault) => {
     switch (status) {
       case 'DRAFT':
         return (
@@ -48,6 +48,7 @@ const ActivityDataTableComponent = ({
           </div>
         );
       case 'FINAL':
+        if (isDefault === undefined || isDefault) {
         return (
           <div className="tbody-wrapper">
             <Button kind="tertiary" size="sm" className={showDrawer ? 'action-item-drawer' : 'action-item'} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.ROLLOUT, id)}>
@@ -55,6 +56,9 @@ const ActivityDataTableComponent = ({
             </Button>
           </div>
         );
+      }else {
+        return <div></div>
+      }
       case 'DELETE':
         return (
           <div className="tbody-wrapper">
@@ -83,9 +87,7 @@ const ActivityDataTableComponent = ({
         ) : (
           <>
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_VERSION, id)} />
-            {!isDefault ? (
-              <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_DEFAULT, id, versionName)} />
-            ) : null}
+            {!isDefault && status !== 'DELETE' ? <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_DEFAULT, id, versionName)} /> : null}
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_VERSION, id)} />
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_VERSION, id)} />
           </>
@@ -211,7 +213,7 @@ const ActivityDataTableComponent = ({
                         {row.cells.map((cell) => (
                           <TableCell key={cell.id}>
                             {cell.info.header === 'action'
-                              ? renderActionItem(statusCell.value, row.id, versionKeyCell.value)
+                              ? renderActionItem(statusCell.value, row.id, versionKeyCell.value, isDefault?.value)
                               : cell.info.header === 'ellipsis'
                                 ? renderEllipsisMenu(row.id, statusCell.value, isDefault?.value, versionName?.value)
                                 : cell.info.header === 'status'

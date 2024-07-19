@@ -16,5 +16,6 @@ public class Connector {
     private String source;
     private String target;
     private String condition;
+    private String parent;
     private List<Diagram> diagram;
 }

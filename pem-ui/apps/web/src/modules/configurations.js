@@ -1,3 +1,10 @@
+import { sideNavConfig as fileSideNavConfig } from './File';
+import { sideNavConfig as apiConfigurationSideNavConfig } from './ApiConfiguration';
+//import { sideNavConfig as customFieldSideNavConfig } from './CustomField';
+import { sideNavConfig as activitiesSideNavConfig } from './activity';
+
+// import { sideNavConfig as pocSideNavConfig } from '@b2bi/poc';
+
 const sideNavConfig = [
   {
     label: 'pem:sideNav.partners',
@@ -29,13 +36,13 @@ const sideNavConfig = [
     title: 'pem:sideNav.divisions',
     resourceKey: 'DIVISIONS.VIEW'
   },
-  {
-    label: 'pem:sideNav.definitions',
-    to: '/activities',
-    title: 'pem:sideNav.definitions',
-    resourceKey: 'DEFINITIONS.VIEW'
-  }
+  ...activitiesSideNavConfig,
+  ...fileSideNavConfig,
+  ...apiConfigurationSideNavConfig
+  //...customFieldSideNavConfig
 ];
+
+//sideNavConfig.push(...pocSideNavConfig);
 
 const headerMenuList = [
   {

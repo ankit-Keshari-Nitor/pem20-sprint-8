@@ -42,7 +42,7 @@ const FileUpload = ({ mode, context }) => {
         },
         uiUpload: function () {
           const formData = new FormData();
-          const params = this.form.key.getValues();
+          // const params = this.form.key.getValues();
           formData.append('documentContents', this.ui.selectedFile);
           this.ds
             .uploadFile(formData, {

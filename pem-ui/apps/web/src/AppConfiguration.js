@@ -43,7 +43,7 @@ const AppConfiguration = ({ children, ...props }) => {
         return config;
       }
     });
-  },[]);
+  }, []); /* eslint-disable-line */
 
   return <>{children}</>;
 };

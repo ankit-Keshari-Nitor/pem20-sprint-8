@@ -175,8 +175,8 @@ export default function RolloutDetails(props) {
               setRolloutDetails((prev) => ({ ...prev, rollingOutTo: value }));
             }}
             valueSelected={rolloutDetails.rollingOutTo}
-            //value={rolloutDetails.rollingOutTo}
-            //defaultChecked={true}
+          //value={rolloutDetails.rollingOutTo}
+          //defaultChecked={true}
           >
             <RadioButton labelText="Partners" value="partners" id="partners" />
             <RadioButton labelText="Internal Users" value="internal_users" id="internal_users" />
@@ -205,7 +205,13 @@ export default function RolloutDetails(props) {
                   <>
                     {rolloutPartnersData.selectedPartnersData.map((item) => {
                       return (
-                        <Tag className="some-class" type="blue" filter onClose={() => handleRemovePartners([item.partnerUniqueId])} key={item.partnerUniqueId}>
+                        <Tag
+                          className="some-class"
+                          type="blue"
+                          filter
+                          onClose={() => handleRemovePartners([item.partnerUniqueId])}
+                          key={item.partnerUniqueId}
+                        >
                           {capitalizeFirstLetter(item.nameOfCompany)}
                         </Tag>
                       );

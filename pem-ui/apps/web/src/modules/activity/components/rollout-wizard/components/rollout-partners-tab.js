@@ -11,17 +11,14 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
   const [searchKey, setSearchKey] = useState('');
 
   const [isChecked, setIsChecked] = useState(false);
-  const [selectedPartners, setSelectedPartners] = React.useState([]);
-  const [selectedPartnersData, setSelectedPartnersData] = React.useState([]);
+  const [selectedPartners, setSelectedPartners] = useState(new Set()); // Using Set for unique partner IDs
+  const [selectedPartnersData, setSelectedPartnersData] = useState([]);
 
   useEffect(() => {
-    const partnerUniqueIds = rolloutPartnersData.selectedPartnersData.map((item) => item.partnerUniqueId);
-    if (partnerList.length === partnerUniqueIds.length && partnerUniqueIds.length > 0) {
-      setIsChecked(true);
-    } else {
-      setIsChecked(false);
-    }
-    setSelectedPartners([...partnerUniqueIds]);
+    const partnerUniqueIds = new Set(rolloutPartnersData.selectedPartnersData.map((item) => item.partnerUniqueId));
+    setSelectedPartners(partnerUniqueIds);
+
+    setIsChecked(partnerUniqueIds.size === partnerList.length && partnerList.length > 0);
   }, [partnerList, rolloutPartnersData]);
 
   useEffect(() => {
@@ -51,33 +48,29 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
   };
 
   const handleCheck = (item) => {
-    let updatedSelectedPartners;
-    let updatedSelectedPartnersData;
+    const updatedSelectedPartners = new Set(selectedPartners);
 
-    if (!selectedPartners.includes(item.partnerUniqueId)) {
-      updatedSelectedPartners = [...selectedPartners, item.partnerUniqueId];
-      updatedSelectedPartnersData = [...selectedPartnersData, item];
+    if (updatedSelectedPartners.has(item.partnerUniqueId)) {
+      updatedSelectedPartners.delete(item.partnerUniqueId);
     } else {
-      updatedSelectedPartners = selectedPartners.filter((e) => e !== item.partnerUniqueId);
-      updatedSelectedPartnersData = selectedPartnersData.filter((e) => e.partnerUniqueId !== item.partnerUniqueId);
+      updatedSelectedPartners.add(item.partnerUniqueId);
     }
 
     setSelectedPartners(updatedSelectedPartners);
-    setSelectedPartnersData(updatedSelectedPartnersData);
+    setSelectedPartnersData(Array.from(updatedSelectedPartners).map(id => partnerList.find(partner => partner.partnerUniqueId === id)));
 
-    // Update the "Select All" checkbox state
-    setIsChecked(updatedSelectedPartners.length === partnerList.length);
+    setIsChecked(updatedSelectedPartners.size === partnerList.length);
   };
 
   const handleSelectAll = () => {
     if (isChecked) {
-      setSelectedPartners([]);
+      setSelectedPartners(new Set());
       setSelectedPartnersData([]);
       setIsChecked(false);
     } else {
-      const keys = partnerList.map((e) => e.partnerUniqueId);
-      setSelectedPartners([...keys]);
-      setSelectedPartnersData([...partnerList]);
+      const updatedSelectedPartners = new Set(partnerList.map((e) => e.partnerUniqueId));
+      setSelectedPartners(updatedSelectedPartners);
+      setSelectedPartnersData(partnerList);
       setIsChecked(true);
     }
   };
@@ -125,13 +118,13 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
               onChange={handleSelectAll}
             />
           </Column>
-          {selectedPartners.length > 0 && (
+          {selectedPartners.size > 0 && (
             <Column className="col-margin" lg={8}>
               <Button
                 size="sm"
                 className="new-button"
                 renderIcon={Add}
-                onClick={() => handleAddPartners(selectedPartnersData)}
+                onClick={() => handleAddPartners(Array.from(selectedPartnersData))}
               >
                 Add
               </Button>
@@ -144,7 +137,7 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
                   <Checkbox
                     id={item.partnerUniqueId}
                     labelText=""
-                    checked={selectedPartners.includes(item.partnerUniqueId)}
+                    checked={selectedPartners.has(item.partnerUniqueId)}
                     onChange={() => handleCheck(item)}
                     className="checkbox-input"
                   />

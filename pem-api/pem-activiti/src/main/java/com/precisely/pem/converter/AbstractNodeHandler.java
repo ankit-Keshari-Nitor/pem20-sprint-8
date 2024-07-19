@@ -54,20 +54,11 @@ public abstract class AbstractNodeHandler implements NodeHandler{
     }
 
     public static Connector createConnector(SequenceFlow sequenceFlow, BpmnModel bpmnModel) {
-        Connector connector = Connector.builder()
+        return Connector.builder()
                 .id(sequenceFlow.getId())
                 .source(sequenceFlow.getSourceRef())
                 .target(sequenceFlow.getTargetRef())
                 .condition(sequenceFlow.getConditionExpression())
                 .build();
-
-        List<GraphicInfo> locations = bpmnModel.getFlowLocationMap().get(sequenceFlow.getId());
-        if (locations != null) {
-            List<Diagram> diagrams = locations.stream()
-                    .map(location -> Diagram.builder().x((double) Constants.WIDTH /2).y(((double) Constants.HEIGHT /2)).build())
-                    .collect(Collectors.toList());
-            connector.setDiagram(diagrams);
-        }
-        return connector;
     }
 }

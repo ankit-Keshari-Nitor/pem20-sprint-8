@@ -55,6 +55,13 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
     }
   }, [partnerUserList]);
 
+  // Effect to reset selected partners and checkboxes when rolloutPartnersData changes
+  useEffect(() => {
+    setSelectedPartners([])
+    setSelectedPartnersData([]);
+    setIsChecked(false);
+  }, [rolloutPartnersData])
+
   // Handle checkbox selection for partners
   const handleCheck = (item) => {
     let updatedSelectedPartners;

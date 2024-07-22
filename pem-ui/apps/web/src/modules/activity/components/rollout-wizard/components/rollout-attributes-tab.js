@@ -100,7 +100,7 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
         <Select id={`attribute-select`} labelText="" onChange={handleOnChangeType}>
           <SelectItem value={''} text={'Select Attribute Type'} />
           {attributeTypeList?.map((attributeType) => {
-            return <SelectItem value={attributeType?.attributeTypeKey} text={attributeType?.name} />;
+            return <SelectItem id={`attribute-select-item${attributeType?.attributeTypeKey}`} value={attributeType?.attributeTypeKey} text={attributeType?.name} />;
           })}
         </Select>
       </Column>

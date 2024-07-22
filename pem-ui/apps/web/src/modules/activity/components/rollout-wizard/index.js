@@ -68,7 +68,7 @@ const ActivityRolloutModal = (props) => {
         setFormErrors((prev) => ({ ...prev, partnersDetails: false }));
       }
     }
-  }, [rolloutDetails, rolloutPartnersData, formErrors]);
+  }, [rolloutDetails, rolloutPartnersData]);
 
   const validateValues = (inputValues) => {
     let errors = {};

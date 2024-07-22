@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import GeneralModal from '../../helpers/wrapper-modal';
 
 import RolloutPartnersDetails from './components/rollout-partners-details';
@@ -8,7 +8,7 @@ import { DUMMY_CONTEXT_DATA } from '../../constants';
 import WrapperNotification from './../../helpers/wrapper-notification-toast';
 
 const ActivityRolloutModal = (props) => {
-  const { showModal, setShowModal, activityName, activityDefnKey, activityDefnVersionKey, fetchAndSetData } = props;
+  const { showModal, setShowModal, activityName, activityDefnVersionKey, fetchAndSetData } = props;
   const [notificationProps, setNotificationProps] = useState(null);
 
   const today = new Date();
@@ -30,24 +30,29 @@ const ActivityRolloutModal = (props) => {
   });
 
   // Final Submit
-  const handleActivityRollout = async () => {
-    const response = await RolloutService.rolloutActivity(activityDefnVersionKey, rolloutDetails, rolloutPartnersData);
-    setNotificationProps({
-      open: true,
-      title: response ? 'Success - ' : 'Error - ',
-      subtitle: response ? 'Action completed successfully!' : `Action not completed successfully!`,
-      kind: response ? 'success' : 'error',
-      onCloseButtonClick: () => setNotificationProps(null)
-    });
-    fetchAndSetData();
-    setShowModal(false);
-  };
+  const finalRolloutSubmit = useCallback(() => {
+    RolloutService.rolloutActivity(activityDefnVersionKey, rolloutDetails, rolloutPartnersData)
+      .then((response) => {
+        setNotificationProps({
+          open: true,
+          title: response ? 'Success - ' : 'Error - ',
+          subtitle: response ? 'Action completed successfully!' : `Action not completed successfully!`,
+          kind: response ? 'success' : 'error',
+          onCloseButtonClick: () => setNotificationProps(null)
+        });
+        fetchAndSetData();
+        setShowModal(false);
+      })
+      .catch((errors) => {
+        console.error('Failed to fetch data:', errors);
+      });
+  }, [activityDefnVersionKey,rolloutDetails,rolloutPartnersData, fetchAndSetData, setShowModal]);
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && submitting) {
-      handleActivityRollout();
+      finalRolloutSubmit();
     }
-  }, [formErrors, handleActivityRollout, submitting]);
+  }, [formErrors, finalRolloutSubmit, submitting]);
 
   useEffect(() => {
     if (rolloutDetails.name.length > 0) {

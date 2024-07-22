@@ -84,6 +84,7 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
 
   return (
     <Grid className="define-grid">
+      {/* Search Box */}
       <Column className="col-margin" lg={8}>
         <Search
           size="lg"
@@ -96,6 +97,7 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
           value={searchKey}
         />
       </Column>
+      {/* Filter Dropdown */}
       <Column className="col-margin" lg={8}>
         <Select id={`attribute-select`} labelText="" onChange={handleOnChangeType}>
           <SelectItem value={''} text={'Select Attribute Type'} />
@@ -104,6 +106,7 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
           })}
         </Select>
       </Column>
+      {/* No Data to Display Text */}
       {attributeList && attributeList.length === 0 ? (
         <Column className="col-margin" lg={16}>
           <p id={`attribute-list-label`} className="no-data-display-text">
@@ -112,9 +115,11 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
         </Column>
       ) : (
         <>
+          {/*Select Add */}
           <Column className="select-all-checkbox" lg={8}>
             <Checkbox id="select_all-attribute" labelText="Select All" checked={isChecked} onChange={handleSelectAll} />
           </Column>
+          {/* Add Button */}
           {attributeList && selectedAttributes.length > 0 && (
             <Column className="col-margin" lg={8}>
               <Button size="sm" onClick={() => handleAddAttributes(selectedAttributesData)}>
@@ -122,6 +127,7 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
               </Button>
             </Column>
           )}
+          {/*List of Attributes */}
           {attributeList &&
             attributeList.map((item) => {
               return (

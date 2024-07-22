@@ -87,6 +87,9 @@ export const rolloutActivity = async (activityDefnVersionKey, rolloutData, rollo
     });
   }
 
+  console.log(attributeValuesData);
+  console.log(attributeGroupsData);
+  
   let url = `${API_END_POINTS.ACTIVITY_DEFINITION_ROLLOUT}`;
   let dataLoaderConfig = { url, method: API_METHODS.POST };
   let data = {

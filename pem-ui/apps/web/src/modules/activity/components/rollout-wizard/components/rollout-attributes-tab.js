@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Grid, Column, Checkbox, Select, SelectItem, Button, Search } from '@carbon/react';
 import * as RolloutService from '../../../services/rollout-service';
 import './../../style.scss';
@@ -13,6 +13,39 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
   const [selectedAttributes, setSelectedAttributes] = React.useState([]);
   const [selectedAttributesData, setSelectedAttributesData] = React.useState([]);
 
+  // Function to get the attributes list
+  const getAttributeListData = useCallback(() => {
+    if (selectedAttributeType === '') {
+      setAttributeList([]);
+      return;
+    }
+    RolloutService.getAttributeList(selectedAttributeType, searchKey)
+      .then((response) => {
+        setAttributeList([...response]);
+      })
+      .catch((errors) => {
+        console.error('Failed to fetch data:', errors);
+      });
+  }, [selectedAttributeType, searchKey]);
+
+  const getAttributeTypes = useCallback(() => {
+    RolloutService.getAttributeTypeList()
+      .then((response) => {
+        setAttributeTypeList(response);
+      })
+      .catch((errors) => {
+        console.error('Failed to fetch data:', errors);
+      });
+  }, []);
+
+  useEffect(() => {
+    getAttributeListData();
+  }, [searchKey, getAttributeListData]);
+
+  useEffect(() => {
+    getAttributeTypes();
+  }, [getAttributeTypes]);
+
   useEffect(() => {
     if (rolloutPartnersData.selectedAttributesData.length > 0) {
       const attributeValueKeys = rolloutPartnersData.selectedAttributesData.map((item) => item.attributeValueKey);
@@ -25,38 +58,9 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
     }
   }, [attributeList, rolloutPartnersData]);
 
-  // Function to get the attributes types list
-  const getAttributeTypes = async () => {
-    const response = await RolloutService.getAttributeTypeList();
-    setAttributeTypeList(response);
-    if (response && response.length > 0) {
-      setSelectedAttributeType(response[0].attributeTypeKey);
-      getAttributeListData(response[0].attributeTypeKey);
-    }
-  };
-
-  // Function to get the attributes list
-  const getAttributeListData = async (type, searchKey) => {
-    if (type !== '') {
-      const response = await RolloutService.getAttributeList(type, searchKey);
-      setAttributeList([...response]);
-    }
-  };
-
-  useEffect(() => {
-    if (searchKey !== '') {
-      getAttributeListData(selectedAttributeType, searchKey);
-    }
-  }, [searchKey, selectedAttributeType, getAttributeListData]);
-
-  useEffect(() => {
-    getAttributeTypes();
-  }, []);
-
   // Function to handle the selected attribute type input field
   const handleOnChangeType = (e) => {
     setSelectedAttributeType(e.target.value);
-    getAttributeListData(e.target.value, searchKey);
   };
 
   const handleCheck = (item) => {

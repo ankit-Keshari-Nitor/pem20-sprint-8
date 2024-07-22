@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Grid, Column, Checkbox, Select, SelectItem, Button, Search } from '@carbon/react';
 import * as RolloutService from '../../../services/rollout-service';
 import { Add } from '@carbon/icons-react';
@@ -14,37 +14,36 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
   const [selectedPartners, setSelectedPartners] = useState(new Set()); // Using Set for unique partner IDs
   const [selectedPartnersData, setSelectedPartnersData] = useState([]);
 
-  useEffect(() => {
-    const partnerUniqueIds = new Set(rolloutPartnersData.selectedPartnersData.map((item) => item.partnerUniqueId));
-    setSelectedPartners(partnerUniqueIds);
+  // Function to get the partners list
+  const getTradingPartnerList = useCallback(() => {
+    let param = {};
+    if (selectedPartnerType === 'user-id' && searchKey !== '') {
+      param = { userId: `con:${searchKey}` };
+    } else if (selectedPartnerType === 'company-id' && searchKey !== '') {
+      param = { searchText: searchKey };
+    }
 
-    setIsChecked(partnerUniqueIds.size === partnerList.length && partnerList.length > 0);
-  }, [partnerList, rolloutPartnersData]);
-
-  useEffect(() => {
-    getTradingPartnerList(selectedPartnerType, searchKey);
+    RolloutService.getPartnerList(param)
+      .then((response) => {
+        setPartnerList([...response]);
+      })
+      .catch((errors) => {
+        console.error('Failed to fetch data:', errors);
+      });
   }, [selectedPartnerType, searchKey]);
 
   useEffect(() => {
-    if (searchKey !== '') {
-      getTradingPartnerList(selectedPartnerType, searchKey);
-    }
-  }, [searchKey, selectedPartnerType]);
+    getTradingPartnerList();
+  }, [getTradingPartnerList]);
 
-  const getTradingPartnerList = async (type, searchKey) => {
-    let param = {};
-    if (type === 'user-id' && searchKey !== '') {
-      param = { userId: `con:${searchKey}` };
-    } else if (type === 'company-id' && searchKey !== '') {
-      param = { searchText: searchKey };
-    }
-    const response = await RolloutService.getPartnerList(param);
-    setPartnerList(response);
-  };
+  useEffect(() => {
+    const partnerUniqueIds = new Set(rolloutPartnersData.selectedPartnersData.map((item) => item.partnerUniqueId));
+    setSelectedPartners(partnerUniqueIds);
+    setIsChecked(partnerUniqueIds.size === partnerList.length && partnerList.length > 0);
+  }, [partnerList, rolloutPartnersData]);
 
   const handleOnChangeType = (e) => {
     setSelectedPartnerType(e.target.value);
-    getTradingPartnerList(e.target.value, searchKey);
   };
 
   const handleCheck = (item) => {
@@ -55,7 +54,6 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
     } else {
       updatedSelectedPartners.add(item.partnerUniqueId);
     }
-
     setSelectedPartners(updatedSelectedPartners);
     setSelectedPartnersData(Array.from(updatedSelectedPartners).map((id) => partnerList.find((partner) => partner.partnerUniqueId === id)));
 

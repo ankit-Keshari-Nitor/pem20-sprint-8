@@ -28,6 +28,7 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
       });
   }, [selectedAttributeType, searchKey]);
 
+  // Function to get the attributes types
   const getAttributeTypes = useCallback(() => {
     RolloutService.getAttributeTypeList()
       .then((response) => {

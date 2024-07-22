@@ -413,7 +413,7 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
         ActivityTaskDto activityTaskDto = null;
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
         Optional<PcptActivityInst> result = Optional.ofNullable(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(sponsorInfo.getSponsorKey(),pcptActivityInstKey));
-        if(result.get() != null) {
+        if(result.isPresent()) {
             PcptActivityInst pcptActivityInst = result.get();
             if(pcptActivityInst.getPcptInstStatus().equalsIgnoreCase(PcptInstStatus.STARTED.getPcptInstStatus())){
                 TaskDTO taskDTO = pemActivitiService.getUserNodeDetails(taskKey);

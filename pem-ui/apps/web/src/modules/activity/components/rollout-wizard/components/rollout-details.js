@@ -175,8 +175,8 @@ export default function RolloutDetails(props) {
               setRolloutDetails((prev) => ({ ...prev, rollingOutTo: value }));
             }}
             valueSelected={rolloutDetails.rollingOutTo}
-          //value={rolloutDetails.rollingOutTo}
-          //defaultChecked={true}
+            //value={rolloutDetails.rollingOutTo}
+            //defaultChecked={true}
           >
             <RadioButton labelText="Partners" value="partners" id="partners" />
             <RadioButton labelText="Internal Users" value="internal_users" id="internal_users" />
@@ -205,13 +205,7 @@ export default function RolloutDetails(props) {
                   <>
                     {rolloutPartnersData.selectedPartnersData.map((item) => {
                       return (
-                        <Tag
-                          className="some-class"
-                          type="blue"
-                          filter
-                          onClose={() => handleRemovePartners([item.partnerUniqueId])}
-                          key={item.partnerUniqueId}
-                        >
+                        <Tag id={item.partnerKey} className="some-class" type="blue" filter onClose={() => handleRemovePartners([item.partnerUniqueId])} key={item.partnerUniqueId}>
                           {capitalizeFirstLetter(item.nameOfCompany)}
                         </Tag>
                       );
@@ -222,7 +216,14 @@ export default function RolloutDetails(props) {
                   <>
                     {rolloutPartnersData.selectedAttributesData.map((item) => {
                       return (
-                        <Tag className="some-class" type="blue" filter onClose={() => handleRemovePartners([item.attributeUniqueId])} key={item.attributeUniqueId}>
+                        <Tag
+                          id={item.attributeValueKey}
+                          className="some-class"
+                          type="blue"
+                          filter
+                          onClose={() => handleRemovePartners([item.attributeUniqueId])}
+                          key={item.attributeUniqueId}
+                        >
                           {item.attrValue}
                         </Tag>
                       );
@@ -233,7 +234,7 @@ export default function RolloutDetails(props) {
                   <>
                     {rolloutPartnersData.selectedGroupsData.map((item) => {
                       return (
-                        <Tag className="some-class" type="blue" filter onClose={() => handleRemovePartners([item.groupUniqueId])} key={item.groupUniqueId}>
+                        <Tag id={item.value} className="some-class" type="blue" filter onClose={() => handleRemovePartners([item.groupUniqueId])} key={item.groupUniqueId}>
                           {item.value}
                         </Tag>
                       );

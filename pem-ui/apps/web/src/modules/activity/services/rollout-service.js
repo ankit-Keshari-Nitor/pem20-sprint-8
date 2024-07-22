@@ -61,6 +61,32 @@ export const getGroupList = async (selectedAttributeType) => {
 
 // Function to rollout Activity
 export const rolloutActivity = async (activityDefnVersionKey, rolloutData, rolloutPartnersData) => {
+  console.log('rolloutPartnersData', rolloutPartnersData);
+  let partnersData = [];
+  let attributeValuesData = [];
+  let attributeGroupsData = [];
+  if (rolloutPartnersData.selectedPartnersData.length > 0) {
+    partnersData = rolloutPartnersData.selectedPartnersData.map((item) => {
+      return { partnerKey: item.partnerKey, contextDataNodes: [] };
+    });
+  }
+
+  if (rolloutPartnersData.selectedAttributesData.length > 0) {
+    attributeValuesData = rolloutPartnersData.selectedAttributesData.map((item) => {
+      return {
+        attributeValueKey: item.attributeValueKey
+      };
+    });
+  }
+
+  if (rolloutPartnersData.selectedGroupsData.length > 0) {
+    attributeGroupsData = rolloutPartnersData.selectedGroupsData.map((item) => {
+      return {
+        attributeGroupKey: item.value
+      };
+    });
+  }
+
   let url = `${API_END_POINTS.ACTIVITY_DEFINITION_ROLLOUT}`;
   let dataLoaderConfig = { url, method: API_METHODS.POST };
   let data = {
@@ -70,7 +96,7 @@ export const rolloutActivity = async (activityDefnVersionKey, rolloutData, rollo
     alertStartDate: rolloutData.alertDate,
     alertInterval: rolloutData.alertInterval,
     dueDate: rolloutData.dueDate,
-    partners: [],
+    partners: partnersData,
     contextData: rolloutData.contextData,
     rolloutInternally: rolloutData.rollingOutTo === 'internal_users' ? true : false,
     attributeValues: [],

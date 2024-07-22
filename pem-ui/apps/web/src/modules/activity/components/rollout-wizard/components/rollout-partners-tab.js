@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Grid, Column, Checkbox, Select, SelectItem, Button, Search } from '@carbon/react';
 import * as RolloutService from '../../../services/rollout-service';
 import { Add } from '@carbon/icons-react';
@@ -14,37 +14,36 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
   const [selectedPartners, setSelectedPartners] = useState(new Set()); // Using Set for unique partner IDs
   const [selectedPartnersData, setSelectedPartnersData] = useState([]);
 
-  useEffect(() => {
-    const partnerUniqueIds = new Set(rolloutPartnersData.selectedPartnersData.map((item) => item.partnerUniqueId));
-    setSelectedPartners(partnerUniqueIds);
+  // Function to get the partners list
+  const getTradingPartnerList = useCallback(() => {
+    let param = {};
+    if (selectedPartnerType === 'user-id' && searchKey !== '') {
+      param = { userId: `con:${searchKey}` };
+    } else if (selectedPartnerType === 'company-id' && searchKey !== '') {
+      param = { searchText: searchKey };
+    }
 
-    setIsChecked(partnerUniqueIds.size === partnerList.length && partnerList.length > 0);
-  }, [partnerList, rolloutPartnersData]);
-
-  useEffect(() => {
-    getTradingPartnerList(selectedPartnerType, searchKey);
+    RolloutService.getPartnerList(param)
+      .then((response) => {
+        setPartnerList([...response]);
+      })
+      .catch((errors) => {
+        console.error('Failed to fetch data:', errors);
+      });
   }, [selectedPartnerType, searchKey]);
 
   useEffect(() => {
-    if (searchKey !== '') {
-      getTradingPartnerList(selectedPartnerType, searchKey);
-    }
-  }, [searchKey, selectedPartnerType]);
+    getTradingPartnerList();
+  }, [getTradingPartnerList]);
 
-  const getTradingPartnerList = async (type, searchKey) => {
-    let param = {};
-    if (type === 'user-id' && searchKey !== '') {
-      param = { userId: `con:${searchKey}` };
-    } else if (type === 'company-id' && searchKey !== '') {
-      param = { searchText: searchKey };
-    }
-    const response = await RolloutService.getPartnerList(param);
-    setPartnerList(response);
-  };
+  useEffect(() => {
+    const partnerUniqueIds = new Set(rolloutPartnersData.selectedPartnersData.map((item) => item.partnerUniqueId));
+    setSelectedPartners(partnerUniqueIds);
+    setIsChecked(partnerUniqueIds.size === partnerList.length && partnerList.length > 0);
+  }, [partnerList, rolloutPartnersData]);
 
   const handleOnChangeType = (e) => {
     setSelectedPartnerType(e.target.value);
-    getTradingPartnerList(e.target.value, searchKey);
   };
 
   const handleCheck = (item) => {
@@ -55,9 +54,8 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
     } else {
       updatedSelectedPartners.add(item.partnerUniqueId);
     }
-
     setSelectedPartners(updatedSelectedPartners);
-    setSelectedPartnersData(Array.from(updatedSelectedPartners).map(id => partnerList.find(partner => partner.partnerUniqueId === id)));
+    setSelectedPartnersData(Array.from(updatedSelectedPartners).map((id) => partnerList.find((partner) => partner.partnerUniqueId === id)));
 
     setIsChecked(updatedSelectedPartners.size === partnerList.length);
   };
@@ -76,14 +74,12 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
   };
 
   const filteredPartnerList = partnerList.filter(
-    (item) =>
-      !rolloutPartnersData?.selectedPartnersData.some(
-        (selectedItem) => selectedItem.partnerUniqueId === item.partnerUniqueId
-      )
+    (item) => !rolloutPartnersData?.selectedPartnersData.some((selectedItem) => selectedItem.partnerUniqueId === item.partnerUniqueId)
   );
 
   return (
-    <Grid className="define-grid">
+    <Grid className="define-grid-partner">
+      {/* Search Box */}
       <Column className="col-margin" lg={8}>
         <Search
           size="lg"
@@ -96,12 +92,14 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
           value={searchKey}
         />
       </Column>
+      {/* Filter Dropdown */}
       <Column className="col-margin" lg={8}>
         <Select id={`trading-partners-select`} labelText="" onChange={handleOnChangeType}>
           <SelectItem value="company-id" text="Company/Unique ID" />
           <SelectItem value="user-id" text="User ID (Email)" />
         </Select>
       </Column>
+      {/* No Data to Display Text */}
       {partnerList.length === 0 || filteredPartnerList.length === 0 ? (
         <Column className="col-margin" lg={16}>
           <p id={`attribute-list-label`} className="no-data-display-text">
@@ -110,26 +108,19 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
         </Column>
       ) : (
         <>
+          {/*Select Add */}
           <Column className="select-all-checkbox" lg={8}>
-            <Checkbox
-              id="select_all-partners"
-              labelText="Select All"
-              checked={isChecked}
-              onChange={handleSelectAll}
-            />
+            <Checkbox id="select_all-partners" labelText="Select All" checked={isChecked} onChange={handleSelectAll} />
           </Column>
+          {/* Add Button */}
           {selectedPartners.size > 0 && (
             <Column className="col-margin" lg={8}>
-              <Button
-                size="sm"
-                className="new-button"
-                renderIcon={Add}
-                onClick={() => handleAddPartners(Array.from(selectedPartnersData))}
-              >
+              <Button size="sm" className="new-button" renderIcon={Add} onClick={() => handleAddPartners(Array.from(selectedPartnersData))}>
                 Add
               </Button>
             </Column>
           )}
+          {/*List of Partners */}
           {filteredPartnerList.map((item) => {
             return (
               <Column className="col-margin" lg={16} key={item.partnerUniqueId}>

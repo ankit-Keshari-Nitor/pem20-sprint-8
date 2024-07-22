@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Grid, Column, Checkbox, Select, SelectItem, Button, Search } from '@carbon/react';
 import * as RolloutService from '../../../services/rollout-service';
 import './../../style.scss';
@@ -13,6 +13,40 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
   const [selectedAttributes, setSelectedAttributes] = React.useState([]);
   const [selectedAttributesData, setSelectedAttributesData] = React.useState([]);
 
+  // Function to get the attributes list
+  const getAttributeListData = useCallback(() => {
+    if (selectedAttributeType === '') {
+      setAttributeList([]);
+      return;
+    }
+    RolloutService.getAttributeList(selectedAttributeType, searchKey)
+      .then((response) => {
+        setAttributeList([...response]);
+      })
+      .catch((errors) => {
+        console.error('Failed to fetch data:', errors);
+      });
+  }, [selectedAttributeType, searchKey]);
+
+  // Function to get the attributes types
+  const getAttributeTypes = useCallback(() => {
+    RolloutService.getAttributeTypeList()
+      .then((response) => {
+        setAttributeTypeList(response);
+      })
+      .catch((errors) => {
+        console.error('Failed to fetch data:', errors);
+      });
+  }, []);
+
+  useEffect(() => {
+    getAttributeListData();
+  }, [searchKey, getAttributeListData]);
+
+  useEffect(() => {
+    getAttributeTypes();
+  }, [getAttributeTypes]);
+
   useEffect(() => {
     if (rolloutPartnersData.selectedAttributesData.length > 0) {
       const attributeValueKeys = rolloutPartnersData.selectedAttributesData.map((item) => item.attributeValueKey);
@@ -25,38 +59,9 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
     }
   }, [attributeList, rolloutPartnersData]);
 
-  // Function to get the attributes types list
-  const getAttributeTypes = async () => {
-    const response = await RolloutService.getAttributeTypeList();
-    setAttributeTypeList(response);
-    if (response && response.length > 0) {
-      setSelectedAttributeType(response[0].attributeTypeKey);
-      getAttributeListData(response[0].attributeTypeKey);
-    }
-  };
-
-  // Function to get the attributes list
-  const getAttributeListData = async (type, searchKey) => {
-    if (type !== '') {
-      const response = await RolloutService.getAttributeList(type, searchKey);
-      setAttributeList([...response]);
-    }
-  };
-
-  useEffect(() => {
-    if (searchKey !== '') {
-      getAttributeListData(selectedAttributeType, searchKey);
-    }
-  }, [searchKey, selectedAttributeType, getAttributeListData]);
-
-  useEffect(() => {
-    getAttributeTypes();
-  }, []);
-
   // Function to handle the selected attribute type input field
   const handleOnChangeType = (e) => {
     setSelectedAttributeType(e.target.value);
-    getAttributeListData(e.target.value, searchKey);
   };
 
   const handleCheck = (item) => {
@@ -84,6 +89,7 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
 
   return (
     <Grid className="define-grid">
+      {/* Search Box */}
       <Column className="col-margin" lg={8}>
         <Search
           size="lg"
@@ -96,14 +102,16 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
           value={searchKey}
         />
       </Column>
+      {/* Filter Dropdown */}
       <Column className="col-margin" lg={8}>
         <Select id={`attribute-select`} labelText="" onChange={handleOnChangeType}>
           <SelectItem value={''} text={'Select Attribute Type'} />
           {attributeTypeList?.map((attributeType) => {
-            return <SelectItem value={attributeType?.attributeTypeKey} text={attributeType?.name} />;
+            return <SelectItem id={`attribute-select-item${attributeType?.attributeTypeKey}`} value={attributeType?.attributeTypeKey} text={attributeType?.name} />;
           })}
         </Select>
       </Column>
+      {/* No Data to Display Text */}
       {attributeList && attributeList.length === 0 ? (
         <Column className="col-margin" lg={16}>
           <p id={`attribute-list-label`} className="no-data-display-text">
@@ -112,9 +120,11 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
         </Column>
       ) : (
         <>
+          {/*Select Add */}
           <Column className="select-all-checkbox" lg={8}>
             <Checkbox id="select_all-attribute" labelText="Select All" checked={isChecked} onChange={handleSelectAll} />
           </Column>
+          {/* Add Button */}
           {attributeList && selectedAttributes.length > 0 && (
             <Column className="col-margin" lg={8}>
               <Button size="sm" onClick={() => handleAddAttributes(selectedAttributesData)}>
@@ -122,6 +132,7 @@ export default function RolloutAttributeTab({ rolloutPartnersData, handleAddAttr
               </Button>
             </Column>
           )}
+          {/*List of Attributes */}
           {attributeList &&
             attributeList.map((item) => {
               return (

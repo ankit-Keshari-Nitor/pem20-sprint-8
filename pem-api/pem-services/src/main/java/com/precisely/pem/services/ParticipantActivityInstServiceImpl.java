@@ -22,6 +22,7 @@ import com.precisely.pem.repositories.*;
 import com.precisely.pem.service.BpmnConvertService;
 import com.precisely.pem.service.PEMActivitiService;
 import lombok.extern.log4j.Log4j2;
+import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -429,15 +430,26 @@ public class ParticipantActivityInstServiceImpl implements ParticipantActivityIn
     @Override
     public MarkAsFinalActivityDefinitionVersionResp completeNode(String sponsorContext, String pcptActivityInstKey, String taskKey, String data, Boolean isDraft) throws Exception {
         SponsorInfo sponsorInfo = validateSponsorContext(sponsorContext);
+        JSONObject dataObj = null;
+        if(data != null && !data.isEmpty()){
+            try {
+                dataObj = new JSONObject(data);
+            }catch (Exception e){
+                throw new ResourceNotFoundException("NA", "Data should not be null and needed in JSON format.");
+            }
+            if(dataObj.isEmpty())
+                throw new ResourceNotFoundException("NA", "Data has not any key-value pair");
+        }
         Optional<PcptActivityInst> result = Optional.ofNullable(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(sponsorInfo.getSponsorKey(),pcptActivityInstKey));
-        if(result.get() != null) {
+        if(result.isPresent()) {
             PcptActivityInst pcptActivityInst = result.get();
             if(pcptActivityInst.getPcptInstStatus().equalsIgnoreCase(PcptInstStatus.STARTED.getPcptInstStatus())){
+                assert dataObj != null;
                 if(isDraft != null && !isDraft) {
-                    pemActivitiService.completeUserNode(taskKey, data);
+                    pemActivitiService.completeUserNode(taskKey, dataObj.toString());
                 }else {
                     Map<String , Object>  newItem = new HashMap<>();
-                    newItem.put("draft",data);
+                    newItem.put("draft",dataObj.toString());
                     pemActivitiService.setTaskVariables(taskKey, newItem);
                 }
             } else{

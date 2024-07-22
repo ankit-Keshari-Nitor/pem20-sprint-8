@@ -232,170 +232,172 @@ export default function RolloutPartnersPreview({ rolloutPartnersData, onClose, s
               <Tab>Administrators</Tab>
               <Tab>Users</Tab>
             </TabList>
-            <TabPanels>
-              <TabPanel>
-                <Accordion>
-                  <AccordionItem title="Partner Organization Information">
-                    <div style={{ marginLeft: '5rem' }}>
-                      <div>
-                        <strong>Partner Key</strong>
+            <div className='partner-view-layout'>
+              <TabPanels >
+                <TabPanel>
+                  <Accordion>
+                    <AccordionItem title="Partner Organization Information">
+                      <div style={{ marginLeft: '5rem' }}>
+                        <div>
+                          <strong>Partner Key</strong>
+                        </div>
+                        <div>{selectedViewData?.partnerKey ? selectedViewData?.partnerKey : 'None'}</div>
+                        <div>
+                          <strong>Partner Unique ID</strong>
+                        </div>
+                        <div>{selectedViewData?.partnerUniqueId ? selectedViewData?.partnerUniqueId : 'None'}</div>
+                        <div>
+                          <strong>Name of Company</strong>
+                        </div>
+                        <div>{selectedViewData?.nameOfCompany ? selectedViewData?.nameOfCompany : 'None'}</div>
+                        <div>
+                          <strong>Street address and PO Box </strong>
+                        </div>
+                        <div>{selectedViewData?.streetAddress ? selectedViewData?.streetAddress : 'None'}</div>
+                        <div>
+                          <strong>Zip / Postal Code</strong>
+                        </div>
+                        <div>{selectedViewData?.zipCode ? selectedViewData?.zipCode : 'None'}</div>
+                        <div>
+                          <strong>Headquaters Phone</strong>
+                        </div>
+                        <div>{selectedViewData?.headOfficePhone ? selectedViewData?.headOfficePhone : 'None'}</div>
+                        <div>
+                          <strong>Website</strong>
+                        </div>
+                        <div>{selectedViewData?.website ? selectedViewData?.website : 'None'}</div>
+                        <div>
+                          <strong>Invite Status</strong>
+                        </div>
+                        <div>{selectedViewData?.status?.display ? selectedViewData?.status?.display : 'None'}</div>
                       </div>
-                      <div>{selectedViewData?.partnerKey ? selectedViewData?.partnerKey : 'None'}</div>
-                      <div>
-                        <strong>Partner Unique ID</strong>
+                    </AccordionItem>
+                    <AccordionItem title="Account Information">
+                      <div style={{ marginLeft: '5rem' }}>
+                        <div>
+                          <strong>User ID (Email)</strong>
+                        </div>
+                        <div>{selectedViewData?.userId ? selectedViewData?.userId : 'None'}</div>
+                        <div>
+                          <strong>Given name</strong>
+                        </div>
+                        <div>{selectedViewData?.firstName ? selectedViewData?.firstName : 'None'}</div>
+                        <div>
+                          <strong>Surname</strong>
+                        </div>
+                        <div>{selectedViewData?.lastName ? selectedViewData?.lastName : 'None'}</div>
+                        <div>
+                          <strong>Business role/Title </strong>
+                        </div>
+                        <div>{'None'}</div>
+                        <div>
+                          <strong>Alternate email</strong>
+                        </div>
+                        <div>{'None'}</div>
+                        <div>
+                          <strong>Phone (Office)</strong>
+                        </div>
+                        <div>{selectedViewData?.officePhone ? selectedViewData?.officePhone : 'None'}</div>
+                        <div>
+                          <strong>Phone (Mobile)</strong>
+                        </div>
+                        <div>{'None'}</div>
+                        <div>
+                          <strong>Other contact information</strong>
+                        </div>
+                        <div>{'None'}</div>
                       </div>
-                      <div>{selectedViewData?.partnerUniqueId ? selectedViewData?.partnerUniqueId : 'None'}</div>
-                      <div>
-                        <strong>Name of Company</strong>
-                      </div>
-                      <div>{selectedViewData?.nameOfCompany ? selectedViewData?.nameOfCompany : 'None'}</div>
-                      <div>
-                        <strong>Street address and PO Box </strong>
-                      </div>
-                      <div>{selectedViewData?.streetAddress ? selectedViewData?.streetAddress : 'None'}</div>
-                      <div>
-                        <strong>Zip / Postal Code</strong>
-                      </div>
-                      <div>{selectedViewData?.zipCode ? selectedViewData?.zipCode : 'None'}</div>
-                      <div>
-                        <strong>Headquaters Phone</strong>
-                      </div>
-                      <div>{selectedViewData?.headOfficePhone ? selectedViewData?.headOfficePhone : 'None'}</div>
-                      <div>
-                        <strong>Website</strong>
-                      </div>
-                      <div>{selectedViewData?.website ? selectedViewData?.website : 'None'}</div>
-                      <div>
-                        <strong>Invite Status</strong>
-                      </div>
-                      <div>{selectedViewData?.status?.display ? selectedViewData?.status?.display : 'None'}</div>
-                    </div>
-                  </AccordionItem>
-                  <AccordionItem title="Account Information">
-                    <div style={{ marginLeft: '5rem' }}>
-                      <div>
-                        <strong>User ID (Email)</strong>
-                      </div>
-                      <div>{selectedViewData?.userId ? selectedViewData?.userId : 'None'}</div>
-                      <div>
-                        <strong>Given name</strong>
-                      </div>
-                      <div>{selectedViewData?.firstName ? selectedViewData?.firstName : 'None'}</div>
-                      <div>
-                        <strong>Surname</strong>
-                      </div>
-                      <div>{selectedViewData?.lastName ? selectedViewData?.lastName : 'None'}</div>
-                      <div>
-                        <strong>Business role/Title </strong>
-                      </div>
-                      <div>{'None'}</div>
-                      <div>
-                        <strong>Alternate email</strong>
-                      </div>
-                      <div>{'None'}</div>
-                      <div>
-                        <strong>Phone (Office)</strong>
-                      </div>
-                      <div>{selectedViewData?.officePhone ? selectedViewData?.officePhone : 'None'}</div>
-                      <div>
-                        <strong>Phone (Mobile)</strong>
-                      </div>
-                      <div>{'None'}</div>
-                      <div>
-                        <strong>Other contact information</strong>
-                      </div>
-                      <div>{'None'}</div>
-                    </div>
-                  </AccordionItem>
-                </Accordion>
-              </TabPanel>
-              <TabPanel>
-                <div className="details-container">
-                  <div>
+                    </AccordionItem>
+                  </Accordion>
+                </TabPanel>
+                <TabPanel>
+                  <div className="details-container">
                     <div>
-                      <strong>Given name</strong>
+                      <div>
+                        <div><strong>Given name</strong></div>
+                        <div>{selectedPartnerUser?.firstName ? selectedPartnerUser.firstName : 'None'}</div>
+                      </div>
+                      <div>
+                        <div><strong>Surname</strong></div>
+                        <div>{selectedPartnerUser?.lastName ? selectedPartnerUser.lastName : 'None'}</div>
+                      </div>
+                      <div>
+                        <div><strong>Business role/Title </strong>  </div>
+                        <div>{selectedPartnerUser?.businessRole ? selectedPartnerUser.businessRole : 'None'}</div>
+                      </div>
+                      <div>
+                        <div><strong>Alternate email</strong></div>
+                        <div>{'None'}</div>
+                      </div>
+                      <div>
+                        <div> <strong>Phone (Office)</strong> </div>
+                        <div>{selectedPartnerUser?.officePhone ? selectedPartnerUser.officePhone : 'None'}</div>
+                      </div>
+                      <div>
+                        <div> <strong>Phone (Mobile)</strong></div>
+                        <div>{selectedPartnerUser?.mobilePhone ? selectedPartnerUser.mobilePhone : 'None'}</div>
+                      </div>
+                      <div>
+                        <div>  <strong>Other contact info</strong>  </div>
+                        <div>{selectedPartnerUser?.furtherContacts ? selectedPartnerUser.furtherContacts : 'None'}</div>
+                      </div>
+                      <div>
+                        <div><strong>Comments</strong></div>
+                        <div>{selectedPartnerUser?.comments ? selectedPartnerUser.comments : 'None'}</div>
+                      </div>
                     </div>
-                    <div>{selectedPartnerUser?.firstName ? selectedPartnerUser.firstName : 'None'}</div>
                     <div>
-                      <strong>Surname</strong>
+                      <RadioButtonGroup valueSelected={selectedPartnerUser?.userName} name="partner-admin" orientation="vertical" onChange={handleRadioChange}>
+                        {partnerUserList.length > 0 && partnerUserList.map((item, idx) => <RadioButton key={idx} labelText={item.userName} value={item.userName} />)}
+                      </RadioButtonGroup>
                     </div>
-                    <div>{selectedPartnerUser?.lastName ? selectedPartnerUser.lastName : 'None'}</div>
-                    <div>
-                      <strong>Business role/Title </strong>
-                    </div>
-                    <div>{selectedPartnerUser?.businessRole ? selectedPartnerUser.businessRole : 'None'}</div>
-                    <div>
-                      <strong>Alternate email</strong>
-                    </div>
-                    <div>{'None'}</div>
-                    <div>
-                      <strong>Phone (Office)</strong>
-                    </div>
-                    <div>{selectedPartnerUser?.officePhone ? selectedPartnerUser.officePhone : 'None'}</div>
-                    <div>
-                      <strong>Phone (Mobile)</strong>
-                    </div>
-                    <div>{selectedPartnerUser?.mobilePhone ? selectedPartnerUser.mobilePhone : 'None'}</div>
-                    <div>
-                      <strong>Other contact info</strong>
-                    </div>
-                    <div>{selectedPartnerUser?.furtherContacts ? selectedPartnerUser.furtherContacts : 'None'}</div>
-                    <div>
-                      <strong>Comments</strong>
-                    </div>
-                    <div>{selectedPartnerUser?.comments ? selectedPartnerUser.comments : 'None'}</div>
                   </div>
-                  <div>
-                    <RadioButtonGroup valueSelected={selectedPartnerUser?.userName} name="partner-admin" orientation="vertical" onChange={handleRadioChange}>
-                      {partnerUserList.length > 0 && partnerUserList.map((item, idx) => <RadioButton key={idx} labelText={item.userName} value={item.userName} />)}
-                    </RadioButtonGroup>
+                </TabPanel>
+                <TabPanel>
+                  <div className="details-container">
+                    <div>
+                      <div>
+                        <div><strong>Given name</strong></div>
+                        <div>{selectedPartnerUser?.firstName ? selectedPartnerUser.firstName : 'None'}</div>
+                      </div>
+                      <div>
+                        <div><strong>Surname</strong></div>
+                        <div>{selectedPartnerUser?.lastName ? selectedPartnerUser.lastName : 'None'}</div>
+                      </div>
+                      <div>
+                        <div><strong>Business role/Title </strong>  </div>
+                        <div>{selectedPartnerUser?.businessRole ? selectedPartnerUser.businessRole : 'None'}</div>
+                      </div>
+                      <div>
+                        <div><strong>Alternate email</strong></div>
+                        <div>{'None'}</div>
+                      </div>
+                      <div>
+                        <div> <strong>Phone (Office)</strong> </div>
+                        <div>{selectedPartnerUser?.officePhone ? selectedPartnerUser.officePhone : 'None'}</div>
+                      </div>
+                      <div>
+                        <div> <strong>Phone (Mobile)</strong></div>
+                        <div>{selectedPartnerUser?.mobilePhone ? selectedPartnerUser.mobilePhone : 'None'}</div>
+                      </div>
+                      <div>
+                        <div>  <strong>Other contact info</strong>  </div>
+                        <div>{selectedPartnerUser?.furtherContacts ? selectedPartnerUser.furtherContacts : 'None'}</div>
+                      </div>
+                      <div>
+                        <div><strong>Comments</strong></div>
+                        <div>{selectedPartnerUser?.comments ? selectedPartnerUser.comments : 'None'}</div>
+                      </div>
+                    </div>
+                    <div>
+                      <RadioButtonGroup valueSelected={selectedPartnerUser?.userName} name="partner-user" orientation="vertical" onChange={handleRadioChange}>
+                        {partnerUserList.length > 0 && partnerUserList.map((item, idx) => <RadioButton key={idx} labelText={item.userName} value={item.userName} />)}
+                      </RadioButtonGroup>
+                    </div>
                   </div>
-                </div>
-              </TabPanel>
-              <TabPanel>
-                <div className="details-container">
-                  <div>
-                    <div>
-                      <strong>Given name</strong>
-                    </div>
-                    <div>{selectedPartnerUser?.firstName ? selectedPartnerUser.firstName : 'None'}</div>
-                    <div>
-                      <strong>Surname</strong>
-                    </div>
-                    <div>{selectedPartnerUser?.lastName ? selectedPartnerUser.lastName : 'None'}</div>
-                    <div>
-                      <strong>Business role/Title </strong>
-                    </div>
-                    <div>{selectedPartnerUser?.businessRole ? selectedPartnerUser.businessRole : 'None'}</div>
-                    <div>
-                      <strong>Alternate email</strong>
-                    </div>
-                    <div>{'None'}</div>
-                    <div>
-                      <strong>Phone (Office)</strong>
-                    </div>
-                    <div>{selectedPartnerUser?.officePhone ? selectedPartnerUser.officePhone : 'None'}</div>
-                    <div>
-                      <strong>Phone (Mobile)</strong>
-                    </div>
-                    <div>{selectedPartnerUser?.mobilePhone ? selectedPartnerUser.mobilePhone : 'None'}</div>
-                    <div>
-                      <strong>Other contact info</strong>
-                    </div>
-                    <div>{selectedPartnerUser?.furtherContacts ? selectedPartnerUser.furtherContacts : 'None'}</div>
-                    <div>
-                      <strong>Comments</strong>
-                    </div>
-                    <div>{selectedPartnerUser?.comments ? selectedPartnerUser.comments : 'None'}</div>
-                  </div>
-                  <div>
-                    <RadioButtonGroup valueSelected={selectedPartnerUser?.userName} name="partner-user" orientation="vertical" onChange={handleRadioChange}>
-                      {partnerUserList.length > 0 && partnerUserList.map((item, idx) => <RadioButton key={idx} labelText={item.userName} value={item.userName} />)}
-                    </RadioButtonGroup>
-                  </div>
-                </div>
-              </TabPanel>
-            </TabPanels>
+                </TabPanel>
+              </TabPanels>
+            </div>
           </Tabs>
         </>
       )}

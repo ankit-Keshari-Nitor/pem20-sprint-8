@@ -17,7 +17,8 @@
   text-align: left;
 }
 
-.define-grid {
+.define-grid,
+.define-grid-partner {
   --cds-grid-gutter-start: none;
   padding-inline: unset;
 }
@@ -94,9 +95,11 @@
   height: 100%;
 }
 
-.partners-details-view {
-  background-color: #f4f4f4;
+.partners-details-view,
+.partners-details-list {
+  background-color: #ffffff;
 }
+
 
 .partners-tab-title {
   font-family: IBM Plex Sans;
@@ -152,14 +155,22 @@
   margin: 1rem;
 }
 
-.details-container > div {
+.details-container>div {
   flex: 1;
-  margin-right: 1rem;
+  margin-right: 6rem;
+  background-color: #f4f4f4;
 }
 
-.details-container > div:last-child {
-  margin-right: 0;
+.details-container>div>div {
+  margin-left: 1rem;
+  margin-top: 0.75rem;
 }
+
+.details-container>div:last-child {
+  margin-right: 0;
+  background-color: #ffffff;
+}
+
 
 .context-data-view {
   width: 100%;
@@ -212,4 +223,34 @@
   padding: 1rem;
   margin: 0.5rem 0rem 0rem 3rem;
   border-color: #0f62fe;
+}
+
+.cds--accordion__heading {
+  flex-direction: row;
+}
+
+.partner-view-layout {
+  overflow: auto;
+  height: 410px;
+}
+
+.partner-details-list-wrapper {
+  height: 270px;
+  overflow-y: auto;
+  width: 580px;
+}
+
+
+.define-grid-partner {
+  max-height: 450px;
+  overflow-y: auto;
+  padding-right: 2rem;
+}
+
+.checkbox-input {
+  margin-right: 8px;
+}
+
+#rollout>div>div {
+  background-color: #f4f4f4;
 }

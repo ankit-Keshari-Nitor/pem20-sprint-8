@@ -78,7 +78,7 @@ export default function RolloutPartnerTab({ rolloutPartnersData, handleAddPartne
   );
 
   return (
-    <Grid className="define-grid">
+    <Grid className="define-grid-partner">
       {/* Search Box */}
       <Column className="col-margin" lg={8}>
         <Search

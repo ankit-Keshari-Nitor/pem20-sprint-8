@@ -1,19 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Grid, Column, TextInput, Checkbox, Button } from '@carbon/react';
-import './../../style.scss';
 import * as RolloutService from '../../../services/rollout-service';
 
-export default function RolloutGroupTab({ handleAddGroups }) {
+import './../../style.scss';
+
+export default function RolloutGroupTab({ rolloutPartnersData, handleAddGroups, handleDetailsViewClick }) {
   const [groupList, setGroupList] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
   const [selectedGroups, setSelectedGroups] = React.useState([]);
   const [selectedGroupsData, setSelectedGroupsData] = React.useState([]);
 
-  useEffect(() => {
-    RolloutService.getGroupList().then((data) => {
-      setGroupList(data);
-    });
-  });
+  // useEffect(() => {
+  //   getGroupList();
+  // }, []);
+
+  const getGroupList = async (type) => {
+    const response = await RolloutService.getGroupList(type);
+    setGroupList(response);
+  };
 
   const handleCheck = (item) => {
     if (!selectedGroups.includes(item.key)) {
@@ -54,13 +58,21 @@ export default function RolloutGroupTab({ handleAddGroups }) {
         </Column>
       )}
 
-      {groupList.map((item) => {
-        return (
-          <Column className="col-margin" lg={16}>
-            <Checkbox id={item.key} labelText={item.value} checked={selectedGroups.includes(item.key)} onChange={() => handleCheck(item)} />
-          </Column>
-        );
-      })}
+      {groupList &&
+        groupList.map((item) => {
+          return (
+            <Column className="col-margin" lg={16}>
+              <Checkbox
+                id={item.key}
+                labelText={item.value}
+                checked={selectedGroups.includes(item.key)}
+                onChange={() => handleCheck(item)}
+                className="partners-data-item"
+                onClick={() => handleDetailsViewClick(item, 'group')}
+              />
+            </Column>
+          );
+        })}
     </Grid>
   );
 }

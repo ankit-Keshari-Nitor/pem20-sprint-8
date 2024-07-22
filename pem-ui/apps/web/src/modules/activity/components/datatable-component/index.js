@@ -1,5 +1,5 @@
 import React from 'react';
-import { ACTION_COLUMN_KEYS } from '../constants';
+import { ACTION_COLUMN_KEYS, capitalizeFirstLetter } from '../../constants';
 import {
   Button,
   DataTable,
@@ -36,7 +36,7 @@ const ActivityDataTableComponent = ({
     switch (status) {
       case 'DRAFT':
         return (
-          <div className='tbody-wrapper'>
+          <div className="tbody-wrapper">
             <Button
               kind="tertiary"
               size="sm"
@@ -50,7 +50,7 @@ const ActivityDataTableComponent = ({
       case 'FINAL':
         if (isDefault === undefined || isDefault) {
         return (
-          <div className='tbody-wrapper'>
+          <div className="tbody-wrapper">
             <Button kind="tertiary" size="sm" className={showDrawer ? 'action-item-drawer' : 'action-item'} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.ROLLOUT, id)}>
               {ACTION_COLUMN_KEYS.ROLLOUT}
             </Button>
@@ -61,7 +61,7 @@ const ActivityDataTableComponent = ({
       }
       case 'DELETE':
         return (
-          <div className='tbody-wrapper'>
+          <div className="tbody-wrapper">
             <Button kind="tertiary" size="sm" className={`${showDrawer ? 'action-item-drawer' : 'action-item'} action-item-delete`}>
               {ACTION_COLUMN_KEYS.RESTORE}
             </Button>
@@ -122,22 +122,19 @@ const ActivityDataTableComponent = ({
     </div>
   );
 
-  // Capitalize the first letter of a string
-  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-
   // Render status tag
   const renderTag = (status) => {
     const formattedStatus = capitalizeFirstLetter(status);
     return (
-      <div className='tbody-wrapper'>
+      <div className="tbody-wrapper">
         <Tag type={status === 'draft' ? 'cool-gray' : status === 'final' ? 'green' : 'red'}>{formattedStatus}</Tag>
       </div>
-    )
+    );
   };
 
   // Render recently viewed icon and text
   const renderRecentlyViewed = (value = '', id, activityName = '', status = '', description = '', isDefault = false) => (
-    <div >
+    <div>
       {showDrawer ? (
         <div className="information-wrapper">
           {description !== '' ? (
@@ -146,11 +143,11 @@ const ActivityDataTableComponent = ({
             </Tooltip>
           ) : null}
           <span className="information-text">{`Ver. ${value}`}</span>
-          {isDefault ? <Tag type='cyan'>Default</Tag> : null}
+          {isDefault ? <Tag type="cyan">Default</Tag> : null}
         </div>
       ) : (
-        <div className='tbody-wrapper'>
-          <Tooltip label='Version History'>
+        <div className="tbody-wrapper">
+          <Tooltip label="Version History">
             <div className="recently-view-wrapper" onClick={() => handleVersion(id, activityName, status)}>
               <span className="recently-view-text">{`Ver. ${value}`}</span>
               <RecentlyViewed />
@@ -163,7 +160,7 @@ const ActivityDataTableComponent = ({
 
   // Render checkmark icon and text for encryption status
   const renderCheckmarkFilled = (encryptedvalue = '') => (
-    <div className='tbody-wrapper'>
+    <div className="tbody-wrapper">
       <span className="encrypted-wrapper">
         {encryptedvalue ? (
           <>

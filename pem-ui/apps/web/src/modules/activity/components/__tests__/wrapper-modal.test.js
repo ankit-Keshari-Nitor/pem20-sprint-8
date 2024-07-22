@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom';
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import WrapperModal from '../../helpers/wrapper-modal';
+import GeneralModal from '../../helpers/wrapper-modal';
 
-describe('WrapperModal component', () => {
+describe('GenericModal component', () => {
   it('renders the modal with default props', () => {
     const setIsOpen = jest.fn();
     const onPrimaryButtonClick = jest.fn();
@@ -13,7 +13,7 @@ describe('WrapperModal component', () => {
     const modalHeading = 'Confirmation';
 
     const { getByLabelText, getByText } = render(
-      <WrapperModal
+      <GeneralModal
         isOpen={true}
         setIsOpen={setIsOpen}
         primaryButtonText={primaryButtonText}
@@ -24,7 +24,7 @@ describe('WrapperModal component', () => {
         onRequestClose={onSecondaryButtonClick}
       >
         {/* You can add children components here if needed */}
-      </WrapperModal>
+      </GeneralModal>
     );
 
     expect(getByLabelText(modalHeading)).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('WrapperModal component', () => {
   it('calls onRequestClose when the modal is closed', () => {
     const setIsOpen = jest.fn();
     const onRequestClose = setIsOpen;
-    const { getByLabelText } = render(<WrapperModal isOpen={true} setIsOpen={setIsOpen} onRequestClose={onRequestClose} />);
+    const { getByLabelText } = render(<GeneralModal isOpen={true} setIsOpen={setIsOpen} onRequestClose={onRequestClose} />);
     fireEvent.click(getByLabelText('Close'));
     expect(setIsOpen).toHaveBeenCalledTimes(1);
   });
@@ -43,7 +43,7 @@ describe('WrapperModal component', () => {
   it('calls handlePrimaryButtonClick when the primary button is clicked', () => {
     const handlePrimaryButtonClick = jest.fn();
     const { getByText } = render(
-      <WrapperModal
+      <GeneralModal
         isOpen={true}
         onPrimaryButtonClick={handlePrimaryButtonClick} // Pass the function as the onPrimaryButtonClick prop
         primaryButtonText="Mark as final"
@@ -55,7 +55,7 @@ describe('WrapperModal component', () => {
 
   it('renders the provided message', () => {
     const message = 'This is a test message';
-    const { getByText } = render(<WrapperModal isOpen={true} children={message} />);
+    const { getByText } = render(<GeneralModal isOpen={true} children={message} />);
     expect(getByText(message)).toBeInTheDocument();
   });
 });

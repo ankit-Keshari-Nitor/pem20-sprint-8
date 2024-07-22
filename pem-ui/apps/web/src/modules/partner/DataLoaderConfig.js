@@ -9,7 +9,7 @@ const DataLoaderConfig = {
         // url: getEnvironmentValue('USER.PERMISSIONTREE')
         url: '/rest/sponsors/b2b/partners',
         //url: '/pemws/sponsors/b2b/partners/',
-        handleOutput: (responseData) => {         
+        handleOutput: (responseData) => {
           ListAPIHandler.handleResponse(responseData, 'partnerKey');
         }
       };

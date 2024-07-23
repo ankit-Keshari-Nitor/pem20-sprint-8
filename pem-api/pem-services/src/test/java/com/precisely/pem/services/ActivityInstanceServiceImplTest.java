@@ -1,10 +1,7 @@
 package com.precisely.pem.services;
 
 import com.precisely.pem.dtos.requests.ActivityInstReq;
-import com.precisely.pem.dtos.responses.ActivityInstListResp;
-import com.precisely.pem.dtos.responses.ActivityInstPagnResp;
-import com.precisely.pem.dtos.responses.ActivityInstResp;
-import com.precisely.pem.dtos.responses.SponsorInfo;
+import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.shared.ActivityInstDto;
 import com.precisely.pem.dtos.shared.PcptActivityInstDto;
 import com.precisely.pem.dtos.shared.TenantContext;
@@ -127,5 +124,31 @@ public class ActivityInstanceServiceImplTest extends BaseServiceTest {
         assertThrows(JSONException.class, () -> {
             activityInstService.createActivityInstance("TEST_SPONSOR", activityInstReq);
         });
+    }
+
+    @Test
+    public void testGetActivityInstStatsByKey_ActivityInstNotFound() throws Exception {
+        when(activityInstRepo.findByActivityInstKey(anyString())).thenReturn(null);
+        assertThrows(ResourceNotFoundException.class, () -> {
+            activityInstService.getInstanceByKey("sponsorContext", "activityInstKey");
+        });
+    }
+
+    @Test
+    public void testGetActivityInstStatsByKey_Success() throws Exception {
+        ActivityInst activityInst = new ActivityInst();
+        when(activityInstRepo.findByActivityInstKey(anyString())).thenReturn(activityInst);
+        PcptActivityInst pcptActivityInst = new PcptActivityInst();
+
+        when(activityDefnVersionRepo.findByActivityDefnVersionKey(anyString())).thenReturn(getVCHActivityDefnVersionObj());
+        when(partnerRepo.findById(getListPartners().get(0).getPartnerKey())).thenReturn(Optional.ofNullable(getPartnerData()));
+        when(mapper.map(any(ActivityInstDto.class), eq(ActivityInst.class))).thenReturn(activityInst);
+        when(mapper.map(any(PcptActivityInstDto.class), eq(PcptActivityInst.class))).thenReturn(pcptActivityInst);
+
+        ActivityInstStatsResp activityInstStatsResp = new ActivityInstStatsResp();
+        when(mapper.map(activityInst,ActivityInstStatsResp.class)).thenReturn(activityInstStatsResp);
+
+        ActivityInstStatsResp response = activityInstService.getActivityInstStatsByKey("TEST_SPONSOR","activityInstKey");
+        assertEquals(activityInstStatsResp,response);
     }
 }

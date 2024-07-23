@@ -53,6 +53,10 @@ public abstract class AbstractNodeHandler implements NodeHandler{
                 || NodeTypes.SPONSOR_SUB_PROCESS.getName().equalsIgnoreCase(type);
     }
 
+    public static boolean isSystemSubProcess(String type) {
+        return NodeTypes.SYSTEM_SUB_PROCESS.getName().equalsIgnoreCase(type);
+    }
+
     public static Connector createConnector(SequenceFlow sequenceFlow, BpmnModel bpmnModel) {
         return Connector.builder()
                 .id(sequenceFlow.getId())

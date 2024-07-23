@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
     PcptActivityInst findBySponsorKeyAndPcptActivityInstKey(String sponsorKey,String pcptActivityInstKey);
@@ -166,6 +168,8 @@ public interface PcptInstRepo extends JpaRepository<PcptActivityInst,String> {
     Page<PcptActivityInst> findBySponsorKeyAndActivityInstKeyAndPartnerNameAndOnScheduleProgress(@Param("sponsorKey") String sponsorKey, @Param("activityInstKey") String activityInstKey,
                                                                                                                                 @Param("partnerName") String partnerName, @Param("currentDate") String currentDate, Pageable pageable);
     PcptActivityInst findByPcptActivityInstKey(String pcptActivityInstKey);
+
+    List<PcptActivityInst> findByActivityInstKey(String activityInstKey);
 }
 
 

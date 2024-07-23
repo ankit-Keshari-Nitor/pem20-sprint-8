@@ -7,6 +7,7 @@ import com.precisely.pem.dtos.requests.ActivityInstReq;
 import com.precisely.pem.dtos.responses.ActivityInstListResp;
 import com.precisely.pem.dtos.responses.ActivityInstPagnResp;
 import com.precisely.pem.dtos.responses.ActivityInstResp;
+import com.precisely.pem.dtos.responses.ActivityInstStatsResp;
 import com.precisely.pem.dtos.shared.ActivityStatsDto;
 import com.precisely.pem.exceptionhandler.ErrorResponseDto;
 import com.precisely.pem.services.ActivityInstService;
@@ -136,5 +137,25 @@ public class ActivityInstanceController {
 //                }).collect(Collectors.toList());
 
         return new ResponseEntity<>(activityDefnPaginationRes, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get Activity Instance Stats by Key")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ActivityInstStatsResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityInstStatsResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "404", description = "There are no Activity Instances", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "422", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
+    })
+    @GetMapping(value = "/{activityInstKey}/actions/getStats",produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<Object> getActivityInstStatsByKey(@PathVariable(value = "sponsorContext")String sponsorContext,
+                                                            @PathVariable(value = "activityInstKey")String activityInstKey) throws Exception{
+        ActivityInstStatsResp activityInstStatsResp = activityInstService.getActivityInstStatsByKey(sponsorContext,activityInstKey);
+        return new ResponseEntity<>(activityInstStatsResp, HttpStatus.OK);
+
     }
 }

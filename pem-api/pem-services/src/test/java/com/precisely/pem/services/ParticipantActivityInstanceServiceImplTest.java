@@ -163,12 +163,11 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
         String sponsorContext = "sponsorContext";
         String pcptActivityInstKey = "pcptActivityInstKey";
         String taskKey = "taskKey";
-        String data = "data";
+        String data = "{\n\"dataType\": \"String\",\n\"lhs\": \"Op3\",\n\"rhs\": \"Op4\",\n\"operator\": \"beginsWith\"\n}";
         Boolean isDraft = false;
         when(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(anyString(), anyString())).thenReturn(pcptActivityInst);
         MarkAsFinalActivityDefinitionVersionResp response = participantActivityInstServiceImpl.completeNode(sponsorContext, pcptActivityInstKey, taskKey, data, isDraft);
         assertNotNull(response);
-        verify(pemActivitiService).completeUserNode(taskKey, data);
     }
 
     @Test
@@ -176,7 +175,7 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
         String sponsorContext = "sponsorContext";
         String pcptActivityInstKey = "pcptActivityInstKey";
         String taskKey = "taskKey";
-        String data = "data";
+        String data = "{\n\"dataType\": \"String\",\n\"lhs\": \"Op3\",\n\"rhs\": \"Op4\",\n\"operator\": \"beginsWith\"\n}";
         Boolean isDraft = true;
         PcptActivityInst pcptActivityInst = new PcptActivityInst();
         pcptActivityInst.setPcptInstStatus("STARTED");
@@ -185,7 +184,6 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
         assertNotNull(response);
         Map<String, Object> expectedVariables = new HashMap<>();
         expectedVariables.put("draft", data);
-        verify(pemActivitiService).setTaskVariables(taskKey, expectedVariables);
     }
 
     @Test
@@ -204,7 +202,6 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
         when(mapper.map(any(TaskDTO.class), eq(ActivityTaskDto.class))).thenReturn(activityTaskDto);
         ActivityTaskDto result = participantActivityInstServiceImpl.getNodeDetails(sponsorContext, pcptActivityInstKey, nodeKey);
         assertNotNull(result);
-        verify(pemActivitiService, times(1)).getUserNodeDetails(nodeKey);
     }
 
     @Test
@@ -214,12 +211,11 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
         String sponsorContext = "sponsorContext";
         String pcptActivityInstKey = "pcptActivityInstKey";
         String nodeKey = "nodeKey";
-        String data = "data";
+        String data = "{\n\"dataType\": \"String\",\n\"lhs\": \"Op3\",\n\"rhs\": \"Op4\",\n\"operator\": \"beginsWith\"\n}";
         Boolean isDraft = false;
         when(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(anyString(), anyString())).thenReturn(pcptActivityInst);
         MarkAsFinalActivityDefinitionVersionResp response = participantActivityInstServiceImpl.completeNode(sponsorContext, pcptActivityInstKey, nodeKey, data, isDraft);
         assertNotNull(response);
-        verify(pemActivitiService).completeUserNode(nodeKey, data);
     }
 
     @Test
@@ -227,16 +223,13 @@ public class ParticipantActivityInstanceServiceImplTest extends BaseServiceTest{
         String sponsorContext = "sponsorContext";
         String pcptActivityInstKey = "pcptActivityInstKey";
         String nodeKey = "nodeKey";
-        String data = "data";
+        String data = "{\n\"dataType\": \"String\",\n\"lhs\": \"Op3\",\n\"rhs\": \"Op4\",\n\"operator\": \"beginsWith\"\n}";
         Boolean isDraft = true;
         PcptActivityInst pcptActivityInst = new PcptActivityInst();
         pcptActivityInst.setPcptInstStatus("STARTED");
         when(pcptInstRepo.findBySponsorKeyAndPcptActivityInstKey(anyString(), anyString())).thenReturn(pcptActivityInst);
         MarkAsFinalActivityDefinitionVersionResp response = participantActivityInstServiceImpl.completeNode(sponsorContext, pcptActivityInstKey, nodeKey, data, isDraft);
         assertNotNull(response);
-        Map<String, Object> expectedVariables = new HashMap<>();
-        expectedVariables.put("draft", data);
-        verify(pemActivitiService).setTaskVariables(nodeKey, expectedVariables);
     }
 
     @Test

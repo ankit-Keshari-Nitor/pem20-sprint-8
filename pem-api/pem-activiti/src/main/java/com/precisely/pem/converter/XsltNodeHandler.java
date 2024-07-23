@@ -7,6 +7,7 @@ import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.Node;
 import com.precisely.pem.dtos.NodeTypes;
 import com.precisely.pem.dtos.XsltConfiguration;
+import org.apache.commons.lang3.StringUtils;
 
 import static com.precisely.pem.dtos.Constants.*;
 
@@ -67,23 +68,27 @@ public class XsltNodeHandler extends AbstractNodeHandler{
 
             ObjectNode inputField = fields.addObject();
             inputField.put("name", XSLT_FIELD_INPUT);
-            inputField.put("stringValue", xslt.getInput());
+            inputField.put("expression", xslt.getInput());
 
             ObjectNode inputXsltField = fields.addObject();
             inputXsltField.put("name", XSLT_FIELD_XSLT);
-            inputXsltField.put("stringValue", xslt.getXslt());
+            inputXsltField.put("expression", xslt.getXslt());
 
             ObjectNode outputField = fields.addObject();
             outputField.put("name", XSLT_FIELD_OUTPUT);
-            outputField.put("stringValue", xslt.getOutput());
+            outputField.put("expression", xslt.getOutput());
 
             ObjectNode sampleOutputField = fields.addObject();
             sampleOutputField.put("name", XSLT_FIELD_SAMPLE_OUTPUT);
-            sampleOutputField.put("stringValue", xslt.getOutput());
+            sampleOutputField.put("expression", xslt.getOutput());
 
             ObjectNode typeField = fields.addObject();
             typeField.put("name", XSLT_FIELD_TYPE);
-            typeField.put("stringValue", type);
+            typeField.put("expression", type);
+
+            ObjectNode escapeInputField = fields.addObject();
+            escapeInputField.put("name", XSLT_FIELD_ESCAPE_INPUT);
+            escapeInputField.put("expression", StringUtils.isBlank(xslt.getEscapeInput()) ? "false" : xslt.getEscapeInput());
 
             addChildShapes(outputJson,xsltNodeChildShape);
 

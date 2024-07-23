@@ -28,6 +28,7 @@ public class Constants {
     public static final String API_FIELD_SAMPLE_RESPONSE = "sampleResponse";
     public static final String API_FIELD_RESPONSE_BODY = "responseBody";
     public static final String API_FIELD_TYPE = "type";
+    public static final String API_FIELD_FILE = "file";
     public static final String API_FIELD_API_CONFIGURATION = "apiConfiguration";
     //field name used in XSLT Node Handler
     public static final String XSLT_FIELD_INPUT = "input";

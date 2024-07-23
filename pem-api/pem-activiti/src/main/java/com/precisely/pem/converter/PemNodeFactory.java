@@ -75,8 +75,8 @@ public class PemNodeFactory {
         /**
          * create map with all the fields based on FieldName and its value
          * */
-        Map<String, String> fieldValueMap = serviceTask.getFieldExtensions().stream()
-                .collect(Collectors.toMap(FieldExtension::getFieldName, FieldExtension::getStringValue));
+        Map<String, String> fieldValueMap = serviceTask.getFieldExtensions().stream().filter(fieldExtension ->Objects.nonNull( fieldExtension.getExpression()))
+                .collect(Collectors.toMap(FieldExtension::getFieldName, FieldExtension::getExpression));
         String nodeType = fieldValueMap.get(API_FIELD_TYPE);
 
         if (nodeType.equalsIgnoreCase(NodeTypes.API_NODE.getName())) {
@@ -92,7 +92,7 @@ public class PemNodeFactory {
             apiConfiguration.setMethod(fieldValueMap.get(API_FIELD_METHOD));
             apiConfiguration.setRequestContentType(fieldValueMap.get(API_FIELD_REQUEST_CONTENT_TYPE));
             apiConfiguration.setResponseContentType(fieldValueMap.get(API_FIELD_RESPONSE_CONTENT_TYPE));
-            apiConfiguration.setFile(fieldValueMap.get("file"));
+            apiConfiguration.setFile(fieldValueMap.get(API_FIELD_FILE));
             apiConfiguration.setHeaders(fieldValueMap.get(API_FIELD_HEADERS));
             apiConfiguration.setRequestBody(fieldValueMap.get(API_FIELD_REQUEST_BODY));
             apiConfiguration.setSampleResponse(fieldValueMap.get(API_FIELD_SAMPLE_RESPONSE));

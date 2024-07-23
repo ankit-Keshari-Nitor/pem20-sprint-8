@@ -41,6 +41,11 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     ObjectMapper objectMapper = new ObjectMapper();
 
     public BpmnConvertServiceImpl(){
+        /*
+        FAIL_ON_UNKNOWN_PROPERTIES: Set false to allow the ObjectMapper to ignore unknown properties in the JSON data, instead of throwing an exception.
+        JsonInclude.Include.NON_NULL: Set to exclude null values from being serialized in the output
+        SerializationFeature.FAIL_ON_EMPTY_BEANS:it tells the ObjectMapper to not throw an exception when it encounters an empty bean. Instead, it will serialize the empty bean as an empty JSON object {}
+        * */
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);

@@ -69,35 +69,39 @@ public class ApiNodeHandler extends AbstractNodeHandler{
 
             ObjectNode methodField = fields.addObject();
             methodField.put("name", API_FIELD_METHOD);
-            methodField.put("stringValue", api.getMethod());
+            methodField.put("expression", api.getMethod());
 
             ObjectNode requestContentTypeField = fields.addObject();
             requestContentTypeField.put("name", API_FIELD_REQUEST_CONTENT_TYPE);
-            requestContentTypeField.put("stringValue", api.getRequestContentType());
+            requestContentTypeField.put("expression", api.getRequestContentType());
 
             ObjectNode responseContentTypeField = fields.addObject();
             responseContentTypeField.put("name", API_FIELD_RESPONSE_CONTENT_TYPE);
-            responseContentTypeField.put("stringValue", api.getResponseContentType());
+            responseContentTypeField.put("expression", api.getResponseContentType());
 
             ObjectNode headersField = fields.addObject();
             headersField.put("name", API_FIELD_HEADERS);
-            headersField.put("stringValue", api.getHeaders());
+            headersField.put("expression", api.getHeaders());
 
             ObjectNode requestBodyField = fields.addObject();
             requestBodyField.put("name", API_FIELD_REQUEST_BODY);
-            requestBodyField.put("stringValue", api.getRequestBody());
+            requestBodyField.put("expression", api.getRequestBody());
 
             ObjectNode sampleResponseField = fields.addObject();
             sampleResponseField.put("name", API_FIELD_SAMPLE_RESPONSE);
-            sampleResponseField.put("stringValue", api.getSampleResponse());
+            sampleResponseField.put("expression", api.getSampleResponse());
 
             ObjectNode responseBodyField = fields.addObject();
             responseBodyField.put("name", API_FIELD_RESPONSE_BODY);
-            responseBodyField.put("stringValue", api.getResponseBody());
+            responseBodyField.put("expression", api.getResponseBody());
 
             ObjectNode typeField = fields.addObject();
             typeField.put("name", API_FIELD_TYPE);
-            typeField.put("stringValue", type);
+            typeField.put("expression", type);
+
+            ObjectNode fileField = fields.addObject();
+            fileField.put("name", API_FIELD_FILE);
+            fileField.put("expression", api.getFile());
 
             addChildShapes(outputJson,apiNodeChildShape);
         }else {

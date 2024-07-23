@@ -213,7 +213,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
 
     private void addContextData(BpmnModel bpmnModel, PemBpmnModel pemBpmnModel,BpmnConverterRequest bpmnConverterRequest)throws BpmnConverterException  {
         Process process = bpmnModel.getProcessById(bpmnConverterRequest.getProcessId());
-        if(StringUtils.isBlank(pemBpmnModel.getProcess().getContextData())){
+        if(!StringUtils.isBlank(pemBpmnModel.getProcess().getContextData())){
             process.addExtensionElement(addStringExtensionElement(PROCESS_FIELD_CONTEXT_DATA, validateAndGetContextData(pemBpmnModel)));
         }
 

@@ -14,6 +14,7 @@ import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.*;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
@@ -212,7 +213,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
 
     private void addContextData(BpmnModel bpmnModel, PemBpmnModel pemBpmnModel,BpmnConverterRequest bpmnConverterRequest)throws BpmnConverterException  {
         Process process = bpmnModel.getProcessById(bpmnConverterRequest.getProcessId());
-        if(Objects.nonNull(pemBpmnModel.getProcess().getContextData())){
+        if(StringUtils.isBlank(pemBpmnModel.getProcess().getContextData())){
             process.addExtensionElement(addStringExtensionElement(PROCESS_FIELD_CONTEXT_DATA, validateAndGetContextData(pemBpmnModel)));
         }
 

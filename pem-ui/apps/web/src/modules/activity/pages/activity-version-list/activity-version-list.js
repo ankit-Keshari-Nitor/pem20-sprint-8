@@ -3,10 +3,12 @@ import { CrossIcon } from '../../icons';
 import { TableContainer } from '@carbon/react';
 import './activity-version-list.scss';
 
-import DataTableComponent from '../../components/datatable-component';
+import ActivityDataTableComponent from '../../components/datatable-component/index.js';
 
 import GeneralModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
+
+import useActivityStore from '../../store';
 
 import { ACTIVITY_VERSION_COLUMNS, ACTION_COLUMN_KEYS } from '../../constants';
 
@@ -14,6 +16,10 @@ import * as ActivityVersionService from '../../services/actvity-version-service.
 import * as ActivityService from '../../services/activity-service.js';
 
 const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, showDrawer }) => {
+
+  // State hooks for managing various states
+  const store = useActivityStore();
+
   // Version Side drawer
   const [totalRows, setTotalRows] = useState(0);
   const [sortDir, setSortDir] = useState('DESC'); // Sorting direction state
@@ -27,7 +33,6 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
   const [actionText, setActionText] = useState('');
   const [message, setMessage] = useState('');
   const [onPrimaryButtonClick, setOnPrimaryButtonClick] = useState(null); // Renamed state
-
 
   // Function to fetch and set data from the API
   const fetchVersionRowData = useCallback(
@@ -64,6 +69,16 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
 
   // Handler for action clicks
   const onCellActionClick = (action, actVersionKey = '', versionName = '') => {
+    const record = versionRows.filter((x) => x.id === actVersionKey)[0];
+    store.setSelectedActivity({
+      activityDefKey: activityDefnKey,
+      actDefName: activityName,
+      actDefVerKey: record.activityDefnVersionKey,
+      operation: action,
+      status: record.status,
+      version: record.version
+    });
+
     switch (action) {
       case ACTION_COLUMN_KEYS.MARK_AS_FINAL:
         setActionText('Mark as final');
@@ -83,7 +98,7 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
       case ACTION_COLUMN_KEYS.ROLLOUT:
         console.log('Rollout Version');
         break;
-      case ACTION_COLUMN_KEYS.TEST_ACTIVITY:
+      case ACTION_COLUMN_KEYS.TEST_VERSION:
         console.log('Test Version');
         break;
       case ACTION_COLUMN_KEYS.EDIT:
@@ -92,10 +107,10 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
       case ACTION_COLUMN_KEYS.VIEW:
         console.log('View Version');
         break;
-      case ACTION_COLUMN_KEYS.EXPORT_ACTIVITY:
+      case ACTION_COLUMN_KEYS.EXPORT_VERSION:
         console.log('Export Version');
         break;
-      case ACTION_COLUMN_KEYS.CLONE_ACTIVITY:
+      case ACTION_COLUMN_KEYS.CLONE_VERSION:
         console.log('Clone Version');
         break;
       case ACTION_COLUMN_KEYS.RESTORE:
@@ -154,7 +169,7 @@ const ActivityVersionList = ({ activityName, activityDefnKey, status, onClose, s
         </div>
       </div>
       <TableContainer>
-        <DataTableComponent
+        <ActivityDataTableComponent
           headers={ACTIVITY_VERSION_COLUMNS}
           rows={versionRows}
           sortDir={sortDir}

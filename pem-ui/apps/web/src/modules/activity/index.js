@@ -9,17 +9,26 @@ const ActivityDefinition = {
   Edit: React.lazy(() => import('./pages/activity-definition'))
 };
 
+const sideNavConfig = [
+  {
+    label: 'pem:sideNav.definitions',
+    to: '/activities/definitions',
+    title: 'pem:sideNav.definitions',
+    resourceKey: 'DEFINITIONS.VIEW'
+  },
+];
+
 const routes = [
   {
-    path: '/activities',
+    path: '/definitions',
     breadcrumb: 'mod-activity-definition:breadcrumb.definitions',
     resourceKey: 'DEFINITIONS.VIEW',
     element: (
-      <Shell.RoutePage resourceKey="DEFINITIONS.VIEW" dataLoaderConfig={{}}>
+      <Shell.PageContainer resourceKey="DEFINITIONS.VIEW" dataLoaderConfig={{}}>
         <DndProvider backend={HTML5Backend}>
           <ActivityDefinition.List />
         </DndProvider>
-      </Shell.RoutePage>
+      </Shell.PageContainer>
     ),
     children: [
       {
@@ -27,11 +36,11 @@ const routes = [
         breadcrumb: 'mod-activity-definition:breadcrumb.workflow',
         resourceKey: 'DESIGNER.VIEW',
         element: (
-          <Shell.RoutePage resourceKey="DESIGNER.VIEW" dataLoaderConfig={{}}>
+          <Shell.PageContainer resourceKey="DESIGNER.VIEW" dataLoaderConfig={{}}>
             <DndProvider backend={HTML5Backend}>
               <ActivityDefinition.New />
             </DndProvider>
-          </Shell.RoutePage>
+          </Shell.PageContainer>
         )
       },
       {
@@ -39,15 +48,17 @@ const routes = [
         breadcrumb: 'mod-activity-definition:breadcrumb.workflow',
         resourceKey: 'DESIGNER.VIEW',
         element: (
-          <Shell.RoutePage resourceKey="DESIGNER.VIEW" dataLoaderConfig={{}}>
+          <Shell.PageContainer resourceKey="DESIGNER.VIEW" dataLoaderConfig={{}}>
             <DndProvider backend={HTML5Backend}>
               <ActivityDefinition.Edit />
             </DndProvider>
-          </Shell.RoutePage>
+          </Shell.PageContainer>
         )
       }
     ]
   }
 ];
 
-export { routes };
+const modals = [];
+
+export { routes, sideNavConfig, modals };

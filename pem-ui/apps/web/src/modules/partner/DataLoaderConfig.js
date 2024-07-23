@@ -7,7 +7,8 @@ const DataLoaderConfig = {
         type: 'RESTAPI',
         method: 'GET',
         // url: getEnvironmentValue('USER.PERMISSIONTREE')
-        url: '/rest/sponsors/hsbc/partners',
+        url: '/rest/sponsors/b2b/partners',
+        //url: '/pemws/sponsors/b2b/partners/',
         handleOutput: (responseData) => {
           ListAPIHandler.handleResponse(responseData, 'partnerKey');
         }

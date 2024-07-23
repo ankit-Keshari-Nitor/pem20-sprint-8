@@ -1,43 +1,109 @@
-import { GROUP_LIST_DATA, ATTRIBUTE_LIST_DATA, PARTNER_LIST_DATA } from '../constants';
+import Shell from '@b2bi/shell';
+import { API_METHODS, API_END_POINTS } from '../constants';
 
-// TODO with actual api url
-export const getGroupList = async () => {
-  try {
-    return await GROUP_LIST_DATA;
-  } catch (error) {
-    console.error('Failed to fetch data:', error);
-    return [];
-  }
+const generateOptions = (param = {}) => {
+  const options = {
+    headers: {
+      Accept: 'application/json'
+    },
+    params: param
+  };
+
+  return options;
 };
 
-// TODO with actual api url
-export const getAttributeList = async (selectedAttributeType) => {
-  try {
-    let response = [];
-    if (selectedAttributeType === '') {
-      response = [];
-    } else {
-      response = ATTRIBUTE_LIST_DATA;
-    }
-    return await response;
-  } catch (error) {
-    console.error('Failed to fetch data:', error);
-    return [];
-  }
+// Function to get the Attribute Type List
+export const getAttributeTypeList = async () => {
+  let url = `${API_END_POINTS.ATTRIBUTE_TYPES}`;
+  let dataLoaderConfig = { url, method: API_METHODS.GET };
+
+  const response = await new Shell.RestApiService().call(dataLoaderConfig, null, generateOptions());
+  return response.status === 200 ? response?.data : [];
 };
 
-// TODO with actual api url
-export const getPartnerList = async (selectedPartnerType) => {
-  try {
-    let response = [];
-    if (selectedPartnerType === '') {
-      response = [];
-    } else {
-      response = PARTNER_LIST_DATA;
-    }
-    return await response;
-  } catch (error) {
-    console.error('Failed to fetch data:', error);
-    return [];
+// Function to get the Attributes List
+export const getAttributeList = async (selectedAttributeType, searchKey) => {
+  let url = `${API_END_POINTS.ATTRIBUTE_LIST}/${selectedAttributeType}/attributeValues`;
+  let dataLoaderConfig = { url, method: API_METHODS.GET };
+
+  const response = await new Shell.RestApiService().call(dataLoaderConfig, null, generateOptions());
+  return response.status === 200 ? response?.data : [];
+};
+
+// Function to get the Partners List
+export const getPartnerList = async (param) => {
+  let url = `${API_END_POINTS.PARTNERS_LIST}`;
+
+  let dataLoaderConfig = { url, method: API_METHODS.GET };
+
+  const response = await new Shell.RestApiService().call(dataLoaderConfig, null, generateOptions(param));
+  return response.status === 200 ? response?.data : [];
+};
+
+// Function to get the Partners Users List
+export const getPartnerUserList = async (param, partnerId) => {
+  let url = `${API_END_POINTS.PARTNERS_LIST}${partnerId}/users/`;
+
+  let dataLoaderConfig = { url, method: API_METHODS.GET };
+
+  const response = await new Shell.RestApiService().call(dataLoaderConfig, null, generateOptions(param));
+  return response.status === 200 ? response?.data : [];
+};
+
+// Function to get the Group List
+export const getGroupList = async (selectedAttributeType) => {
+  let url = `${API_END_POINTS.ATTRIBUTE_TYPES}`;
+  let dataLoaderConfig = { url, method: API_METHODS.GET };
+
+  const response = await new Shell.RestApiService().call(dataLoaderConfig, null, generateOptions());
+  return response.status === 200 ? response?.data : [];
+};
+
+// Function to rollout Activity
+export const rolloutActivity = async (activityDefnVersionKey, rolloutData, rolloutPartnersData) => {
+  let partnersData = [];
+  let attributeValuesData = [];
+  let attributeGroupsData = [];
+  if (rolloutPartnersData.selectedPartnersData.length > 0) {
+    partnersData = rolloutPartnersData.selectedPartnersData.map((item) => {
+      return { partnerKey: item.partnerKey, contextDataNodes: [] };
+    });
   }
+
+  if (rolloutPartnersData.selectedAttributesData.length > 0) {
+    attributeValuesData = rolloutPartnersData.selectedAttributesData.map((item) => {
+      return {
+        attributeValueKey: item.attributeValueKey
+      };
+    });
+  }
+
+  if (rolloutPartnersData.selectedGroupsData.length > 0) {
+    attributeGroupsData = rolloutPartnersData.selectedGroupsData.map((item) => {
+      return {
+        attributeGroupKey: item.value
+      };
+    });
+  }
+
+  console.log(attributeValuesData);
+  console.log(attributeGroupsData);
+  
+  let url = `${API_END_POINTS.ACTIVITY_DEFINITION_ROLLOUT}`;
+  let dataLoaderConfig = { url, method: API_METHODS.POST };
+  let data = {
+    activityDefnVersionKey: activityDefnVersionKey,
+    name: rolloutData.name,
+    description: rolloutData.description,
+    alertStartDate: rolloutData.alertDate,
+    alertInterval: rolloutData.alertInterval,
+    dueDate: rolloutData.dueDate,
+    partners: partnersData,
+    contextData: rolloutData.contextData,
+    rolloutInternally: rolloutData.rollingOutTo === 'internal_users' ? true : false,
+    attributeValues: [],
+    attributeGroups: []
+  };
+  const response = await new Shell.RestApiService().call(dataLoaderConfig, data, generateOptions());
+  return response.status === 201 ? true : false;
 };

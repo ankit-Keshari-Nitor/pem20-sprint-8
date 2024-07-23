@@ -9,13 +9,13 @@ const Partner = {
 
 const routes = [
   {
-    path: '/directories/partners',
+    path: '/partners',
     breadcrumb: 'mod-partner:breadcrumb.partners',
     resourceKey: 'PARTNERS.VIEW',
     element: (
-      <Shell.RoutePage resourceKey="PARTNERS.VIEW" dataLoaderConfig={Partner.DataLoaderConfig}>
+      <Shell.PageContainer resourceKey="PARTNERS.VIEW" dataLoaderConfig={Partner.DataLoaderConfig}>
         <Partner.ListPage />
-      </Shell.RoutePage>
+      </Shell.PageContainer>
     )
   }
 ];

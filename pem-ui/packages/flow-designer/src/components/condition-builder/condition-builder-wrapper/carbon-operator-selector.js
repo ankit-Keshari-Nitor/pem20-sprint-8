@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { toOptions, useValueEditor } from 'react-querybuilder';
-import { Checkbox, TextInput, TreeView, TreeNode, Button, DatePicker, DatePickerInput, Select, SelectItem } from '@carbon/react';
+import { TextInput, TreeView, TreeNode, Button, DatePicker, DatePickerInput, Select, SelectItem } from '@carbon/react';
 import { ElippsisIcon } from '../../../icons';
 import { useState } from 'react';
 import WrapperModal from '../../helpers';

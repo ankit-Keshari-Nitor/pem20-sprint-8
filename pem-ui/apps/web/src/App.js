@@ -2,9 +2,11 @@ import React from 'react';
 import './App.scss';
 import * as Shell from '@b2bi/shell';
 import { routes as PemRoutes } from './modules/routes';
-import axios from 'axios';
+import { sidePages as PemSidePages} from './modules/sidePages';
 import AppAuthHandler from './AppAuthHandler';
 import AppConfiguration from './AppConfiguration';
+// import { modals as PocModals } from '@b2bi/poc';
+import { modals as PEMModals } from './modules/modals';
 
 const flattenRoutes = (flattenedRoutes, nestedRoutes, parentPath) => {
   nestedRoutes.forEach((nestedRoute) => {
@@ -38,43 +40,28 @@ const routes = [
   }
 ];
 
-// Set global headers
-axios.defaults.headers.common['Authorization'] = 'Basic ZGVib3JhaF9sZWVfYWNkQGhzYmMuY29tOlBAJCR3MHJk';
-axios.defaults.headers.common['Content-Type'] = 'application/json';
-axios.defaults.headers.common['Accept'] = 'application/json';
-
 function App() {
   return (
     <Shell.EnvironmentProvider config={{}}>
-      <Shell.ApplicationInfoProvider>
-        <Shell.AuthProvider handler={AppAuthHandler()}>
-          <Shell.ConfigurationProvider
-            locales={Shell.SupportedLocales}
-            locale={'en_US'}
-            sideNavConfig={
-              [
-                /*...sideNavConfig, ...Shell.sideNavConfig*/
-              ]
-            }
-            headerMenuList={
-              [
-                /*...headerMenuList */
-                /*, ...Shell.headerMenuList*/
-              ]
-            }
-          >
-            <Shell.ResourceProvider resourceMappings={{}}>
-              <Shell.ModalProvider modals={{}}>
-                <Shell.NotificationProvider>
-                  <AppConfiguration>
-                    <Shell.RouterProvider routes={routes} />
-                  </AppConfiguration>
-                </Shell.NotificationProvider>
-              </Shell.ModalProvider>
-            </Shell.ResourceProvider>
-          </Shell.ConfigurationProvider>
-        </Shell.AuthProvider>
-      </Shell.ApplicationInfoProvider>
+      <Shell.DataServiceProvider>
+        <Shell.ApplicationInfoProvider>
+          <Shell.AuthProvider handler={AppAuthHandler()}>
+            <Shell.ConfigurationProvider locales={Shell.SupportedLocales} locale={'en_US'}>
+              <Shell.ResourceProvider resourceMappings={{}}>
+                <Shell.ModalProvider modals={[...PEMModals]}>
+                  <Shell.SidePageProvider sidePages={[...PemSidePages]}>
+                    <Shell.NotificationProvider>
+                      <AppConfiguration>
+                        <Shell.RouterProvider routes={routes} />
+                      </AppConfiguration>
+                    </Shell.NotificationProvider>
+                  </Shell.SidePageProvider>
+                </Shell.ModalProvider>
+              </Shell.ResourceProvider>
+            </Shell.ConfigurationProvider>
+          </Shell.AuthProvider>
+        </Shell.ApplicationInfoProvider>
+      </Shell.DataServiceProvider>
     </Shell.EnvironmentProvider>
   );
 }

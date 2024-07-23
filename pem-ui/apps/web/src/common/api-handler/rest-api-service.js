@@ -7,6 +7,14 @@ function resolveUrl(url, input) {
   });
   return url;
 }
+
+const addPemHeaders = (headers) => {
+  const rHeaders = headers ? headers : {};
+  rHeaders['Authorization'] = `Basic ZGVib3JhaF9sZWVfYWNkQGhzYmMuY29tOlBAJCR3MHJk`;
+  rHeaders['Accept'] = 'application/json';
+  return rHeaders;
+};
+
 class RestApiService {
   async call(config, input) {
     const headers = {
@@ -16,10 +24,11 @@ class RestApiService {
     const restReq = {
       url: input ? resolveUrl(config.url, input) : config.url,
       method: config.method ? config.method : 'GET',
-      data: config?.data,
-      params: config?.params,
+      data: config?.data === undefined ? {} : config?.data,
+      params: config?.params === undefined ? {} : config?.params,
       //baseURL: window.sfgBackendBaseUrl,
-      headers: headers
+      headers: addPemHeaders(headers)
+
       //paramsSerializer: customParamsSerializer
     };
     try {

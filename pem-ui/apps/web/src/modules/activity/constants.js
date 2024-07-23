@@ -7,9 +7,19 @@ export const ROUTES = {
 export const API_END_POINTS = {
   ACTIVITY_DEFINITION: '/sponsors/cashbank/v2/activityDefinitions',
   ACTIVITY_INSTANCE: '/sponsors/{sponsorContext}/v2/activityInstances',
-  ACTIVITY_DEFINITION_VERSION: '/sponsors/{sponsorContext}/v2/activityDefinitions/{activityDefnKey}/version'
+  ACTIVITY_DEFINITION_VERSION: '/sponsors/{sponsorContext}/v2/activityDefinitions/{activityDefnKey}/version',
+  ATTRIBUTE_TYPES: '/rest/sponsors/b2b/attributetypes/',
+  ATTRIBUTE_LIST: '/rest/sponsors/b2b/attributetypes',
+  PARTNERS_LIST: '/rest/sponsors/b2b/partners/',
+  ACTIVITY_DEFINITION_ROLLOUT: '/sponsors/cashbank//v2/activityInstances'
 };
 
+export const API_METHODS = {
+  GET: 'GET',
+  POST: 'POST',
+  DELETE: 'DELETE',
+  UPDATE: 'UPDATE'
+};
 export const ACTION_COLUMN_KEYS = {
   NAME: 'name',
   ENCRYPTED: 'isEncrypted',
@@ -44,7 +54,7 @@ export const ACTIVITY_LIST_COLUMNS = [
   { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
   { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' },
   { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' },
-  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' },
+  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' }
 ];
 
 export const ACTIVITY_VERSION_COLUMNS = [
@@ -68,6 +78,33 @@ export const ROLLOUT_STEPS = [
     id: 'step2',
     label: 'Step 2',
     secondaryLabel: 'Select Group, Attributes, Partners'
+  }
+];
+
+export const ATTRIBUTE_TYPES = [
+  {
+    name: 'RequestType',
+    attributeTypeKey: '64a285c4-a4a3-4fb1-8f00-9fecf1ed3da9',
+    visibility: {
+      code: 'SPONSOR',
+      display: 'Sponsor Only'
+    }
+  },
+  {
+    name: 'SubResourceType',
+    attributeTypeKey: '6317cc3b-c709-4c5a-9525-308828db757b',
+    visibility: {
+      code: 'SPONSOR',
+      display: 'Sponsor Only'
+    }
+  },
+  {
+    name: 'My Partners',
+    attributeTypeKey: 'ee679ea2-d573-4075-b16c-b8addd344c6d',
+    visibility: {
+      code: 'SPONSOR',
+      display: 'Sponsor Only'
+    }
   }
 ];
 
@@ -254,3 +291,9 @@ export const OPERATIONS = {
   CREATE_NEW_VERSION: 'create_new_version',
   TEST: 'test'
 };
+
+export const DUMMY_CONTEXT_DATA =
+  '{\n\t"ContextData": {\n\t\t"ProvisioningRequest": {\n\t\t\t"RequestType": "ProvisioningRequest",\n\t\t\t"ResourceType": "CODELIST",\n\t\t\t"SubResourceType": "CodeList",\n\t\t\t"ConfigType": "PROD",\n\t\t\t"ResourceKey": "b7f18eb4-b32f-406a-af16-ebb3ce0d0b34",\n\t\t\t"PartnerKey": "9bf632dc-01a4-4dd9-9302-bc9bc4e5d30d",\n\t\t\t"SponsorKey": "761044dd-adea-404d-9ee2-5d7654de7137"\n\t\t},\n\t\t"Topology": {\n\t\t\t"Applications": {\n\t\t\t\t"SFTP": {\n\t\t\t\t\t"_type": "APIConfig",\n\t\t\t\t\t"__text": "d6314576-8aaa-4bd6-8a23-7ccf79f6ec13"\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}';
+
+// Capitalize the first letter of a string
+export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();

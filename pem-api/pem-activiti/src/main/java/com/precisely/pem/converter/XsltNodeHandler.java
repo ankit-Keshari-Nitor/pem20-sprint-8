@@ -85,6 +85,10 @@ public class XsltNodeHandler extends AbstractNodeHandler{
             typeField.put("name", XSLT_FIELD_TYPE);
             typeField.put("expression", type);
 
+            ObjectNode escapeInputField = fields.addObject();
+            escapeInputField.put("name", XSLT_FIELD_ESCAPE_INPUT);
+            escapeInputField.put("expression", xslt.getEscapeInput());
+
             addChildShapes(outputJson,xsltNodeChildShape);
 
         }else {

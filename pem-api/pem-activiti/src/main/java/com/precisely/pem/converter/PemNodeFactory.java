@@ -112,6 +112,7 @@ public class PemNodeFactory {
             xsltConfiguration.setOutput(fieldValueMap.get(XSLT_FIELD_OUTPUT));
             xsltConfiguration.setSampleOutput(fieldValueMap.get(XSLT_FIELD_OUTPUT));
             xsltConfiguration.setInput(fieldValueMap.get(XSLT_FIELD_INPUT));
+            xsltConfiguration.setEscapeInput(fieldValueMap.get(XSLT_FIELD_ESCAPE_INPUT));
 
             node.setXslt(xsltConfiguration);
             return node;

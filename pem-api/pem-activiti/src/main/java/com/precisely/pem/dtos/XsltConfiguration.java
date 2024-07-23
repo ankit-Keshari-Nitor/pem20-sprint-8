@@ -14,4 +14,5 @@ public class XsltConfiguration {
     private String input;
     private String sampleOutput;
     private String output;
+    private String escapeInput;
 }

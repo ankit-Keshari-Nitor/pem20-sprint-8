@@ -61,7 +61,6 @@ export const getGroupList = async (selectedAttributeType) => {
 
 // Function to rollout Activity
 export const rolloutActivity = async (activityDefnVersionKey, rolloutData, rolloutPartnersData) => {
-  console.log('rolloutPartnersData', rolloutPartnersData);
   let partnersData = [];
   let attributeValuesData = [];
   let attributeGroupsData = [];

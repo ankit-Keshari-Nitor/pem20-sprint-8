@@ -28,9 +28,9 @@ export default function RolloutDetails(props) {
             required
             pattern="/^[^&<>'.{}]+$/i"
             data-testid="name"
-            labelText="Name (mandatory)"
+            labelText="Name (required)"
             placeholder={'Enter Name'}
-            invalidText={'Name is a mandatory field.'}
+            invalidText={'Name is a required field.'}
             invalid={formErrors.name}
             value={rolloutDetails.name}
             onChange={(e) => setRolloutDetails((prev) => ({ ...prev, name: e.target.value }))}
@@ -190,7 +190,7 @@ export default function RolloutDetails(props) {
                 <TextArea
                   id="partners_rollout"
                   data-testid="partners_rollout"
-                  labelText="Partner, Groups and Attributes (mandatory)"
+                  labelText="Partner, Groups and Attributes (required)"
                   invalidText={'None of the Trading Partners is selected.'}
                   invalid={formErrors.partnersDetails}
                   required

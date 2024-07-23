@@ -37,7 +37,7 @@ describe('RolloutDetails Component', () => {
 
     it('renders the component', () => {
         render(<RolloutDetails {...mockProps} />);
-        expect(screen.getByLabelText('Name (mandatory)')).toBeInTheDocument();
+        expect(screen.getByLabelText('Name (required)')).toBeInTheDocument();
         expect(screen.getByLabelText('Description')).toBeInTheDocument();
         expect(screen.getByLabelText(/Due Date/)).toBeInTheDocument();
         expect(screen.getByLabelText(/Alert Date/)).toBeInTheDocument();
@@ -49,7 +49,7 @@ describe('RolloutDetails Component', () => {
         render(<RolloutDetails {...mockProps} />);
 
         // Name input change
-        const nameInput = screen.getByLabelText('Name (mandatory)');
+        const nameInput = screen.getByLabelText('Name (required)');
         fireEvent.change(nameInput, { target: { value: 'Test Name' } });
         expect(mockProps.setRolloutDetails).toHaveBeenCalledWith(expect.any(Function));
 

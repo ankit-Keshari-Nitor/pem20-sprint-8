@@ -9,8 +9,6 @@ import com.precisely.pem.dtos.NodeTypes;
 import com.precisely.pem.dtos.XsltConfiguration;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Objects;
-
 import static com.precisely.pem.dtos.Constants.*;
 
 public class XsltNodeHandler extends AbstractNodeHandler{

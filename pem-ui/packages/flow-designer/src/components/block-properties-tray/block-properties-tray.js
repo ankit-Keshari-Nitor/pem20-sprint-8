@@ -80,7 +80,8 @@ export default function BlockPropertiesTray(props) {
             <span onClick={() => setOpenExpandMode(true)} className="icon">
               <ExpandIcon />
             </span>
-            <span onClick={() => setOpenPropertiesBlock(false)} className="icon" style={{ marginLeft: '1rem' }}>
+            <span onClick={() => setOpenPropertiesBlock(false)} className="icon drawer-close
+ " style={{ marginLeft: '1rem' }}>
               <CrossIcon />
             </span>
           </div>

@@ -1,7 +1,9 @@
 package com.precisely.pem.service;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.precisely.pem.converter.*;
 import com.precisely.pem.dtos.*;
@@ -39,7 +41,9 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
     ObjectMapper objectMapper = new ObjectMapper();
 
     public BpmnConvertServiceImpl(){
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
     }
 
     /*This will convert pem_bpmn_json into bpmn xml definition and return BLOB which will be saved in DB.*/
@@ -148,7 +152,9 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
             //Mandatory userKeys and roleKeys, each subprocess has startNode present always
             nodes.stream()
                     .filter(node ->
-                            AbstractNodeHandler.isSubProcess(node.getType())).forEach(node ->
+                            AbstractNodeHandler.isSubProcess(node.getType()))
+                    .filter(subProcessNode -> !AbstractNodeHandler.isSystemSubProcess(subProcessNode.getType()))
+                    .forEach(node ->
                             addDefaultSystemUserTaskForAllSubProcess(node.getNodes(),connectors, bpmnConverterRequest,node.getUserKeys(),node.getRoleKeys()));
             log.debug("======= Default System User Task For All SubProcess is added Successfully in PemBpmnModel body. ");
             // Process each node through the chain
@@ -201,7 +207,9 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
 
     private void addContextData(BpmnModel bpmnModel, PemBpmnModel pemBpmnModel,BpmnConverterRequest bpmnConverterRequest)throws BpmnConverterException  {
         Process process = bpmnModel.getProcessById(bpmnConverterRequest.getProcessId());
-        process.addExtensionElement(addStringExtensionElement(PROCESS_FIELD_CONTEXT_DATA, validateAndGetContextData(pemBpmnModel)));
+        if(Objects.nonNull(pemBpmnModel.getProcess().getContextData())){
+            process.addExtensionElement(addStringExtensionElement(PROCESS_FIELD_CONTEXT_DATA, validateAndGetContextData(pemBpmnModel)));
+        }
 
         pemBpmnModel.getProcess().getNodes().forEach(node -> {
             if(NodeTypes.API_NODE.getName().equalsIgnoreCase(node.getType())){
@@ -267,7 +275,7 @@ public class BpmnConvertServiceImpl implements BpmnConvertService{
 
                 //add new connector in Connectors List
                 connectors.add(newConnector);
-            }else if(isSubProcess(node.getType())){
+            }else if(isSubProcess(node.getType()) && !AbstractNodeHandler.isSystemSubProcess(node.getType())){
                 addDefaultSystemUserTaskForAllSubProcess(node.getNodes(),connectors,request, node.getUserKeys(), node.getRoleKeys());
             }
         }

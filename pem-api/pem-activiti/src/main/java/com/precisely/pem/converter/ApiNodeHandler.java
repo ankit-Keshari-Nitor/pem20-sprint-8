@@ -61,11 +61,11 @@ public class ApiNodeHandler extends AbstractNodeHandler{
             //create field for each API Configuration
             ObjectNode apiConfigurationField = fields.addObject();
             apiConfigurationField.put("name", API_FIELD_API_CONFIGURATION);
-            apiConfigurationField.put("stringValue", api.getApiConfiguration());
+            apiConfigurationField.put("expression", api.getApiConfiguration());
 
             ObjectNode urlField = fields.addObject();
             urlField.put("name", API_FIELD_URL);
-            urlField.put("stringValue", api.getUrl());
+            urlField.put("expression", api.getUrl());
 
             ObjectNode methodField = fields.addObject();
             methodField.put("name", API_FIELD_METHOD);

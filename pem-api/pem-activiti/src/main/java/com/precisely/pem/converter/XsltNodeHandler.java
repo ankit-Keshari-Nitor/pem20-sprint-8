@@ -7,6 +7,9 @@ import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.Node;
 import com.precisely.pem.dtos.NodeTypes;
 import com.precisely.pem.dtos.XsltConfiguration;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Objects;
 
 import static com.precisely.pem.dtos.Constants.*;
 
@@ -87,7 +90,7 @@ public class XsltNodeHandler extends AbstractNodeHandler{
 
             ObjectNode escapeInputField = fields.addObject();
             escapeInputField.put("name", XSLT_FIELD_ESCAPE_INPUT);
-            escapeInputField.put("expression", xslt.getEscapeInput());
+            escapeInputField.put("expression", StringUtils.isBlank(xslt.getEscapeInput()) ? "false" : xslt.getEscapeInput());
 
             addChildShapes(outputJson,xsltNodeChildShape);
 

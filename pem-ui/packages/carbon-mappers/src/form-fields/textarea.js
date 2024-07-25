@@ -5,7 +5,7 @@ import {
   minProps,
   maxProps,
   readOnly,
-  NameLabel,
+  Id,
   valueLabel,
   mapping,
   helperText,
@@ -16,7 +16,7 @@ import {
   labelText,
   regexValidation,
   height,
-  id
+  elementTyps,
 } from '../constant';
 import { TextAreaIcon } from '../icons';
 
@@ -59,8 +59,9 @@ TextArea.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <TextAreaIcon />,
   editableProps: {
-    Basic: [id, NameLabel, labelText, placeHolder, helperText, height, valueLabel, mapping, readOnly],
+    //Basic: [id, NameLabel, labelText, placeHolder, helperText, height, valueLabel, mapping, readOnly],
+    Basic: [elementTyps, Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
     Condition: []
   },
-  advanceProps: [minProps, maxProps, regexValidation, isRequired]
+  advanceProps: [minProps, maxProps, regexValidation]
 };

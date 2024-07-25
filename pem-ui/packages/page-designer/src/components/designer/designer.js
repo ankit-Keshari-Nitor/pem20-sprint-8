@@ -105,12 +105,12 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
 
         //Condition for Max Length Property
         if (item.component.type === 'textarea' || item.component.type === 'textinput' || item.component.type === 'password') {
-          item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` }
+          item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` };
         }
 
         if (item.component.type === 'numberinput') {
-          item.component.max = { value: '20', message: `${item.component.label} value should be between 0 - 20.` }
-          item.component.min = { value: '0', message: `${item.component.label} value should be between 0 - 20.` }
+          item.component.max = { value: '20', message: `${item.component.label} value should be between 0 - 20.` };
+          item.component.min = { value: '0', message: `${item.component.label} value should be between 0 - 20.` };
         }
 
         const newItem = {
@@ -144,7 +144,6 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
     },
     [layout, components]
   );
-
   const onFieldSelect = (e, componentDetail, currentPathDetail) => {
     e.stopPropagation();
     let filedTypeConfig;
@@ -192,7 +191,13 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           advancePops?.regexPattern && (advancePops.invalid = false);
           return (advancePops.value = fieldData.component[advancePops?.propsName]);
         } else {
-          return advancePops?.propsName === REGEXVALIDATION ? (advancePops.value = { pattern: 'None', value: '', message: '' }) : advancePops?.propsName === MAXPROPS ? (advancePops.value = { value: '20', message: '' }) : advancePops?.propsName === MINPROPS ? (advancePops.value = { value: '0', message: '' }) : (advancePops.value = { value: '', message: '' });
+          return advancePops?.propsName === REGEXVALIDATION
+            ? (advancePops.value = { pattern: 'None', value: '', message: '' })
+            : advancePops?.propsName === MAXPROPS
+              ? (advancePops.value = { value: '20', message: '' })
+              : advancePops?.propsName === MINPROPS
+                ? (advancePops.value = { value: '0', message: '' })
+                : (advancePops.value = { value: '', message: '' });
         }
       });
     } else if (componentDetail.type === COLUMN) {
@@ -253,10 +258,10 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
       } else if (propsName === ISREQUIRED) {
         objCopy?.component?.advanceProps.map((prop) => {
           if (prop.propsName === 'min') {
-            newValue ? prop.value.value.trim() === '0' ? prop.value.value = '1' : prop.value.value : prop.value.value;
+            newValue ? (prop.value.value.trim() === '0' ? (prop.value.value = '1') : prop.value.value) : prop.value.value;
             minValue = prop.value.value;
           }
-        })
+        });
       } else {
         objCopy?.component?.editableProps.Basic.map((prop) => {
           if (prop.propsName === propsName) {
@@ -268,12 +273,12 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
               prop.value = value;
               // Ensure the invalid text is set if invalid
               if (!isValid) {
-                isInvalid = true
+                isInvalid = true;
                 prop.invalidText = prop.invalidText || 'Invalid input'; // default message if none provided
               }
             }
           }
-        })
+        });
         objCopy?.component?.advanceProps.map((prop) => {
           if (prop.propsName === propsName) {
             if (prop?.regexPattern) {
@@ -284,12 +289,12 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
               prop.value = value;
               // Ensure the invalid text is set if invalid
               if (!isValid) {
-                isInvalid = true
+                isInvalid = true;
                 prop.invalidText = prop.invalidText || 'Invalid input'; // default message if none provided
               }
             }
           }
-        })
+        });
       }
       if (key !== 'advance') {
         objCopy.component.editableProps[key].map((config) => {
@@ -317,9 +322,9 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
         if (propsName === ISREQUIRED) {
           setLayout(updateChildToChildren(layout, componentPosition, 'min', { value: minValue, message: `Minimum ${minValue} characters required` }));
         }
-        setLayout(prevLayout => {
-          return updateChildToChildren(prevLayout, componentPosition, propsName, newValue)
-        })
+        setLayout((prevLayout) => {
+          return updateChildToChildren(prevLayout, componentPosition, propsName, newValue);
+        });
         //setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
       }
     }
@@ -389,6 +394,18 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             </div>
             <div className="canvas-wrapper">
               <Canvas layout={layout} handleDrop={handleDrop} renderRow={renderRow} componentMapper={componentMapper} onFieldSelect={onFieldSelect} onFieldDelete={onFieldDelete} />
+              <div className="btn-top-container">
+                <Grid fullWidth className="buttons-container-bottom">
+                  <Column lg={16} className="buttons-container">
+                    <Button kind="secondary" className="cancelButton">
+                      Cancel
+                    </Button>
+                    <Button kind="primary" className="saveButton" onClick={() => saveFormDesignerData(layout)}>
+                      Save
+                    </Button>
+                  </Column>
+                </Grid>
+              </div>
             </div>
           </div>
           {selectedFiledProps && (
@@ -405,16 +422,6 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             </div>
           )}
         </div>
-        <Grid fullWidth className="buttons-container-bottom">
-          <Column lg={16} className="buttons-container">
-            <Button kind="secondary" className="cancelButton">
-              Cancel
-            </Button>
-            <Button kind="primary" className="saveButton" onClick={() => saveFormDesignerData(layout)}>
-              Save
-            </Button>
-          </Column>
-        </Grid>
       </div>
 
       {/* View Schema Modal */}

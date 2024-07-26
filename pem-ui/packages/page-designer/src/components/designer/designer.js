@@ -144,6 +144,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
     },
     [layout, components]
   );
+  console.log('layout>>>',layout);
   const onFieldSelect = (e, componentDetail, currentPathDetail) => {
     e.stopPropagation();
     let filedTypeConfig;

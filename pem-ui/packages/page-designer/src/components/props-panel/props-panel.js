@@ -161,9 +161,9 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
   };
 
   const handleRegexOption = (e, items, message, id, propsName, path) => {
-    const newRegex = items.filter((items) => items.value === e.target.value)[0];
+    const newRegex = items.filter((items) => items.value === e)[0];
     const newValue = { pattern: newRegex.label, value: newRegex.value, message: message };
-    if (e.target.value === CUSTOMREGEX) {
+    if (e === CUSTOMREGEX) {
       newValue.customRegex = '';
       setCustomRegexPattern(true);
     }
@@ -737,7 +737,30 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           {/* Regex Validation */}
                           {advncProps.type === OPTIONS && (
                             <>
-                              <Column lg={advncProps.propsPanelColSize}>
+                              <Column lg={16} className='test----0'>
+                                <RadioButtonGroup
+                                  legendText="Regex Pattern"
+                                  name={`radio-group-${selectedFiledProps?.id}`}
+                                  valueSelected={advncProps.value.value}
+                                  orientation="vertical"
+                                  onChange={(e) =>
+                                    handleRegexOption(
+                                      e,
+                                      advncProps?.items,
+                                      advncProps.value.message,
+                                      selectedFiledProps?.id,
+                                      advncProps.propsName,
+                                      selectedFiledProps?.currentPathDetail
+                                    )
+                                  }
+                                >
+                                  {advncProps?.items.map((item, index) => {
+                                    return <RadioButton key={index} labelText={item.label} value={item.value} />;
+                                  })}
+
+                                </RadioButtonGroup>
+                              </Column>
+                              {/* <Column lg={advncProps.propsPanelColSize}>
                                 <Select
                                   className="regex-types right-palette-form-item"
                                   id={String(selectedFiledProps.id)}
@@ -759,7 +782,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     return <SelectItem key={index} value={item.value} text={item.label} />;
                                   })}
                                 </Select>
-                              </Column>
+                              </Column> */}
                               <Column lg={advncProps.propsPanelColSize}>
                                 <TextInput
                                   key={`${idx}-'message'`}

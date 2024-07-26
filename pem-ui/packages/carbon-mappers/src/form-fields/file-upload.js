@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FileUploaderDropContainer, FileUploaderItem } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, id, maxFileSize, NameLabel, helperText, extensions, isRequired, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTyps, maxFileSize, Id, helperText, extensions, isRequired, labelText } from '../constant';
 import { FileUploadIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.FILE_UPLOADER;
@@ -99,7 +99,7 @@ const FileUploader = ({ field, id, }) => {
         <>
           <FileUploaderDropContainer
             labelText={labelText === undefined ? label : labelText}
-            name={NameLabel}
+            name={Id}
             filenameStatus='edit'
             onChange={onAddFiles}
             onAddFiles={onAddFiles}
@@ -136,7 +136,7 @@ FileUploader.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <FileUploadIcon />,
   editableProps: {
-    Basic: [id, NameLabel, labelText, helperText, maxFileSize, extensions],
+    Basic: [elementTyps, Id, labelText, helperText, maxFileSize, extensions],
     Condition: []
   },
   advanceProps: [isRequired]

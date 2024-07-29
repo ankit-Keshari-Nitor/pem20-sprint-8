@@ -46,7 +46,7 @@ const ActivityRolloutModal = (props) => {
       .catch((errors) => {
         console.error('Failed to fetch data:', errors);
       });
-  }, [activityDefnVersionKey,rolloutDetails,rolloutPartnersData, fetchAndSetData, setShowModal]);
+  }, [activityDefnVersionKey, rolloutDetails, rolloutPartnersData, fetchAndSetData, setShowModal]);
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && submitting) {
@@ -57,9 +57,6 @@ const ActivityRolloutModal = (props) => {
   useEffect(() => {
     if (rolloutDetails.name.length > 0) {
       setFormErrors((prev) => ({ ...prev, name: false }));
-    }
-    if (rolloutDetails.description.length > 20) {
-      setFormErrors((prev) => ({ ...prev, description: false }));
     }
 
     if (Number(rolloutDetails.alertInterval) >= 1 && Number(rolloutDetails.alertInterval) <= 99) {
@@ -79,9 +76,6 @@ const ActivityRolloutModal = (props) => {
     let errors = {};
     if (inputValues.name.length === 0) {
       errors.name = true;
-    }
-    if (inputValues.description.length < 20) {
-      errors.description = true;
     }
 
     if (!(Number(inputValues.alertInterval) >= 1 && Number(inputValues.alertInterval) <= 99)) {

@@ -46,9 +46,9 @@ export default function RolloutDetails(props) {
             enableCounter={true}
             counterMode="character"
             maxCount={100}
-            minLength={10}
-            rules={{ required: false, minLength: 20, maxLength: 100 }}
-            invalidText={'Description must be at least 20 characters long.'}
+            minLength={0}
+            rules={{ required: false, minLength: 0, maxLength: 100 }}
+            invalidText={'Description must be at least 0 characters long.'}
             invalid={formErrors.description}
             value={rolloutDetails.description}
             placeholder={'Enter Description'}

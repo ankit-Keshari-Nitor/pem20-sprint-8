@@ -15,7 +15,7 @@ export const BlocksTray = ({ category = CATEGORY_TYPES.TASK, readOnly }) => {
           <div key={node.id} className="block-tray" onDragStart={(event) => onDragStart(event, node)} draggable={!readOnly}>
             <button className={`block-tray-field ${node.type}`}>
               <span className="block-tray-field-icon">{node.nodeIcon}</span>
-              <span className="block-tray-field-text"> {node.shortName}</span>
+              <span className="block-tray-field-text"> {node.type}</span>
             </button>
           </div>
         );

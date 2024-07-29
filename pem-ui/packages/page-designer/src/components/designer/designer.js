@@ -16,7 +16,8 @@ import {
   addChildToChildren,
   findChildComponentById,
   indexForChild,
-  capitalizeFirstLetter
+  capitalizeFirstLetter,
+  defaultProps
 } from '../../utils/helpers';
 import {
   SIDEBAR_ITEM,
@@ -88,30 +89,32 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           [newComponent.id]: newComponent
         });
 
+        defaultProps(item);
+
         // Condition for add options property
-        if (item.component.type === 'checkbox-group' || item.component.type === 'radio-group' || item.component.type === 'select') {
-          item.component.options = [{ label: 'Label-0', id: '', value: 'Value-0' }];
-        }
+        // if (item.component.type === 'checkbox-group' || item.component.type === 'radio-group' || item.component.type === 'select') {
+        //   item.component.options = [{ label: 'Label-0', id: '', value: 'Value-0' }];
+        // }
 
         //Condition for Textarea row Property
-        if (item.component.type === 'textarea') {
-          item.component.height = '1';
-        }
+        // if (item.component.type === 'textarea') {
+        //   item.component.height = '1';
+        // }
 
         //Condition for File Uploader row Property
-        if (item.component.type === 'fileUploader') {
-          item.component.maxFileSize = '100kb';
-        }
+        // if (item.component.type === 'fileUploader') {
+        //   item.component.maxFileSize = '100kb';
+        // }
 
         //Condition for Max Length Property
-        if (item.component.type === 'textarea' || item.component.type === 'textinput' || item.component.type === 'password') {
-          item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` };
-        }
+        // if (item.component.type === 'textarea' || item.component.type === 'textinput' || item.component.type === 'password') {
+        //   item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` };
+        // }
 
-        if (item.component.type === 'numberinput') {
-          item.component.max = { value: '20', message: `${item.component.label} value should be between 0 - 20.` };
-          item.component.min = { value: '0', message: `${item.component.label} value should be between 0 - 20.` };
-        }
+        // if (item.component.type === 'numberinput') {
+        //   item.component.max = { value: '20', message: `${item.component.label} value should be between 0 - 20.` };
+        //   item.component.min = { value: '0', message: `${item.component.label} value should be between 0 - 20.` };
+        // }
 
         const newItem = {
           id: newComponent.id,
@@ -144,7 +147,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
     },
     [layout, components]
   );
-  const onFieldSelect = (e, componentDetail, currentPathDetail) => {
+  const onFieldSelect = (e, componentDetail, currentPathDetail, elementChange = null) => {
     e.stopPropagation();
     let filedTypeConfig;
     if (componentDetail.type === COMPONENT || componentDetail.type === ACCORDION || componentDetail.type === TAB) {
@@ -154,6 +157,9 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
         filedTypeConfig = componentMapper[componentDetail.component.type].config;
       }
       let fieldData = findChildComponentById(layout, componentDetail.id);
+      if (elementChange !== null) {
+        fieldData = elementChange;
+      }
       filedTypeConfig?.editableProps?.Basic.map((basicEditPops) => {
         if (fieldData?.component[basicEditPops?.propsName]) {
           basicEditPops?.propsName === NAME && (basicEditPops.invalid = false);
@@ -341,11 +347,18 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
   const replaceComponet = (e, path, newItem) => {
     e.stopPropagation();
     setDeletedFieldPath(path);
+    defaultProps(newItem);
+    const newItemId = uuid();
     const splitDropZonePath = path.split('-');
     const oldLayout = handleRemoveItemFromLayout(layout, splitDropZonePath);
-    const updatedLayout = handleMoveSidebarComponentIntoParent(oldLayout, splitDropZonePath, { id: uuid(), type: COMPONENT, component: { ...newItem.component } });
+    const newFormField = {
+      id: newItemId,
+      type: COMPONENT,
+      component: { ...newItem.component, id: newItemId, name: 'form-control-' + newItemId.substring(0, 2), labelText: newItem.component.label }
+    };
+    const updatedLayout = handleMoveSidebarComponentIntoParent(oldLayout, splitDropZonePath, newFormField);
     setLayout(updatedLayout);
-    onFieldSelect(e, { id: uuid(), type: COMPONENT, component: { ...newItem.component } }, path);
+    onFieldSelect(e, newFormField, path, newFormField);
   };
 
   const renderRow = (row, currentPath, renderRow, previewMode, onChangeHandle) => {

@@ -730,40 +730,42 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           {/* Min - Max validation */}
                           {advncProps.type === 'TextInput' && (
                             <Column lg={advncProps.propsPanelColSize}>
-                              <div className="min-max-div">
-                                <Tooltip className="min-max-tooltip" align="bottom" label={advncProps.label}>
-                                  <Information />
-                                </Tooltip>
-                                <TextInput
-                                  key={idx}
-                                  id={String(idx)}
-                                  className="right-palette-form-item"
-                                  labelText={advncProps.label}
-                                  value={advncProps?.value?.value}
-                                  invalid={advncProps.invalid ? advncProps.invalid : false}
-                                  invalidText={advncProps.invalidText ? advncProps.invalidText : null}
-                                  onChange={(e) => {
-                                    if (isNaN(e.target.value)) {
-                                      e.preventDefault();
-                                      handleSchemaChanges(
-                                        selectedFiledProps?.id,
-                                        'advance',
-                                        advncProps.propsName,
-                                        { value: e.target.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
-                                        selectedFiledProps?.currentPathDetail
-                                      );
-                                    } else {
-                                      handleSchemaChanges(
-                                        selectedFiledProps?.id,
-                                        'advance',
-                                        advncProps.propsName,
-                                        { value: e.target.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
-                                        selectedFiledProps?.currentPathDetail
-                                      );
-                                    }
-                                  }}
-                                />
-                              </div>
+                              <TextInput
+                                key={idx}
+                                id={String(idx)}
+                                className="right-palette-form-item"
+                                labelText={
+                                  <>
+                                    {advncProps.label}
+                                    <Tooltip className="min-max-tooltip" align="bottom" label={'It is the '+advncProps.label+' of use input'}>
+                                      <Information />
+                                    </Tooltip>
+                                  </>
+                                }
+                                value={advncProps?.value?.value}
+                                invalid={advncProps.invalid ? advncProps.invalid : false}
+                                invalidText={advncProps.invalidText ? advncProps.invalidText : null}
+                                onChange={(e) => {
+                                  if (isNaN(e.target.value)) {
+                                    e.preventDefault();
+                                    handleSchemaChanges(
+                                      selectedFiledProps?.id,
+                                      'advance',
+                                      advncProps.propsName,
+                                      { value: e.target.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
+                                      selectedFiledProps?.currentPathDetail
+                                    );
+                                  } else {
+                                    handleSchemaChanges(
+                                      selectedFiledProps?.id,
+                                      'advance',
+                                      advncProps.propsName,
+                                      { value: e.target.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
+                                      selectedFiledProps?.currentPathDetail
+                                    );
+                                  }
+                                }}
+                              />
                             </Column>
                           )}
                           {/* Regex Validation */}

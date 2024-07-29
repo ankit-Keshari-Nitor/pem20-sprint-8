@@ -130,7 +130,7 @@
   background-color: unset;
 }
 
-.min-max-div > .min-max-tooltip {
-  position: absolute;
-  margin-left: 4.1rem;
+.min-max-tooltip {
+  position: absolute !important;
+  margin-left: 0.2rem !important;
 }

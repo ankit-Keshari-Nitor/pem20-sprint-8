@@ -60,8 +60,8 @@ Password.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <PasswordIcon />,
   editableProps: {
-    Basic: [elementTyps, Id, labelText, placeHolder, helperText, readOnly],
+    Basic: [elementTyps, Id, labelText, isRequired, placeHolder, helperText],
     Condition: []
   },
-  advanceProps: [minProps, maxProps, regexValidation, isRequired]
+  advanceProps: [minProps, maxProps, regexValidation]
 };

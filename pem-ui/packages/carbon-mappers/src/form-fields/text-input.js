@@ -60,8 +60,8 @@ TextInput.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <TextInputIcon />,
   editableProps: {
-    Basic: [elementTyps, Id, labelText, readOnly, valueLabel, placeHolder, helperText, mapping],
+    Basic: [elementTyps, Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
     Condition: []
   },
-  advanceProps: [minProps, maxProps, regexValidation, isRequired]
+  advanceProps: [minProps, maxProps, regexValidation]
 };

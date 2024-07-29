@@ -139,5 +139,5 @@ FileUploader.config = {
     Basic: [elementTyps, Id, labelText, helperText, maxFileSize, extensions],
     Condition: []
   },
-  advanceProps: [isRequired]
+  advanceProps: []
 };

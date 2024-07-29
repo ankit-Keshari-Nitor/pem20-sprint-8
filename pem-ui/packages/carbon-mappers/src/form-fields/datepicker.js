@@ -41,7 +41,7 @@ DatePicker.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <DatepickerIcon />,
   editableProps: {
-    Basic: [elementTyps, Id, labelText, readOnly, isRequired, helperText, placeHolder],
+    Basic: [elementTyps, Id, labelText, readOnly, isRequired, placeHolder, helperText],
     Condition: []
   },
   advanceProps: []

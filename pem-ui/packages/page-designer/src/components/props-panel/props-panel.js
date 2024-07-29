@@ -24,7 +24,7 @@ import {
   Checkbox,
   FileUploader,
   CheckboxGroup,
-  Tooltip,
+  Tooltip
 } from '@carbon/react';
 import { v4 as uuid } from 'uuid';
 import './props-panel.scss';
@@ -360,7 +360,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       </Column>
                                     )}
                                     {/* Toggle */}
-                                    {item.type === 'Toggle' && (
+                                    {item.type === 'Toggle' && item.propsName != 'isRequired' && (
                                       <Column lg={item.propsPanelColSize}>
                                         <ul key={idx}>
                                           <li>
@@ -375,6 +375,38 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                               labelA={item?.labelA}
                                               labelB={item?.labelB}
                                               onClick={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, !item.value, selectedFiledProps?.currentPathDetail)}
+                                            />
+                                          </li>
+                                        </ul>
+                                      </Column>
+                                    )}
+                                    {/* Toggle with required */}
+                                    {item.type === 'Toggle' && item.propsName == 'isRequired' && (
+                                      <Column lg={item.propsPanelColSize}>
+                                        <ul key={idx}>
+                                          <li>
+                                            <Toggle
+                                              key={idx}
+                                              size="sm"
+                                              id={'toggle-' + String(idx) + '-' + selectedFiledProps?.id}
+                                              className="right-palette-form-item "
+                                              labelText={item.label}
+                                              defaultToggled={Boolean(item.value.value)}
+                                              toggled={Boolean(item.value.value)}
+                                              labelA={item?.labelA}
+                                              labelB={item?.labelB}
+                                              onClick={(e) =>
+                                                handleSchemaChanges(
+                                                  selectedFiledProps?.id,
+                                                  key,
+                                                  item.propsName,
+                                                  {
+                                                    value: !item.value.value,
+                                                    message: getValidationMessage(selectedFiledProps?.component?.label, item.propsName, !item.value.value)
+                                                  },
+                                                  selectedFiledProps?.currentPathDetail
+                                                )
+                                              }
                                             />
                                           </li>
                                         </ul>
@@ -698,9 +730,9 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           {/* Min - Max validation */}
                           {advncProps.type === 'TextInput' && (
                             <Column lg={advncProps.propsPanelColSize}>
-                              <div className='min-max-div'>
-                                <Tooltip className='min-max-tooltip' align="bottom" label={advncProps.label}>
-                                  <Information/>
+                              <div className="min-max-div">
+                                <Tooltip className="min-max-tooltip" align="bottom" label={advncProps.label}>
+                                  <Information />
                                 </Tooltip>
                                 <TextInput
                                   key={idx}
@@ -737,7 +769,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           {/* Regex Validation */}
                           {advncProps.type === OPTIONS && (
                             <>
-                              <Column lg={16} className='test----0'>
+                              <Column lg={16}>
                                 <RadioButtonGroup
                                   legendText="Regex Pattern"
                                   name={`radio-group-${selectedFiledProps?.id}`}
@@ -757,7 +789,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                   {advncProps?.items.map((item, index) => {
                                     return <RadioButton key={index} labelText={item.label} value={item.value} />;
                                   })}
-
                                 </RadioButtonGroup>
                               </Column>
                               {/* <Column lg={advncProps.propsPanelColSize}>

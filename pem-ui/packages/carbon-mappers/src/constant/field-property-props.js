@@ -41,6 +41,7 @@ export const hrefText = {
   label: 'URL',
   value: '',
   type: 'TextInput',
+  placeholder: 'https://',
   propsPanelColSize: 8,
 };
 
@@ -170,7 +171,7 @@ export const regexValidation = {
         '(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})'
     },
     {
-      label: 'Custom Regular Expression',
+      label: 'Custom',
       value: 'customRegex'
     }
   ],

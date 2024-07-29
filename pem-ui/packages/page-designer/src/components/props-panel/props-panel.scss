@@ -5,6 +5,7 @@
   flex: 1;
   overflow-x: hidden;
   overflow-y: scroll;
+  padding: 10px;
 }
 
 .right-palette-container .tab-panel {
@@ -14,11 +15,12 @@
 .right-palette-form-item {
   display: block;
   margin-bottom: 16px;
+  margin-right: 1.563rem;
 }
 
 .right-palette-form-item-mapping {
-  margin-bottom: 16px;
-  max-width: 90% !important;
+  // margin-bottom: 16px;
+  // max-width: 90% !important;
   display: inline-block;
 }
 
@@ -56,8 +58,9 @@
 }
 
 .right-palette-form-item-mapping {
-  margin-bottom: 8px;
-  max-width: 90% !important;
+  // margin-bottom: 8px;
+  // max-width: 90% !important;
+  margin-right: 0.8rem;
   display: inline-block;
 }
 
@@ -115,4 +118,19 @@
   padding-right: 3rem;
   margin-left: 4.55rem;
   margin-bottom: 1rem;
+}
+
+.right-palette-container > .cds--tabs--contained {
+  border-bottom: 1px solid #989696;
+}
+
+.right-palette-container > .cds--tabs.cds--tabs--contained .cds--tabs__nav-item.cds--tabs__nav-item--selected {
+  box-shadow: none;
+  border-bottom: 2px solid #0F62FE;
+  background-color: unset;
+}
+
+.min-max-div > .min-max-tooltip {
+  position: absolute;
+  margin-left: 4.1rem;
 }

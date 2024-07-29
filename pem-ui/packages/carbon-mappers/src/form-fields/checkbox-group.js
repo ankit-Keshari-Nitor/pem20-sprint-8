@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CheckboxGroup as CarbonCheckboxGroup, Checkbox as CarbonCheckbox } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, helperText, id, orientation, NameLabel, options, isRequired, labelText, readOnly } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, helperText, elementTyps, orientation, Id, options, isRequired, labelText, readOnly } from '../constant';
 
 import { CheckboxIcon } from './../icons';
 
@@ -42,7 +42,7 @@ CheckboxGroup.config = {
   group: FORM_FIELD_GROUPS.SELECTION,
   icon: <CheckboxIcon />,
   editableProps: {
-    Basic: [id, NameLabel, labelText, helperText, options, orientation, readOnly],
+    Basic: [elementTyps, Id, labelText, helperText, options, orientation, readOnly],
     Condition: []
   },
   advanceProps: [isRequired]

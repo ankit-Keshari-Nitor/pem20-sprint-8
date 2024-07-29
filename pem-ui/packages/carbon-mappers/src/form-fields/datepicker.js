@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DatePicker as CarbonDatePicker, DatePickerInput } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, id, helperText, placeHolder, NameLabel, readOnly, isRequired, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTyps, helperText, placeHolder, Id, readOnly, isRequired, labelText } from '../constant';
 import { DatepickerIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.DATEPICKER;
@@ -41,8 +41,8 @@ DatePicker.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <DatepickerIcon />,
   editableProps: {
-    Basic: [id, NameLabel, labelText, helperText, placeHolder, readOnly],
+    Basic: [elementTyps, Id, labelText, readOnly, isRequired, placeHolder, helperText],
     Condition: []
   },
-  advanceProps: [isRequired]
+  advanceProps: []
 };

@@ -296,8 +296,6 @@ export const extensions = {
   propsPanelColSize: 8,
 };
 
-
-
 export const maxFileSize = {
   propsName: 'maxFileSize',
   label: 'Max File Size',
@@ -333,3 +331,19 @@ export const fontSize = {
     { label: '36px', value: '36px' },
   ],
 }
+
+export const addTab = {
+  propsName: 'addTabBtn',
+  label: 'Add Tab',
+  value: '',
+  type: 'Button',
+  propsPanelColSize: 8,
+};
+
+export const addColumnInGroup = {
+  propsName: 'addColumnBtn',
+  label: 'Add Column',
+  value: '',
+  type: 'Button',
+  propsPanelColSize: 8,
+};

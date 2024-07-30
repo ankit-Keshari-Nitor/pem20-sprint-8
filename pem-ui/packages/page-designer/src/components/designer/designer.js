@@ -41,7 +41,8 @@ import {
   DATATABLE,
   TABLE_ROWS,
   MAXPROPS,
-  MINPROPS
+  MINPROPS,
+  ROW
 } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Grid, Modal, Column } from '@carbon/react';
@@ -211,6 +212,8 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
       filedTypeConfig = { ...componentDetail, style: [{ labelText: 'Column Size', text: size }], currentPathDetail: currentPathDetail };
     } else if (componentDetail.type === SUBTAB) {
       filedTypeConfig = { ...componentDetail };
+    } else if (componentDetail.type === ROW) {
+      filedTypeConfig = componentMapper[componentDetail.maintype].config;
     }
     setSelectedFiledProps({ id: componentDetail.id, type: componentDetail.type, component: { ...filedTypeConfig }, currentPathDetail: currentPathDetail });
   };

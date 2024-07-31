@@ -152,6 +152,10 @@
   justify-content: center;
 }
 
+.dropZone.nestedZone{
+height: 8px !important;
+}
+
 .dropZone.active {
   background: hsl(205, 100%, 95%);
   transition: 100ms all;

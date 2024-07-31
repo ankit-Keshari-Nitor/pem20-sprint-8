@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE } from '../constant';
+import { addTab, elementTyps, FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE } from '../constant';
 import { NewTab } from '@carbon/icons-react';
 import PageDesigner from '@b2bi/page-designer';
 
@@ -55,7 +55,7 @@ CustomTab.config = {
   group: FORM_FIELD_GROUPS.PANEL,
   icon: <NewTab />,
   editableProps: {
-    Basic: [],
+    Basic: [elementTyps, addTab],
     Condition: []
   },
   advanceProps: []

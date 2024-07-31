@@ -4,7 +4,6 @@ import {
   FORM_FIELD_TYPE,
   minProps,
   maxProps,
-  readOnly,
   Id,
   helperText,
   FORM_FIELD_LABEL,
@@ -12,7 +11,6 @@ import {
   isRequired,
   labelText,
   placeHolder,
-  valueLabel,
   elementTyps,
   regexValidation
 } from '../constant';
@@ -20,10 +18,9 @@ import { Password as PasswordIcon } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.PASSWORD;
 
-const Password = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
-  const { labelText, helperText, label, disabled, value, isRequired, min, max, ...rest } = field;
+const Password = ({ field, id: uniqueId, currentPath, onChangeHandle, previewMode }) => {
+  const { labelText, helperText, label, disabled, value, isRequired, min, max, id, ...rest } = field;
   const [fieldValue, setFieldValue] = useState();
-
   useEffect(() => {
     if (previewMode) {
       setFieldValue(value ? value : '');
@@ -34,8 +31,8 @@ const Password = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
     <>
       <PasswordInput
         type={FORM_FIELD_TYPE.TEXT}
-        data-testid={id}
-        id={id}
+        data-testid={`${uniqueId}-${previewMode}`}
+        id={`${uniqueId}-${previewMode}`}
         labelText={labelText === undefined ? label : labelText}
         helperText={helperText}
         disabled={disabled}

@@ -35,7 +35,7 @@ const TextArea = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
   return (
     <CarbonTextArea
       id={id}
-      rows={height}
+      rows={String(height)}
       data-testid={id}
       labelText={labelText === undefined ? label : labelText}
       defaultValue={valueLabel}

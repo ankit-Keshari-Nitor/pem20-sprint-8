@@ -30,7 +30,7 @@ import {
 } from '@carbon/react';
 import { v4 as uuid } from 'uuid';
 import './props-panel.scss';
-import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLE_COLUMNS, TABLE_ROWS } from '../../constants/constants';
+import { CUSTOM_COLUMN, SUBTAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLE_COLUMNS, TABLE_ROWS, TEXT_INPUT, MAPPING, SELECT, TOGGLE, TEXT, RADIO, CHECKBOX, FILE_UPLOAD, DROPDOWN, ADD_Tab_BTN, ADD_COLUMN_BTN, ISREQUIRED } from '../../constants/constants';
 import { collectPaletteEntries } from '../../utils/helpers';
 import { ElippsisIcon } from '../../icon';
 import { TrashCan, Information } from '@carbon/icons-react';
@@ -109,7 +109,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
 
   const handleAddOption = () => {
     const index = options.length + 1;
-    const newOptions = [...options, { label: `Label-${index - 1}`, value: `Value-${index - 1}` }];
+    const newOptions = [...options, { label: `Label-${index - 1}`, id: index-1, value: `Value-${index - 1}` }];
     setOptions(newOptions);
     handleSchemaChanges(selectedFiledProps?.id, 'Basic', 'options', newOptions, selectedFiledProps?.currentPathDetail);
   };
@@ -278,22 +278,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
             </TabList>
             <TabPanels>
               <TabPanel className="tab-panel">
-                {/* Component Types Select */}
-                {/* {componentStyle === undefined && tabSubTitle === undefined && (
-                  <Select
-                    className="component-types"
-                    id={String(selectedFiledProps.id)}
-                    labelText="Component Types"
-                    onChange={handleComponentTypeChange}
-                    defaultValue={componentType}
-                    value={componentType}
-                  >
-                    {componentTypes.map((item, index) => {
-                      return <SelectItem key={index} value={item.component.type} text={item.component.type} />;
-                    })}
-                  </Select>
-                )} */}
-                {/* Basic Properties Field  */}
                 {editableProps &&
                   Object.keys(editableProps).map((key, idx) => {
                     return (
@@ -305,7 +289,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                 return (
                                   <>
                                     {/* Select */}
-                                    {item.type === 'select' && (
+                                    {item.type === SELECT && (
                                       <Column lg={item.propsPanelColSize}>
                                         <Select
                                           className="component-types right-palette-form-item"
@@ -322,7 +306,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       </Column>
                                     )}
                                     {/* TextInput */}
-                                    {item.type === 'TextInput' && item.propsName != TABLE_COLUMNS && item.propsName != TABLE_ROWS && (
+                                    {item.type === TEXT_INPUT && item.propsName != TABLE_COLUMNS && item.propsName != TABLE_ROWS && (
                                       <Column lg={item.propsPanelColSize}>
                                         <TextInput
                                           key={idx}
@@ -339,7 +323,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       </Column>
                                     )}
                                     {/* Mapping */}
-                                    {item.type === 'mapping' && (
+                                    {item.type === MAPPING && (
                                       <Column lg={item.propsPanelColSize}>
                                         <TextInput
                                           key={idx}
@@ -362,7 +346,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       </Column>
                                     )}
                                     {/* Toggle */}
-                                    {item.type === 'Toggle' && item.propsName != 'isRequired' && (
+                                    {item.type === TOGGLE && item.propsName != ISREQUIRED && (
                                       <Column lg={item.propsPanelColSize}>
                                         <ul key={idx}>
                                           <li>
@@ -383,7 +367,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       </Column>
                                     )}
                                     {/* Toggle with required */}
-                                    {item.type === 'Toggle' && item.propsName == 'isRequired' && (
+                                    {item.type === TOGGLE && item.propsName == ISREQUIRED && (
                                       <Column lg={item.propsPanelColSize}>
                                         <ul key={idx}>
                                           <li>
@@ -415,7 +399,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       </Column>
                                     )}
                                     {/* Text */}
-                                    {item.type === 'text' && (
+                                    {item.type === TEXT && (
                                       <Column lg={7}>
                                         <div className="component-type-id">
                                           <FormLabel>{item.label}</FormLabel>
@@ -424,7 +408,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       </Column>
                                     )}
                                     {/* Radio */}
-                                    {item.type === 'radio' && (
+                                    {item.type === RADIO && (
                                       <Column lg={item.propsPanelColSize}>
                                         <div className="right-palette-form-item">
                                           <RadioButtonGroup
@@ -443,7 +427,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       </Column>
                                     )}
                                     {/* CheckBox */}
-                                    {item.type === 'checkbox' && (
+                                    {item.type === CHECKBOX && (
                                       <div className="right-palette-form-item">
                                         <CheckboxGroup
                                           legendText={item.label}
@@ -465,7 +449,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       </div>
                                     )}
                                     {/* DropDown */}
-                                    {item.type === 'DropDown' && (
+                                    {item.type === DROPDOWN && (
                                       <Column lg={item.propsPanelColSize ? item.propsPanelColSize : 16} className="right-palette-form-item">
                                         <Dropdown
                                           id={item.propsName}
@@ -479,7 +463,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       </Column>
                                     )}
                                     {/* File Uploader */}
-                                    {item.type === 'FileUpload' && (
+                                    {item.type === FILE_UPLOAD && (
                                       <div className="right-palette-form-item">
                                         <FileUploader
                                           labelTitle="File Attachment"
@@ -518,7 +502,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     )}
                                     {/* Table Column */}
                                     {item.propsName === TABLE_COLUMNS && (
-                                      <div className="table-col-header">
+                                      <Column lg={16} className="table-col-header">
                                         <span>
                                           <label>Table Column</label>
                                           <Button size="sm" onClick={handleAddHeader} className="add-header">
@@ -565,11 +549,11 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                             </AccordionItem>
                                           ))}
                                         </Accordion>
-                                      </div>
+                                      </Column>
                                     )}
                                     {/* Table Row */}
                                     {item.propsName === TABLE_ROWS && (
-                                      <div className="table-row">
+                                      <Column lg={16} className="table-row">
                                         <span>
                                           <label>Table Row</label>
                                           <Button size="sm" className="add-row" onClick={() => handleAddRow(tableHeader)}>
@@ -610,7 +594,31 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                             </AccordionItem>
                                           ))}
                                         </Accordion>
-                                      </div>
+                                      </Column>
+                                    )}
+                                    {/* Add Tab Button */}
+                                    {item.propsName === ADD_Tab_BTN && (
+                                      <Column lg={item.propsPanelColSize}>
+                                        <Button
+                                          onClick={(e) => {
+                                            handleSchemaChanges(selectedFiledProps?.id, SUBTAB, '', 1, selectedFiledProps?.currentPathDetail);
+                                          }}
+                                        >
+                                          {item.label}
+                                        </Button>
+                                      </Column>
+                                    )}
+                                    {/* Add Column in Group Button */}
+                                    {item.propsName === ADD_COLUMN_BTN && (
+                                      <Column lg={item.propsPanelColSize}>
+                                        <Button
+                                          onClick={(e) => {
+                                            handleSchemaChanges(selectedFiledProps?.id, CUSTOM_COLUMN, '', 1, selectedFiledProps?.currentPathDetail);
+                                          }}
+                                        >
+                                          {item.label}
+                                        </Button>
+                                      </Column>
                                     )}
                                   </>
                                 );
@@ -621,55 +629,56 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                       )
                     );
                   })}
-
                 {/* Option Section */}
                 {options.length > 0 && (
                   <div className="options-section">
                     <label className="cds--label">Options</label>
                     {options.map((option, index) => {
                       return (
-                        <Grid className="options-row-input">
-                          <Column lg={8}>
-                            <div key={index} className="option-input">
-                              <TextInput
-                                className="mapping-text-field"
-                                id={`option-${index}`}
-                                value={option?.label}
-                                placeholder={`Label-${index}`}
-                                onChange={(e) => handleOptionChange(index, e.target.value, 'label')}
-                              />
-                              <Button
-                                size="md"
-                                className="mapping-button"
-                                kind="secondary"
-                                renderIcon={ElippsisIcon}
-                                onClick={() => OpenMappingDialog(selectedFiledProps?.id, 'Basic', 'mapping', selectedFiledProps?.currentPathDetail)}
-                              ></Button>
-                            </div>
+                        <Grid>
+                          <Column lg={7}>
+                            <TextInput
+                              key={`text-opt-0-${index}`}
+                              className="mapping-text-field"
+                              id={`option-${index}`}
+                              value={option?.label}
+                              placeholder={`Label-${index}`}
+                              onChange={(e) => handleOptionChange(index, e.target.value, 'label')}
+                            />
+                            <Button
+                              key={`text-map-0-${index}`}
+                              size="md"
+                              className="mapping-button"
+                              kind="secondary"
+                              renderIcon={ElippsisIcon}
+                              onClick={() => OpenMappingDialog(selectedFiledProps?.id, 'Basic', 'mapping', selectedFiledProps?.currentPathDetail)}
+                            ></Button>
                           </Column>
-                          <Column lg={8}>
-                            <div key={index} className="option-input">
-                              <TextInput
-                                className="mapping-text-field"
-                                id={`option-${index}`}
-                                value={option?.value}
-                                placeholder={`Value-${index}`}
-                                onChange={(e) => handleOptionChange(index, e.target.value, 'value')}
-                              />
-                              <Button
-                                size="md"
-                                className="mapping-button"
-                                kind="secondary"
-                                renderIcon={ElippsisIcon}
-                                onClick={() => OpenMappingDialog(selectedFiledProps?.id, 'Basic', 'options', selectedFiledProps?.currentPathDetail)}
-                              ></Button>
-                            </div>
+                          <Column lg={7}>
+                            <TextInput
+                              key={`text-opt-1-${index}`}
+                              className="mapping-text-field"
+                              id={`option-${index}`}
+                              value={option?.value}
+                              placeholder={`Value-${index}`}
+                              onChange={(e) => handleOptionChange(index, e.target.value, 'value')}
+                            />
+                            <Button
+                              key={`text-map-1-${index}`}
+                              size="md"
+                              className="mapping-button"
+                              kind="secondary"
+                              renderIcon={ElippsisIcon}
+                              onClick={() => OpenMappingDialog(selectedFiledProps?.id, 'Basic', 'options', selectedFiledProps?.currentPathDetail)}
+                            ></Button>
                           </Column>
                           {/* Check if options length is greater than 1 before displaying delete icon */}
                           {options.length > 1 && (
-                            <span className="delete-icon">
+                            <Column lg={2}>
+                            <span className="delete-icon icon-margin">
                               <TrashCan onClick={() => handleDeleteOption(index)} />
                             </span>
+                            </Column>
                           )}
                         </Grid>
                       );
@@ -678,26 +687,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                       Add Option
                     </Button>
                   </div>
-                )}
-                {/* To Show the Add Tab Button */}
-                {selectedFiledProps?.type === TAB && (
-                  <Button
-                    onClick={(e) => {
-                      handleSchemaChanges(selectedFiledProps?.id, SUBTAB, '', 1, selectedFiledProps?.currentPathDetail);
-                    }}
-                  >
-                    Add Tab
-                  </Button>
-                )}
-                {/* To Show the Add Column Button */}
-                {selectedFiledProps?.type === ROW && (
-                  <Button
-                    onClick={(e) => {
-                      handleSchemaChanges(selectedFiledProps?.id, CUSTOM_COLUMN, '', 1, selectedFiledProps?.currentPathDetail);
-                    }}
-                  >
-                    Add Column
-                  </Button>
                 )}
                 {/* Column Size Style  */}
                 {componentStyle && componentStyle.length > 0 && (
@@ -752,40 +741,42 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           {/* Min - Max validation */}
                           {advncProps.type === 'TextInput' && (
                             <Column lg={advncProps.propsPanelColSize}>
-                              <div className="min-max-div">
-                                <Tooltip className="min-max-tooltip" align="bottom" label={advncProps.label}>
-                                  <Information />
-                                </Tooltip>
-                                <TextInput
-                                  key={idx}
-                                  id={String(idx)}
-                                  className="right-palette-form-item"
-                                  labelText={advncProps.label}
-                                  value={advncProps?.value?.value}
-                                  invalid={advncProps.invalid ? advncProps.invalid : false}
-                                  invalidText={advncProps.invalidText ? advncProps.invalidText : null}
-                                  onChange={(e) => {
-                                    if (isNaN(e.target.value)) {
-                                      e.preventDefault();
-                                      handleSchemaChanges(
-                                        selectedFiledProps?.id,
-                                        'advance',
-                                        advncProps.propsName,
-                                        { value: e.target.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
-                                        selectedFiledProps?.currentPathDetail
-                                      );
-                                    } else {
-                                      handleSchemaChanges(
-                                        selectedFiledProps?.id,
-                                        'advance',
-                                        advncProps.propsName,
-                                        { value: e.target.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
-                                        selectedFiledProps?.currentPathDetail
-                                      );
-                                    }
-                                  }}
-                                />
-                              </div>
+                              <TextInput
+                                key={`${selectedFiledProps?.id}-${idx}`}
+                                id={String(`${selectedFiledProps?.id}-${idx}`)}
+                                className="right-palette-form-item"
+                                labelText={
+                                  <>
+                                    {advncProps.label}
+                                    <Tooltip className="min-max-tooltip" align="bottom" label={'It is the ' + advncProps.label + ' of use input'}>
+                                      <Information />
+                                    </Tooltip>
+                                  </>
+                                }
+                                value={advncProps?.value?.value}
+                                invalid={advncProps.invalid ? advncProps.invalid : false}
+                                invalidText={advncProps.invalidText ? advncProps.invalidText : null}
+                                onChange={(e) => {
+                                  if (isNaN(e.target.value)) {
+                                    e.preventDefault();
+                                    handleSchemaChanges(
+                                      selectedFiledProps?.id,
+                                      'advance',
+                                      advncProps.propsName,
+                                      { value: e.target.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
+                                      selectedFiledProps?.currentPathDetail
+                                    );
+                                  } else {
+                                    handleSchemaChanges(
+                                      selectedFiledProps?.id,
+                                      'advance',
+                                      advncProps.propsName,
+                                      { value: e.target.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
+                                      selectedFiledProps?.currentPathDetail
+                                    );
+                                  }
+                                }}
+                              />
                             </Column>
                           )}
                           {/* Regex Validation */}
@@ -839,7 +830,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                               <Column lg={advncProps.propsPanelColSize}>
                                 <TextInput
                                   key={`${idx}-'message'`}
-                                  id={String(idx)}
+                                  id={String(`${idx}-message`)}
                                   className="right-palette-form-item"
                                   labelText={'Regex Message'}
                                   value={advncProps.value.message}

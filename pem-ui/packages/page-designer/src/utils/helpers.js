@@ -550,3 +550,30 @@ export const collectPaletteEntries = (formFields) => {
 // Capitalize the first letter of a string
 export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 
+export const defaultProps = (item) => {
+  switch (item.component.type) {
+    case 'checkbox-group':
+    case 'radio-group':
+    case 'select':
+      item.component.options = [{ label: 'Label-0', id: 0, value: 'Value-0' }];
+      break;
+    case 'textinput':
+    case 'password':
+      item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` };
+      break;
+    case 'textarea':
+      item.component.height = '1'; 
+      item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` };
+      break;
+    case 'fileUploader':
+      item.component.maxFileSize = '100kb';  
+      break;
+    case 'numberinput':
+      item.component.max = { value: '20', message: `${item.component.label} value should be between 0 - 20.` };
+      item.component.min = { value: '0', message: `${item.component.label} value should be between 0 - 20.` };
+      break;
+    default:
+      break;
+  }
+};
+

@@ -10,7 +10,7 @@ export const CUSTOM_COLUMN = 'customColumn';
 export const SUBTAB = 'subTab';
 export const CUSTOM_SIZE = 'customsize';
 export const CUSTOM_TITLE = 'customTitle';
-export const TEXT_INPUT = 'textinput';
+export const TEXT_INPUT = 'TextInput';
 export const NAME = 'name';
 export const REGEXVALIDATION = 'regexValidation';
 export const MAXPROPS = 'max';
@@ -22,6 +22,16 @@ export const TABLE_COLUMNS = 'tableColumns';
 export const TABLE_ROWS = 'tableRows';
 export const LABEL_TEXT = 'labelText';
 export const ISREQUIRED = 'isRequired';
+export const ADD_Tab_BTN  = 'addTabBtn';
+export const ADD_COLUMN_BTN  = 'addColumnBtn';
+export const MAPPING  = 'mapping';
+export const SELECT  = 'select';
+export const TOGGLE  = 'Toggle';
+export const TEXT  = 'text';
+export const RADIO  = 'radio';
+export const CHECKBOX  = 'checkbox';
+export const DROPDOWN  = 'DropDown';
+export const FILE_UPLOAD  = 'FileUpload';
 
 export const PALETTE_GROUPS = [
   {

@@ -5,16 +5,16 @@ import { SelectIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.SELECT;
 
-const Select = ({ field, id }) => {
-  const { type, labelText, label, isRequired, options, ...rest } = field;
+const Select = ({ field, id: uniqueId, previewMode}) => {
+  const { type, labelText, label, isRequired, options, id, ...rest } = field;
 
   return (
     <>
-      <CarbonSelect data-testid={id} id={id} labelText={labelText === undefined ? label : labelText} {...rest}>
+      <CarbonSelect data-testid={id} id={`${uniqueId}-${previewMode}`} labelText={labelText === undefined ? label : labelText} {...rest}>
         {/*  <SelectItem text="No Option" value="no-option" /> */}
         {options &&
           options.map((element) => {
-            return <SelectItem id={`${element?.id}`} value={element?.value} text={element?.label} />;
+            return <SelectItem key={`${element?.id}-${previewMode}`} id={`${element?.id}-${previewMode}`} value={element?.value} text={element?.label} />;
           })}
       </CarbonSelect>
     </>

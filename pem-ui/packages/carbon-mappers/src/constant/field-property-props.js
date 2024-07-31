@@ -332,6 +332,22 @@ export const fontSize = {
   ],
 }
 
+export const addTab = {
+  propsName: 'addTabBtn',
+  label: 'Add Tab',
+  value: '',
+  type: 'Button',
+  propsPanelColSize: 8,
+};
+
+export const addColumnInGroup = {
+  propsName: 'addColumnBtn',
+  label: 'Add Column',
+  value: '',
+  type: 'Button',
+  propsPanelColSize: 8,
+};
+
 export const minDate = {
   type: 'Date',
   propsName: 'minDate',

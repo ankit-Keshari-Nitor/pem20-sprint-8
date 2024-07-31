@@ -1,9 +1,10 @@
 node_modules/
 /test-results/
 /playwright-report/
-/blob-report/
 /playwright/.cache/
-/screenshots
-/playwright/reports
-/test
-/cucumber-report.html
+package-lock.json
+/junit-reports/
+.features-gen/features/*
+.features-gen/*
+/allure-results/
+/allure-report/

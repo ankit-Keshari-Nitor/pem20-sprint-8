@@ -25,6 +25,7 @@
     "start-dev": "cd apps/web && yarn workspace @b2bi/pem start-craco"
   },
   "dependencies": {
+    "file-saver": "^2.0.5",
     "turbo": "^1.12.4"
   }
 }

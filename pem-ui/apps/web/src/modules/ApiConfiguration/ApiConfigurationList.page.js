@@ -241,7 +241,7 @@ const ApiConfigurationList = ({ mode, context }) => {
 
   return (
     <>
-      <Shell.Page type="LIST" className="sfg--page--file-list">
+      <Shell.Page type="LIST" className="sfg--page--api-configuration-list">
         <Shell.PageHeader title={pageUtil.t('mod-apic:list.pageTitle')} description={pageUtil.t('mod-apic:list.pageDescription')}></Shell.PageHeader>
         <Shell.PageBody>
           <Shell.DataTable

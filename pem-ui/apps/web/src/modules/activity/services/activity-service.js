@@ -15,7 +15,7 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
       status: status,
       name: `con:${searchKey}`
     }
-  }
+  };
   const response = await new RestApiService().call(config, null);
   if (response.success) {
     const customizedData = response.data.content.map((e) => ({
@@ -35,10 +35,9 @@ export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchK
     return {
       success: false,
       content: [],
-      pageContent: {},
-    }
+      pageContent: {}
+    };
   }
-
 };
 
 // Function to delete the activity
@@ -47,7 +46,7 @@ export const deleteActivity = async (activityDefnKey) => {
   let config = {
     url,
     method: 'DELETE'
-  }
+  };
   const response = await new RestApiService().call(config, null);
 
   return response.success;
@@ -60,7 +59,7 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
     url,
     method: 'POST',
     data: ''
-  }
+  };
   const response = await new RestApiService().call(config, null);
 
   return response.success && response?.data?.status !== undefined && response?.data?.status === 'FINAL'
@@ -76,23 +75,25 @@ export const getActivityDetails = async (activityKey, activityVersoinKey) => {
     const activityCurrentVersionData = await new RestApiService().call({ url: `${url}versions/${activityVersoinKey}/actions/getData` }, null);
     return {
       success: true,
-      definition: {
-        name: response.data.name,
-        description: response.data.description,
-        definationKey: response.data.key
+      activityData: {
+        definition: {
+          name: response.data.name,
+          description: response.data.description,
+          definationKey: response.data.key
+        },
+        version: {
+          key: activityCurrentVersionDetails.data.key,
+          encrypted: activityCurrentVersionDetails.data.isEncrypted, //false,
+          contextData: activityCurrentVersionDetails.data.contextData,
+          status: activityCurrentVersionDetails.data.status,
+          number: activityCurrentVersionDetails.data.version
+        },
+        schema: {
+          nodes: activityCurrentVersionData.data.nodes,
+          edges: activityCurrentVersionData.data.edges
+        }
       },
-      versions: activityVersions.data.content,
-      version: {
-        key: activityCurrentVersionDetails.data.key,
-        encrypted: activityCurrentVersionDetails.data.isEncrypted, //false,
-        contextData: activityCurrentVersionDetails.data.contextData,
-        status: activityCurrentVersionDetails.data.status,
-        number: activityCurrentVersionDetails.data.version
-      },
-      schema: {
-        nodes: activityCurrentVersionData.data.nodes,
-        edges: activityCurrentVersionData.data.edges
-      }
+      versions: activityVersions.data.content
     };
   } else {
     return {

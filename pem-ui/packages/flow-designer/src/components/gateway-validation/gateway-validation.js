@@ -3,6 +3,7 @@ import ConditionalBuilder from '../condition-builder';
 import { Select, SelectItem, Grid, Column } from '@carbon/react';
 import useTaskStore from '../../store';
 import { INITIAL_QUERY, NODE_TYPE } from '../../constants';
+import { placeHolder } from './../../../../carbon-mappers/src/constant/field-property-props';
 
 export default function GatewayValidation({ readOnly, selectedNode, selectedTaskNode }) {
   const storeData = useTaskStore((state) => state.tasks);
@@ -44,11 +45,20 @@ export default function GatewayValidation({ readOnly, selectedNode, selectedTask
     }
   };
 
+  function capitalize(s) {
+    return s[0].toUpperCase() + s.slice(1);
+  }
+
   return (
     <>
       <Grid>
         <Column className="form-field" lg={8}>
-          <Select id="connectedNodes-selector" data-testid="connectedNodes-selector" labelText="" onChange={(event) => setSelectedGatewayNode(event.target.value)}>
+          <Select
+            id="connectedNodes-selector"
+            data-testid="connectedNodes-selector"
+            labelText={`Select ${capitalize(selectedNode.data?.category)}`}
+            onChange={(event) => setSelectedGatewayNode(event.target.value)}
+          >
             {connectedGatewayNodes?.map((connectedGatewayNode) => (
               <SelectItem
                 key={connectedGatewayNode.id}

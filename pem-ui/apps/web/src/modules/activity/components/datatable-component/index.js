@@ -196,7 +196,7 @@ const ActivityDataTableComponent = ({
         </div>
       ) : (
         <div className="tbody-wrapper">
-          <Tooltip label="Version History">
+          <Tooltip label="Click to view Version History">
             <div className="recently-view-wrapper" onClick={() => handleVersion(id, activityName, status)}>
               <span className="recently-view-text">{`Ver. ${value}`}</span>
               <RecentlyViewed />

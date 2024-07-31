@@ -1,5 +1,5 @@
 import React from 'react';
-import { BaseEdge, EdgeLabelRenderer, getBezierPath, useReactFlow } from 'reactflow';
+import { BaseEdge, EdgeLabelRenderer, getSmoothStepPath, useReactFlow } from 'reactflow';
 import './style.scss';
 import useTaskStore from '../../store';
 
@@ -7,7 +7,7 @@ function CrossEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, tar
   const { setEdges } = useReactFlow();
   const deleteTaskEdge = useTaskStore((state) => state.deleteTaskEdge);
   const deleteDialogEdge = useTaskStore((state) => state.deleteDialogEdge);
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
     sourcePosition,

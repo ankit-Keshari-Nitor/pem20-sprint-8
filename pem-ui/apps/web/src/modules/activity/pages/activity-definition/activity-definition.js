@@ -6,9 +6,10 @@ import { getActivityDetails, saveActivityData } from '../../services/activity-se
 import { OPERATIONS } from '../../constants';
 import { Button, Column, Grid } from '@carbon/react';
 import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
-//import { saveAs } from 'file-saver';
+import { saveAs } from 'file-saver';
 import Notification from '../../helpers/wrapper-notification-toast';
 import Shell from '@b2bi/shell';
+import { generateNodeEdgesForApi } from '../../util';
 
 export default function ActivityDefinition() {
   const store = useActivityStore();
@@ -30,14 +31,14 @@ export default function ActivityDefinition() {
     const getActivityData = (activityDefKey, versionKey) => {
       getActivityDetails(activityDefKey, versionKey).then((response) => {
         if (response.success) {
-          setActivityDefinitionData(response.definition);
+          setActivityDefinitionData(response.activityData);
           setActivityVersions(response.versions | []);
         } else {
           console.log('error in api call');
         }
       });
     };
-    if (currentActivity && currentActivity.activityDefKey) {
+    if (currentActivity && currentActivity.activityDefKey && currentActivity.activityDefKey.length > 0) {
       getActivityData(currentActivity.activityDefKey, currentActivity.actDefVerKey);
     }
     return () => {
@@ -50,44 +51,35 @@ export default function ActivityDefinition() {
   }, [store.activityData]);
 
   const saveActivity = async () => {
-    const nodes = activityObj.schema.nodes.map((x, index) => {
-      return {
-        id: x.id ? x.id : `${x.type}-${index}`,
-        name: x.data.label,
-        type: x.type,
-        diagram: {
-          x: x.position.x,
-          y: x.position.y
-        },
-        exitCondition: x.validateExitValidationQuery,
-        exitConditionErrorMessage: x.exitValidationMessage,
-        entryCondition: x.validateEntryValidationQuery,
-        entryConditionErrorMessage: x.entryValidationMessage
-      };
-    });
-    const edges = activityObj.schema.edges.map((x) => {
-      return {
-        id: x.id, //`${x.type}-${index}`,
-        source: x.source,
-        target: x.target,
-        condition: null,
-        diagram: []
-      };
-    });
-
+    if (activityObj.definition.name && activityObj.definition.name.trim().length === 0) {
+      setNotificationProps({
+        open: true,
+        title: 'Validation',
+        subTitle: 'Activity Name is required',
+        kind: 'error',
+        onCloseButtonClick: () => setNotificationProps(null)
+      });
+      setShowActivityDefineDrawer(true);
+      return;
+    }
+    const nodeEdgesData = generateNodeEdgesForApi(activityObj.schema.nodes, activityObj.schema.edges);
     const newObj = {
       name: activityObj.definition.name,
       description: activityObj.definition.description,
       schemaVersion: 1.0,
+      //encrypted: activityObj.definition.description,
+      //contextData: activityObj.definition.contextData,
       process: {
-        nodes: nodes,
-        connectors: edges
+        nodes: nodeEdgesData.nodes,
+        connectors: nodeEdgesData.edges,
+        contextData:activityObj.definition.contextData ? activityObj.definition.contextData : null
       }
     };
-
+    const file = new Blob([JSON.stringify(newObj)], { type: 'text/json' });
+    saveAs(file, 'file.json');
     const saveResponse = await saveActivityData(newObj);
     setNotificationProps({
-      open: saveResponse.success,
+      open: true,
       title: saveResponse.success ? 'Success - ' : 'Error - ',
       subtitle: saveResponse.success ? 'Actvity Created successfully!' : `Actvity creation failed`,
       kind: saveResponse.success ? 'success' : 'error',
@@ -96,8 +88,11 @@ export default function ActivityDefinition() {
     if (saveResponse.success) {
       store.reset();
       setTimeout(() => {
-        pageUtil.navigate('/activities', {});
+        pageUtil.navigate('/activities/definitions', {});
       }, 2000);
+    }else{
+      console.log(saveResponse);
+      
     }
   };
 

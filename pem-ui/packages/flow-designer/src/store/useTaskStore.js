@@ -25,9 +25,9 @@ const taskStore = (set, get) => ({
     });
   },
 
-  addTaskEdges: (activity) => {
+  addTaskEdges: (edges) => {
     set((state) => ({
-      tasks: { nodes: state.tasks.nodes, edges: activity }
+      tasks: { nodes: state.tasks.nodes, edges: edges }
     }));
   },
 

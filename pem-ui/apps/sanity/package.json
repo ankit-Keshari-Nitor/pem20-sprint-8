@@ -1,17 +1,22 @@
 {
-  "name": "@b2bi/pem-sanity",
+  "name": "pem-sanity",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "type": "module",
-  "devDependencies": {
-    "@cucumber/cucumber": "^10.1.0",
-    "@playwright/test": "^1.40.1",
-    "@types/node": "^20.10.6"
-  },
   "scripts": {
-    "test": "cucumber-js test --tags \"(not (@Ignore or @ignore))\" ",
-    "test-current": "cucumber-js --tags \"(@current and (not (@Ignore or @ignore)))\" -f summary -f json:test/report/cucumber_report.json",
-    "test-report": "node bdd/reporter.js"
+    "runTestsQA": "npx bddgen && npx playwright test",
+    "test": "npm run runTestsQA -- --headed --project=chromium features/activity/activity-list.feature",
+    "runTestsDev": "export runEnv=dev && npx bddgen && npx playwright test"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "allure-playwright": "^2.9.2",
+    "test-results-reporter": "^1.0.18"
+  },
+  "dependencies": {
+    "@cucumber/cucumber": "^8.1.2",
+    "@cucumber/gherkin": "^28.0.0",
+    "@playwright/test": "^1.45.3",
+    "cucumber": "^6.0.7",
+    "playwright": "^1.45.3",
+    "playwright-bdd": "^7.1.0"
   }
 }

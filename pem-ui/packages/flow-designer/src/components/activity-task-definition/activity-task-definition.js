@@ -9,8 +9,8 @@ const ActivityTaskDefinition = ({ id, onSubmitDefinitionForm, setShowActivityDef
   const initialValues = {
     name: activityDefinitionData.definition?.name,
     description: activityDefinitionData.definition?.description,
-    encrypted: activityDefinitionData.version.encrypted | false,
-    contextData: activityDefinitionData.version.contextData
+    encrypted: activityDefinitionData?.version.encrypted ? 1 :0,
+    contextData: activityDefinitionData?.version.contextData
   };
 
   return (

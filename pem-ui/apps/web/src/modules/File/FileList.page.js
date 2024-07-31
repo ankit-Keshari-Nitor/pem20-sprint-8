@@ -252,18 +252,18 @@ const FileList = ({ mode, context }) => {
 
         init: function () {},
         uiGotoDetails: function (selectedRow) {
-          //pageUtil.navigate(`${selectedRow.id}`, {});
-          pageUtil.showSidePage('FILE.DETAILS').then((sidePageData) => {
+          pageUtil.navigate(`${selectedRow.id}`, {});
+          /*pageUtil.showSidePage('FILE.DETAILS').then((sidePageData) => {
             if (sidePageData.actionType === 'submit') {
             }
-          });
+          });*/
         },
         uiUploadKey: function () {
-          //pageUtil.navigate('upload', {});
-          pageUtil.showSidePage('FILE.UPLOAD').then((sidePageData) => {
+          pageUtil.navigate('upload', {});
+          /*pageUtil.showSidePage('FILE.UPLOAD').then((sidePageData) => {
             if (sidePageData.actionType === 'submit') {
             }
-          });
+          });*/
           /*pageUtil.showPageModal('FILE.UPLOAD').then((modalData) => {
             if (modalData.actionType === 'submit') {
             }

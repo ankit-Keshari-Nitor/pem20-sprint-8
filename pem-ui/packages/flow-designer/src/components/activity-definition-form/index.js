@@ -3,7 +3,7 @@ import { Column, Grid, Modal } from '@carbon/react';
 import ActivityTaskDefinition from '../activity-task-definition';
 import { CrossIcon, ExpandIcon } from './../../icons';
 import ActivityVersions from './activity-versions-dropdown';
-import './../block-definition-form/block-definition-form.scss';
+import './../block-properties-tray/block-properties-tray.scss';
 
 export default function ActivityDefinitionForm(props) {
   const { readOnly, versionData = [], setShowActivityDefineDrawer, onActivityDetailsSave, activityOperation, activityDefinitionData } = props;
@@ -14,7 +14,9 @@ export default function ActivityDefinitionForm(props) {
     const definition = {
       definationKey: '',
       name: values.name,
-      description: values.description
+      description: values.description,
+      contextData: values.contextData,
+      encrypted: values.encrypted
     };
     const version = {
       encrypted: values.encrypted ? values.encrypted : false,
@@ -30,17 +32,19 @@ export default function ActivityDefinitionForm(props) {
   return (
     <div className="block-properties-container">
       <div className="title-bar">
-        <span className="title">
+        <div className="title">
           <Grid fullWidth>
-            <Column lg={4} md={3} sm={2}>
+            <Column lg={6} md={3} sm={2}>
               <b>Define Activity</b>
             </Column>
-            <Column lg={2} md={2} sm={1} className="activity-active">
+            <Column lg={4} md={2} sm={1} className="activity-active">
               {versionData.length > 0 ? 'Active' : 'Draft'}
             </Column>
-            {versionData.length > 0 && <ActivityVersions {...props} />}
+            <Column lg={6} md={3} sm={2} className="activity-version-dropdown">
+              {versionData.length > 0 && <ActivityVersions {...props} />}
+            </Column>
           </Grid>
-        </span>
+        </div>
         <div className="icon">
           <span onClick={() => setOpenExpandMode(true)} className="icon">
             <ExpandIcon />
@@ -63,7 +67,7 @@ export default function ActivityDefinitionForm(props) {
         onRequestClose={() => setOpenExpandMode(false)}
         isFullWidth
         modalHeading={
-          <Grid>
+          <Grid fullWidth>
             <Column lg={4} md={3} sm={2}>
               <b>Define Activity</b>
             </Column>

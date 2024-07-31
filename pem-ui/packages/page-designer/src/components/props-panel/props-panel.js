@@ -4,6 +4,8 @@ import {
   TextInput,
   Button,
   Select,
+  DatePicker,
+  DatePickerInput,
   Dropdown,
   SelectItem,
   RadioButtonGroup,
@@ -271,7 +273,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
           <Tabs>
             <TabList aria-label="List of tabs" contained>
               <Tab>Properties</Tab>
-              <Tab>Validators</Tab>
+              {advanceProps && advanceProps.length > 0 ? <Tab>Validators</Tab> : null}
               {/* <Tab>Condition</Tab> */}
             </TabList>
             <TabPanels>
@@ -464,7 +466,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     )}
                                     {/* DropDown */}
                                     {item.type === 'DropDown' && (
-                                      <Column lg={16} className="right-palette-form-item">
+                                      <Column lg={item.propsPanelColSize ? item.propsPanelColSize : 16} className="right-palette-form-item">
                                         <Dropdown
                                           id={item.propsName}
                                           items={item.options}
@@ -493,6 +495,26 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                           onDelete={() => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, '', selectedFiledProps?.currentPathDetail)}
                                         />
                                       </div>
+                                    )}
+                                    {/* Date Picker */}
+                                    {item.type === 'Date' && (
+                                      <Column lg={item.propsPanelColSize} className="right-palette-form-item">
+                                        <DatePicker datePickerType="single" onChange={(e) => {
+                                          handleSchemaChanges(
+                                            selectedFiledProps?.id,
+                                            key,
+                                            item.propsName,
+                                            e[0],
+                                            selectedFiledProps?.currentPathDetail
+                                          )
+                                        }}>
+                                          <DatePickerInput
+                                            id="date-picker-single"
+                                            labelText={item?.label}
+                                            placeholder="mm/dd/yyyy"
+                                          />
+                                        </DatePicker>
+                                      </Column>
                                     )}
                                     {/* Table Column */}
                                     {item.propsName === TABLE_COLUMNS && (
@@ -826,45 +848,45 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       e.preventDefault();
                                       advncProps.type === OPTIONS
                                         ? handleSchemaChanges(
-                                            selectedFiledProps?.id,
-                                            'advance',
-                                            advncProps.propsName,
-                                            { ...advncProps.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
-                                            selectedFiledProps?.currentPathDetail
-                                          )
+                                          selectedFiledProps?.id,
+                                          'advance',
+                                          advncProps.propsName,
+                                          { ...advncProps.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
+                                          selectedFiledProps?.currentPathDetail
+                                        )
                                         : handleSchemaChanges(
-                                            selectedFiledProps?.id,
-                                            'advance',
-                                            advncProps.propsName,
-                                            {
-                                              value: advncProps.value.value,
-                                              message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
-                                            },
-                                            selectedFiledProps?.currentPathDetail
-                                          );
+                                          selectedFiledProps?.id,
+                                          'advance',
+                                          advncProps.propsName,
+                                          {
+                                            value: advncProps.value.value,
+                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                          },
+                                          selectedFiledProps?.currentPathDetail
+                                        );
                                     } else {
                                       advncProps.type === OPTIONS
                                         ? handleSchemaChanges(
-                                            selectedFiledProps?.id,
-                                            'advance',
-                                            advncProps.propsName,
-                                            {
-                                              pattern: advncProps.value.pattern,
-                                              value: advncProps.value.value,
-                                              message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
-                                            },
-                                            selectedFiledProps?.currentPathDetail
-                                          )
+                                          selectedFiledProps?.id,
+                                          'advance',
+                                          advncProps.propsName,
+                                          {
+                                            pattern: advncProps.value.pattern,
+                                            value: advncProps.value.value,
+                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                          },
+                                          selectedFiledProps?.currentPathDetail
+                                        )
                                         : handleSchemaChanges(
-                                            selectedFiledProps?.id,
-                                            'advance',
-                                            advncProps.propsName,
-                                            {
-                                              value: advncProps.value.value,
-                                              message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
-                                            },
-                                            selectedFiledProps?.currentPathDetail
-                                          );
+                                          selectedFiledProps?.id,
+                                          'advance',
+                                          advncProps.propsName,
+                                          {
+                                            value: advncProps.value.value,
+                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                          },
+                                          selectedFiledProps?.currentPathDetail
+                                        );
                                     }
                                   }}
                                 />
@@ -901,6 +923,30 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                   }
                                 }}
                               />
+                            </Column>
+                          )}
+                          {/* Min Date and Max Date*/}
+
+                          {advncProps.type === 'Date' && (
+                            <Column lg={advncProps.propsPanelColSize} className="right-palette-form-item">
+                              <DatePicker datePickerType="single" onChange={(e) => {
+                                handleSchemaChanges(
+                                  selectedFiledProps?.id,
+                                  'advance',
+                                  advncProps.propsName,
+                                  {
+                                    value: e[0],
+                                    message: ''
+                                  },
+                                  selectedFiledProps?.currentPathDetail
+                                )
+                              }}>
+                                <DatePickerInput
+                                  id="date-picker-single"
+                                  labelText={advncProps?.label}
+                                  placeholder="mm/dd/yyyy"
+                                />
+                              </DatePicker>
                             </Column>
                           )}
                           {/* Required Validation */}

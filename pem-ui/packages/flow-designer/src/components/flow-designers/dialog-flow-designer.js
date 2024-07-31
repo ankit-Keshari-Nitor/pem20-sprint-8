@@ -39,9 +39,12 @@ const DialogFlowDesigner = ({
         <Panel minSize={30} maxSize={80}>
           <div className="dnd-flow">
             {/* Tasks Block */}
-            <div className="task-tray-container">
-              <BlocksTray category={CATEGORY_TYPES.DIALOG} readOnly={readOnly} />
-            </div>
+            {!readOnly && (
+              <div className="task-tray-container">
+                <BlocksTray category={CATEGORY_TYPES.DIALOG} readOnly={readOnly} />
+              </div>
+            )}
+
             {/* Flow Designer Block  */}
             <ReactFlowProvider>
               <div className="reactflow-wrapper" ref={dialogFlowWrapper}>

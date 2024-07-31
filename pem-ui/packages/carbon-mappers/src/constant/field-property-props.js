@@ -296,8 +296,6 @@ export const extensions = {
   propsPanelColSize: 8,
 };
 
-
-
 export const maxFileSize = {
   propsName: 'maxFileSize',
   label: 'Max File Size',
@@ -332,4 +330,39 @@ export const fontSize = {
     { label: '34px', value: '34px' },
     { label: '36px', value: '36px' },
   ],
+}
+
+export const minDate = {
+  type: 'Date',
+  propsName: 'minDate',
+  label: 'Min Date',
+  value: '',
+  propsPanelColSize: 8
+}
+
+export const maxDate = {
+  type: 'Date',
+  propsName: 'maxDate',
+  label: 'Max Date',
+  value: '',
+  propsPanelColSize: 8
+}
+export const dateFormat = {
+  type: 'DropDown',
+  label: 'Date Format',
+  propsName: 'dateFormat',
+  propsPanelColSize: 8,
+  options: [
+    { label: 'mm/dd/yyyy', value: 'm/d/Y' },
+    { label: 'dd/mm/yyyy', value: 'd/m/Y' },
+    { label: 'MMM,D,Y', value: 'M,d,Y' },
+  ]
+}
+
+export const dateValue = {
+  type: 'Date',
+  propsName: 'dateValue',
+  label: 'Value',
+  value: '',
+  propsPanelColSize: 8,
 }

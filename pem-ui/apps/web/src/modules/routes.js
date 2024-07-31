@@ -3,11 +3,13 @@ import { routes as PartnerRoutes } from './partner';
 import { routes as ActivityRoutes } from './activity';
 import { routes as FileRoutes } from './File';
 import { routes as ApiConfigurationRoutes } from './ApiConfiguration';
+import { routes as DashboardRoutes } from './dashboard';
 // import { routes as CustomFieldRoutes } from './CustomField';
 
 // import { routes as POCROutes } from '@b2bi/poc';
 
 const routes = [
+  ...DashboardRoutes,
   {
     path: 'directories',
     breadcrumb: null,

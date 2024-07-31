@@ -101,7 +101,7 @@ const Column = ({ data, handleDrop, path, componentMapper, onFieldSelect, render
               }}
               onDrop={handleDrop}
               isLast
-              className={data.children.length === 0 && 'plus-icon'}
+              className={data.children.length === 0 ? 'plus-icon' : 'nestedZone'}
             />
           )}
         </>

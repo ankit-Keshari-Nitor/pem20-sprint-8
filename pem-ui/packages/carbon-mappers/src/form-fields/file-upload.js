@@ -99,7 +99,7 @@ const FileUploader = ({ field, id, }) => {
         <>
           <FileUploaderDropContainer
             labelText={labelText === undefined ? label : labelText}
-            name={Id}
+            name={String(id)}
             filenameStatus='edit'
             onChange={onAddFiles}
             onAddFiles={onAddFiles}

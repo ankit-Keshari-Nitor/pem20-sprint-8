@@ -555,7 +555,7 @@ export const defaultProps = (item) => {
     case 'checkbox-group':
     case 'radio-group':
     case 'select':
-      item.component.options = [{ label: 'Label-0', id: '', value: 'Value-0' }];
+      item.component.options = [{ label: 'Label-0', id: 0, value: 'Value-0' }];
       break;
     case 'textinput':
     case 'password':

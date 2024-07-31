@@ -21,6 +21,7 @@ const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, onFieldSele
           onFieldSelect={onFieldSelect}
           previewMode={previewMode}
           onChangeHandle={onChangeHandle}
+          colSize={14}
         />
       </div>
     );
@@ -54,6 +55,7 @@ const TabCanvas = ({ layout, handleDrop, renderRow, componentMapper, onFieldSele
           }}
           onDrop={handleDrop}
           isLast
+          className='nestedZone'
         />
       )}
     </>

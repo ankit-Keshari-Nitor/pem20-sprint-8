@@ -5,11 +5,11 @@ import { ToggleIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.TOGGLE;
 
-const Toggle = ({ field, id }) => {
-  const { labelText, isRequired, label, min, max, labelA, labelB, ...rest } = field;
+const Toggle = ({ field, id: uniqueId, previewMode }) => {
+  const { labelText, isRequired, label, min, max, labelA, labelB, id, ...rest } = field;
 
   return (
-    <CarbonToggle data-testid={id} id={id} labelText={labelText === undefined ? label : labelText} labelA={labelA ? labelA : 'No'} labelB={labelB ? labelB : 'Yes'} {...rest} />
+    <CarbonToggle data-testid={id} key={`${uniqueId}-${previewMode}`} id={`${uniqueId}-${previewMode}`} labelText={labelText === undefined ? label : labelText} labelA={labelA ? labelA : 'No'} labelB={labelB ? labelB : 'Yes'} {...rest} />
   );
 };
 

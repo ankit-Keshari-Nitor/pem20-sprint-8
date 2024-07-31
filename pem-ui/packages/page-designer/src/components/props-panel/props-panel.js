@@ -107,7 +107,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
 
   const handleAddOption = () => {
     const index = options.length + 1;
-    const newOptions = [...options, { label: `Label-${index - 1}`, value: `Value-${index - 1}` }];
+    const newOptions = [...options, { label: `Label-${index - 1}`, id: index-1, value: `Value-${index - 1}` }];
     setOptions(newOptions);
     handleSchemaChanges(selectedFiledProps?.id, 'Basic', 'options', newOptions, selectedFiledProps?.currentPathDetail);
   };
@@ -614,7 +614,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                     {options.map((option, index) => {
                       return (
                         <Grid>
-                          <Column lg={8}>
+                          <Column lg={7}>
                             <TextInput
                               key={`text-opt-0-${index}`}
                               className="mapping-text-field"
@@ -632,7 +632,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                               onClick={() => OpenMappingDialog(selectedFiledProps?.id, 'Basic', 'mapping', selectedFiledProps?.currentPathDetail)}
                             ></Button>
                           </Column>
-                          <Column lg={8}>
+                          <Column lg={7}>
                             <TextInput
                               key={`text-opt-1-${index}`}
                               className="mapping-text-field"
@@ -652,9 +652,11 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           </Column>
                           {/* Check if options length is greater than 1 before displaying delete icon */}
                           {options.length > 1 && (
-                            <span className="delete-icon">
+                            <Column lg={2}>
+                            <span className="delete-icon icon-margin">
                               <TrashCan onClick={() => handleDeleteOption(index)} />
                             </span>
+                            </Column>
                           )}
                         </Grid>
                       );
@@ -718,8 +720,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           {advncProps.type === 'TextInput' && (
                             <Column lg={advncProps.propsPanelColSize}>
                               <TextInput
-                                key={idx}
-                                id={String(idx)}
+                                key={`${selectedFiledProps?.id}-${idx}`}
+                                id={String(`${selectedFiledProps?.id}-${idx}`)}
                                 className="right-palette-form-item"
                                 labelText={
                                   <>
@@ -806,7 +808,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                               <Column lg={advncProps.propsPanelColSize}>
                                 <TextInput
                                   key={`${idx}-'message'`}
-                                  id={String(idx)}
+                                  id={String(`${idx}-message`)}
                                   className="right-palette-form-item"
                                   labelText={'Regex Message'}
                                   value={advncProps.value.message}

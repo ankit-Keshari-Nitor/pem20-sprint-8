@@ -5,21 +5,21 @@ import { RadioIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.RADIOGROUP;
 
-const RadioButtonGroup = ({ field, id, previewMode }) => {
-  const { type, labelText, label, isRequired, readOnly, orientation, options, helperText, ...rest } = field;
+const RadioButtonGroup = ({ field, id: uniqueId, previewMode }) => {
+  const { type, labelText, label, isRequired, readOnly, orientation, options, helperText, id, ...rest } = field;
 
   return (
     <CarbonRadioButtonGroup
       readOnly={readOnly}
       orientation={orientation}
-      data-testid={`${id}-${previewMode}`}
-      id={`${id}-${previewMode}`}
+      data-testid={`${uniqueId}-${previewMode}`}
+      id={`${uniqueId}-${previewMode}`}
       legendText={labelText === undefined ? label : labelText}
       helperText={helperText}
     >
       {options &&
         options.map((element) => {
-          return <CarbonRadioButton labelText={element?.label} id={`${element?.id}-${previewMode}`} value={element?.value} {...rest} />;
+          return <CarbonRadioButton key={`${element?.id}-${previewMode}`} labelText={element?.label} id={`${element?.id}-${previewMode}`} value={element?.value} {...rest} />;
         })}
     </CarbonRadioButtonGroup>
   );

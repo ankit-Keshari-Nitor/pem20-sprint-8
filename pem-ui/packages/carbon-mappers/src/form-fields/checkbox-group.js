@@ -6,10 +6,9 @@ import { CheckboxIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.CHECKBOXGROUP;
 
-const CheckboxGroup = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
-  const { type, labelText, value, label, orientation, readOnly, options, isRequired, helperText, ...rest } = field;
+const CheckboxGroup = ({ field, id: uniqueId, currentPath, onChangeHandle, previewMode }) => {
+  const { type, labelText, value, label, orientation, readOnly, options, isRequired, helperText, id, ...rest } = field;
   const [isChecked, setIsChecked] = useState(false);
-
   useEffect(() => {
     if (previewMode && value !== undefined) {
       setIsChecked(value);
@@ -20,14 +19,14 @@ const CheckboxGroup = ({ field, id, currentPath, onChangeHandle, previewMode }) 
     <CarbonCheckboxGroup
       readOnly={readOnly}
       orientation={orientation}
-      data-testid={`${id}-${previewMode}`}
-      id={`${id}-${previewMode}`}
+      data-testid={`${uniqueId}-${previewMode}`}
+      id={`${uniqueId}-${previewMode}`}
       legendText={labelText === undefined ? label : labelText}
       helperText={helperText}
     >
       {options &&
         options.map((element) => {
-          return <CarbonCheckbox labelText={element?.label} id={`${element?.id}-${previewMode}`} value={element?.value} {...rest} />;
+          return <CarbonCheckbox key={`${element?.id}-${previewMode}`} labelText={element?.label} id={`${element?.id}-${previewMode}`} value={element?.value} {...rest} />;
         })}
     </CarbonCheckboxGroup>
   );

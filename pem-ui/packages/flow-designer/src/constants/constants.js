@@ -304,6 +304,7 @@ export const NODE_TYPES = [
       { label: 'Clone', action: 'clone' },
       { label: 'Save as Template', action: 'savetemplate' }
     ],
+    form: '',
     nodeIcon: <FormBlockIcon />,
     category: CATEGORY_TYPES.DIALOG,
     active: true

@@ -50,10 +50,10 @@ import FormPreview from '../preview-mode';
 import { CrossIcon } from '../../icon';
 import { View } from '@carbon/icons-react';
 
-export default function Designer({ componentMapper, onClickPageDesignerBack, activityDefinitionData, saveFormDesignerData }) {
-  const initialLayout = INITIAL_DATA.layout;
+export default function Designer({ componentMapper, onClickPageDesignerBack, activityDefinitionData, saveFormDesignerData, formFields }) {
+  //const initialLayout = INITIAL_DATA.layout;
   const initialComponents = INITIAL_DATA.components;
-  const [layout, setLayout] = useState(initialLayout);
+  const [layout, setLayout] = useState(formFields);
   const [components, setComponents] = useState(initialComponents);
   const [selectedFiledProps, setSelectedFiledProps] = useState();
   const [open, setOpen] = useState(false);

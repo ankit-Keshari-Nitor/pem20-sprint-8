@@ -18,6 +18,8 @@ export default function ActivityDefinition() {
   const currentActivity = useActivityStore((state) => state.selectedActivity);
   const updateActivitySchema = useActivityStore((state) => state.updateActivitySchema);
   const updateActivityDetails = useActivityStore((state) => state.updateActivityDetails);
+  const updateActivityData = useActivityStore((state) => state.updateActivityData);
+  
   const [notificationProps, setNotificationProps] = useState(null);
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState(true);
 
@@ -31,8 +33,11 @@ export default function ActivityDefinition() {
     const getActivityData = (activityDefKey, versionKey) => {
       getActivityDetails(activityDefKey, versionKey).then((response) => {
         if (response.success) {
+          
+          
           setActivityDefinitionData(response.activityData);
-          setActivityVersions(response.versions | []);
+          updateActivityData(response.activityData);
+          setActivityVersions(response.versions);
         } else {
           console.log('error in api call');
         }
@@ -67,12 +72,10 @@ export default function ActivityDefinition() {
       name: activityObj.definition.name,
       description: activityObj.definition.description,
       schemaVersion: 1.0,
-      //encrypted: activityObj.definition.description,
-      //contextData: activityObj.definition.contextData,
       process: {
         nodes: nodeEdgesData.nodes,
         connectors: nodeEdgesData.edges,
-        contextData:activityObj.definition.contextData ? activityObj.definition.contextData : null
+        contextData:activityObj.definition.contextData
       }
     };
     const file = new Blob([JSON.stringify(newObj)], { type: 'text/json' });
@@ -91,8 +94,7 @@ export default function ActivityDefinition() {
         pageUtil.navigate('/activities/definitions', {});
       }, 2000);
     }else{
-      console.log(saveResponse);
-      
+      console.log(saveResponse); 
     }
   };
 

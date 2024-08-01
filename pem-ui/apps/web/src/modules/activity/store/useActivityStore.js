@@ -45,6 +45,15 @@ const activityStore = (set, get) => ({
       };
     });
   },
+  updateActivityData: (activityData) => {
+    set((state) => {
+      return {
+        activityData: activityData,
+        selectedActivity: state?.selectedActivity
+      };
+    });
+
+  }  ,
   //this changes during -
   updateActivitySchema: (task) => {
     set((state) => {

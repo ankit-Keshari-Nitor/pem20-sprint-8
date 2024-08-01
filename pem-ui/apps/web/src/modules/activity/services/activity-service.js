@@ -1,5 +1,6 @@
 import { API_END_POINTS, TEST_DIALOG_DATA } from './../constants';
 import { RestApiService } from '../../../common/api-handler/rest-api-service';
+import { generateActivitySchema } from '../util';
 
 // Function to get the list of all activities
 export const getActivityList = async (pageNo, pageSize, sortDir = 'ASC', searchKey = '', status = '', sortBy = 'modifyts') => {
@@ -62,7 +63,7 @@ export const markActivityDefinitionAsFinal = async (activityDefnKey, activityDef
   };
   const response = await new RestApiService().call(config, null);
 
-  return response.success && response?.data?.status !== undefined && response?.data?.status === 'FINAL'
+  return response.success && response?.data?.status !== undefined && response?.data?.status === 'FINAL';
 };
 
 // Function to get the details of activity
@@ -70,35 +71,44 @@ export const getActivityDetails = async (activityKey, activityVersoinKey) => {
   const url = `${API_END_POINTS.ACTIVITY_DEFINITION}/${activityKey}`;
   const response = await new RestApiService().call({ url }, null);
   if (response.success) {
-    const activityVersions = await new RestApiService().call({ url: `${url}versions?&pageNo=0&pageSize=100` }, null);
-    const activityCurrentVersionDetails = await new RestApiService().call({ url: `${url}versions/${activityVersoinKey}` }, null);
-    const activityCurrentVersionData = await new RestApiService().call({ url: `${url}versions/${activityVersoinKey}/actions/getData` }, null);
+    const activityVersions = await new RestApiService().call({ url: `${url}/versions?&pageNo=0&pageSize=100` }, null);
+    const activityCurrentVersionDetails = await new RestApiService().call({ url: `${url}/versions/${activityVersoinKey}` }, null);
+    const activityCurrentVersionData = await new RestApiService().call({ url: `${url}/versions/${activityVersoinKey}/actions/getData` }, null);
+
+    const activityData = {
+      definition: {
+        name: response.data.name,
+        description: response.data.description,
+        definationKey: response.data.activityDefnKey
+      },
+      version: {
+        key: activityCurrentVersionDetails.data.activityDefnVersionKey,
+        encrypted: activityCurrentVersionDetails.data.isEncrypted, //false,
+        contextData: activityCurrentVersionDetails.data.contextData,
+        status: activityCurrentVersionDetails.data.status,
+        number: activityCurrentVersionDetails.data.version
+      },
+      schema: {
+        nodes: [],
+        edges: []
+      }
+    };
+
+    const { nodes, edges } = generateActivitySchema(activityCurrentVersionData.data.process.nodes, activityCurrentVersionData.data.process.connectors);
+
+    activityData.schema.nodes = nodes;
+    activityData.schema.edges = edges;
+//console.log(activityData);
     return {
       success: true,
-      activityData: {
-        definition: {
-          name: response.data.name,
-          description: response.data.description,
-          definationKey: response.data.key
-        },
-        version: {
-          key: activityCurrentVersionDetails.data.key,
-          encrypted: activityCurrentVersionDetails.data.isEncrypted, //false,
-          contextData: activityCurrentVersionDetails.data.contextData,
-          status: activityCurrentVersionDetails.data.status,
-          number: activityCurrentVersionDetails.data.version
-        },
-        schema: {
-          nodes: activityCurrentVersionData.data.nodes,
-          edges: activityCurrentVersionData.data.edges
-        }
-      },
+      activityData,
       versions: activityVersions.data.content
     };
   } else {
     return {
       success: false,
-      data: null
+      activityData: null,
+      versions: []
     };
   }
 };

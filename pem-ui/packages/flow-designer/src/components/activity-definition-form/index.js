@@ -7,9 +7,11 @@ import './../block-properties-tray/block-properties-tray.scss';
 
 export default function ActivityDefinitionForm(props) {
   const { readOnly, versionData = [], setShowActivityDefineDrawer, onActivityDetailsSave, activityOperation, activityDefinitionData } = props;
-
+  
   const [openExpandMode, setOpenExpandMode] = useState(false);
 
+
+  
   const onSubmitDefinitionForm = (values) => {
     const definition = {
       definationKey: '',
@@ -38,7 +40,7 @@ export default function ActivityDefinitionForm(props) {
               <b>Define Activity</b>
             </Column>
             <Column lg={4} md={2} sm={1} className="activity-active">
-              {versionData.length > 0 ? 'Active' : 'Draft'}
+            {activityDefinitionData.version.status}
             </Column>
             <Column lg={6} md={3} sm={2} className="activity-version-dropdown">
               {versionData.length > 0 && <ActivityVersions {...props} />}
@@ -72,9 +74,9 @@ export default function ActivityDefinitionForm(props) {
               <b>Define Activity</b>
             </Column>
             <Column lg={2} md={2} sm={1} className="activity-active">
-              Active
+              {activityDefinitionData.version.status}
             </Column>
-            {versionData.length > 0 && <ActivityVersions {...props} />}
+            {versionData.length > 0 && <ActivityVersions  {...props} />}
           </Grid>
         }
         passiveModal

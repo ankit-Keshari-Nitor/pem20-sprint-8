@@ -13,7 +13,7 @@ import {
   endMarks,
   TASK_NODE_TYPES,
   TASK_EDGE_TYPES,
-  DIALOG_INITIAL_NODES,
+  DIALOG_INITIAL_NODES,INITIAL_EDGES,
   DIALOG_NODE_TYPES,
   DIALOG_EDGE_TYPES,
   NODE_TYPE
@@ -46,6 +46,9 @@ const WorkFlowDesigner = forwardRef(
     },
     ref
   ) => {
+
+
+
     //-------------------------------- State Management -------------------------------------
     const store = useTaskStore();
     const storeData = useTaskStore((state) => state.tasks);
@@ -108,6 +111,13 @@ const WorkFlowDesigner = forwardRef(
       //this is sending the new schema to web page  - activity-definition.js
       updateActivitySchema(storeData);
     }, [setTaskNodes, setTaskEdges, storeData, updateActivitySchema]);
+
+
+    useEffect(()=>{
+      setTaskNodes(activityDefinitionData.schema.nodes);
+      setTaskEdges(activityDefinitionData.schema.edges);
+
+    },[activityDefinitionData])
 
     //#region Dialog Block Methods
     const onDialogNodeDragOver = useCallback((event) => {
@@ -228,7 +238,7 @@ const WorkFlowDesigner = forwardRef(
           id: getNewTaskId(),
           position,
           type: nodeData.type,
-          data: { ...nodeData, dialogNodes: DIALOG_INITIAL_NODES, dialogEdges: [] }
+          data: { ...nodeData, dialogNodes: DIALOG_INITIAL_NODES, dialogEdges: INITIAL_EDGES }
         };
 
         if (taskFlowInstance) {

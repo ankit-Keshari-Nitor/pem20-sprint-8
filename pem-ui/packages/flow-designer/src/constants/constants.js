@@ -454,6 +454,23 @@ export const DIALOG_INITIAL_NODES = [
   }
 ];
 
+export const INITIAL_EDGES = [
+  {
+    id: 'source_To_end',
+    type: 'crossEdge',
+    source: '1',
+    sourceHandle: 'start-node-right',
+    target: '2',
+    targetHandle: 'end-node-left',
+    markEnd: {
+      color: '#FF0072',
+      height: 20,
+      type: 'arrowclosed',
+      width: 20
+    }
+  }
+];
+
 export const DIALOG_NODE_TYPES = {
   START: StartNode,
   END: EndNode,

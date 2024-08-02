@@ -14,7 +14,7 @@ import {
   Search
 } from '@carbon/react';
 import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE } from '../constant/form-field-type';
-import { Id, helperText, isRequired, labelText, pageSize, selectRow, tableColumn, tableRows as tableRowsData } from '../constant';
+import { Id, elementTypeDataTable, helperText, isRequired, labelText, pageSize, selectRow, tableColumn, tableRows as tableRowsData } from '../constant';
 import { DataTable as DataTableIcon } from '@carbon/icons-react';
 
 const DataTable = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
@@ -140,7 +140,7 @@ DataTable.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <DataTableIcon />,
   editableProps: {
-    Basic: [Id, labelText, helperText, selectRow, pageSize, tableColumn, tableRowsData],
+    Basic: [elementTypeDataTable, Id, labelText, helperText, selectRow, pageSize, tableColumn, tableRowsData],
     Condition: []
   },
   advanceProps: [isRequired]

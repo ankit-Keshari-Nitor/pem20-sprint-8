@@ -42,7 +42,8 @@ import {
   TABLE_ROWS,
   MAXPROPS,
   MINPROPS,
-  ROW
+  ROW,
+  ELEMENT_TYPES
 } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Grid, Modal, Column } from '@carbon/react';
@@ -89,33 +90,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           ...components,
           [newComponent.id]: newComponent
         });
-
         defaultProps(item);
-
-        // Condition for add options property
-        // if (item.component.type === 'checkbox-group' || item.component.type === 'radio-group' || item.component.type === 'select') {
-        //   item.component.options = [{ label: 'Label-0', id: '', value: 'Value-0' }];
-        // }
-
-        //Condition for Textarea row Property
-        // if (item.component.type === 'textarea') {
-        //   item.component.height = '1';
-        // }
-
-        //Condition for File Uploader row Property
-        // if (item.component.type === 'fileUploader') {
-        //   item.component.maxFileSize = '100kb';
-        // }
-
-        //Condition for Max Length Property
-        // if (item.component.type === 'textarea' || item.component.type === 'textinput' || item.component.type === 'password') {
-        //   item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` };
-        // }
-
-        // if (item.component.type === 'numberinput') {
-        //   item.component.max = { value: '20', message: `${item.component.label} value should be between 0 - 20.` };
-        //   item.component.min = { value: '0', message: `${item.component.label} value should be between 0 - 20.` };
-        // }
 
         const newItem = {
           id: newComponent.id,
@@ -168,14 +143,16 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           return (basicEditPops.value = fieldData.component[basicEditPops?.propsName]);
         } else {
           // Initialize options for checkbox-group and radio-group
-          if (basicEditPops?.propsName === OPTIONS) {
-            return (basicEditPops.value = OPTION);
-          } else if (basicEditPops?.propsName === TABLE_COLUMNS) {
-            return (basicEditPops.value = TABLE_HEADER);
-          } else if (basicEditPops?.propsName === TABLE_ROWS) {
-            return (basicEditPops.value = []);
-          } else {
-            return (basicEditPops.value = '');
+          if (basicEditPops?.propsName !== ELEMENT_TYPES) {
+            if (basicEditPops?.propsName === OPTIONS) {
+              return (basicEditPops.value = OPTION);
+            } else if (basicEditPops?.propsName === TABLE_COLUMNS) {
+              return (basicEditPops.value = TABLE_HEADER);
+            } else if (basicEditPops?.propsName === TABLE_ROWS) {
+              return (basicEditPops.value = []);
+            } else {
+              return (basicEditPops.value = '');
+            }
           }
         }
       });

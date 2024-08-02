@@ -1,26 +1,26 @@
 export const FORM_FIELD_TYPE = {
-  TEXT_INPUT: 'textinput',
-  TEXT_AREA: 'textarea',
-  PASSWORD: 'password',
-  RADIOGROUP: 'radio-group',
-  CHECKBOXGROUP: 'checkbox-group',
-  SELECT: 'select',
-  TOGGLE: 'toggle',
-  LINK: 'link',
-  TEXT: 'text',
-  FILE_UPLOADER: 'fileUploader',
-  DATEPICKER: 'datepicker',
-  INFO: 'info',
+  TEXT_INPUT: 'Single line input',
+  TEXT_AREA: 'Textarea',
+  PASSWORD: 'Password',
+  RADIOGROUP: 'Radio Button Group',
+  CHECKBOXGROUP: 'Checkbox',
+  SELECT: 'Drop-down',
+  TOGGLE: 'Toggle',
+  LINK: 'Hyperlink',
+  TEXT: 'Label',
+  FILE_UPLOADER: 'File Upload',
+  DATEPICKER: 'Date',
+  INFO: 'Information',
   GROUP: 'group',
   ACCORDION: 'accordion',
   TAB: 'tab',
   BUTTON: 'button',
   CHECKBOX: 'checkbox',
   RADIO: 'radio',
-  NUMBER: 'numberinput',
+  NUMBER: 'Number',
   SWITCH: 'switch',
   DATATABLE: 'data-table',
-  FILE_DOWNLOADER:'filedownloader'
+  FILE_DOWNLOADER: 'File Download'
 };
 
 export const FORM_FIELD_LABEL = {
@@ -45,7 +45,7 @@ export const FORM_FIELD_LABEL = {
   CHECKBOX: 'Checkbox',
   RADIO: 'Radio',
   DATATABLE: 'Data Table',
-  FILE_DOWNLOADER:'File Downloader'
+  FILE_DOWNLOADER: 'File Downloader'
 };
 
 export const FORM_FIELD_GROUPS = {

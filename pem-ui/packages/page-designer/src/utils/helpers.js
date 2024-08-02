@@ -552,23 +552,23 @@ export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() 
 
 export const defaultProps = (item) => {
   switch (item.component.type) {
-    case 'checkbox-group':
-    case 'radio-group':
-    case 'select':
+    case 'Checkbox':
+    case 'Radio Button Group':
+    case 'Drop-down':
       item.component.options = [{ label: 'Label-0', id: 0, value: 'Value-0' }];
       break;
-    case 'textinput':
-    case 'password':
+    case 'Single line input':
+    case 'Password':
       item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` };
       break;
-    case 'textarea':
+    case 'Textarea':
       item.component.height = '1'; 
       item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` };
       break;
-    case 'fileUploader':
+    case 'File Upload':
       item.component.maxFileSize = '100kb';  
       break;
-    case 'numberinput':
+    case 'Number':
       item.component.max = { value: '20', message: `${item.component.label} value should be between 0 - 20.` };
       item.component.min = { value: '0', message: `${item.component.label} value should be between 0 - 20.` };
       break;

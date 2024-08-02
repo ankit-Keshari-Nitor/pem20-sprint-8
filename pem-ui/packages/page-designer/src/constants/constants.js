@@ -22,16 +22,17 @@ export const TABLE_COLUMNS = 'tableColumns';
 export const TABLE_ROWS = 'tableRows';
 export const LABEL_TEXT = 'labelText';
 export const ISREQUIRED = 'isRequired';
-export const ADD_Tab_BTN  = 'addTabBtn';
-export const ADD_COLUMN_BTN  = 'addColumnBtn';
-export const MAPPING  = 'mapping';
-export const SELECT  = 'select';
-export const TOGGLE  = 'Toggle';
-export const TEXT  = 'text';
-export const RADIO  = 'radio';
-export const CHECKBOX  = 'checkbox';
-export const DROPDOWN  = 'DropDown';
-export const FILE_UPLOAD  = 'FileUpload';
+export const ADD_TAB_BTN = 'addTabBtn';
+export const ADD_COLUMN_BTN = 'addColumnBtn';
+export const MAPPING = 'mapping';
+export const SELECT = 'select';
+export const TOGGLE = 'Toggle';
+export const TEXT = 'text';
+export const RADIO = 'radio';
+export const CHECKBOX = 'checkbox';
+export const DROPDOWN = 'DropDown';
+export const FILE_UPLOAD = 'FileUpload';
+export const ELEMENT_TYPES = 'elementType';
 
 export const PALETTE_GROUPS = [
   {

@@ -30,7 +30,27 @@ import {
 } from '@carbon/react';
 import { v4 as uuid } from 'uuid';
 import './props-panel.scss';
-import { CUSTOM_COLUMN, SUBTAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLE_COLUMNS, TABLE_ROWS, TEXT_INPUT, MAPPING, SELECT, TOGGLE, TEXT, RADIO, CHECKBOX, FILE_UPLOAD, DROPDOWN, ADD_Tab_BTN, ADD_COLUMN_BTN, ISREQUIRED } from '../../constants/constants';
+import {
+  CUSTOM_COLUMN,
+  SUBTAB,
+  CUSTOM_TITLE,
+  OPTIONS,
+  CUSTOMREGEX,
+  TABLE_COLUMNS,
+  TABLE_ROWS,
+  TEXT_INPUT,
+  MAPPING,
+  SELECT,
+  TOGGLE,
+  TEXT,
+  RADIO,
+  CHECKBOX,
+  FILE_UPLOAD,
+  DROPDOWN,
+  ADD_COLUMN_BTN,
+  ISREQUIRED,
+  ADD_TAB_BTN
+} from '../../constants/constants';
 import { collectPaletteEntries } from '../../utils/helpers';
 import { ElippsisIcon } from '../../icon';
 import { TrashCan, Information } from '@carbon/icons-react';
@@ -109,7 +129,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
 
   const handleAddOption = () => {
     const index = options.length + 1;
-    const newOptions = [...options, { label: `Label-${index - 1}`, id: index-1, value: `Value-${index - 1}` }];
+    const newOptions = [...options, { label: `Label-${index - 1}`, id: index - 1, value: `Value-${index - 1}` }];
     setOptions(newOptions);
     handleSchemaChanges(selectedFiledProps?.id, 'Basic', 'options', newOptions, selectedFiledProps?.currentPathDetail);
   };
@@ -298,9 +318,10 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                           onChange={handleComponentTypeChange}
                                           defaultValue={componentType}
                                           value={componentType}
+                                          disabled={item?.value.length > 1 ? false : true}
                                         >
-                                          {componentTypes.map((item, index) => {
-                                            return <SelectItem key={index} value={item.component.type} text={item.component.type} />;
+                                          {item.value.map((fieldName, index) => {
+                                            return <SelectItem key={index} value={fieldName} text={fieldName} />;
                                           })}
                                         </Select>
                                       </Column>
@@ -483,20 +504,13 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     {/* Date Picker */}
                                     {item.type === 'Date' && (
                                       <Column lg={item.propsPanelColSize} className="right-palette-form-item">
-                                        <DatePicker datePickerType="single" onChange={(e) => {
-                                          handleSchemaChanges(
-                                            selectedFiledProps?.id,
-                                            key,
-                                            item.propsName,
-                                            e[0],
-                                            selectedFiledProps?.currentPathDetail
-                                          )
-                                        }}>
-                                          <DatePickerInput
-                                            id="date-picker-single"
-                                            labelText={item?.label}
-                                            placeholder="mm/dd/yyyy"
-                                          />
+                                        <DatePicker
+                                          datePickerType="single"
+                                          onChange={(e) => {
+                                            handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e[0], selectedFiledProps?.currentPathDetail);
+                                          }}
+                                        >
+                                          <DatePickerInput id="date-picker-single" labelText={item?.label} placeholder="mm/dd/yyyy" />
                                         </DatePicker>
                                       </Column>
                                     )}
@@ -597,7 +611,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       </Column>
                                     )}
                                     {/* Add Tab Button */}
-                                    {item.propsName === ADD_Tab_BTN && (
+                                    {item.propsName === ADD_TAB_BTN && (
                                       <Column lg={item.propsPanelColSize}>
                                         <Button
                                           onClick={(e) => {
@@ -638,15 +652,15 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                         <Grid>
                           <Column lg={7}>
                             <TextInput
-                              key={`text-opt-0-${index}`}
+                              key={`text-label-${index}`}
                               className="mapping-text-field"
-                              id={`option-${index}`}
+                              id={`option-label-${index}`}
                               value={option?.label}
                               placeholder={`Label-${index}`}
                               onChange={(e) => handleOptionChange(index, e.target.value, 'label')}
                             />
                             <Button
-                              key={`text-map-0-${index}`}
+                              key={`text-map-${index}`}
                               size="md"
                               className="mapping-button"
                               kind="secondary"
@@ -656,15 +670,15 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           </Column>
                           <Column lg={7}>
                             <TextInput
-                              key={`text-opt-1-${index}`}
+                              key={`text-value-${index}`}
                               className="mapping-text-field"
-                              id={`option-${index}`}
+                              id={`option-value-${index}`}
                               value={option?.value}
                               placeholder={`Value-${index}`}
                               onChange={(e) => handleOptionChange(index, e.target.value, 'value')}
                             />
                             <Button
-                              key={`text-map-1-${index}`}
+                              key={`text-value-${index}`}
                               size="md"
                               className="mapping-button"
                               kind="secondary"
@@ -675,9 +689,9 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           {/* Check if options length is greater than 1 before displaying delete icon */}
                           {options.length > 1 && (
                             <Column lg={2}>
-                            <span className="delete-icon icon-margin">
-                              <TrashCan onClick={() => handleDeleteOption(index)} />
-                            </span>
+                              <span className="delete-icon icon-margin">
+                                <TrashCan onClick={() => handleDeleteOption(index)} />
+                              </span>
                             </Column>
                           )}
                         </Grid>
@@ -782,7 +796,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           {/* Regex Validation */}
                           {advncProps.type === OPTIONS && (
                             <>
-                              <Column lg={16}>
+                              <Column className="regx-opt" lg={advncProps.propsPanelColSize}>
                                 <RadioButtonGroup
                                   legendText="Regex Pattern"
                                   name={`radio-group-${selectedFiledProps?.id}`}
@@ -827,116 +841,115 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                   })}
                                 </Select>
                               </Column> */}
+                              {/* Custom Regex Validation */}
+                              {(advncProps?.value?.customRegex || advncProps?.value?.customRegex === '') && (
+                                <Column lg={16}>
+                                  <TextInput
+                                    key={`customregex-${idx}`}
+                                    id={`customregex-${String(idx)}`}
+                                    className="right-palette-form-item"
+                                    labelText={'Custom Regex'}
+                                    value={advncProps.value.customRegex}
+                                    onChange={(e) => {
+                                      if (isNaN(e.target.value)) {
+                                        e.preventDefault();
+                                        handleSchemaChanges(
+                                          selectedFiledProps?.id,
+                                          'advance',
+                                          advncProps.propsName,
+                                          { pattern: advncProps.value.pattern, value: advncProps.value.value, customRegex: e.target.value, message: advncProps.value.message },
+                                          selectedFiledProps?.currentPathDetail
+                                        );
+                                      } else {
+                                        handleSchemaChanges(
+                                          selectedFiledProps?.id,
+                                          'advance',
+                                          advncProps.propsName,
+                                          { pattern: advncProps.value.pattern, value: advncProps.value.value, customRegex: e.target.value, message: advncProps.value.message },
+                                          selectedFiledProps?.currentPathDetail
+                                        );
+                                      }
+                                    }}
+                                  />
+                                </Column>
+                              )}
+                              {/* Default Regex Error Message */}
                               <Column lg={advncProps.propsPanelColSize}>
                                 <TextInput
                                   key={`${idx}-'message'`}
                                   id={String(`${idx}-message`)}
                                   className="right-palette-form-item"
-                                  labelText={'Regex Message'}
+                                  labelText={'Default Error Message'}
                                   value={advncProps.value.message}
                                   onChange={(e) => {
                                     if (isNaN(e.target.value)) {
                                       e.preventDefault();
                                       advncProps.type === OPTIONS
                                         ? handleSchemaChanges(
-                                          selectedFiledProps?.id,
-                                          'advance',
-                                          advncProps.propsName,
-                                          { ...advncProps.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
-                                          selectedFiledProps?.currentPathDetail
-                                        )
+                                            selectedFiledProps?.id,
+                                            'advance',
+                                            advncProps.propsName,
+                                            { ...advncProps.value, message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value) },
+                                            selectedFiledProps?.currentPathDetail
+                                          )
                                         : handleSchemaChanges(
-                                          selectedFiledProps?.id,
-                                          'advance',
-                                          advncProps.propsName,
-                                          {
-                                            value: advncProps.value.value,
-                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
-                                          },
-                                          selectedFiledProps?.currentPathDetail
-                                        );
+                                            selectedFiledProps?.id,
+                                            'advance',
+                                            advncProps.propsName,
+                                            {
+                                              value: advncProps.value.value,
+                                              message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                            },
+                                            selectedFiledProps?.currentPathDetail
+                                          );
                                     } else {
                                       advncProps.type === OPTIONS
                                         ? handleSchemaChanges(
-                                          selectedFiledProps?.id,
-                                          'advance',
-                                          advncProps.propsName,
-                                          {
-                                            pattern: advncProps.value.pattern,
-                                            value: advncProps.value.value,
-                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
-                                          },
-                                          selectedFiledProps?.currentPathDetail
-                                        )
+                                            selectedFiledProps?.id,
+                                            'advance',
+                                            advncProps.propsName,
+                                            {
+                                              pattern: advncProps.value.pattern,
+                                              value: advncProps.value.value,
+                                              message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                            },
+                                            selectedFiledProps?.currentPathDetail
+                                          )
                                         : handleSchemaChanges(
-                                          selectedFiledProps?.id,
-                                          'advance',
-                                          advncProps.propsName,
-                                          {
-                                            value: advncProps.value.value,
-                                            message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
-                                          },
-                                          selectedFiledProps?.currentPathDetail
-                                        );
+                                            selectedFiledProps?.id,
+                                            'advance',
+                                            advncProps.propsName,
+                                            {
+                                              value: advncProps.value.value,
+                                              message: getValidationMessage(selectedFiledProps?.component?.label, advncProps.propsName, e.target.value)
+                                            },
+                                            selectedFiledProps?.currentPathDetail
+                                          );
                                     }
                                   }}
                                 />
                               </Column>
                             </>
                           )}
-                          {/* Custom Regex Validation */}
-                          {(advncProps?.value?.customRegex || advncProps?.value?.customRegex === '') && (
-                            <Column lg={16}>
-                              <TextInput
-                                key={`customregex-${idx}`}
-                                id={`customregex-${String(idx)}`}
-                                className="right-palette-form-item"
-                                labelText={'Custom Regex'}
-                                value={advncProps.value.customRegex}
-                                onChange={(e) => {
-                                  if (isNaN(e.target.value)) {
-                                    e.preventDefault();
-                                    handleSchemaChanges(
-                                      selectedFiledProps?.id,
-                                      'advance',
-                                      advncProps.propsName,
-                                      { pattern: advncProps.value.pattern, value: advncProps.value.value, customRegex: e.target.value, message: advncProps.value.message },
-                                      selectedFiledProps?.currentPathDetail
-                                    );
-                                  } else {
-                                    handleSchemaChanges(
-                                      selectedFiledProps?.id,
-                                      'advance',
-                                      advncProps.propsName,
-                                      { pattern: advncProps.value.pattern, value: advncProps.value.value, customRegex: e.target.value, message: advncProps.value.message },
-                                      selectedFiledProps?.currentPathDetail
-                                    );
-                                  }
-                                }}
-                              />
-                            </Column>
-                          )}
                           {/* Min Date and Max Date*/}
-
                           {advncProps.type === 'Date' && (
                             <Column lg={advncProps.propsPanelColSize} className="right-palette-form-item">
-                              <DatePicker datePickerType="single" onChange={(e) => {
-                                handleSchemaChanges(
-                                  selectedFiledProps?.id,
-                                  'advance',
-                                  advncProps.propsName,
-                                  {
-                                    value: e[0],
-                                    message: ''
-                                  },
-                                  selectedFiledProps?.currentPathDetail
-                                )
-                              }}>
-                                <DatePickerInput
-                                  id="date-picker-single"
-                                  labelText={advncProps?.label}
-                                  placeholder="mm/dd/yyyy"
-                                />
+                              <DatePicker
+                                datePickerType="single"
+                                onChange={(e) => {
+                                  handleSchemaChanges(
+                                    selectedFiledProps?.id,
+                                    'advance',
+                                    advncProps.propsName,
+                                    {
+                                      value: e[0],
+                                      message: ''
+                                    },
+                                    selectedFiledProps?.currentPathDetail
+                                  );
+                                }}
+                              >
+                                <DatePickerInput id="date-picker-single" labelText={advncProps?.label} placeholder="mm/dd/yyyy" />
                               </DatePicker>
                             </Column>
                           )}

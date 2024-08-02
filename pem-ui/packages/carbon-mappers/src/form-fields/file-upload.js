@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FileUploaderDropContainer, FileUploaderItem } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTyps, maxFileSize, Id, helperText, extensions, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTypeFiles, maxFileSize, Id, helperText, extensions, labelText } from '../constant';
 import { FileUploadIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.FILE_UPLOADER;
@@ -136,7 +136,7 @@ FileUploader.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <FileUploadIcon />,
   editableProps: {
-    Basic: [elementTyps, Id, labelText, helperText, maxFileSize, extensions],
+    Basic: [elementTypeFiles, Id, labelText, helperText, maxFileSize, extensions],
     Condition: []
   },
   advanceProps: []

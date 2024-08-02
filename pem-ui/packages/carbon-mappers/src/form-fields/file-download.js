@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTyps, fileUploader, decodeBase64, Id, helperText, buttonLabel, isRequired, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTypeFiles, fileUploader, decodeBase64, Id, helperText, buttonLabel, isRequired, labelText } from '../constant';
 import { FileDownloadIcon } from './../icons';
 import { Button } from '@carbon/react';
 import './../style.scss';
@@ -30,7 +30,7 @@ FileDownload.config = {
     group: FORM_FIELD_GROUPS.BASIC_INPUT,
     icon: <FileDownloadIcon />,
     editableProps: {
-        Basic: [elementTyps, Id, labelText, helperText, buttonLabel, fileUploader],
+        Basic: [elementTypeFiles, Id, labelText, helperText, buttonLabel, fileUploader],
         Condition: []
     },
     advanceProps: [isRequired]

@@ -562,12 +562,15 @@ export const defaultProps = (item) => {
       item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` };
       break;
     case 'Textarea':
-      item.component.height = {'label': 1, 'value': 1}; 
+      item.component.height = 1; 
       item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` };
       break;
     case 'File Upload':
       item.component.maxFileSize = '100kb';  
       break;
+    case 'Date':
+      item.component.dateFormat = 'm/d/Y';  
+      break;  
     case 'Number':
       item.component.max = { value: '20', message: `${item.component.label} value should be between 0 - 20.` };
       item.component.min = { value: '0', message: `${item.component.label} value should be between 0 - 20.` };

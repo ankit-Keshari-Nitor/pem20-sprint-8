@@ -449,6 +449,7 @@ export const dateFormat = {
   label: 'Date Format',
   propsName: 'dateFormat',
   propsPanelColSize: 8,
+  value: 'mm/dd/yyyy',
   options: [
     { label: 'mm/dd/yyyy', value: 'm/d/Y' },
     { label: 'dd/mm/yyyy', value: 'd/m/Y' },
@@ -468,6 +469,7 @@ export const textAreaHeight = {
   propsName: 'height',
   label: 'Default Height (in lines)',
   type: 'DropDown',
+  value: '1',
   options: [
     { label: '1', value: '1' },
     { label: '2', value: '2' },

@@ -178,7 +178,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
 
   const handleComponentTypeChange = (e) => {
     const newComponent = componentTypes.filter((items) => items.component.type === e.target.value)[0];
-    replaceComponet(e, selectedFiledProps.currentPathDetail, newComponent);
+    replaceComponet(e, selectedFiledProps.currentPathDetail, newComponent, selectedFiledProps.id);
     setComponentType(e.target.value);
   };
 
@@ -471,8 +471,23 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     )}
                                     {/* DropDown */}
                                     {item.type === DROPDOWN && (
-                                      <Column lg={item.propsPanelColSize ? item.propsPanelColSize : 16} className="right-palette-form-item">
-                                        <Dropdown
+                                      <Column lg={item.propsPanelColSize ? item.propsPanelColSize : 16}>
+                                        <Select
+                                          className="right-palette-form-item"
+                                          id={String(selectedFiledProps.id)}
+                                          labelText={item.label}
+                                          onChange={(e) =>
+                                            //console.log("selectedItem>>>",e)
+                                            handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value, selectedFiledProps?.currentPathDetail)
+                                          }
+                                          defaultValue={item.value}
+                                          value={item.value}
+                                        >
+                                          {item.options.map((fieldName, index) => {
+                                            return <SelectItem key={index} value={fieldName.value} text={fieldName.label} />;
+                                          })}
+                                        </Select>
+                                        {/* <Dropdown
                                           id={item.propsName}
                                           items={item.options}
                                           selectedItem={item.value}
@@ -480,7 +495,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                           onChange={({ selectedItem }) =>
                                             handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, selectedItem, selectedFiledProps?.currentPathDetail)
                                           }
-                                        />
+                                        /> */}
                                       </Column>
                                     )}
                                     {/* File Uploader */}

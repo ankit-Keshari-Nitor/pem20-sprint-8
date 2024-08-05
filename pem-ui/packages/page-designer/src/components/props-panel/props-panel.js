@@ -178,7 +178,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
 
   const handleComponentTypeChange = (e) => {
     const newComponent = componentTypes.filter((items) => items.component.type === e.target.value)[0];
-    replaceComponet(e, selectedFiledProps.currentPathDetail, newComponent);
+    replaceComponet(e, selectedFiledProps.currentPathDetail, newComponent, selectedFiledProps.id);
     setComponentType(e.target.value);
   };
 
@@ -471,8 +471,23 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     )}
                                     {/* DropDown */}
                                     {item.type === DROPDOWN && (
-                                      <Column lg={item.propsPanelColSize ? item.propsPanelColSize : 16} className="right-palette-form-item">
-                                        <Dropdown
+                                      <Column lg={item.propsPanelColSize ? item.propsPanelColSize : 16}>
+                                        <Select
+                                          className="right-palette-form-item"
+                                          id={String(selectedFiledProps.id)}
+                                          labelText={item.label}
+                                          onChange={(e) =>
+                                            //console.log("selectedItem>>>",e)
+                                            handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value, selectedFiledProps?.currentPathDetail)
+                                          }
+                                          defaultValue={item.value}
+                                          value={item.value}
+                                        >
+                                          {item.options.map((fieldName, index) => {
+                                            return <SelectItem key={index} value={fieldName.value} text={fieldName.label} />;
+                                          })}
+                                        </Select>
+                                        {/* <Dropdown
                                           id={item.propsName}
                                           items={item.options}
                                           selectedItem={item.value}
@@ -480,7 +495,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                           onChange={({ selectedItem }) =>
                                             handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, selectedItem, selectedFiledProps?.currentPathDetail)
                                           }
-                                        />
+                                        /> */}
                                       </Column>
                                     )}
                                     {/* File Uploader */}
@@ -754,7 +769,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                         <>
                           {/* Min - Max validation */}
                           {advncProps.type === 'TextInput' && (
-                            <Column lg={advncProps.propsPanelColSize}>
+                            <Column className='min-max' lg={advncProps.propsPanelColSize}>
                               <TextInput
                                 key={`${selectedFiledProps?.id}-${idx}`}
                                 id={String(`${selectedFiledProps?.id}-${idx}`)}
@@ -798,7 +813,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                             <>
                               <Column className="regx-opt" lg={advncProps.propsPanelColSize}>
                                 <RadioButtonGroup
-                                  legendText="Regex Pattern"
+                                  legendText={advncProps.label}
                                   name={`radio-group-${selectedFiledProps?.id}`}
                                   valueSelected={advncProps.value.value}
                                   orientation="vertical"
@@ -879,7 +894,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                   key={`${idx}-'message'`}
                                   id={String(`${idx}-message`)}
                                   className="right-palette-form-item"
-                                  labelText={'Default Error Message'}
+                                  labelText={advncProps?.value?.customRegex !== '' ? 'Default Error Message' : 'Custom Error Message'}
                                   value={advncProps.value.message}
                                   onChange={(e) => {
                                     if (isNaN(e.target.value)) {

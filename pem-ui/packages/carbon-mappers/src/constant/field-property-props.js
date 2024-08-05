@@ -2,7 +2,7 @@ import { FORM_FIELD_TYPE } from './form-field-type';
 
 export const labelText = {
   propsName: 'labelText',
-  label: 'Label (required)',
+  label: 'Label',
   value: 'Label Text',
   placeholder: 'Enter Text',
   type: 'TextInput',
@@ -35,7 +35,7 @@ export const helperText = {
   value: '',
   placeholder: 'Enter text',
   type: 'TextInput',
-  propsPanelColSize: 8
+  propsPanelColSize: 16
 };
 
 export const hrefText = {
@@ -117,7 +117,7 @@ export const labelB = {
 
 export const Id = {
   propsName: 'name',
-  label: 'ID (required)',
+  label: 'ID',
   value: '',
   type: 'TextInput',
   invalid: false,
@@ -131,12 +131,12 @@ export const placeHolder = {
   value: '',
   placeholder: 'Enter text',
   type: 'TextInput',
-  propsPanelColSize: 8
+  propsPanelColSize: 16
 };
 
 export const valueLabel = {
-  propsName: 'valueLabel',
-  label: 'Value (required)',
+  propsName: 'value',
+  label: 'Value',
   value: '',
   placeholder: 'Enter Value',
   type: 'TextInput',
@@ -145,7 +145,7 @@ export const valueLabel = {
 
 export const regexValidation = {
   propsName: 'regexValidation',
-  label: 'Regex',
+  label: 'Regex Pattern',
   items: [
     {
       label: 'None',
@@ -186,13 +186,35 @@ export const regexValidation = {
   propsPanelColSize: 16
 };
 
+export const regexValidationforPassword = {
+  propsName: 'regexValidation',
+  label: 'Regex Pattern',
+  items: [
+    {
+      label: 'None',
+      value: ''
+    },
+    {
+      label: 'Custom',
+      value: 'customRegex'
+    }
+  ],
+  value: {
+    pattern: '',
+    value: '',
+    message: ''
+  },
+  type: 'Options',
+  propsPanelColSize: 16
+};
+
 export const mapping = {
   propsName: 'mapping',
   label: 'Mapping',
   value: '',
   placeholder: 'Enter text',
   type: 'mapping',
-  propsPanelColSize: 8
+  propsPanelColSize: 16
 };
 
 export const orientation = {
@@ -427,6 +449,7 @@ export const dateFormat = {
   label: 'Date Format',
   propsName: 'dateFormat',
   propsPanelColSize: 8,
+  value: 'mm/dd/yyyy',
   options: [
     { label: 'mm/dd/yyyy', value: 'm/d/Y' },
     { label: 'dd/mm/yyyy', value: 'd/m/Y' },
@@ -439,5 +462,20 @@ export const dateValue = {
   propsName: 'dateValue',
   label: 'Value',
   value: '',
+  propsPanelColSize: 8
+};
+
+export const textAreaHeight = {
+  propsName: 'height',
+  label: 'Default Height (in lines)',
+  type: 'DropDown',
+  value: '1',
+  options: [
+    { label: '1', value: '1' },
+    { label: '2', value: '2' },
+    { label: '3', value: '3' },
+    { label: '4', value: '4' },
+    { label: '5', value: '5' },
+  ],
   propsPanelColSize: 8
 };

@@ -12,7 +12,9 @@ import {
   FORM_FIELD_GROUPS,
   isRequired,
   labelText,
-  elementTypeTextFields
+  elementTypeTextFields,
+  valueLabel,
+  mapping
 } from '../constant';
 import { CharacterWholeNumber } from '@carbon/icons-react';
 
@@ -61,7 +63,7 @@ NumberInput.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <CharacterWholeNumber />,
   editableProps: {
-    Basic: [elementTypeTextFields, Id, labelText, readOnly, isRequired, placeHolder, helperText],
+    Basic: [elementTypeTextFields, Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
     Condition: []
   },
   advanceProps: [minProps, maxProps]

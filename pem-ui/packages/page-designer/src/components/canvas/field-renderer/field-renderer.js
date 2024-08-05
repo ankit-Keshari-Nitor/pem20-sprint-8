@@ -64,7 +64,7 @@ const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onF
           <Column lg={NewcolSize <= 0 ? 16 : NewcolSize}> {formFieldData}</Column>
           <Column lg={1}>
             <span className="delete-icon">
-              <TrashCan onClick={(e) => onFieldDelete(e, path)} />
+              <TrashCan onClick={(e) => onFieldDelete(e, path, data.id)} />
             </span>
           </Column>
         </Grid>

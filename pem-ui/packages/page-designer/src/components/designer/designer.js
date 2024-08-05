@@ -97,7 +97,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           type: COMPONENT,
           component: { ...item.component, id: newComponent.id, name: 'form-control-' + newComponent.id.substring(0, 2), labelText: item.component.label }
         };
-        setComponentsNames((preState) => [...preState, { id: newItem.id, name: newItem.id }]);
+        setComponentsNames((preState) => [...preState, { id: newItem.id, name: 'form-control-' + newItem.id.substring(0, 2) }]);
         setLayout(handleMoveSidebarComponentIntoParent(layout, splitDropZonePath, newItem));
         return;
       }
@@ -315,16 +315,17 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
       }
     }
   };
-
-  const onFieldDelete = (e, path) => {
+  const onFieldDelete = (e, path, deletedElement) => {
     e.stopPropagation();
     setDeletedFieldPath(path);
     const splitDropZonePath = path.split('-');
     setLayout(handleRemoveItemFromLayout(layout, splitDropZonePath));
+    const newElements = componentsNames.filter((item) => item.id !== deletedElement);
+    setComponentsNames(newElements);
     setSelectedFiledProps();
   };
 
-  const replaceComponet = (e, path, newItem) => {
+  const replaceComponet = (e, path, newItem, oldElementId) => {
     e.stopPropagation();
     setDeletedFieldPath(path);
     defaultProps(newItem);
@@ -338,6 +339,8 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
     };
     const updatedLayout = handleMoveSidebarComponentIntoParent(oldLayout, splitDropZonePath, newFormField);
     setLayout(updatedLayout);
+    const newElements = componentsNames.filter((item) => item.id !== oldElementId);
+    setComponentsNames([...newElements, { id: newItemId, name: 'form-control-' + newItemId.substring(0, 2) }]);
     onFieldSelect(e, newFormField, path, newFormField);
   };
 
@@ -366,12 +369,12 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             <span className="header-title">{activityDefinitionData && Object.keys(activityDefinitionData).length > 0 ? activityDefinitionData.name : 'New Form Builder'}</span>
           </Column>
           <Column lg={12} className="buttons-container">
-            {/*  <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
+             <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
               View Schema
             </Button>
             <Button kind="secondary" className="cancelButton" onClick={() => setOpenPreview(true)}>
               Preview
-            </Button> */}
+            </Button>
             <span onClick={() => setOpenPreview(true)} className="cross-icon" style={{ marginRight: '16px' }}>
               <View size={30} />
             </span>

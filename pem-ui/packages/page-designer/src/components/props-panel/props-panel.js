@@ -754,7 +754,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                         <>
                           {/* Min - Max validation */}
                           {advncProps.type === 'TextInput' && (
-                            <Column lg={advncProps.propsPanelColSize}>
+                            <Column className='min-max' lg={advncProps.propsPanelColSize}>
                               <TextInput
                                 key={`${selectedFiledProps?.id}-${idx}`}
                                 id={String(`${selectedFiledProps?.id}-${idx}`)}
@@ -798,7 +798,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                             <>
                               <Column className="regx-opt" lg={advncProps.propsPanelColSize}>
                                 <RadioButtonGroup
-                                  legendText="Regex Pattern"
+                                  legendText={advncProps.label}
                                   name={`radio-group-${selectedFiledProps?.id}`}
                                   valueSelected={advncProps.value.value}
                                   orientation="vertical"
@@ -879,7 +879,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                   key={`${idx}-'message'`}
                                   id={String(`${idx}-message`)}
                                   className="right-palette-form-item"
-                                  labelText={'Default Error Message'}
+                                  labelText={advncProps?.value?.customRegex !== '' ? 'Default Error Message' : 'Custom Error Message'}
                                   value={advncProps.value.message}
                                   onChange={(e) => {
                                     if (isNaN(e.target.value)) {

@@ -17,6 +17,7 @@ import {
   regexValidation,
   height,
   elementTypeTextFields,
+  textAreaHeight,
 } from '../constant';
 import { TextAreaIcon } from '../icons';
 
@@ -31,11 +32,10 @@ const TextArea = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
       setFieldValue(value ? value : valueLabel);
     }
   }, [field, previewMode, value]);
-
   return (
     <CarbonTextArea
       id={id}
-      rows={String(height)}
+      rows={String(height?.value)}
       data-testid={id}
       labelText={labelText === undefined ? label : labelText}
       defaultValue={valueLabel}
@@ -60,7 +60,7 @@ TextArea.config = {
   icon: <TextAreaIcon />,
   editableProps: {
     //Basic: [id, NameLabel, labelText, placeHolder, helperText, height, valueLabel, mapping, readOnly],
-    Basic: [elementTypeTextFields, Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
+    Basic: [elementTypeTextFields, Id, labelText, readOnly, isRequired, textAreaHeight, valueLabel, placeHolder, helperText, mapping],
     Condition: []
   },
   advanceProps: [minProps, maxProps, regexValidation]

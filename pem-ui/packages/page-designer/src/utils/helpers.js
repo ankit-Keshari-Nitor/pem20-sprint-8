@@ -562,7 +562,7 @@ export const defaultProps = (item) => {
       item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` };
       break;
     case 'Textarea':
-      item.component.height = '1'; 
+      item.component.height = {'label': 1, 'value': 1}; 
       item.component.max = { value: '20', message: `${item.component.label} must be no longer than 20 characters.` };
       break;
     case 'File Upload':

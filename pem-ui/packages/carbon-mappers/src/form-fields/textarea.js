@@ -16,7 +16,7 @@ import {
   labelText,
   regexValidation,
   height,
-  elementTyps,
+  elementTypeTextFields,
 } from '../constant';
 import { TextAreaIcon } from '../icons';
 
@@ -60,7 +60,7 @@ TextArea.config = {
   icon: <TextAreaIcon />,
   editableProps: {
     //Basic: [id, NameLabel, labelText, placeHolder, helperText, height, valueLabel, mapping, readOnly],
-    Basic: [elementTyps, Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
+    Basic: [elementTypeTextFields, Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
     Condition: []
   },
   advanceProps: [minProps, maxProps, regexValidation]

@@ -71,6 +71,9 @@ const WorkFlowDesigner = forwardRef(
     const [dialogFlowInstance, setDialogFlowInstance] = useState(null);
     const [selectedDialogNode, setSelectedDialogNode] = useState(null);
 
+    // -------------------------------- Form Layout --------------------------------------------
+    const [formFields, setFormFields] = useState();
+
     const handleRest = () => {
       store.reset();
     };
@@ -198,8 +201,10 @@ const WorkFlowDesigner = forwardRef(
           }
           return copyNode;
         });
+        const formData = node.data.form.length ? JSON.parse(node.data.form).fields : [] ;
         setDialogNodes([...copyNodes]);
         setSelectedDialogNode(node);
+        setFormFields(formData);
         setOpenDialogPropertiesBlock(true);
       }
     };
@@ -310,21 +315,21 @@ const WorkFlowDesigner = forwardRef(
       setIsDialogFlowActive(false);
       setIsPageDesignerActive(false);
     };
-
     // Save temporary Form data to Session Storage
     const saveFormDesignerData = (layout) => {
-      const formDesignerSessionData = JSON.parse(sessionStorage.getItem('formDesignerSessionData'));
-      const newDialog = {
-        key: 'dialog-1',
-        name: 'Dialog',
-        schema: { fields: [...layout] }
-      };
-      if (formDesignerSessionData) {
-        formDesignerSessionData.unshift(newDialog);
-        sessionStorage.setItem('formDesignerSessionData', JSON.stringify(formDesignerSessionData));
-      } else {
-        sessionStorage.setItem('formDesignerSessionData', JSON.stringify([newDialog]));
-      }
+      store.addFormLayout(selectedTaskNode, selectedDialogNode, layout);
+      // const formDesignerSessionData = JSON.parse(sessionStorage.getItem('formDesignerSessionData'));
+      // const newDialog = {
+      //   key: 'dialog-1',
+      //   name: 'Dialog',
+      //   schema: { fields: [...layout] }
+      // };
+      // if (formDesignerSessionData) {
+      //   formDesignerSessionData.unshift(newDialog);
+      //   sessionStorage.setItem('formDesignerSessionData', JSON.stringify(formDesignerSessionData));
+      // } else {
+      //   sessionStorage.setItem('formDesignerSessionData', JSON.stringify([newDialog]));
+      // }
     };
 
     return (
@@ -336,6 +341,7 @@ const WorkFlowDesigner = forwardRef(
               onClickPageDesignerBack={onClickPageDesignerBack}
               activityDefinitionData={activityDefinitionData}
               saveFormDesignerData={saveFormDesignerData}
+              formFields={formFields}
             />
           </DndProvider>
         ) : (

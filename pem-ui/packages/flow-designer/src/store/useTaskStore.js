@@ -113,6 +113,28 @@ const taskStore = (set, get) => ({
     });
   },
 
+  addFormLayout: (taskNode, dialogNode, formLayout) => {
+    set((state) => {
+      const copyNodes = state.tasks.nodes;
+      copyNodes.map((copyNode) => {
+        if (taskNode.id === copyNode.id) {
+          const {
+            data: { dialogNodes }
+          } = copyNode;
+          dialogNodes?.map((dialogNodeData) => {
+            if (dialogNodeData.id === dialogNode.id) {
+              dialogNodeData.data['form'] = JSON.stringify({fields: formLayout});
+            }
+            return dialogNodeData;
+          });
+          //return { ...rest, data: { ...restdata, dialogNodes: updatedDialogNodeData } };
+        }
+        return copyNode;
+      });
+      return { tasks: { nodes: copyNodes, edges: state.tasks.edges } };
+    });
+  },
+
   reset: () => {
     set({
       tasks: {

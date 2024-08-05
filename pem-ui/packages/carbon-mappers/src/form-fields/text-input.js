@@ -14,7 +14,7 @@ import {
   valueLabel,
   Id,
   regexValidation,
-  elementTyps,
+  elementTypeTextFields,
   mapping
 } from '../constant';
 import { TextInputIcon } from './../icons';
@@ -60,7 +60,7 @@ TextInput.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <TextInputIcon />,
   editableProps: {
-    Basic: [elementTyps, Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
+    Basic: [elementTypeTextFields, Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
     Condition: []
   },
   advanceProps: [minProps, maxProps, regexValidation]

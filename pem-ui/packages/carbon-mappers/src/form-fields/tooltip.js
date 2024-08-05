@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tooltip as CarbonTooltip } from '@carbon/react';
 import { Information } from '@carbon/icons-react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTyps, labelText, Id } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTypeHelpInfo, labelText, Id } from '../constant';
 import { Info } from './../icons';
 
 const type = FORM_FIELD_TYPE.INFO;
@@ -25,7 +25,7 @@ Tooltip.config = {
   group: FORM_FIELD_GROUPS.ACTION,
   icon: <Info />,
   editableProps: {
-    Basic: [elementTyps, Id, labelText],
+    Basic: [elementTypeHelpInfo, Id, labelText],
     Condition: []
   },
   advanceProps: []

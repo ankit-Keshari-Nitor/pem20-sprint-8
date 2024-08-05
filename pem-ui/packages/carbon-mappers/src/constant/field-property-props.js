@@ -1,10 +1,12 @@
+import { FORM_FIELD_TYPE } from './form-field-type';
+
 export const labelText = {
   propsName: 'labelText',
   label: 'Label (required)',
   value: 'Label Text',
   placeholder: 'Enter Text',
   type: 'TextInput',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const isDisabled = {
@@ -24,7 +26,7 @@ export const isRequired = {
   type: 'Toggle',
   labelA: 'No',
   labelB: 'Yes',
-  propsPanelColSize: 3,
+  propsPanelColSize: 3
 };
 
 export const helperText = {
@@ -33,7 +35,7 @@ export const helperText = {
   value: '',
   placeholder: 'Enter text',
   type: 'TextInput',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const hrefText = {
@@ -42,7 +44,7 @@ export const hrefText = {
   value: '',
   type: 'TextInput',
   placeholder: 'https://',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const readOnly = {
@@ -52,7 +54,7 @@ export const readOnly = {
   type: 'Toggle',
   labelA: 'No',
   labelB: 'Yes',
-  propsPanelColSize: 3,
+  propsPanelColSize: 3
 };
 
 export const minProps = {
@@ -66,7 +68,7 @@ export const minProps = {
   invalid: false,
   invalidText: 'Only Numbers are allowed',
   regexPattern: /^[0-9]+$/,
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const maxProps = {
@@ -80,7 +82,7 @@ export const maxProps = {
   invalid: false,
   invalidText: 'Only Numbers are allowed',
   regexPattern: /^[0-9]+$/,
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 // New constant for Options type
@@ -102,7 +104,7 @@ export const labelA = {
   label: 'False Text',
   value: 'Yes',
   type: 'TextInput',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const labelB = {
@@ -110,7 +112,7 @@ export const labelB = {
   label: 'True Text',
   value: 'No',
   type: 'TextInput',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const Id = {
@@ -120,7 +122,7 @@ export const Id = {
   type: 'TextInput',
   invalid: false,
   invalidText: 'Id should be unique',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const placeHolder = {
@@ -129,7 +131,7 @@ export const placeHolder = {
   value: '',
   placeholder: 'Enter text',
   type: 'TextInput',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const valueLabel = {
@@ -138,7 +140,7 @@ export const valueLabel = {
   value: '',
   placeholder: 'Enter Value',
   type: 'TextInput',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const regexValidation = {
@@ -181,7 +183,7 @@ export const regexValidation = {
     message: ''
   },
   type: 'Options',
-  propsPanelColSize: 16,
+  propsPanelColSize: 16
 };
 
 export const mapping = {
@@ -190,7 +192,7 @@ export const mapping = {
   value: '',
   placeholder: 'Enter text',
   type: 'mapping',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const orientation = {
@@ -201,7 +203,7 @@ export const orientation = {
     { label: 'Horizontal', value: 'horizontal' }
   ],
   type: 'radio',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const height = {
@@ -209,15 +211,71 @@ export const height = {
   label: 'Height',
   value: '1',
   type: 'TextInput',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
-export const elementTyps = {
-  propsName: 'elementTyps',
-  label: 'Element Typs',
-  value: '',
+export const elementTypeTextFields = {
+  propsName: 'elementType',
+  label: 'Element Type',
+  value: [FORM_FIELD_TYPE.TEXT_INPUT, FORM_FIELD_TYPE.TEXT_AREA, FORM_FIELD_TYPE.PASSWORD, FORM_FIELD_TYPE.DATEPICKER, FORM_FIELD_TYPE.NUMBER],
   type: 'select',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
+};
+
+export const elementTypeHelpInfo = {
+  propsName: 'elementType',
+  label: 'Element Type',
+  value: [FORM_FIELD_TYPE.INFO],
+  type: 'select',
+  propsPanelColSize: 8
+};
+
+export const elementTypeFiles = {
+  propsName: 'elementType',
+  label: 'Element Type',
+  value: [FORM_FIELD_TYPE.FILE_UPLOADER, FORM_FIELD_TYPE.FILE_DOWNLOADER],
+  type: 'select',
+  propsPanelColSize: 8
+};
+
+export const elementTypeLink = {
+  propsName: 'elementType',
+  label: 'Element Type',
+  value: [FORM_FIELD_TYPE.LINK],
+  type: 'select',
+  propsPanelColSize: 8
+};
+
+export const elementTypeToggle = {
+  propsName: 'elementType',
+  label: 'Element Type',
+  value: [FORM_FIELD_TYPE.TOGGLE],
+  type: 'select',
+  propsPanelColSize: 8
+};
+
+export const elementTypeGroup = {
+  propsName: 'elementType',
+  label: 'Element Type',
+  value: [FORM_FIELD_TYPE.SELECT, FORM_FIELD_TYPE.RADIOGROUP, FORM_FIELD_TYPE.CHECKBOXGROUP],
+  type: 'select',
+  propsPanelColSize: 8
+};
+
+export const elementTypeLabel = {
+  propsName: 'elementType',
+  label: 'Element Type',
+  value: [FORM_FIELD_TYPE.TEXT],
+  type: 'select',
+  propsPanelColSize: 8
+};
+
+export const elementTypeDataTable = {
+  propsName: 'elementType',
+  label: 'Element Type',
+  value: [FORM_FIELD_TYPE.DATATABLE],
+  type: 'select',
+  propsPanelColSize: 8
 };
 
 export const tableColumn = {
@@ -225,7 +283,7 @@ export const tableColumn = {
   label: 'Column Header',
   value: [],
   type: 'TextInput',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const tableRows = {
@@ -233,7 +291,7 @@ export const tableRows = {
   label: 'Table Rows',
   value: [],
   type: 'TextInput',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const selectRow = {
@@ -242,7 +300,8 @@ export const selectRow = {
   value: false,
   type: 'Toggle',
   labelA: 'No',
-  labelB: 'Yes'
+  labelB: 'Yes',
+  propsPanelColSize: 8
 };
 
 export const pageSize = {
@@ -250,7 +309,7 @@ export const pageSize = {
   label: 'Page Size',
   value: '',
   type: 'TextInput',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const buttonLabel = {
@@ -258,7 +317,7 @@ export const buttonLabel = {
   label: 'Button Label',
   value: '',
   type: 'TextInput',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const fileUploader = {
@@ -266,7 +325,7 @@ export const fileUploader = {
   label: 'File Upload',
   value: '',
   type: 'FileUpload'
-}
+};
 
 export const mulitipleAllow = {
   propsName: 'mulitipleAllow',
@@ -284,7 +343,7 @@ export const decodeBase64 = {
   type: 'Toggle',
   labelA: 'No',
   labelB: 'Yes'
-}
+};
 
 export const extensions = {
   propsName: 'extensions',
@@ -293,7 +352,7 @@ export const extensions = {
   invalid: false,
   invalidText: 'Only comma separated values are allowed',
   regexPattern: /^[a-zA-Z0-9,]+$/,
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const maxFileSize = {
@@ -304,8 +363,8 @@ export const maxFileSize = {
   invalid: false,
   invalidText: "Invalid size format. Use format like '500b', '500kb', or '500mb'.",
   regexPattern: /(\d+(\.\d+)?)(b|kb|mb)/i,
-  propsPanelColSize: 8,
-}
+  propsPanelColSize: 8
+};
 
 export const fontSize = {
   propsName: 'fontSize',
@@ -328,16 +387,16 @@ export const fontSize = {
     { label: '30px', value: '30px' },
     { label: '32px', value: '32px' },
     { label: '34px', value: '34px' },
-    { label: '36px', value: '36px' },
-  ],
-}
+    { label: '36px', value: '36px' }
+  ]
+};
 
 export const addTab = {
   propsName: 'addTabBtn',
   label: 'Add Tab',
   value: '',
   type: 'Button',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const addColumnInGroup = {
@@ -345,7 +404,7 @@ export const addColumnInGroup = {
   label: 'Add Column',
   value: '',
   type: 'Button',
-  propsPanelColSize: 8,
+  propsPanelColSize: 8
 };
 
 export const minDate = {
@@ -354,7 +413,7 @@ export const minDate = {
   label: 'Min Date',
   value: '',
   propsPanelColSize: 8
-}
+};
 
 export const maxDate = {
   type: 'Date',
@@ -362,7 +421,7 @@ export const maxDate = {
   label: 'Max Date',
   value: '',
   propsPanelColSize: 8
-}
+};
 export const dateFormat = {
   type: 'DropDown',
   label: 'Date Format',
@@ -371,14 +430,14 @@ export const dateFormat = {
   options: [
     { label: 'mm/dd/yyyy', value: 'm/d/Y' },
     { label: 'dd/mm/yyyy', value: 'd/m/Y' },
-    { label: 'MMM,D,Y', value: 'M,d,Y' },
+    { label: 'MMM,D,Y', value: 'M,d,Y' }
   ]
-}
+};
 
 export const dateValue = {
   type: 'Date',
   propsName: 'dateValue',
   label: 'Value',
   value: '',
-  propsPanelColSize: 8,
-}
+  propsPanelColSize: 8
+};

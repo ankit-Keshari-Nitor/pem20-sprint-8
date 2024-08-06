@@ -44,7 +44,7 @@ export const getNodeSpecificDataObj = (node) => {
         estimateDays: node.data.editableProps?.estimate_days,
         userKeys: '',
         roleKeys: node.data.editableProps?.role,
-        showToPartner: true
+        showToPartner: node.data.editableProps?.showToPartner
       };
     case 'SYSTEM':
       return {
@@ -61,15 +61,20 @@ export const getNodeSpecificDataObj = (node) => {
       return {
         description: node.data.editableProps?.description,
         userKeys: '',
-        roleKeys: '',
+        roleKeys: node.data.editableProps?.role,
         form: {
           key: 'value'
         }
       };
-    case 'ATTRIBUTE':
-    case 'APPROVAL':
     case 'CUSTOM':
-      return {};
+      return {
+        description: node.data.editableProps?.description,
+      };
+      case 'ATTRIBUTE':
+        case 'APPROVAL':
+          return {
+
+          }
     default:
       return {};
   }
@@ -145,8 +150,8 @@ const getStartNode = (node) => {
       borderColor: '#0585FC'
     },
     position: {
-      x: 250,
-      y: 300
+      x: node.diagram.x,
+      y: node.diagram.y
     },
     sourcePosition: 'right'
   };
@@ -160,21 +165,20 @@ const getEndNode = (node) => {
       borderColor: '#0585FC'
     },
     position: {
-      x: 450,
-      y: 300
+      x: node.diagram.x,
+      y: node.diagram.y
     },
     targetPosition: 'left'
   };
 };
 
-export const nodeObjects = (node) => {
-  //console.log(node);
-
-  switch (node.id.toUpperCase()) {
+export const nodeObjects = (node, readOnly) => {
+console.log(node);
+  switch (node.type.toUpperCase()) {
     case 'START':
       return getStartNode(node);
     case 'END':
-      return getEndNode();
+      return getEndNode(node);
     default:
       return {
         id: 'Task_Name_0',
@@ -189,6 +193,8 @@ export const nodeObjects = (node) => {
           borderColor: '#023FB2',
           taskName: 'Partner Task',
           editableProps: {},
+          dialogEdges: [],
+          dialogNodes: [],
           exitValidationQuery: {
             combinator: 'and',
             rules: []
@@ -228,26 +234,28 @@ export const nodeObjects = (node) => {
   }
 };
 
-export const generateActivitySchema = (nodes, edges) => {
+export const generateActivitySchema = (nodes, edges, readOnly) => {
   const newNodes = nodes.map((node) => {
-    return nodeObjects(node);
+    return nodeObjects(node, readOnly);
   });
 
   const newEdges = edges.map((edge) => {
-    return {...edge,type:'crossEdge',
+    return {
+      ...edge,
+      type: 'crossEdge',
 
       markerEnd: {
-                    type: "arrowclosed",
-                    width: 20,
-                    height: 20,
-                    color: "#FF0072"
-                },
-                data: {
-                    readOnly: false
-                },
-                style: {
-                    stroke: "#000"
-                }
+        type: 'arrowclosed',
+        width: 20,
+        height: 20,
+        color: '#FF0072'
+      },
+      data: {
+        readOnly: readOnly
+      },
+      style: {
+        stroke: '#000'
+      }
     };
   });
 

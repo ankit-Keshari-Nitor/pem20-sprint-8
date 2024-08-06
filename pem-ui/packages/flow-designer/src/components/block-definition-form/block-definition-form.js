@@ -7,7 +7,7 @@ import useTaskStore from '../../store';
 import { COMPONENT_MAPPER, FORM_TEMPLATE, INITIAL_QUERY, NODE_TYPE } from '../../constants';
 import ConditionalBuilder from '../condition-builder';
 
-export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode = null, schema, readOnly }) {
+export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode = null, schema, readOnly, setOpenPropertiesBlock }) {
   schema.fields = schema.fields.map((item) => ({ ...item, isReadOnly: readOnly }));
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const editTask = useTaskStore((state) => state.editTaskNodePros);
@@ -29,6 +29,7 @@ export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode
     } else {
       editTask(selectedNode, 'editableProps', values);
     }
+    setOpenPropertiesBlock(false);
   };
 
   const onCancelDefinitionForm = () => {

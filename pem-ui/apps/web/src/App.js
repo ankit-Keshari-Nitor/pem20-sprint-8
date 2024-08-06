@@ -2,7 +2,7 @@ import React from 'react';
 import './App.scss';
 import * as Shell from '@b2bi/shell';
 import { routes as PemRoutes } from './modules/routes';
-import { sidePages as PemSidePages} from './modules/sidePages';
+import { sidePages as PemSidePages } from './modules/sidePages';
 import AppAuthHandler from './AppAuthHandler';
 import AppConfiguration from './AppConfiguration';
 // import { modals as PocModals } from '@b2bi/poc';
@@ -42,27 +42,29 @@ const routes = [
 
 function App() {
   return (
-    <Shell.EnvironmentProvider config={{}}>
-      <Shell.DataServiceProvider>
-        <Shell.ApplicationInfoProvider>
-          <Shell.AuthProvider handler={AppAuthHandler()}>
-            <Shell.ConfigurationProvider locales={Shell.SupportedLocales} locale={'en_US'}>
-              <Shell.ResourceProvider resourceMappings={{}}>
-                <Shell.ModalProvider modals={[...PEMModals]}>
-                  <Shell.SidePageProvider sidePages={[...PemSidePages]}>
-                    <Shell.NotificationProvider>
-                      <AppConfiguration>
-                        <Shell.RouterProvider routes={routes} />
-                      </AppConfiguration>
-                    </Shell.NotificationProvider>
-                  </Shell.SidePageProvider>
-                </Shell.ModalProvider>
-              </Shell.ResourceProvider>
-            </Shell.ConfigurationProvider>
-          </Shell.AuthProvider>
-        </Shell.ApplicationInfoProvider>
-      </Shell.DataServiceProvider>
-    </Shell.EnvironmentProvider>
+    <React.StrictMode>
+      <Shell.EnvironmentProvider config={{}}>
+        <Shell.DataServiceProvider>
+          <Shell.ApplicationInfoProvider>
+            <Shell.AuthProvider handler={AppAuthHandler()}>
+              <Shell.ConfigurationProvider locales={Shell.SupportedLocales} locale={'en_US'}>
+                <Shell.ResourceProvider resourceMappings={{}}>
+                  <Shell.ModalProvider modals={[...PEMModals]}>
+                    <Shell.SidePageProvider sidePages={[...PemSidePages]}>
+                      <Shell.NotificationProvider>
+                        <AppConfiguration>
+                          <Shell.RouterProvider routes={routes} />
+                        </AppConfiguration>
+                      </Shell.NotificationProvider>
+                    </Shell.SidePageProvider>
+                  </Shell.ModalProvider>
+                </Shell.ResourceProvider>
+              </Shell.ConfigurationProvider>
+            </Shell.AuthProvider>
+          </Shell.ApplicationInfoProvider>
+        </Shell.DataServiceProvider>
+      </Shell.EnvironmentProvider>
+    </React.StrictMode>
   );
 }
 

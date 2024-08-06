@@ -5,9 +5,10 @@ import { OverflowMenuVertical } from '@carbon/icons-react';
 import { Popover, PopoverContent } from '@carbon/react';
 
 export default function TaskNode(nodeConfig) {
-  const { borderColor, contextMenu, editableProps, taskName, type } = nodeConfig?.data;
+  const { borderColor, contextMenu, editableProps, taskName, type, onContextMenuClick } = nodeConfig?.data;
   const [openContextMenu, setOpenContextMenu] = useState(false);
 
+  //console.log(onContextMenuClick);
   return (
     <div
       onClick={() => {
@@ -31,7 +32,7 @@ export default function TaskNode(nodeConfig) {
               <ul>
                 {contextMenu.map((x, i) => {
                   return (
-                    <li key={i}>
+                    <li key={i} onClick={() => onContextMenuClick(nodeConfig?.id, x.label)}>
                       <label>{x.label}</label>
                       {i + 1 < contextMenu.length && <hr />}
                     </li>

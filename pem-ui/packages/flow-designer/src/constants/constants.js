@@ -172,7 +172,8 @@ export const NODE_TYPES = [
       { label: 'Save as Template', action: 'savetemplate' }
     ],
     nodeIcon: <SponsorBlockIcon />,
-    category: CATEGORY_TYPES.TASK
+    category: CATEGORY_TYPES.TASK,
+    active: true
   },
   {
     type: NODE_TYPE.CUSTOM,
@@ -205,7 +206,7 @@ export const NODE_TYPES = [
     ],
     nodeIcon: <CustomBlockIcon />,
     category: CATEGORY_TYPES.TASK,
-    active: true
+    active: false
   },
   {
     type: NODE_TYPE.SYSTEM,
@@ -238,7 +239,7 @@ export const NODE_TYPES = [
     ],
     nodeIcon: <SystemBlockIcon />,
     category: CATEGORY_TYPES.TASK,
-    active: true
+    active: false
   },
   {
     type: NODE_TYPE.GATEWAY,
@@ -438,16 +439,33 @@ export const TASK_EDGE_TYPES = {
   crossEdge: CrossEdge
 };
 
+export const TASK_INITIAL_NODES = [
+  {
+    id: 'start_1',
+    type: NODE_TYPE.START,
+    data: { taskName: 'Start' },
+    position: { x: 250, y: 300 },
+    sourcePosition: 'right'
+  },
+  {
+    id: 'end_1',
+    type: NODE_TYPE.END,
+    data: { taskName: 'End' },
+    position: { x: 450, y: 300 },
+    targetPosition: 'left'
+  }
+];
+
 export const DIALOG_INITIAL_NODES = [
   {
-    id: '1',
+    id: 'start_1',
     type: NODE_TYPE.START,
     data: { label: 'Start', taskName: 'Start' },
     position: { x: 350, y: 500 },
     sourcePosition: 'right'
   },
   {
-    id: '2',
+    id: 'end_1',
     type: NODE_TYPE.END,
     data: { label: 'End', taskName: 'End' },
     position: { x: 950, y: 500 },
@@ -457,12 +475,13 @@ export const DIALOG_INITIAL_NODES = [
 
 export const INITIAL_EDGES = [
   {
-    id: 'source_To_end',
+    id: 'start_To_end',
     type: 'crossEdge',
-    source: '1',
+    source: 'start_1',
     sourceHandle: 'start-node-right',
-    target: '2',
+    target: 'end_1',
     targetHandle: 'end-node-left',
+    data: { id: '' },
     markEnd: {
       color: '#FF0072',
       height: 20,

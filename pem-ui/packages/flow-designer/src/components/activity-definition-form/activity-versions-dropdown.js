@@ -9,6 +9,7 @@ export default function ActivityVersions({ activityDefKey, versionData = [], rea
       <Select
         hideLabel={true}
         id={'activity-version'}
+        key={'vresiondd'}
         value={currentValue}
         onSelect={(event) => {
           setCurrentValue(event.target.value);
@@ -18,7 +19,7 @@ export default function ActivityVersions({ activityDefKey, versionData = [], rea
         }}
       >
         {versionData.map((item) => {
-          return <SelectItem value={item.activityDefnVersionKey} text={`Ver ${item.version}`}></SelectItem>;
+          return <SelectItem  key={item.version} value={item.activityDefnVersionKey} text={`Ver ${item.version}`}></SelectItem>;
         })}
       </Select>
     </Column>

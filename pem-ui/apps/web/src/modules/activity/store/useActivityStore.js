@@ -39,7 +39,7 @@ const activityStore = (set, get) => ({
         activityData: {
           definition: activity.definition,
           version: activity.version,
-          schema: state?.activityData?.schema
+          schema: activity.schema
         },
         selectedActivity: state.selectedActivity
       };

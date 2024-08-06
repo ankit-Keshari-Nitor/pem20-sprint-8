@@ -13,7 +13,9 @@ import {
   endMarks,
   TASK_NODE_TYPES,
   TASK_EDGE_TYPES,
-  DIALOG_INITIAL_NODES,INITIAL_EDGES,
+  TASK_INITIAL_NODES,
+  DIALOG_INITIAL_NODES,
+  INITIAL_EDGES,
   DIALOG_NODE_TYPES,
   DIALOG_EDGE_TYPES,
   NODE_TYPE
@@ -35,20 +37,17 @@ const WorkFlowDesigner = forwardRef(
     {
       showActivityDefineDrawer,
       setShowActivityDefineDrawer,
-      updateActivityDetails,
-      updateActivitySchema,
-      activityDefinitionData,
-      activityOperation,
-      readOnly,
-      onVersionSelection,
-      versionData,
-      selectedVersion
+      updateActivityDetails, //updates activity basic details and version specific details to web/activity-store
+      updateActivitySchema, //update activity schema - nodes & edges to web/activity-store
+      activityDefinitionData, //local state variable from web/activity-definition page
+      activityOperation, //mode of operation - new/view/edit
+      readOnly, //readonly mode flag
+      onVersionSelection, //on version change callback for web/activity-definition page to load version specific data
+      versionData, //array of all versions of current activity
+      selectedVersion //current selected version
     },
     ref
   ) => {
-
-
-
     //-------------------------------- State Management -------------------------------------
     const store = useTaskStore();
     const storeData = useTaskStore((state) => state.tasks);
@@ -58,7 +57,7 @@ const WorkFlowDesigner = forwardRef(
     // --------------------------------- Task Flow States -----------------------------------
     const taskFlowWrapper = useRef(null);
     const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState();
-    const [nodes, setTaskNodes, onTaskNodesChange] = useNodesState(storeData.nodes);
+    const [nodes, setTaskNodes, onTaskNodesChange] = useNodesState([]);
     const [edges, setTaskEdges, onTaskEdgesChange] = useEdgesState([]);
     const [taskFlowInstance, setTaskFlowInstance] = useState(null);
     const [selectedTaskNode, setSelectedTaskNode] = useState(null);
@@ -71,6 +70,7 @@ const WorkFlowDesigner = forwardRef(
     const [dialogFlowInstance, setDialogFlowInstance] = useState(null);
     const [selectedDialogNode, setSelectedDialogNode] = useState(null);
 
+    /*    // Initializing the Dialog Flow Nodes and Edges
     // -------------------------------- Form Layout --------------------------------------------
     const [formFields, setFormFields] = useState();
 
@@ -98,29 +98,63 @@ const WorkFlowDesigner = forwardRef(
         setDialogEdges(dialogNodeData?.data?.dialogEdges);
       }
       //this is sending the new schema to web page  - activity-definition.js
-      updateActivitySchema(storeData);
-    }, [setDialogEdges, storeData, selectedTaskNode, updateActivitySchema, setDialogNodes]);
+      //updateActivitySchema(storeData);
+    }, [setDialogEdges, storeData, selectedTaskNode, updateActivitySchema, setDialogNodes]);*/
 
     // Initializing the Task Flow Nodes and Edges
     useEffect(() => {
-      if(taskFlowInstance){
-        setTaskNodes(taskFlowInstance.getNodes());
-        setTaskEdges(taskFlowInstance.getEdges());
-      }else{
-        setTaskNodes(storeData.nodes);
-        setTaskEdges(storeData.edges);
+      const instanceNodes = taskFlowInstance ? taskFlowInstance.getNodes() : storeData.nodes;
+      const instanceEdges = taskFlowInstance ? taskFlowInstance.getEdges() : storeData.edges;
+
+      setTaskEdges(instanceEdges);
+      if (taskFlowInstance) {
+        const newNodes = storeData.nodes.map((node) => {
+          const n = instanceNodes.find((x) => x.id === node.id);
+          return { ...node, position: n ? n.position : node.position };
+        });
+        setTaskNodes(newNodes);
       }
 
-      //this is sending the new schema to web page  - activity-definition.js
-      updateActivitySchema(storeData);
+      setTimeout(() => {
+        //this is sending the new schema to web page  - activity-definition.js
+        updateActivitySchema({ nodes, edges });
+      }, 200);
     }, [setTaskNodes, setTaskEdges, storeData, updateActivitySchema]);
 
+    const deleteNode = (id, isdialog) => {
+      const newNodes = taskFlowInstance.getNodes().filter((n) => n.id !== id);
+      setTaskNodes(newNodes);
+      store.setTaskNOdes(newNodes);
+      updateActivitySchema({ nodes: newNodes, edges: storeData.edges });
+    };
+    const onNodeContextOptionClick = (id, mode, isdialog) => {
+      switch (mode.toUpperCase()) {
+        case 'DELETE':
+          deleteNode(id, isdialog);
+          break;
+        case 'CLONE':
+          alert('Clone operation is in progress');
+          break;
+        default:
+          alert(`${mode} is to be implemented`);
+      }
+    };
 
-    useEffect(()=>{
-      setTaskNodes(activityDefinitionData.schema.nodes);
-      setTaskEdges(activityDefinitionData.schema.edges);
-
-    },[activityDefinitionData])
+    useEffect(() => {
+      console.log(activityDefinitionData);
+      store.reset();
+      if (activityDefinitionData.schema.nodes.length === 0 || activityDefinitionData.schema.edges.length === 0) {
+        setTaskNodes(TASK_INITIAL_NODES);
+        setTaskEdges(INITIAL_EDGES);
+        store.addTaskNodes(TASK_INITIAL_NODES);
+        store.addTaskEdges(INITIAL_EDGES);
+      } else {
+        setTaskNodes(activityDefinitionData.schema.nodes);
+        setTaskEdges(activityDefinitionData.schema.edges);
+        store.addTaskNodes(activityDefinitionData.schema.nodes);
+        store.addTaskEdges(activityDefinitionData.schema.edges);
+      }
+    }, [activityDefinitionData]);
 
     //#region Dialog Block Methods
     const onDialogNodeDragOver = useCallback((event) => {
@@ -138,6 +172,10 @@ const WorkFlowDesigner = forwardRef(
         if (typeof nodeData === 'undefined' || !nodeData) {
           return;
         }
+        if (!nodeData.active) {
+          alert('Block not supported yet to use');
+          return;
+        }
 
         // Get the position of the dialog
         const position = dialogFlowInstance.screenToFlowPosition({
@@ -149,7 +187,7 @@ const WorkFlowDesigner = forwardRef(
           id: getNewDialogId(),
           position,
           type: nodeData.type,
-          data: { ...nodeData }
+          data: { ...nodeData, onContextMenuClick: (id, menu) => onNodeContextOptionClick(id, menu, true) }
         };
         if (dialogFlowInstance) {
           dialogFlowInstance.addNodes(newDialog);
@@ -201,7 +239,7 @@ const WorkFlowDesigner = forwardRef(
           }
           return copyNode;
         });
-        const formData = node.data.form.length ? JSON.parse(node.data.form).fields : [] ;
+        const formData = node.data.form.length ? JSON.parse(node.data.form).fields : [];
         setDialogNodes([...copyNodes]);
         setSelectedDialogNode(node);
         setFormFields(formData);
@@ -233,23 +271,31 @@ const WorkFlowDesigner = forwardRef(
           return;
         }
 
+        if (!nodeData.active) {
+          alert(`${nodeData.type} task can not be used.`);
+          return;
+        }
+
         // Get the position of the task
         const position = taskFlowInstance.screenToFlowPosition({
           x: event.clientX,
           y: event.clientY
         });
 
+        const id = getNewTaskId();
         const newTask = {
-          id: getNewTaskId(),
+          id: id,
           position,
           type: nodeData.type,
-          data: { ...nodeData, dialogNodes: DIALOG_INITIAL_NODES, dialogEdges: INITIAL_EDGES }
+          data: { ...nodeData, onContextMenuClick: (id, menu) => onNodeContextOptionClick(id, menu, false), dialogNodes: DIALOG_INITIAL_NODES, dialogEdges: INITIAL_EDGES }
         };
-
+        newTask.data.dialogEdges[0].data.id = id;
         if (taskFlowInstance) {
           taskFlowInstance.addNodes(newTask);
         }
         store.addTaskNodes(newTask);
+
+        updateActivitySchema(storeData);
       },
       [store.addTaskNodes, taskFlowInstance]
     );
@@ -266,9 +312,11 @@ const WorkFlowDesigner = forwardRef(
           taskFlowInstance.addEdges({ ...newParam, style: { stroke: '#000' } });
           if (!readOnly) {
             store.addTaskEdges(addEdge({ ...newParam, style: { stroke: '#000' } }, taskFlowInstance.getEdges()));
+            updateActivitySchema(storeData);
           }
         }
       },
+
       [store.addTaskEdges, taskFlowInstance]
     );
 
@@ -293,7 +341,6 @@ const WorkFlowDesigner = forwardRef(
         });
         setTaskNodes([...copyNodes]);
         setSelectedTaskNode(node);
-        setDialogNodes(node.data.dialogNodes);
         setOpenTaskPropertiesBlock(true);
         setShowActivityDefineDrawer(false);
       }
@@ -301,17 +348,25 @@ const WorkFlowDesigner = forwardRef(
 
     const onTaskNodeDoubleClick = (event, node) => {
       if (node.type === NODE_TYPE.PARTNER || node.type === NODE_TYPE.SPONSOR || node.type === NODE_TYPE.CUSTOM || node.type === NODE_TYPE.SYSTEM) {
-        setIsDialogFlowActive(true);
+        setDialogNodes(node.data.dialogNodes);
+        setDialogEdges(node.data.dialogEdges);
+        setTimeout(() => {
+          setIsDialogFlowActive(true);
+        }, 200);
       }
     };
     //#endregion
 
     const onClickPageDesignerBack = () => {
+      setDialogNodes([]);
+      setDialogEdges([]);
       setIsDialogFlowActive(true);
       setIsPageDesignerActive(false);
     };
 
     const onClickDialogFlowBack = () => {
+      setDialogNodes([]);
+      setDialogEdges([]);
       setIsDialogFlowActive(false);
       setIsPageDesignerActive(false);
     };
@@ -393,37 +448,39 @@ const WorkFlowDesigner = forwardRef(
                   readOnly={readOnly}
                 />
               ) : (
-                <TaskFlowDesigner
-                  connectionLineStyle={connectionLineStyle}
-                  defaultViewport={defaultViewport}
-                  snapGrid={snapGrid}
-                  taskFlowWrapper={taskFlowWrapper}
-                  nodes={nodes}
-                  edges={edges}
-                  onTaskNodesChange={onTaskNodesChange}
-                  onTaskEdgesChange={onTaskEdgesChange}
-                  taskFlowInstance={taskFlowInstance}
-                  setTaskFlowInstance={setTaskFlowInstance}
-                  onTaskNodeConnect={onTaskNodeConnect}
-                  onTaskNodeDrop={onTaskNodeDrop}
-                  onTaskNodeDragOver={onTaskNodeDragOver}
-                  onTaskNodeClick={onTaskNodeClick}
-                  TASK_NODE_TYPES={TASK_NODE_TYPES}
-                  TASK_EDGE_TYPES={TASK_EDGE_TYPES}
-                  selectedTaskNode={selectedTaskNode}
-                  openTaskPropertiesBlock={openTaskPropertiesBlock}
-                  setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
-                  showActivityDefineDrawer={showActivityDefineDrawer}
-                  setShowActivityDefineDrawer={setShowActivityDefineDrawer}
-                  updateActivityDetails={updateActivityDetails}
-                  activityDefinitionData={activityDefinitionData}
-                  activityOperation={activityOperation}
-                  readOnly={readOnly}
-                  onVersionSelection={onVersionSelection}
-                  onTaskNodeDoubleClick={onTaskNodeDoubleClick}
-                  versionData={versionData}
-                  selectedVersion={selectedVersion}
-                />
+                activityDefinitionData && (
+                  <TaskFlowDesigner
+                    connectionLineStyle={connectionLineStyle}
+                    defaultViewport={defaultViewport}
+                    snapGrid={snapGrid}
+                    taskFlowWrapper={taskFlowWrapper}
+                    nodes={nodes}
+                    edges={edges}
+                    onTaskNodesChange={onTaskNodesChange}
+                    onTaskEdgesChange={onTaskEdgesChange}
+                    taskFlowInstance={taskFlowInstance}
+                    setTaskFlowInstance={setTaskFlowInstance}
+                    onTaskNodeConnect={onTaskNodeConnect}
+                    onTaskNodeDrop={onTaskNodeDrop}
+                    onTaskNodeDragOver={onTaskNodeDragOver}
+                    onTaskNodeClick={onTaskNodeClick}
+                    TASK_NODE_TYPES={TASK_NODE_TYPES}
+                    TASK_EDGE_TYPES={TASK_EDGE_TYPES}
+                    selectedTaskNode={selectedTaskNode}
+                    openTaskPropertiesBlock={openTaskPropertiesBlock}
+                    setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
+                    showActivityDefineDrawer={showActivityDefineDrawer}
+                    setShowActivityDefineDrawer={setShowActivityDefineDrawer}
+                    updateActivityDetails={updateActivityDetails}
+                    activityDefinitionData={activityDefinitionData}
+                    activityOperation={activityOperation}
+                    readOnly={readOnly}
+                    onVersionSelection={onVersionSelection}
+                    onTaskNodeDoubleClick={onTaskNodeDoubleClick}
+                    versionData={versionData}
+                    selectedVersion={selectedVersion}
+                  />
+                )
               )}
             </div>
           </>

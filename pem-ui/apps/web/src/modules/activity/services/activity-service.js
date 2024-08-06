@@ -89,16 +89,11 @@ export const getActivityDetails = async (activityKey, activityVersoinKey) => {
         number: activityCurrentVersionDetails.data.version
       },
       schema: {
-        nodes: [],
-        edges: []
+        nodes: activityCurrentVersionData.data.process.nodes,
+        edges: activityCurrentVersionData.data.process.connectors
       }
     };
 
-    const { nodes, edges } = generateActivitySchema(activityCurrentVersionData.data.process.nodes, activityCurrentVersionData.data.process.connectors);
-
-    activityData.schema.nodes = nodes;
-    activityData.schema.edges = edges;
-//console.log(activityData);
     return {
       success: true,
       activityData,

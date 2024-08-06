@@ -10,9 +10,9 @@ export const BlocksTray = ({ category = CATEGORY_TYPES.TASK, readOnly }) => {
 
   return (
     <div className="task-tray-aside">
-      {NODE_TYPES.filter((x) => x.active && x.category === category).map((node) => {
+      {NODE_TYPES.filter((x) => x.category === category).map((node) => {
         return (
-          <div key={`${node.category}_${node.id}`} className="block-tray" onDragStart={(event) => onDragStart(event, node)} draggable={!readOnly}>
+          <div key={`${node.category}_${node.taskName}`} className="block-tray" onDragStart={(event) => onDragStart(event, node)} draggable={!readOnly}>
             <button className={`block-tray-field ${node.type}`}>
               <span className="block-tray-field-icon">{node.nodeIcon}</span>
               <span className="block-tray-field-text"> {node.shortName}</span>

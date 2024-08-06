@@ -49,7 +49,7 @@ export default function ActivityDefinition() {
     return () => {
       //store.reset();
     };
-  }, [currentActivity]);
+  }, [currentActivity, updateActivityData]);
 
   useEffect(() => {
     setActivityDefinitionData(store.activityData);

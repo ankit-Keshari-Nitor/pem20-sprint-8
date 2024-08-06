@@ -32,8 +32,8 @@ export const formFields = [
   Tooltip,
   FileUploader,
   FileDownload,
-  DataTable,
   DatePicker,
+  DataTable,
   Accordion,
   Tab
 ];

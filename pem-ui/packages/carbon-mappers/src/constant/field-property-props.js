@@ -9,6 +9,15 @@ const labelText = {
   size: { col: 8 }
 };
 
+const labelLinkText = {
+  propsName: 'labelLinkText',
+  label: 'Text',
+  value: '',
+  placeholder: 'Enter Text',
+  type: 'TextInput',
+  size: { col: 8 }
+};
+
 const isDisabled = {
   propsName: 'disabled',
   label: 'Disabled',
@@ -44,7 +53,7 @@ const hrefText = {
   value: '',
   type: 'TextInput',
   placeholder: 'https://',
-  size: { col: 8 }
+  size: { col: 16 }
 };
 
 const readOnly = {
@@ -85,6 +94,34 @@ const maxProps = {
   size: { col: 8 }
 };
 
+const minNumberProps = {
+  propsName: 'min',
+  label: 'Min Value',
+  value: {
+    value: '0',
+    message: ''
+  },
+  type: 'TextInput',
+  invalid: false,
+  invalidText: 'Only Numbers are allowed',
+  regexPattern: /^[0-9]+$/,
+  size: { col: 8 }
+};
+
+const maxNumberProps = {
+  propsName: 'max',
+  label: 'Max Value',
+  value: {
+    value: '20',
+    message: ''
+  },
+  type: 'TextInput',
+  invalid: false,
+  invalidText: 'Only Numbers are allowed',
+  regexPattern: /^[0-9]+$/,
+  size: { col: 8 }
+};
+
 // New constant for Options type
 const options = {
   propsName: 'options',
@@ -104,6 +141,7 @@ const labelA = {
   label: 'False Text',
   value: 'Yes',
   type: 'TextInput',
+  placeholder: 'No',
   size: { col: 8 }
 };
 
@@ -112,6 +150,7 @@ const labelB = {
   label: 'True Text',
   value: 'No',
   type: 'TextInput',
+  placeholder: 'Yes',
   size: { col: 8 }
 };
 
@@ -418,6 +457,18 @@ const textAreaHeight = {
   size: { col: 8 }
 };
 
+const toggleValues = {
+  propsName: 'toggleValue',
+  label: 'Value',
+  type: 'DropDown',
+  value: 'True',
+  options: [
+    { label: 'True', value: 'true' },
+    { label: 'False', value: 'false' },
+  ],
+  size: { col: 8 }
+};
+
 const ElementTypeConfig = {
   [FORM_FIELD_TYPE.TEXT_INPUT]: {
     propsName: 'elementType',
@@ -490,11 +541,11 @@ export const PropsPanelFields = {
   [FORM_FIELD_TYPE.PASSWORD]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT_INPUT], Id, labelText, isRequired, placeHolder, helperText, mapping],
   [FORM_FIELD_TYPE.DATEPICKER]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT_INPUT], Id, labelText, readOnly, isRequired, dateFormat, dateValue, placeHolder, helperText],
   [FORM_FIELD_TYPE.NUMBER]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT_INPUT], Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
-  [FORM_FIELD_TYPE.INFO]: [ElementTypeConfig[FORM_FIELD_TYPE.INFO], Id, labelText],
+  [FORM_FIELD_TYPE.INFO]: [ElementTypeConfig[FORM_FIELD_TYPE.INFO], Id, helperText],
   [FORM_FIELD_TYPE.FILE_DOWNLOADER]: [ElementTypeConfig[FORM_FIELD_TYPE.FILE_UPLOADER], Id, labelText, helperText, maxFileSize, extensions],
   [FORM_FIELD_TYPE.FILE_UPLOADER]: [ElementTypeConfig[FORM_FIELD_TYPE.FILE_UPLOADER], Id, labelText, helperText, buttonLabel, fileUploader],
-  [FORM_FIELD_TYPE.LINK]: [ElementTypeConfig[FORM_FIELD_TYPE.LINK], Id, labelText, hrefText, helperText],
-  [FORM_FIELD_TYPE.TOGGLE]: [ElementTypeConfig[FORM_FIELD_TYPE.TOGGLE], Id, labelText, helperText, labelA, labelB, readOnly],
+  [FORM_FIELD_TYPE.LINK]: [ElementTypeConfig[FORM_FIELD_TYPE.LINK], Id, labelText, labelLinkText, helperText, hrefText],
+  [FORM_FIELD_TYPE.TOGGLE]: [ElementTypeConfig[FORM_FIELD_TYPE.TOGGLE], Id, labelText, toggleValues, labelB, labelA, readOnly, helperText, mapping],
   [FORM_FIELD_TYPE.SELECT]: [ElementTypeConfig[FORM_FIELD_TYPE.SELECT], Id, labelText, placeHolder, helperText, options, readOnly],
   [FORM_FIELD_TYPE.RADIOGROUP]: [ElementTypeConfig[FORM_FIELD_TYPE.SELECT], Id, labelText, helperText, options, orientation, readOnly],
   [FORM_FIELD_TYPE.CHECKBOXGROUP]: [ElementTypeConfig[FORM_FIELD_TYPE.SELECT], Id, labelText, helperText, options, orientation, readOnly],
@@ -508,9 +559,9 @@ export const PropsPanelFields = {
 export const propsPanelAdvanceFields = {
   [FORM_FIELD_TYPE.TEXT_INPUT]: [minProps, maxProps, regexValidation],
   [FORM_FIELD_TYPE.TEXT_AREA]: [minProps, maxProps, regexValidation],
-  [FORM_FIELD_TYPE.NUMBER]: [minProps, maxProps],
+  [FORM_FIELD_TYPE.NUMBER]: [minNumberProps, maxNumberProps],
   [FORM_FIELD_TYPE.PASSWORD]: [minProps, maxProps, regexValidationforPassword],
-  [FORM_FIELD_TYPE.PASSWORD]: [[minDate, maxDate]],
+  [FORM_FIELD_TYPE.DATEPICKER]: [minDate, maxDate],
   [FORM_FIELD_TYPE.INFO]: [],
   [FORM_FIELD_TYPE.FILE_DOWNLOADER]: [],
   [FORM_FIELD_TYPE.FILE_UPLOADER]: [],

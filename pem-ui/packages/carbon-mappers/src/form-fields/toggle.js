@@ -6,8 +6,7 @@ import { ToggleIcon } from './../icons';
 const type = FORM_FIELD_TYPE.TOGGLE;
 
 const Toggle = ({ field, id: uniqueId, previewMode }) => {
-  const { labelText, isRequired, label, min, max, labelA, labelB, id, ...rest } = field;
-
+  const { labelText, isRequired, toggleValue, label, min, max, labelA, labelB, id, readOnly, ...rest } = field;
   return (
     <CarbonToggle
       data-testid={id}
@@ -16,7 +15,9 @@ const Toggle = ({ field, id: uniqueId, previewMode }) => {
       labelText={labelText === undefined ? label : labelText}
       labelA={labelA ? labelA : 'No'}
       labelB={labelB ? labelB : 'Yes'}
-      {...rest}
+      defaultToggled={toggleValue === 'true' ? true : false }
+      toggled={toggleValue === 'true' ? true : false}
+      readOnly={readOnly}
     />
   );
 };

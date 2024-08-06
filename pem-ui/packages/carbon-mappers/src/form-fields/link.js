@@ -6,11 +6,18 @@ import { LinkIcon } from './../icons';
 const type = FORM_FIELD_TYPE.LINK;
 
 const Link = ({ field, id }) => {
-  const { type, labelText, label, hrefText, ...rest } = field;
+  const { type, labelText, labelLinkText, label, hrefText, ...rest } = field;
   return (
-    <CarbonLink data-testid={id} id={id} href={hrefText} {...rest}>
-      {labelText === undefined ? label : labelText}
-    </CarbonLink>
+    <div class="cds--form-item cds--text-input-wrapper">
+      <div class="cds--text-input__label-wrapper">{labelText}</div>
+      <div class="cds--text-input__field-outer-wrapper">
+        <div class="cds--text-input__field-wrapper">
+          <CarbonLink data-testid={id} id={id} href={hrefText} {...rest}>
+            {labelLinkText === undefined ? label : labelLinkText}
+          </CarbonLink>
+        </div>
+      </div>
+    </div>
   );
 };
 

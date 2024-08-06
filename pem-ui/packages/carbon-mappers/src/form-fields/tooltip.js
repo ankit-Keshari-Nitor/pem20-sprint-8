@@ -7,10 +7,10 @@ import { Info } from './../icons';
 const type = FORM_FIELD_TYPE.INFO;
 
 const Tooltip = ({ field, id }) => {
-  const { labelText, ...rest } = field;
+  const { helperText, ...rest } = field;
 
   return (
-    <CarbonTooltip data-testid={id} align="bottom" label={labelText}>
+    <CarbonTooltip data-testid={id} align="bottom" label={helperText}>
       <Information />
     </CarbonTooltip>
   );

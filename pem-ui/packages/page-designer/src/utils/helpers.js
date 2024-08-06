@@ -575,6 +575,9 @@ export const defaultProps = (item) => {
       item.component.max = { value: '20', message: `${item.component.label} value should be between 0 - 20.` };
       item.component.min = { value: '0', message: `${item.component.label} value should be between 0 - 20.` };
       break;
+    case 'Toggle':
+      item.component.toggleValue = 'true';
+      break;  
     default:
       break;
   }

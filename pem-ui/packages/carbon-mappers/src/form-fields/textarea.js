@@ -1,24 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { TextArea as CarbonTextArea } from '@carbon/react';
-import {
-  FORM_FIELD_TYPE,
-  minProps,
-  maxProps,
-  readOnly,
-  Id,
-  valueLabel,
-  mapping,
-  helperText,
-  placeHolder,
-  FORM_FIELD_LABEL,
-  FORM_FIELD_GROUPS,
-  isRequired,
-  labelText,
-  regexValidation,
-  height,
-  elementTypeTextFields,
-  textAreaHeight,
-} from '../constant';
+import { FORM_FIELD_TYPE, FORM_FIELD_LABEL, FORM_FIELD_GROUPS, PropsPanelFields, propsPanelAdvanceFields } from '../constant';
 import { TextAreaIcon } from '../icons';
 
 const type = FORM_FIELD_TYPE.TEXT_AREA;
@@ -59,9 +41,8 @@ TextArea.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <TextAreaIcon />,
   editableProps: {
-    //Basic: [id, NameLabel, labelText, placeHolder, helperText, height, valueLabel, mapping, readOnly],
-    Basic: [elementTypeTextFields, Id, labelText, readOnly, isRequired, textAreaHeight, valueLabel, placeHolder, helperText, mapping],
+    Basic: PropsPanelFields[type],
     Condition: []
   },
-  advanceProps: [minProps, maxProps, regexValidation]
+  advanceProps: propsPanelAdvanceFields[type]
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { addColumnInGroup, FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, propsPanelAdvanceFields, PropsPanelFields } from '../constant';
 import { GroupIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.GROUP;
@@ -21,8 +21,8 @@ Group.config = {
   group: FORM_FIELD_GROUPS.PANEL,
   icon: <GroupIcon />,
   editableProps: {
-    Basic: [addColumnInGroup],
+    Basic: PropsPanelFields[type],
     Condition: []
   },
-  advanceProps: []
+  advanceProps: propsPanelAdvanceFields[type]
 };

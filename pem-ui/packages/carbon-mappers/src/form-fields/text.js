@@ -1,5 +1,5 @@
 import React from 'react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTypeLabel, fontSize, Id, mapping, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, PropsPanelFields, propsPanelAdvanceFields } from '../constant';
 import { TextIcon } from '../icons';
 
 const type = FORM_FIELD_TYPE.TEXT;
@@ -23,8 +23,8 @@ Text.config = {
   group: FORM_FIELD_GROUPS.ACTION,
   icon: <TextIcon />,
   editableProps: {
-    Basic: [elementTypeLabel, Id, labelText, mapping, fontSize],
+    Basic: PropsPanelFields[type],
     Condition: []
   },
-  advanceProps: []
+  advanceProps: propsPanelAdvanceFields[type]
 };

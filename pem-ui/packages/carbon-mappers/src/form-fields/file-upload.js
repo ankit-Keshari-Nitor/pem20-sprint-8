@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { FileUploaderDropContainer, FileUploaderItem } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTypeFiles, maxFileSize, Id, helperText, extensions, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, PropsPanelFields, propsPanelAdvanceFields } from '../constant';
 import { FileUploadIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.FILE_UPLOADER;
 
-const FileUploader = ({ field, id, }) => {
-  const { labelText, label, maxFileSize, extensions: extensionsStr, } = field;
+const FileUploader = ({ field, id }) => {
+  const { labelText, label, maxFileSize, extensions: extensionsStr } = field;
 
   // Convert comma-separated extensions string to array
   const extensionsArray = extensionsStr ? extensionsStr.split(',') : [];
@@ -47,10 +47,9 @@ const FileUploader = ({ field, id, }) => {
   }
 
   const onAddFiles = (event, files) => {
-
     const file = event.target.files || files.addedFiles;
     // Check if file extension is valid
-    const isValidExtension = extensionsArray.some(ext => file[0].name.toLowerCase().endsWith(ext.toLowerCase()));
+    const isValidExtension = extensionsArray.some((ext) => file[0].name.toLowerCase().endsWith(ext.toLowerCase()));
 
     if (!isValidExtension) {
       setError(`Invalid file type. Allowed extensions: ${extensionsArray.join(', ')}`);
@@ -68,7 +67,7 @@ const FileUploader = ({ field, id, }) => {
       setFile(newFile[0]);
       onUploadFiles(newFile[0]);
     }
-  }
+  };
 
   const onUploadFiles = (fileUpload) => {
     if (fileUpload.filesize <= convertToBytes(maxFileSize)) {
@@ -86,21 +85,21 @@ const FileUploader = ({ field, id, }) => {
       setFile();
       setError('File size exceeds the maximum limit');
     }
-  }
+  };
 
   const onDeleteFile = function (...args) {
     setFile();
-    setError('')
+    setError('');
   };
 
   return (
     <div>
-      {file === undefined ?
+      {file === undefined ? (
         <>
           <FileUploaderDropContainer
             labelText={labelText === undefined ? label : labelText}
             name={String(id)}
-            filenameStatus='edit'
+            filenameStatus="edit"
             onChange={onAddFiles}
             onAddFiles={onAddFiles}
             accept={extensionsArray}
@@ -108,8 +107,7 @@ const FileUploader = ({ field, id, }) => {
           />
           {error && <p className="error-text">{error}</p>}
         </>
-
-        :
+      ) : (
         <div>
           <p className="cds--label-description">{labelText === undefined ? label : labelText}</p>
           <FileUploaderItem
@@ -122,8 +120,8 @@ const FileUploader = ({ field, id, }) => {
             status="edit"
           />
         </div>
-      }
-    </div >
+      )}
+    </div>
   );
 };
 
@@ -136,8 +134,8 @@ FileUploader.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <FileUploadIcon />,
   editableProps: {
-    Basic: [elementTypeFiles, Id, labelText, helperText, maxFileSize, extensions],
+    Basic: PropsPanelFields[type],
     Condition: []
   },
-  advanceProps: []
+  advanceProps: propsPanelAdvanceFields[type]
 };

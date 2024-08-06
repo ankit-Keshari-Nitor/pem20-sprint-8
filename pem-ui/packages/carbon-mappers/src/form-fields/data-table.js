@@ -14,9 +14,9 @@ import {
   Search
 } from '@carbon/react';
 import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE } from '../constant/form-field-type';
-import { Id, elementTypeDataTable, helperText, isRequired, labelText, pageSize, selectRow, tableColumn, tableRows as tableRowsData } from '../constant';
+import { PropsPanelFields, propsPanelAdvanceFields } from '../constant';
 import { DataTable as DataTableIcon } from '@carbon/icons-react';
-
+const type = FORM_FIELD_TYPE.DATATABLE;
 const DataTable = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
   const { labelText, helperText, disabled, isRequired, selectablerows, pagesize, tableRows, tableColumns, ...rest } = field;
   const [headers, setHeaders] = useState(tableColumns ? tableColumns : []);
@@ -135,13 +135,13 @@ export default DataTable;
 
 // Config of Accordion for Left Palette & Right Palette
 DataTable.config = {
-  type: FORM_FIELD_TYPE.DATATABLE,
+  type: type,
   label: FORM_FIELD_LABEL.DATATABLE,
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <DataTableIcon />,
   editableProps: {
-    Basic: [elementTypeDataTable, Id, labelText, helperText, selectRow, pageSize, tableColumn, tableRowsData],
+    Basic: PropsPanelFields[type],
     Condition: []
   },
-  advanceProps: [isRequired]
+  advanceProps: propsPanelAdvanceFields[type]
 };

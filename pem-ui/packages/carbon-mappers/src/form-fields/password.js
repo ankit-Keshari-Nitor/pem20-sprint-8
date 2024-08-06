@@ -1,20 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PasswordInput } from '@carbon/react';
-import {
-  FORM_FIELD_TYPE,
-  minProps,
-  maxProps,
-  Id,
-  helperText,
-  FORM_FIELD_LABEL,
-  FORM_FIELD_GROUPS,
-  isRequired,
-  labelText,
-  placeHolder,
-  elementTypeTextFields,
-  mapping,
-  regexValidationforPassword
-} from '../constant';
+import { FORM_FIELD_TYPE, FORM_FIELD_LABEL, FORM_FIELD_GROUPS, PropsPanelFields, propsPanelAdvanceFields } from '../constant';
 import { Password as PasswordIcon } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.PASSWORD;
@@ -58,8 +44,8 @@ Password.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <PasswordIcon />,
   editableProps: {
-    Basic: [elementTypeTextFields, Id, labelText, isRequired, placeHolder, helperText, mapping],
+    Basic: PropsPanelFields[type],
     Condition: []
   },
-  advanceProps: [minProps, maxProps, regexValidationforPassword]
+  advanceProps: propsPanelAdvanceFields[type]
 };

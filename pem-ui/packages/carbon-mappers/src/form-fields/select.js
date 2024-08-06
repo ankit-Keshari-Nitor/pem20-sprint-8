@@ -1,11 +1,11 @@
 import React from 'react';
 import { Select as CarbonSelect, SelectItem } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTypeGroup, options, helperText, Id, placeHolder, labelText, readOnly, isRequired } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, PropsPanelFields, propsPanelAdvanceFields } from '../constant';
 import { SelectIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.SELECT;
 
-const Select = ({ field, id: uniqueId, previewMode}) => {
+const Select = ({ field, id: uniqueId, previewMode }) => {
   const { type, labelText, label, isRequired, options, id, ...rest } = field;
 
   return (
@@ -30,8 +30,8 @@ Select.config = {
   group: FORM_FIELD_GROUPS.SELECTION,
   icon: <SelectIcon />,
   editableProps: {
-    Basic: [elementTypeGroup, Id, labelText, placeHolder, helperText, options, readOnly],
+    Basic: PropsPanelFields[type],
     Condition: []
   },
-  advanceProps: [isRequired]
+  advanceProps: propsPanelAdvanceFields[type]
 };

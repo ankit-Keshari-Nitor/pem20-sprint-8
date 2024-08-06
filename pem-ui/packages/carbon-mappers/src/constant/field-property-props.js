@@ -499,7 +499,10 @@ export const PropsPanelFields = {
   [FORM_FIELD_TYPE.RADIOGROUP]: [ElementTypeConfig[FORM_FIELD_TYPE.SELECT], Id, labelText, helperText, options, orientation, readOnly],
   [FORM_FIELD_TYPE.CHECKBOXGROUP]: [ElementTypeConfig[FORM_FIELD_TYPE.SELECT], Id, labelText, helperText, options, orientation, readOnly],
   [FORM_FIELD_TYPE.TEXT]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT], Id, labelText, mapping, fontSize],
-  [FORM_FIELD_TYPE.DATATABLE]: [ElementTypeConfig[FORM_FIELD_TYPE.DATATABLE], Id, labelText, helperText, selectRow, pageSize, tableColumn, tableRows]
+  [FORM_FIELD_TYPE.DATATABLE]: [ElementTypeConfig[FORM_FIELD_TYPE.DATATABLE], Id, labelText, helperText, selectRow, pageSize, tableColumn, tableRows],
+  [FORM_FIELD_TYPE.ACCORDION]: [labelText],
+  [FORM_FIELD_TYPE.GROUP]: [addColumnInGroup],
+  [FORM_FIELD_TYPE.TAB]: [addTab]
 };
 
 export const propsPanelAdvanceFields = {
@@ -517,5 +520,8 @@ export const propsPanelAdvanceFields = {
   [FORM_FIELD_TYPE.RADIOGROUP]: [],
   [FORM_FIELD_TYPE.CHECKBOXGROUP]: [],
   [FORM_FIELD_TYPE.TEXT]: [],
-  [FORM_FIELD_TYPE.DATATABLE]: []
+  [FORM_FIELD_TYPE.DATATABLE]: [],
+  [FORM_FIELD_TYPE.ACCORDION]: [],
+  [FORM_FIELD_TYPE.GROUP]: [],
+  [FORM_FIELD_TYPE.TAB]: []
 };

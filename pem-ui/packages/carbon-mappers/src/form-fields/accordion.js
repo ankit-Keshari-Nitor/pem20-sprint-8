@@ -1,9 +1,8 @@
 import React from 'react';
 import { AccordionItem, Accordion as CarbonAccordion } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, propsPanelAdvanceFields, PropsPanelFields } from '../constant';
 import { Plan } from '@carbon/icons-react';
 import PageDesigner from '@b2bi/page-designer';
-
 
 const type = FORM_FIELD_TYPE.ACCORDION;
 
@@ -36,8 +35,8 @@ Accordion.config = {
   group: FORM_FIELD_GROUPS.PANEL,
   icon: <Plan />,
   editableProps: {
-    Basic: [labelText],
+    Basic: PropsPanelFields[type],
     Condition: []
   },
-  advanceProps: []
+  advanceProps: propsPanelAdvanceFields[type]
 };

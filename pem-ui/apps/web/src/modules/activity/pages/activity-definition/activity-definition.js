@@ -9,32 +9,39 @@ import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../ic
 import { saveAs } from 'file-saver';
 import Notification from '../../helpers/wrapper-notification-toast';
 import Shell from '@b2bi/shell';
-import { generateNodeEdgesForApi } from '../../util';
+import { generateNodeEdgesForApi, generateActivitySchema } from '../../util';
 
 export default function ActivityDefinition() {
   const store = useActivityStore();
   const pageUtil = Shell.PageUtil();
+
   const activityObj = useActivityStore((state) => state.activityData);
   const currentActivity = useActivityStore((state) => state.selectedActivity);
   const updateActivitySchema = useActivityStore((state) => state.updateActivitySchema);
   const updateActivityDetails = useActivityStore((state) => state.updateActivityDetails);
   const updateActivityData = useActivityStore((state) => state.updateActivityData);
-  
+
   const [notificationProps, setNotificationProps] = useState(null);
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState(true);
 
-  const [activityDefinitionData, setActivityDefinitionData] = useState(store.activityData);
+  const [activityDefinitionData, setActivityDefinitionData] = useState();
   const [activityVersions, setActivityVersions] = useState([]);
+
+  const [loading, setLoading] = useState(false);
 
   const readOnly = currentActivity?.operation === OPERATIONS.VIEW ? true : false;
   const ref = useRef();
 
   useEffect(() => {
     const getActivityData = (activityDefKey, versionKey) => {
+      setLoading(true);
       getActivityDetails(activityDefKey, versionKey).then((response) => {
+        setLoading(false);
         if (response.success) {
-          
-          
+          const { nodes, edges } = generateActivitySchema(response.activityData.schema.nodes, response.activityData.schema.edges, readOnly);
+          response.activityData.schema.nodes = nodes;
+          response.activityData.schema.edges = edges;
+
           setActivityDefinitionData(response.activityData);
           updateActivityData(response.activityData);
           setActivityVersions(response.versions);
@@ -52,11 +59,28 @@ export default function ActivityDefinition() {
   }, [currentActivity, updateActivityData]);
 
   useEffect(() => {
-    setActivityDefinitionData(store.activityData);
-  }, [store.activityData]);
+    if (store.activityData) {
+      setActivityDefinitionData(store.activityData);
+    }
+  }, []);
 
+
+  const activityDetailsSave = (activity) => {
+    updateActivityDetails(activity);
+
+    const newActivity = { 
+      schema: 
+        activityObj.schema,
+      definition: activity.definition,
+    version: activity.version,
+
+    }
+    setActivityDefinitionData(newActivity);
+
+  }
   const saveActivity = async () => {
-    if (activityObj.definition.name && activityObj.definition.name.trim().length === 0) {
+    
+   if (activityObj.definition.name && activityObj.definition.name.trim().length === 0) {
       setNotificationProps({
         open: true,
         title: 'Validation',
@@ -71,14 +95,15 @@ export default function ActivityDefinition() {
     const newObj = {
       name: activityObj.definition.name,
       description: activityObj.definition.description,
-      schemaVersion: 1.0,
+      schemaVersion: activityObj.version.number,
       process: {
         nodes: nodeEdgesData.nodes,
         connectors: nodeEdgesData.edges,
-        contextData:activityObj.definition.contextData
+        contextData: activityObj.definition.contextData
       }
     };
-    const file = new Blob([JSON.stringify(newObj)], { type: 'text/json' });
+    console.log('activityObj',newObj);
+     const file = new Blob([JSON.stringify(newObj)], { type: 'text/json' });
     saveAs(file, 'file.json');
     const saveResponse = await saveActivityData(newObj);
     setNotificationProps({
@@ -93,8 +118,8 @@ export default function ActivityDefinition() {
       setTimeout(() => {
         pageUtil.navigate('/activities/definitions', {});
       }, 2000);
-    }else{
-      console.log(saveResponse); 
+    } else {
+      console.log(saveResponse);
     }
   };
 
@@ -126,19 +151,24 @@ export default function ActivityDefinition() {
           </Button>
         </Column>
       </Grid>
-      <Designer.WorkFlowDesigner
-        ref={ref}
-        showActivityDefineDrawer={showActivityDefineDrawer}
-        setShowActivityDefineDrawer={setShowActivityDefineDrawer}
-        updateActivityDetails={updateActivityDetails}
-        updateActivitySchema={updateActivitySchema}
-        activityDefinitionData={activityDefinitionData}
-        activityOperation={currentActivity ? currentActivity.operation : 'New'}
-        readOnly={readOnly}
-        onVersionSelection={(selectedVersion) => console.log(selectedVersion)}
-        versionData={activityVersions} //todo -- this data will be based on version api response
-        selectedVersion={currentActivity ? currentActivity.version : 'Ver.1'} //todo - pass current version id being loaded
-      />
+
+      {loading
+        ? 'Loading'
+        : activityDefinitionData && (
+            <Designer.WorkFlowDesigner
+              ref={ref}
+              showActivityDefineDrawer={showActivityDefineDrawer}
+              setShowActivityDefineDrawer={setShowActivityDefineDrawer}
+              updateActivityDetails={activityDetailsSave}
+              updateActivitySchema={updateActivitySchema}
+              activityDefinitionData={activityDefinitionData}
+              activityOperation={currentActivity ? currentActivity.operation : 'New'}
+              readOnly={readOnly}
+              onVersionSelection={(selectedVersion) => console.log(selectedVersion)}
+              versionData={activityVersions} //todo -- this data will be based on version api response
+              selectedVersion={currentActivity ? currentActivity.version : 'Ver.1'} //todo - pass current version id being loaded
+            />
+          )}
       {notificationProps && notificationProps.open && <Notification {...notificationProps} />}
     </>
   );

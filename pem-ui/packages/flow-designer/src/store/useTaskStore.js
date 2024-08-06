@@ -1,12 +1,11 @@
-import { create } from 'zustand';
-import { TASK_INITIAL_NODES } from '../constants/store-constants';
+import { create } from 'zustand'; //
+//import { TASK_INITIAL_NODES } from '../constants/store-constants';
 
 const taskStore = (set, get) => ({
   tasks: {
     nodes: [],
     edges: []
   },
-  // Task Flow States
   addTaskNodes: (activity) => {
     set((state) => ({
       tasks: { nodes: state.tasks.nodes.concat(activity), edges: state.tasks.edges }
@@ -24,20 +23,21 @@ const taskStore = (set, get) => ({
       return { tasks: { nodes: copyNodes, edges: state.tasks.edges } };
     });
   },
-
+  setTaskNOdes: (nodes) => {
+    set((state) => ({
+      tasks: { nodes: nodes, edges: state.tasks.edges }
+    }));
+  },
   addTaskEdges: (edges) => {
     set((state) => ({
       tasks: { nodes: state.tasks.nodes, edges: edges }
     }));
   },
-
   deleteTaskEdge: (id) => {
     set((state) => ({
       tasks: { nodes: state.tasks.nodes, edges: state.tasks.edges.filter((edge) => edge.id !== id) }
     }));
   },
-
-  // Dialog Flow States
   addDialogNodes: (taskNode, dialogNode) => {
     set((state) => {
       const taskNodeData = state.tasks.nodes.map((node) => {
@@ -76,7 +76,6 @@ const taskStore = (set, get) => ({
       return { tasks: { nodes: copyNodes, edges: state.tasks.edges } };
     });
   },
-
   addDialogEdges: (taskNode, dialogEdge) => {
     set((state) => {
       const taskNodeData = state.tasks.nodes.map((node) => {
@@ -94,7 +93,6 @@ const taskStore = (set, get) => ({
       return { tasks: { nodes: taskNodeData, edges: state.tasks.edges } };
     });
   },
-
   deleteDialogEdge: (taskid, edgeid) => {
     set((state) => {
       const taskNodeData = state.tasks.nodes.map((node) => {
@@ -112,7 +110,18 @@ const taskStore = (set, get) => ({
       return { tasks: { nodes: taskNodeData, edges: state.tasks.edges } };
     });
   },
-
+  setDialogNodes: (taskId, nodes) => {
+    set((state) => {
+      const taskNodeData = state.tasks.nodes.map((node) => {
+        if (node.id === taskId) {
+          return { ...rest, data: { ...restdata, dialogNodes: nodes } };
+        } else {
+          return node;
+        }
+      });
+      return { tasks: { nodes: taskNodeData, edges: state.tasks.edges } };
+    });
+  },
   addFormLayout: (taskNode, dialogNode, formLayout) => {
     set((state) => {
       const copyNodes = state.tasks.nodes;
@@ -123,7 +132,7 @@ const taskStore = (set, get) => ({
           } = copyNode;
           dialogNodes?.map((dialogNodeData) => {
             if (dialogNodeData.id === dialogNode.id) {
-              dialogNodeData.data['form'] = JSON.stringify({fields: formLayout});
+              dialogNodeData.data['form'] = JSON.stringify({ fields: formLayout });
             }
             return dialogNodeData;
           });
@@ -138,7 +147,7 @@ const taskStore = (set, get) => ({
   reset: () => {
     set({
       tasks: {
-        nodes: TASK_INITIAL_NODES,
+        nodes: [],
         edges: []
       }
     });

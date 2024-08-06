@@ -31,25 +31,25 @@ export default function BlockPropertiesTray(props) {
   const getForm = (selectedNode) => {
     switch (selectedNode && selectedNode.type) {
       case NODE_TYPE.PARTNER:
-        return <BlockDefinitionForm id={'partner-define-form'} schema={PARTNER_FORM_SCHEMA} selectedNode={selectedNode} readOnly={readOnly} />;
+        return <BlockDefinitionForm id={'partner-define-form'} schema={PARTNER_FORM_SCHEMA} {...props} />;
       case NODE_TYPE.APPROVAL:
-        return <BlockDefinitionForm id={'approval-define-form'} schema={APPROVAL_FORM_SCHEMA} selectedNode={selectedNode} readOnly={readOnly} />;
+        return <BlockDefinitionForm id={'approval-define-form'} schema={APPROVAL_FORM_SCHEMA} {...props} />;
       case NODE_TYPE.ATTRIBUTE:
-        return <BlockDefinitionForm id={'attribute-define-form'} schema={ATTRIBUTE_FORM_SCHEMA} selectedNode={selectedNode} readOnly={readOnly} />;
+        return <BlockDefinitionForm id={'attribute-define-form'} schema={ATTRIBUTE_FORM_SCHEMA} {...props} />;
       case NODE_TYPE.SPONSOR:
-        return <BlockDefinitionForm id={'sponsor-define-form'} schema={SPONSOR_FORM_SCHEMA} selectedNode={selectedNode} readOnly={readOnly} />;
+        return <BlockDefinitionForm id={'sponsor-define-form'} schema={SPONSOR_FORM_SCHEMA} {...props} />;
       case NODE_TYPE.CUSTOM:
-        return <BlockDefinitionForm id={'custom-define-form'} schema={CUSTOM_FORM_SCHEMA} selectedNode={selectedNode} readOnly={readOnly} />;
+        return <BlockDefinitionForm id={'custom-define-form'} schema={CUSTOM_FORM_SCHEMA} {...props} />;
       case NODE_TYPE.SYSTEM:
-        return <BlockDefinitionForm id={'system-define-form'} schema={SYSTEM_FORM_SCHEMA} selectedNode={selectedNode} readOnly={readOnly} />;
+        return <BlockDefinitionForm id={'system-define-form'} schema={SYSTEM_FORM_SCHEMA} {...props} />;
       case NODE_TYPE.DIALOG:
-        return <BlockDefinitionForm id={'dialog-define-form'} schema={DIALOG_FORM_SCHEMA} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />;
+        return <BlockDefinitionForm id={'dialog-define-form'} schema={DIALOG_FORM_SCHEMA} {...props} />;
       case NODE_TYPE.XSLT:
-        return <BlockDefinitionForm id={'xslt-define-form'} schema={XSLT_FROM_SCHEMA} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />;
+        return <BlockDefinitionForm id={'xslt-define-form'} schema={XSLT_FROM_SCHEMA} {...props} />;
       case NODE_TYPE.API:
-        return <BlockDefinitionForm id={'api-define-form'} schema={API_FORM_SCHEMA} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} readOnly={readOnly} />;
+        return <BlockDefinitionForm id={'api-define-form'} schema={API_FORM_SCHEMA} {...props} />;
       case NODE_TYPE.GATEWAY:
-        return <GatewayValidation id={'gateway-validation-form'} selectedNode={selectedNode} selectedTaskNode={selectedTaskNode}  readOnly={readOnly} />;
+        return <GatewayValidation id={'gateway-validation-form'} {...props} />;
       default:
         return null;
     }

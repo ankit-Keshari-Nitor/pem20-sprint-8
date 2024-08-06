@@ -1,6 +1,6 @@
 import React from 'react';
 import { Toggle as CarbonToggle } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTypeToggle, Id, helperText, labelA, labelB, readOnly, labelText, isRequired } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, PropsPanelFields, propsPanelAdvanceFields } from '../constant';
 import { ToggleIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.TOGGLE;
@@ -9,7 +9,15 @@ const Toggle = ({ field, id: uniqueId, previewMode }) => {
   const { labelText, isRequired, label, min, max, labelA, labelB, id, ...rest } = field;
 
   return (
-    <CarbonToggle data-testid={id} key={`${uniqueId}-${previewMode}`} id={`${uniqueId}-${previewMode}`} labelText={labelText === undefined ? label : labelText} labelA={labelA ? labelA : 'No'} labelB={labelB ? labelB : 'Yes'} {...rest} />
+    <CarbonToggle
+      data-testid={id}
+      key={`${uniqueId}-${previewMode}`}
+      id={`${uniqueId}-${previewMode}`}
+      labelText={labelText === undefined ? label : labelText}
+      labelA={labelA ? labelA : 'No'}
+      labelB={labelB ? labelB : 'Yes'}
+      {...rest}
+    />
   );
 };
 
@@ -22,8 +30,8 @@ Toggle.config = {
   group: FORM_FIELD_GROUPS.ACTION,
   icon: <ToggleIcon />,
   editableProps: {
-    Basic: [elementTypeToggle, Id, labelText, helperText, labelA, labelB, readOnly],
+    Basic: PropsPanelFields[type],
     Condition: []
   },
-  advanceProps: [isRequired]
+  advanceProps: propsPanelAdvanceFields[type]
 };

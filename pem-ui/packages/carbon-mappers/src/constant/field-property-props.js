@@ -1,22 +1,22 @@
 import { FORM_FIELD_TYPE } from './form-field-type';
 
-export const labelText = {
+const labelText = {
   propsName: 'labelText',
   label: 'Label',
   value: 'Label Text',
   placeholder: 'Enter Text',
   type: 'TextInput',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const isDisabled = {
+const isDisabled = {
   propsName: 'disabled',
   label: 'Disabled',
   value: false,
   type: 'Toggle'
 };
 
-export const isRequired = {
+const isRequired = {
   propsName: 'isRequired',
   label: 'Required',
   value: {
@@ -26,38 +26,38 @@ export const isRequired = {
   type: 'Toggle',
   labelA: 'No',
   labelB: 'Yes',
-  propsPanelColSize: 3
+  size: { col: 3 }
 };
 
-export const helperText = {
+const helperText = {
   propsName: 'helperText',
   label: 'Help Text',
   value: '',
   placeholder: 'Enter text',
   type: 'TextInput',
-  propsPanelColSize: 16
+  size: { col: 16 }
 };
 
-export const hrefText = {
+const hrefText = {
   propsName: 'hrefText',
   label: 'URL',
   value: '',
   type: 'TextInput',
   placeholder: 'https://',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const readOnly = {
+const readOnly = {
   propsName: 'readOnly',
   label: 'Read Only',
   value: false,
   type: 'Toggle',
   labelA: 'No',
   labelB: 'Yes',
-  propsPanelColSize: 3
+  size: { col: 3 }
 };
 
-export const minProps = {
+const minProps = {
   propsName: 'min',
   label: 'Min Length',
   value: {
@@ -68,10 +68,10 @@ export const minProps = {
   invalid: false,
   invalidText: 'Only Numbers are allowed',
   regexPattern: /^[0-9]+$/,
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const maxProps = {
+const maxProps = {
   propsName: 'max',
   label: 'Max Length',
   value: {
@@ -82,11 +82,11 @@ export const maxProps = {
   invalid: false,
   invalidText: 'Only Numbers are allowed',
   regexPattern: /^[0-9]+$/,
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
 // New constant for Options type
-export const options = {
+const options = {
   propsName: 'options',
   label: 'Options',
   value: [
@@ -99,51 +99,51 @@ export const options = {
   type: 'Options'
 };
 
-export const labelA = {
+const labelA = {
   propsName: 'labelA',
   label: 'False Text',
   value: 'Yes',
   type: 'TextInput',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const labelB = {
+const labelB = {
   propsName: 'labelB',
   label: 'True Text',
   value: 'No',
   type: 'TextInput',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const Id = {
+const Id = {
   propsName: 'name',
   label: 'ID',
   value: '',
   type: 'TextInput',
   invalid: false,
   invalidText: 'Id should be unique',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const placeHolder = {
+const placeHolder = {
   propsName: 'placeHolder',
   label: 'Placeholder',
   value: '',
   placeholder: 'Enter text',
   type: 'TextInput',
-  propsPanelColSize: 16
+  size: { col: 16 }
 };
 
-export const valueLabel = {
+const valueLabel = {
   propsName: 'value',
   label: 'Value',
   value: '',
   placeholder: 'Enter Value',
   type: 'TextInput',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const regexValidation = {
+const regexValidation = {
   propsName: 'regexValidation',
   label: 'Regex Pattern',
   items: [
@@ -183,10 +183,10 @@ export const regexValidation = {
     message: ''
   },
   type: 'Options',
-  propsPanelColSize: 16
+  size: { col: 16 }
 };
 
-export const regexValidationforPassword = {
+const regexValidationforPassword = {
   propsName: 'regexValidation',
   label: 'Regex Pattern',
   items: [
@@ -205,19 +205,19 @@ export const regexValidationforPassword = {
     message: ''
   },
   type: 'Options',
-  propsPanelColSize: 16
+  size: { col: 16 }
 };
 
-export const mapping = {
+const mapping = {
   propsName: 'mapping',
   label: 'Mapping',
   value: '',
   placeholder: 'Enter text',
   type: 'mapping',
-  propsPanelColSize: 16
+  size: { col: 16 }
 };
 
-export const orientation = {
+const orientation = {
   propsName: 'orientation',
   label: 'Orientation',
   options: [
@@ -225,131 +225,67 @@ export const orientation = {
     { label: 'Horizontal', value: 'horizontal' }
   ],
   type: 'radio',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const height = {
+const height = {
   propsName: 'height',
   label: 'Height',
   value: '1',
   type: 'TextInput',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const elementTypeTextFields = {
-  propsName: 'elementType',
-  label: 'Element Type',
-  value: [FORM_FIELD_TYPE.TEXT_INPUT, FORM_FIELD_TYPE.TEXT_AREA, FORM_FIELD_TYPE.PASSWORD, FORM_FIELD_TYPE.DATEPICKER, FORM_FIELD_TYPE.NUMBER],
-  type: 'select',
-  propsPanelColSize: 8
-};
-
-export const elementTypeHelpInfo = {
-  propsName: 'elementType',
-  label: 'Element Type',
-  value: [FORM_FIELD_TYPE.INFO],
-  type: 'select',
-  propsPanelColSize: 8
-};
-
-export const elementTypeFiles = {
-  propsName: 'elementType',
-  label: 'Element Type',
-  value: [FORM_FIELD_TYPE.FILE_UPLOADER, FORM_FIELD_TYPE.FILE_DOWNLOADER],
-  type: 'select',
-  propsPanelColSize: 8
-};
-
-export const elementTypeLink = {
-  propsName: 'elementType',
-  label: 'Element Type',
-  value: [FORM_FIELD_TYPE.LINK],
-  type: 'select',
-  propsPanelColSize: 8
-};
-
-export const elementTypeToggle = {
-  propsName: 'elementType',
-  label: 'Element Type',
-  value: [FORM_FIELD_TYPE.TOGGLE],
-  type: 'select',
-  propsPanelColSize: 8
-};
-
-export const elementTypeGroup = {
-  propsName: 'elementType',
-  label: 'Element Type',
-  value: [FORM_FIELD_TYPE.SELECT, FORM_FIELD_TYPE.RADIOGROUP, FORM_FIELD_TYPE.CHECKBOXGROUP],
-  type: 'select',
-  propsPanelColSize: 8
-};
-
-export const elementTypeLabel = {
-  propsName: 'elementType',
-  label: 'Element Type',
-  value: [FORM_FIELD_TYPE.TEXT],
-  type: 'select',
-  propsPanelColSize: 8
-};
-
-export const elementTypeDataTable = {
-  propsName: 'elementType',
-  label: 'Element Type',
-  value: [FORM_FIELD_TYPE.DATATABLE],
-  type: 'select',
-  propsPanelColSize: 8
-};
-
-export const tableColumn = {
+const tableColumn = {
   propsName: 'tableColumns',
   label: 'Column Header',
   value: [],
   type: 'TextInput',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const tableRows = {
+const tableRows = {
   propsName: 'tableRows',
   label: 'Table Rows',
   value: [],
   type: 'TextInput',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const selectRow = {
+const selectRow = {
   propsName: 'selectablerows',
   label: 'Selectable Rows',
   value: false,
   type: 'Toggle',
   labelA: 'No',
   labelB: 'Yes',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const pageSize = {
+const pageSize = {
   propsName: 'pagesize',
   label: 'Page Size',
   value: '',
   type: 'TextInput',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const buttonLabel = {
+const buttonLabel = {
   propsName: 'buttonLabel',
   label: 'Button Label',
   value: '',
   type: 'TextInput',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const fileUploader = {
+const fileUploader = {
   propsName: 'fileUploader',
   label: 'File Upload',
   value: '',
   type: 'FileUpload'
 };
 
-export const mulitipleAllow = {
+const mulitipleAllow = {
   propsName: 'mulitipleAllow',
   label: 'Multiple Allow',
   value: false,
@@ -358,7 +294,7 @@ export const mulitipleAllow = {
   labelB: 'Yes'
 };
 
-export const decodeBase64 = {
+const decodeBase64 = {
   propsName: 'decodeBase64',
   label: 'Decode Base64',
   value: false,
@@ -367,17 +303,17 @@ export const decodeBase64 = {
   labelB: 'Yes'
 };
 
-export const extensions = {
+const extensions = {
   propsName: 'extensions',
   label: 'Extensions',
   type: 'TextInput',
   invalid: false,
   invalidText: 'Only comma separated values are allowed',
   regexPattern: /^[a-zA-Z0-9,]+$/,
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const maxFileSize = {
+const maxFileSize = {
   propsName: 'maxFileSize',
   label: 'Max File Size',
   type: 'TextInput',
@@ -385,10 +321,10 @@ export const maxFileSize = {
   invalid: false,
   invalidText: "Invalid size format. Use format like '500b', '500kb', or '500mb'.",
   regexPattern: /(\d+(\.\d+)?)(b|kb|mb)/i,
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const fontSize = {
+const fontSize = {
   propsName: 'fontSize',
   label: 'Font Size',
   type: 'DropDown',
@@ -410,45 +346,47 @@ export const fontSize = {
     { label: '32px', value: '32px' },
     { label: '34px', value: '34px' },
     { label: '36px', value: '36px' }
-  ]
+  ],
+  size: { col: 8 }
 };
 
-export const addTab = {
+const addTab = {
   propsName: 'addTabBtn',
   label: 'Add Tab',
   value: '',
   type: 'Button',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const addColumnInGroup = {
+const addColumnInGroup = {
   propsName: 'addColumnBtn',
   label: 'Add Column',
   value: '',
   type: 'Button',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const minDate = {
+const minDate = {
   type: 'Date',
   propsName: 'minDate',
   label: 'Min Date',
   value: '',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const maxDate = {
+const maxDate = {
   type: 'Date',
   propsName: 'maxDate',
   label: 'Max Date',
   value: '',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
-export const dateFormat = {
+
+const dateFormat = {
   type: 'DropDown',
   label: 'Date Format',
   propsName: 'dateFormat',
-  propsPanelColSize: 8,
+  size: { col: 8 },
   value: 'mm/dd/yyyy',
   options: [
     { label: 'mm/dd/yyyy', value: 'm/d/Y' },
@@ -457,15 +395,15 @@ export const dateFormat = {
   ]
 };
 
-export const dateValue = {
+const dateValue = {
   type: 'Date',
   propsName: 'dateValue',
   label: 'Value',
   value: '',
-  propsPanelColSize: 8
+  size: { col: 8 }
 };
 
-export const textAreaHeight = {
+const textAreaHeight = {
   propsName: 'height',
   label: 'Default Height (in lines)',
   type: 'DropDown',
@@ -475,7 +413,109 @@ export const textAreaHeight = {
     { label: '2', value: '2' },
     { label: '3', value: '3' },
     { label: '4', value: '4' },
-    { label: '5', value: '5' },
+    { label: '5', value: '5' }
   ],
-  propsPanelColSize: 8
+  size: { col: 8 }
+};
+
+const ElementTypeConfig = {
+  [FORM_FIELD_TYPE.TEXT_INPUT]: {
+    propsName: 'elementType',
+    label: 'Element Type',
+    options: [FORM_FIELD_TYPE.TEXT_INPUT, FORM_FIELD_TYPE.TEXT_AREA, FORM_FIELD_TYPE.PASSWORD, FORM_FIELD_TYPE.DATEPICKER, FORM_FIELD_TYPE.NUMBER],
+    type: 'select',
+    size: { col: 8 }
+  },
+
+  [FORM_FIELD_TYPE.INFO]: {
+    propsName: 'elementType',
+    label: 'Element Type',
+    options: [FORM_FIELD_TYPE.INFO],
+    type: 'select',
+    size: { col: 8 }
+  },
+
+  [FORM_FIELD_TYPE.FILE_UPLOADER]: {
+    propsName: 'elementType',
+    label: 'Element Type',
+    options: [FORM_FIELD_TYPE.FILE_UPLOADER, FORM_FIELD_TYPE.FILE_DOWNLOADER],
+    type: 'select',
+    size: { col: 8 }
+  },
+
+  [FORM_FIELD_TYPE.LINK]: {
+    propsName: 'elementType',
+    label: 'Element Type',
+    options: [FORM_FIELD_TYPE.LINK],
+    type: 'select',
+    size: { col: 8 }
+  },
+
+  [FORM_FIELD_TYPE.TOGGLE]: {
+    propsName: 'elementType',
+    label: 'Element Type',
+    options: [FORM_FIELD_TYPE.TOGGLE],
+    type: 'select',
+    size: { col: 8 }
+  },
+
+  [FORM_FIELD_TYPE.SELECT]: {
+    propsName: 'elementType',
+    label: 'Element Type',
+    options: [FORM_FIELD_TYPE.SELECT, FORM_FIELD_TYPE.RADIOGROUP, FORM_FIELD_TYPE.CHECKBOXGROUP],
+    type: 'select',
+    size: { col: 8 }
+  },
+
+  [FORM_FIELD_TYPE.TEXT]: {
+    propsName: 'elementType',
+    label: 'Element Type',
+    options: [FORM_FIELD_TYPE.TEXT],
+    type: 'select',
+    size: { col: 8 }
+  },
+
+  [FORM_FIELD_TYPE.DATATABLE]: {
+    propsName: 'elementType',
+    label: 'Element Type',
+    options: [FORM_FIELD_TYPE.DATATABLE],
+    type: 'select',
+    size: { col: 8 }
+  }
+};
+
+export const PropsPanelFields = {
+  [FORM_FIELD_TYPE.TEXT_INPUT]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT_INPUT], Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
+  [FORM_FIELD_TYPE.TEXT_AREA]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT_INPUT], Id, labelText, readOnly, isRequired, textAreaHeight, valueLabel, placeHolder, helperText, mapping],
+  [FORM_FIELD_TYPE.PASSWORD]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT_INPUT], Id, labelText, isRequired, placeHolder, helperText, mapping],
+  [FORM_FIELD_TYPE.DATEPICKER]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT_INPUT], Id, labelText, readOnly, isRequired, dateFormat, dateValue, placeHolder, helperText],
+  [FORM_FIELD_TYPE.NUMBER]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT_INPUT], Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
+  [FORM_FIELD_TYPE.INFO]: [ElementTypeConfig[FORM_FIELD_TYPE.INFO], Id, labelText],
+  [FORM_FIELD_TYPE.FILE_DOWNLOADER]: [ElementTypeConfig[FORM_FIELD_TYPE.FILE_UPLOADER], Id, labelText, helperText, maxFileSize, extensions],
+  [FORM_FIELD_TYPE.FILE_UPLOADER]: [ElementTypeConfig[FORM_FIELD_TYPE.FILE_UPLOADER], Id, labelText, helperText, buttonLabel, fileUploader],
+  [FORM_FIELD_TYPE.LINK]: [ElementTypeConfig[FORM_FIELD_TYPE.LINK], Id, labelText, hrefText, helperText],
+  [FORM_FIELD_TYPE.TOGGLE]: [ElementTypeConfig[FORM_FIELD_TYPE.TOGGLE], Id, labelText, helperText, labelA, labelB, readOnly],
+  [FORM_FIELD_TYPE.SELECT]: [ElementTypeConfig[FORM_FIELD_TYPE.SELECT], Id, labelText, placeHolder, helperText, options, readOnly],
+  [FORM_FIELD_TYPE.RADIOGROUP]: [ElementTypeConfig[FORM_FIELD_TYPE.SELECT], Id, labelText, helperText, options, orientation, readOnly],
+  [FORM_FIELD_TYPE.CHECKBOXGROUP]: [ElementTypeConfig[FORM_FIELD_TYPE.SELECT], Id, labelText, helperText, options, orientation, readOnly],
+  [FORM_FIELD_TYPE.TEXT]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT], Id, labelText, mapping, fontSize],
+  [FORM_FIELD_TYPE.DATATABLE]: [ElementTypeConfig[FORM_FIELD_TYPE.DATATABLE], Id, labelText, helperText, selectRow, pageSize, tableColumn, tableRows]
+};
+
+export const propsPanelAdvanceFields = {
+  [FORM_FIELD_TYPE.TEXT_INPUT]: [minProps, maxProps, regexValidation],
+  [FORM_FIELD_TYPE.TEXT_AREA]: [minProps, maxProps, regexValidation],
+  [FORM_FIELD_TYPE.NUMBER]: [minProps, maxProps],
+  [FORM_FIELD_TYPE.PASSWORD]: [minProps, maxProps, regexValidationforPassword],
+  [FORM_FIELD_TYPE.PASSWORD]: [[minDate, maxDate]],
+  [FORM_FIELD_TYPE.INFO]: [],
+  [FORM_FIELD_TYPE.FILE_DOWNLOADER]: [],
+  [FORM_FIELD_TYPE.FILE_UPLOADER]: [],
+  [FORM_FIELD_TYPE.LINK]: [],
+  [FORM_FIELD_TYPE.TOGGLE]: [],
+  [FORM_FIELD_TYPE.SELECT]: [],
+  [FORM_FIELD_TYPE.RADIOGROUP]: [],
+  [FORM_FIELD_TYPE.CHECKBOXGROUP]: [],
+  [FORM_FIELD_TYPE.TEXT]: [],
+  [FORM_FIELD_TYPE.DATATABLE]: []
 };

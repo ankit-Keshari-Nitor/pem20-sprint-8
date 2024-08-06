@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link as CarbonLink } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTypeLink, Id, helperText, hrefText, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, PropsPanelFields, propsPanelAdvanceFields } from '../constant';
 import { LinkIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.LINK;
@@ -23,7 +23,7 @@ Link.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <LinkIcon />,
   editableProps: {
-    Basic: [elementTypeLink, Id, labelText, hrefText, helperText]
+    Basic: PropsPanelFields[type]
   },
-  advanceProps: []
+  advanceProps: propsPanelAdvanceFields[type]
 };

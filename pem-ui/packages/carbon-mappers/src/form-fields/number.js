@@ -1,21 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NumberInput as CarbonNumberInput } from '@carbon/react';
-import {
-  FORM_FIELD_TYPE,
-  minProps,
-  maxProps,
-  readOnly,
-  helperText,
-  placeHolder,
-  Id,
-  FORM_FIELD_LABEL,
-  FORM_FIELD_GROUPS,
-  isRequired,
-  labelText,
-  elementTypeTextFields,
-  valueLabel,
-  mapping
-} from '../constant';
+import { FORM_FIELD_TYPE, FORM_FIELD_LABEL, FORM_FIELD_GROUPS, PropsPanelFields, propsPanelAdvanceFields } from '../constant';
 import { CharacterWholeNumber } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.NUMBER;
@@ -63,8 +48,8 @@ NumberInput.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <CharacterWholeNumber />,
   editableProps: {
-    Basic: [elementTypeTextFields, Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
+    Basic: PropsPanelFields[type],
     Condition: []
   },
-  advanceProps: [minProps, maxProps]
+  advanceProps: propsPanelAdvanceFields[type]
 };

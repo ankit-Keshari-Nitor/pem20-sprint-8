@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { DatePicker as CarbonDatePicker, DatePickerInput } from '@carbon/react';
-import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, elementTypeTextFields, dateFormat, dateValue, helperText, minDate, maxDate, placeHolder, Id, readOnly, isRequired, labelText } from '../constant';
+import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, PropsPanelFields, propsPanelAdvanceFields } from '../constant';
 import { DatepickerIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.DATEPICKER;
 
 const DatePicker = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
   const { type, labelText, value, dateFormat, label, readOnly, dateValue, placeHolder, helperText, isRequired, minDate, maxDate, ...rest } = field;
-  const [fieldValue, setFieldValue] = useState(new Date);
+  const [fieldValue, setFieldValue] = useState(new Date());
   useEffect(() => {
     if (previewMode) {
       setFieldValue(dateValue ? new Date(dateValue).toLocaleString('en-US') : value ? new Date(value).toLocaleString('en-US') : new Date().toLocaleString('en-US'));
@@ -47,8 +47,8 @@ DatePicker.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <DatepickerIcon />,
   editableProps: {
-    Basic: [elementTypeTextFields, Id, labelText, readOnly, isRequired, dateFormat, dateValue, placeHolder, helperText],
+    Basic: PropsPanelFields[type],
     Condition: []
   },
-  advanceProps: [minDate, maxDate]
+  advanceProps: propsPanelAdvanceFields[type]
 };

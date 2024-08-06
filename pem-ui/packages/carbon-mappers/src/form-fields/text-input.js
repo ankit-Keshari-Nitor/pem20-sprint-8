@@ -1,22 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { TextInput as CarbonTextInput } from '@carbon/react';
-import {
-  FORM_FIELD_TYPE,
-  minProps,
-  maxProps,
-  readOnly,
-  helperText,
-  FORM_FIELD_LABEL,
-  FORM_FIELD_GROUPS,
-  isRequired,
-  labelText,
-  placeHolder,
-  valueLabel,
-  Id,
-  regexValidation,
-  elementTypeTextFields,
-  mapping
-} from '../constant';
+import { FORM_FIELD_TYPE, FORM_FIELD_LABEL, FORM_FIELD_GROUPS, PropsPanelFields, propsPanelAdvanceFields } from '../constant';
 import { TextInputIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.TEXT_INPUT;
@@ -60,8 +44,8 @@ TextInput.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <TextInputIcon />,
   editableProps: {
-    Basic: [elementTypeTextFields, Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
+    Basic: PropsPanelFields[type],
     Condition: []
   },
-  advanceProps: [minProps, maxProps, regexValidation]
+  advanceProps: propsPanelAdvanceFields[type]
 };

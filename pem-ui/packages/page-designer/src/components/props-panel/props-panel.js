@@ -310,7 +310,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                   <>
                                     {/* Select */}
                                     {item.type === SELECT && (
-                                      <Column lg={item.propsPanelColSize}>
+                                      <Column lg={item.size.col}>
                                         <Select
                                           className="component-types right-palette-form-item"
                                           id={String(selectedFiledProps.id)}
@@ -318,9 +318,9 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                           onChange={handleComponentTypeChange}
                                           defaultValue={componentType}
                                           value={componentType}
-                                          disabled={item?.value.length > 1 ? false : true}
+                                          disabled={item?.options.length > 1 ? false : true}
                                         >
-                                          {item.value.map((fieldName, index) => {
+                                          {item.options.map((fieldName, index) => {
                                             return <SelectItem key={index} value={fieldName} text={fieldName} />;
                                           })}
                                         </Select>
@@ -328,7 +328,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     )}
                                     {/* TextInput */}
                                     {item.type === TEXT_INPUT && item.propsName != TABLE_COLUMNS && item.propsName != TABLE_ROWS && (
-                                      <Column lg={item.propsPanelColSize}>
+                                      <Column lg={item.size.col}>
                                         <TextInput
                                           key={idx}
                                           readOnly={item?.readOnly}
@@ -345,7 +345,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     )}
                                     {/* Mapping */}
                                     {item.type === MAPPING && (
-                                      <Column lg={item.propsPanelColSize}>
+                                      <Column lg={item.size.col}>
                                         <TextInput
                                           key={idx}
                                           id={String(idx)}
@@ -368,7 +368,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     )}
                                     {/* Toggle */}
                                     {item.type === TOGGLE && item.propsName != ISREQUIRED && (
-                                      <Column lg={item.propsPanelColSize}>
+                                      <Column lg={item.size.col}>
                                         <ul key={idx}>
                                           <li>
                                             <Toggle
@@ -389,7 +389,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     )}
                                     {/* Toggle with required */}
                                     {item.type === TOGGLE && item.propsName == ISREQUIRED && (
-                                      <Column lg={item.propsPanelColSize}>
+                                      <Column lg={item.size.col}>
                                         <ul key={idx}>
                                           <li>
                                             <Toggle
@@ -430,7 +430,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     )}
                                     {/* Radio */}
                                     {item.type === RADIO && (
-                                      <Column lg={item.propsPanelColSize}>
+                                      <Column lg={item.size.col}>
                                         <div className="right-palette-form-item">
                                           <RadioButtonGroup
                                             legendText={item.label}
@@ -471,7 +471,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     )}
                                     {/* DropDown */}
                                     {item.type === DROPDOWN && (
-                                      <Column lg={item.propsPanelColSize ? item.propsPanelColSize : 16}>
+                                      <Column lg={item.size.col ? item.size.col : 16}>
                                         <Select
                                           className="right-palette-form-item"
                                           id={String(selectedFiledProps.id)}
@@ -518,7 +518,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     )}
                                     {/* Date Picker */}
                                     {item.type === 'Date' && (
-                                      <Column lg={item.propsPanelColSize} className="right-palette-form-item">
+                                      <Column lg={item.size.col} className="right-palette-form-item">
                                         <DatePicker
                                           datePickerType="single"
                                           onChange={(e) => {
@@ -627,7 +627,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     )}
                                     {/* Add Tab Button */}
                                     {item.propsName === ADD_TAB_BTN && (
-                                      <Column lg={item.propsPanelColSize}>
+                                      <Column lg={item.size.col}>
                                         <Button
                                           onClick={(e) => {
                                             handleSchemaChanges(selectedFiledProps?.id, SUBTAB, '', 1, selectedFiledProps?.currentPathDetail);
@@ -639,7 +639,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     )}
                                     {/* Add Column in Group Button */}
                                     {item.propsName === ADD_COLUMN_BTN && (
-                                      <Column lg={item.propsPanelColSize}>
+                                      <Column lg={item.size.col}>
                                         <Button
                                           onClick={(e) => {
                                             handleSchemaChanges(selectedFiledProps?.id, CUSTOM_COLUMN, '', 1, selectedFiledProps?.currentPathDetail);
@@ -769,7 +769,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                         <>
                           {/* Min - Max validation */}
                           {advncProps.type === 'TextInput' && (
-                            <Column className='min-max' lg={advncProps.propsPanelColSize}>
+                            <Column className="min-max" lg={advncProps.size.col}>
                               <TextInput
                                 key={`${selectedFiledProps?.id}-${idx}`}
                                 id={String(`${selectedFiledProps?.id}-${idx}`)}
@@ -811,7 +811,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           {/* Regex Validation */}
                           {advncProps.type === OPTIONS && (
                             <>
-                              <Column className="regx-opt" lg={advncProps.propsPanelColSize}>
+                              <Column className="regx-opt" lg={advncProps.size.col}>
                                 <RadioButtonGroup
                                   legendText={advncProps.label}
                                   name={`radio-group-${selectedFiledProps?.id}`}
@@ -833,7 +833,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                   })}
                                 </RadioButtonGroup>
                               </Column>
-                              {/* <Column lg={advncProps.propsPanelColSize}>
+                              {/* <Column lg={advncProps.size.col}>
                                 <Select
                                   className="regex-types right-palette-form-item"
                                   id={String(selectedFiledProps.id)}
@@ -889,7 +889,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                 </Column>
                               )}
                               {/* Default Regex Error Message */}
-                              <Column lg={advncProps.propsPanelColSize}>
+                              <Column lg={advncProps.size.col}>
                                 <TextInput
                                   key={`${idx}-'message'`}
                                   id={String(`${idx}-message`)}
@@ -948,7 +948,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                           )}
                           {/* Min Date and Max Date*/}
                           {advncProps.type === 'Date' && (
-                            <Column lg={advncProps.propsPanelColSize} className="right-palette-form-item">
+                            <Column lg={advncProps.size.col} className="right-palette-form-item">
                               <DatePicker
                                 datePickerType="single"
                                 onChange={(e) => {

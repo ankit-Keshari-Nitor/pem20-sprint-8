@@ -1,11 +1,17 @@
+import Designer from '@b2bi/flow-designer';
 const Nodes_With_SubProcess = ['SYSTEM', 'CUSTOM', 'SPONSOR', 'PARTNER'];
 
+const NODE_DATA = Designer.NODE_TYPES; 
+const EDGE_DATA = Designer.INITIAL_EDGES;
+
 export const getNodeSpecificDataObj = (node) => {
-  console.log(node);
   switch (node.type.toUpperCase()) {
     case 'API':
       return {
         description: node.data.editableProps?.description,
+        loop: {
+          loopCardinality: '',
+        },
         api: {
           apiConfiguration: 'apiConfiguration',
           url: 'https://jira.com/browse/PEM-273476',
@@ -13,10 +19,10 @@ export const getNodeSpecificDataObj = (node) => {
           requestContentType: 'JSON',
           responseContentType: 'JSON',
           file: 'file object',
-          headers: '[{"key:"value"}]',
-          requestBody: '{"name:"test_name"}',
+          requestHeaders: '[{"key:"value"}]',
+          request: '{"name:"test_name"}',
           sampleResponse: '{"name:"test_name"}',
-          responseBody: '{"name:"test_name"}'
+          response: '{"name:"test_name"}'
         }
       };
     case 'XSLT':
@@ -28,6 +34,10 @@ export const getNodeSpecificDataObj = (node) => {
           sampleOutput: '',
           output: '',
           escapeInput: false
+        },
+        loop:{
+          loopCardinality: '',
+          completionCondition: '',
         }
       };
     case 'PARTNER':
@@ -60,10 +70,13 @@ export const getNodeSpecificDataObj = (node) => {
     case 'FORM':
       return {
         description: node.data.editableProps?.description,
-        userKeys: '',
-        roleKeys: node.data.editableProps?.role,
-        form: {
-          key: 'value'
+        //userKeys: '',
+        //roleKeys: node.data.editableProps?.role,
+        form: node.data.form,
+        loop: {
+          loopDataInput: '',
+          dataItem: '',
+          completionCondition: ''
         }
       };
     case 'CUSTOM':
@@ -173,64 +186,30 @@ const getEndNode = (node) => {
 };
 
 export const nodeObjects = (node, readOnly) => {
-console.log(node);
   switch (node.type.toUpperCase()) {
     case 'START':
       return getStartNode(node);
     case 'END':
       return getEndNode(node);
-    default:
+    case 'PARTNER':
+      const data = { ...NODE_DATA[node.type.toUpperCase()] };
+      const { nodes, connectors, diagram, id, type, ...rest } = node
+      data.editableProps = { name: rest?.name, description: rest?.description, estimate_days: rest?.estimateDays, role: rest?.roleKeys };
+      data.dialogNodes = nodes;
+      data.dialogEdges = connectors;
       return {
-        id: 'Task_Name_0',
+        id: id,
         position: {
-          x: 293,
-          y: 150
+          x: diagram.x,
+          y: diagram.y
         },
-        type: 'PARTNER',
+        type: type,
         data: {
-          type: 'PARTNER',
-          shortName: 'Partner',
-          borderColor: '#023FB2',
-          taskName: 'Partner Task',
-          editableProps: {},
-          dialogEdges: [],
-          dialogNodes: [],
-          exitValidationQuery: {
-            combinator: 'and',
-            rules: []
-          },
-          validateExitValidationQuery: {
-            combinator: 'and',
-            rules: []
-          },
-          exitValidationMessage: '',
-          entryValidationQuery: {
-            combinator: 'and',
-            rules: []
-          },
-          validateEntryValidationQuery: {
-            combinator: 'and',
-            rules: []
-          },
-          entryValidationMessage: '',
-          contextMenu: [
-            {
-              label: 'Delete',
-              action: 'delete'
-            },
-            {
-              label: 'Clone',
-              action: 'clone'
-            },
-            {
-              label: 'Save as Template',
-              action: 'savetemplate'
-            }
-          ],
-          category: 'task',
-          active: true
+          ...data
         }
-      };
+      };  
+    default:
+      return {};
   }
 };
 
@@ -240,23 +219,26 @@ export const generateActivitySchema = (nodes, edges, readOnly) => {
   });
 
   const newEdges = edges.map((edge) => {
-    return {
-      ...edge,
-      type: 'crossEdge',
 
-      markerEnd: {
-        type: 'arrowclosed',
-        width: 20,
-        height: 20,
-        color: '#FF0072'
-      },
-      data: {
-        readOnly: readOnly
-      },
-      style: {
-        stroke: '#000'
-      }
-    };
+    return {...EDGE_DATA[0], ...edge}
+    
+    // return {
+    //   ...edge,
+    //   type: 'crossEdge',
+
+    //   markerEnd: {
+    //     type: 'arrowclosed',
+    //     width: 20,
+    //     height: 20,
+    //     color: '#FF0072'
+    //   },
+    //   data: {
+    //     readOnly: readOnly
+    //   },
+    //   style: {
+    //     stroke: '#000'
+    //   }
+    // };
   });
 
   return {

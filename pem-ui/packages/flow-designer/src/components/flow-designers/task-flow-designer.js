@@ -7,7 +7,7 @@ import 'reactflow/dist/style.css';
 import './style.scss';
 
 import BlocksTray from '../blocks-tray';
-import { CATEGORY_TYPES } from '../../constants';
+import { CATEGORYS } from '../../constants';
 import BlockPropertiesTray from '../block-properties-tray';
 import ActivityDefinitionForm from '../activity-definition-form';
 
@@ -49,7 +49,7 @@ const TaskFlowDesigner = ({
             {/* Tasks Block */}
             {!readOnly && (
               <div className="task-tray-container">
-                <BlocksTray category={CATEGORY_TYPES.TASK} readOnly={readOnly} />
+                <BlocksTray category={CATEGORYS.TASK} readOnly={readOnly} />
               </div>
             )}
 

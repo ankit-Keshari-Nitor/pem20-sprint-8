@@ -22,7 +22,7 @@ import CrossEdge from './../components/edges/cross-edge';
 import './style.scss';
 import { MarkerType, getConnectedEdges } from 'reactflow';
 
-export const CATEGORY_TYPES = {
+export const CATEGORYS = {
   TASK: 'task',
   DIALOG: 'dialog'
 };
@@ -36,14 +36,15 @@ export const NODE_TYPE = {
   SPONSOR: 'SPONSOR',
   CUSTOM: 'CUSTOM',
   SYSTEM: 'SYSTEM',
-  GATEWAY: 'GATEWAY',
+  TASK_GATEWAY: 'GATEWAY',
+  DIALOG_GATEWAY: 'GATEWAY',
   DIALOG: 'FORM',
   XSLT: 'XSLT',
   API: 'API'
 };
 
-export const NODE_TYPES = [
-  {
+export const NODE_TYPES = {
+  [NODE_TYPE.PARTNER]: {
     type: NODE_TYPE.PARTNER,
     shortName: 'Partner',
     borderColor: '#0585FC',
@@ -73,10 +74,10 @@ export const NODE_TYPES = [
       { label: 'Save as Template', action: 'savetemplate' }
     ],
     nodeIcon: <PartnerBlockIcon />,
-    category: CATEGORY_TYPES.TASK,
+    category: CATEGORYS.TASK,
     active: true
   },
-  {
+  [NODE_TYPE.APPROVAL]: {
     type: NODE_TYPE.APPROVAL,
     shortName: 'Approval',
     borderColor: '#0585FC',
@@ -106,10 +107,10 @@ export const NODE_TYPES = [
       { label: 'Save as Template', action: 'savetemplate' }
     ],
     nodeIcon: <ApprovalBlockIcon />,
-    category: CATEGORY_TYPES.TASK,
+    category: CATEGORYS.TASK,
     active: false
   },
-  {
+  [NODE_TYPE.ATTRIBUTE]: {
     type: NODE_TYPE.ATTRIBUTE,
     shortName: 'Attribute',
     borderColor: '#0585FC',
@@ -139,10 +140,10 @@ export const NODE_TYPES = [
       { label: 'Save as Template', action: 'savetemplate' }
     ],
     nodeIcon: <AttributeBlockIcon />,
-    category: CATEGORY_TYPES.TASK,
+    category: CATEGORYS.TASK,
     active: false
   },
-  {
+  [NODE_TYPE.SPONSOR]: {
     type: NODE_TYPE.SPONSOR,
     shortName: 'Sponsor',
     borderColor: '#0585FC',
@@ -172,10 +173,10 @@ export const NODE_TYPES = [
       { label: 'Save as Template', action: 'savetemplate' }
     ],
     nodeIcon: <SponsorBlockIcon />,
-    category: CATEGORY_TYPES.TASK,
+    category: CATEGORYS.TASK,
     active: true
   },
-  {
+  [NODE_TYPE.CUSTOM]: {
     type: NODE_TYPE.CUSTOM,
     shortName: 'Custom',
     borderColor: '#0585FC',
@@ -205,10 +206,10 @@ export const NODE_TYPES = [
       { label: 'Save as Template', action: 'savetemplate' }
     ],
     nodeIcon: <CustomBlockIcon />,
-    category: CATEGORY_TYPES.TASK,
+    category: CATEGORYS.TASK,
     active: false
   },
-  {
+  [NODE_TYPE.SYSTEM]: {
     type: NODE_TYPE.SYSTEM,
     shortName: 'System',
     borderColor: '#0585FC',
@@ -238,11 +239,11 @@ export const NODE_TYPES = [
       { label: 'Save as Template', action: 'savetemplate' }
     ],
     nodeIcon: <SystemBlockIcon />,
-    category: CATEGORY_TYPES.TASK,
+    category: CATEGORYS.TASK,
     active: false
   },
-  {
-    type: NODE_TYPE.GATEWAY,
+  [NODE_TYPE.TASK_GATEWAY]: {
+    type: NODE_TYPE.TASK_GATEWAY,
     shortName: 'Gatway',
     borderColor: '#0585FC',
     taskName: 'Gateway Task',
@@ -273,10 +274,10 @@ export const NODE_TYPES = [
       { label: 'Save as Template', action: 'savetemplate' }
     ],
     nodeIcon: <GatewayBlockIcon />,
-    category: CATEGORY_TYPES.TASK,
-    active: true
+    category: CATEGORYS.TASK,
+    active: false
   },
-  {
+  [NODE_TYPE.DIALOG]: {
     type: NODE_TYPE.DIALOG,
     shortName: 'Dialog',
     borderColor: '#0585FC',
@@ -307,10 +308,10 @@ export const NODE_TYPES = [
     ],
     form: '',
     nodeIcon: <FormBlockIcon />,
-    category: CATEGORY_TYPES.DIALOG,
+    category: CATEGORYS.DIALOG,
     active: true
   },
-  {
+  [NODE_TYPE.API]: {
     type: NODE_TYPE.API,
     shortName: 'API',
     borderColor: '#0585FC',
@@ -340,10 +341,10 @@ export const NODE_TYPES = [
       { label: 'Save as Template', action: 'savetemplate' }
     ],
     nodeIcon: <ApiBlockIcon />,
-    category: CATEGORY_TYPES.DIALOG,
+    category: CATEGORYS.DIALOG,
     active: true
   },
-  {
+  [NODE_TYPE.XSLT]: {
     type: NODE_TYPE.XSLT,
     shortName: 'XSLT',
     borderColor: '#0585FC',
@@ -373,11 +374,11 @@ export const NODE_TYPES = [
       { label: 'Save as Template', action: 'savetemplate' }
     ],
     nodeIcon: <XsltBlockIcon />,
-    category: CATEGORY_TYPES.DIALOG,
+    category: CATEGORYS.DIALOG,
     active: true
   },
-  {
-    type: NODE_TYPE.GATEWAY,
+  [NODE_TYPE.DIALOG_GATEWAY]: {
+    type: NODE_TYPE.DIALOG_GATEWAY,
     shortName: 'Gateway',
     borderColor: '#0585FC',
     taskName: 'Gateway Task',
@@ -408,10 +409,15 @@ export const NODE_TYPES = [
       { label: 'Save as Template', action: 'savetemplate' }
     ],
     nodeIcon: <GatewayBlockIcon />,
-    category: CATEGORY_TYPES.DIALOG,
-    active: true
+    category: CATEGORYS.DIALOG,
+    active: false
   }
-];
+};
+
+export const CATEGORY_TYPES = {
+  [CATEGORYS.TASK]: [ NODE_TYPES[NODE_TYPE.PARTNER], NODE_TYPES[NODE_TYPE.APPROVAL], NODE_TYPES[NODE_TYPE.ATTRIBUTE], NODE_TYPES[NODE_TYPE.SPONSOR], NODE_TYPES[NODE_TYPE.CUSTOM], NODE_TYPES[NODE_TYPE.SYSTEM], NODE_TYPES[NODE_TYPE.TASK_GATEWAY] ],
+  [CATEGORYS.DIALOG]: [ NODE_TYPES[NODE_TYPE.DIALOG], NODE_TYPES[NODE_TYPE.API], NODE_TYPES[NODE_TYPE.XSLT], NODE_TYPES[NODE_TYPE.DIALOG_GATEWAY] ]
+};
 
 export const connectionLineStyle = { stroke: '#000' };
 export const defaultViewport = { x: 0, y: 0, zoom: 1 };

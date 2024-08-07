@@ -4,7 +4,7 @@ import { Popover, PopoverContent } from '@carbon/react';
 
 import './style.scss';
 
-import { CATEGORY_TYPES, NODE_TYPES } from '../../constants';
+import { CATEGORYS, CATEGORY_TYPES } from '../../constants';
 
 const PlusEdgeButton = (props) => {
   const { data, id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition } = props;
@@ -38,7 +38,7 @@ const PlusEdgeButton = (props) => {
         <PopoverContent>
           <div>
             <ul style={{ margin: '4px 0px' }}>
-              {NODE_TYPES.filter((x) => x.category === CATEGORY_TYPES.TASK).map((node, i) => {
+              {CATEGORY_TYPES[CATEGORYS.TASK].map((node, i) => {
                 return (
                   <li className="node-type-list" key={i} onClick={() => data.onAddNodeCallback({ id, type: node.type, position: { x: labelX, y: labelY } })}>
                     <label className="node-type-list-label">{node.type}</label>

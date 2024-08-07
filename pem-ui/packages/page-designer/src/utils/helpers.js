@@ -539,7 +539,6 @@ export const collectPaletteEntries = (formFields) => {
         component: {
           type: type,
           label: fieldConfig.label,
-          group: fieldConfig.group,
           icon: fieldConfig.icon
         }
       };

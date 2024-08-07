@@ -42,12 +42,13 @@ const testElements = (taskEdgesClone, elements) => {
 
 const getUpdatedElementsAfterNodeAddition = ({ elements, targetEdgeId, type, position, onDoubleClick, onDeleteNodeCallback, onNodeClickCallback, onAddNodeCallback }) => {
   const newNodeId = getNewTaskId();
-  const nodeData = NODE_TYPES.filter((node) => node.type === type);
+  //const nodeData = NODE_TYPES.filter((node) => node.type === type);
+  const nodeData = NODE_TYPES[type];
   const newNode = {
     id: newNodeId,
     type,
     data: {
-      ...nodeData[0],
+      ...nodeData,
       onDoubleClick,
       onNodeClickCallback,
       onDeleteNodeCallback

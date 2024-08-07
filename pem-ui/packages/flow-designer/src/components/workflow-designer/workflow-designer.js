@@ -70,9 +70,10 @@ const WorkFlowDesigner = forwardRef(
     const [dialogFlowInstance, setDialogFlowInstance] = useState(null);
     const [selectedDialogNode, setSelectedDialogNode] = useState(null);
 
-    /*    // Initializing the Dialog Flow Nodes and Edges
     // -------------------------------- Form Layout --------------------------------------------
     const [formFields, setFormFields] = useState();
+
+    /*    // Initializing the Dialog Flow Nodes and Edges
 
     const handleRest = () => {
       store.reset();
@@ -117,7 +118,8 @@ const WorkFlowDesigner = forwardRef(
 
       setTimeout(() => {
         //this is sending the new schema to web page  - activity-definition.js
-        updateActivitySchema({ nodes, edges });
+        //updateActivitySchema({ nodes, edges });
+        updateActivitySchema(storeData);
       }, 200);
     }, [setTaskNodes, setTaskEdges, storeData, updateActivitySchema]);
 
@@ -141,7 +143,6 @@ const WorkFlowDesigner = forwardRef(
     };
 
     useEffect(() => {
-      console.log(activityDefinitionData);
       store.reset();
       if (activityDefinitionData.schema.nodes.length === 0 || activityDefinitionData.schema.edges.length === 0) {
         setTaskNodes(TASK_INITIAL_NODES);
@@ -173,7 +174,7 @@ const WorkFlowDesigner = forwardRef(
           return;
         }
         if (!nodeData.active) {
-          alert('Block not supported yet to use');
+          alert(`${nodeData.type} task can not be used.`);
           return;
         }
 
@@ -239,7 +240,8 @@ const WorkFlowDesigner = forwardRef(
           }
           return copyNode;
         });
-        const formData = node.data.form.length ? JSON.parse(node.data.form).fields : [];
+        //const formData = node.data?.form?.length ? JSON.parse(node.data.form).fields : [];
+        const formData = [];
         setDialogNodes([...copyNodes]);
         setSelectedDialogNode(node);
         setFormFields(formData);
@@ -358,15 +360,15 @@ const WorkFlowDesigner = forwardRef(
     //#endregion
 
     const onClickPageDesignerBack = () => {
-      setDialogNodes([]);
-      setDialogEdges([]);
+      //setDialogNodes([]);
+      //setDialogEdges([]);
       setIsDialogFlowActive(true);
       setIsPageDesignerActive(false);
     };
 
     const onClickDialogFlowBack = () => {
-      setDialogNodes([]);
-      setDialogEdges([]);
+      //setDialogNodes([]);
+      //setDialogEdges([]);
       setIsDialogFlowActive(false);
       setIsPageDesignerActive(false);
     };

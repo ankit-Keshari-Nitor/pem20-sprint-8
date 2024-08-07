@@ -17,7 +17,8 @@ import {
   findChildComponentById,
   indexForChild,
   capitalizeFirstLetter,
-  defaultProps
+  defaultProps,
+  convertToSchema
 } from '../../utils/helpers';
 import {
   SIDEBAR_ITEM,
@@ -396,7 +397,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
                     <Button kind="secondary" className="cancelButton">
                       Cancel
                     </Button>
-                    <Button kind="primary" className="saveButton" onClick={() => saveFormDesignerData(layout)}>
+                    <Button kind="primary" className="saveButton" onClick={() => saveFormDesignerData(convertToSchema(layout))}>
                       Save
                     </Button>
                   </Column>

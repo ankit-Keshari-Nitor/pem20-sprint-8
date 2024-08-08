@@ -1,8 +1,8 @@
 import Designer from '@b2bi/flow-designer';
 const Nodes_With_SubProcess = ['SYSTEM', 'CUSTOM', 'SPONSOR', 'PARTNER'];
 
-const NODE_DATA = Designer.NODE_TYPES; 
-const EDGE_DATA = Designer.INITIAL_EDGES;
+const NODE_DATA = Designer.NODE_TYPES;
+//const EDGE_DATA = Designer.INITIAL_EDGES;
 
 export const getNodeSpecificDataObj = (node) => {
   switch (node.type.toUpperCase()) {
@@ -10,7 +10,7 @@ export const getNodeSpecificDataObj = (node) => {
       return {
         description: node.data.editableProps?.description,
         loop: {
-          loopCardinality: '',
+          loopCardinality: ''
         },
         api: {
           apiConfiguration: 'apiConfiguration',
@@ -35,9 +35,9 @@ export const getNodeSpecificDataObj = (node) => {
           output: '',
           escapeInput: false
         },
-        loop:{
+        loop: {
           loopCardinality: '',
-          completionCondition: '',
+          completionCondition: ''
         }
       };
     case 'PARTNER':
@@ -81,13 +81,11 @@ export const getNodeSpecificDataObj = (node) => {
       };
     case 'CUSTOM':
       return {
-        description: node.data.editableProps?.description,
+        description: node.data.editableProps?.description
       };
-      case 'ATTRIBUTE':
-        case 'APPROVAL':
-          return {
-
-          }
+    case 'ATTRIBUTE':
+    case 'APPROVAL':
+      return {};
     default:
       return {};
   }
@@ -154,93 +152,94 @@ export const generateNodeEdgesForApi = (nodes, edges) => {
   };
 };
 
-const getStartNode = (node) => {
-  return {
-    id: 'start',
-    type: 'START',
-    data: {
-      taskName: 'Start',
-      borderColor: '#0585FC'
-    },
-    position: {
-      x: node.diagram.x,
-      y: node.diagram.y
-    },
-    sourcePosition: 'right'
-  };
-};
-const getEndNode = (node) => {
-  return {
-    id: 'end',
-    type: 'END',
-    data: {
-      taskName: 'End',
-      borderColor: '#0585FC'
-    },
-    position: {
-      x: node.diagram.x,
-      y: node.diagram.y
-    },
-    targetPosition: 'left'
-  };
-};
-
 export const nodeObjects = (node, readOnly) => {
-  switch (node.type.toUpperCase()) {
-    case 'START':
-      return getStartNode(node);
-    case 'END':
-      return getEndNode(node);
-    case 'PARTNER':
-      const data = { ...NODE_DATA[node.type.toUpperCase()] };
-      const { nodes, connectors, diagram, id, type, ...rest } = node
-      data.editableProps = { name: rest?.name, description: rest?.description, estimate_days: rest?.estimateDays, role: rest?.roleKeys };
-      data.dialogNodes = nodes;
-      data.dialogEdges = connectors;
-      return {
-        id: id,
-        position: {
-          x: diagram.x,
-          y: diagram.y
-        },
-        type: type,
-        data: {
-          ...data
-        }
-      };  
-    default:
-      return {};
+  const nodeType = node.type.toUpperCase();
+  let data = nodeType === 'START' || nodeType === 'END' ? {} : { ...NODE_DATA[node.type.toUpperCase()] };
+  let { diagram, id, type, ...rest } = node;
+  let newNode = {
+    id: id,
+    position: {
+      x: diagram.x,
+      y: diagram.y
+    },
+    type: type
+  };
+  if (Nodes_With_SubProcess.includes(nodeType)) {
+    data.dialogNodes = node.nodes ? node.nodes : [];
+    data.dialogEdges = node.connectors ? node.connectors : [];
   }
+  switch (nodeType) {
+    case 'PARTNER':
+      data.editableProps = {
+        name: rest?.name,
+        description: rest?.description,
+        estimate_days: rest?.estimateDays,
+        role: rest?.roleKeys
+      };
+    case 'API':
+      data.editableProps = {
+        name: rest?.name,
+        description: rest?.description,
+        role: rest?.roleKeys
+      };
+      break;
+    case 'FORM':
+      data.editableProps = { name: rest?.name, description: rest?.description, role: rest?.roleKeys, form: rest?.form };
+      data.form = rest.form;
+      break;
+    case 'XSLT':
+      data.editableProps = { name: rest?.name, description: rest?.description };
+      break;
+    case 'DIALOG':
+      data.editableProps = {
+        name: rest?.name,
+        description: rest?.description
+      };
+      break;
+    case 'GATEWAY':
+      data.editableProps = { name: rest?.name, description: rest?.description };
+      break;
+    default:
+      data.editableProps = { name: rest?.name, description: rest?.description };
+  }
+  newNode = {
+    ...newNode,
+    data: { ...data }
+  };
+  return newNode;
 };
 
 export const generateActivitySchema = (nodes, edges, readOnly) => {
   const newNodes = nodes.map((node) => {
-    return nodeObjects(node, readOnly);
-  });
+    const nodeSpecificData = nodeObjects(node, readOnly);
 
+    if (Nodes_With_SubProcess.includes(node.type.toUpperCase())) {
+      if (node.nodes) {
+        const subProcessData = generateActivitySchema(node.nodes, node.connectors, readOnly);
+        nodeSpecificData.data.dialogNodes = subProcessData.nodes;
+        nodeSpecificData.data.dialogEdges = subProcessData.edges;
+      }
+    }
+    return nodeSpecificData;
+  });
   const newEdges = edges.map((edge) => {
-
-    return {...EDGE_DATA[0], ...edge}
-    
-    // return {
-    //   ...edge,
-    //   type: 'crossEdge',
-
-    //   markerEnd: {
-    //     type: 'arrowclosed',
-    //     width: 20,
-    //     height: 20,
-    //     color: '#FF0072'
-    //   },
-    //   data: {
-    //     readOnly: readOnly
-    //   },
-    //   style: {
-    //     stroke: '#000'
-    //   }
-    // };
+    return {
+      ...edge,
+      type: 'crossEdge',
+      markerEnd: {
+        type: 'arrowclosed',
+        width: 20,
+        height: 20,
+        color: '#FF0072'
+      },
+      data: {
+        readOnly: readOnly
+      },
+      style: {
+        stroke: '#000'
+      }
+    };
   });
-
   return {
     nodes: newNodes,
     edges: newEdges

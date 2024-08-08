@@ -240,8 +240,7 @@ const WorkFlowDesigner = forwardRef(
           }
           return copyNode;
         });
-        //const formData = node.data?.form?.length ? JSON.parse(node.data.form).fields : [];
-        const formData = [];
+        const formData = node.data?.form?.length ? JSON.parse(node.data.form).fields : [];
         setDialogNodes([...copyNodes]);
         setSelectedDialogNode(node);
         setFormFields(formData);

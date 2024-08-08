@@ -18,7 +18,8 @@ import {
   indexForChild,
   capitalizeFirstLetter,
   defaultProps,
-  convertToSchema
+  convertToSchema,
+  getFormObject
 } from '../../utils/helpers';
 import {
   SIDEBAR_ITEM,
@@ -55,7 +56,7 @@ import { View } from '@carbon/icons-react';
 export default function Designer({ componentMapper, onClickPageDesignerBack, activityDefinitionData, saveFormDesignerData, formFields }) {
   //const initialLayout = INITIAL_DATA.layout;
   const initialComponents = INITIAL_DATA.components;
-  const [layout, setLayout] = useState(formFields);
+  const [layout, setLayout] = useState(getFormObject(formFields, []));
   const [components, setComponents] = useState(initialComponents);
   const [selectedFiledProps, setSelectedFiledProps] = useState();
   const [open, setOpen] = useState(false);

@@ -401,8 +401,6 @@ export const nestedLayoutView = (childLayout, childSchema) => {
       case ACCORDION: {
         const { icon, label, group, ...others } = item.component;
         childSchema.push({
-          id: item.id,
-          type: item.type,
           ...others,
           children: []
         });
@@ -410,19 +408,20 @@ export const nestedLayoutView = (childLayout, childSchema) => {
         break;
       }
       case TAB: {
+        const { icon, label, group, ...others } = item.component;
         childSchema.push({
-          id: item.id,
-          type: item.type,
+          ...others,
           children: []
         });
         nestedLayoutView(childLayout[index]?.children, childSchema[index].children);
         break;
       }
       case SUBTAB: {
-        const { id, tabTitle } = item;
+        const { id, tabTitle, type } = item;
         childSchema.push({
           id,
           tabTitle,
+          type,
           children: []
         });
         nestedLayoutView(childLayout[index]?.children, childSchema[index].children);
@@ -444,6 +443,80 @@ export const convertToSchema = (layout) => {
   const schema = nestedLayoutView(layout, []);
   return { fields: schema };
 };
+
+export const getFormObject = (schema, formObj) => {
+  schema.forEach((item, index)=> {
+    switch (item.type) {
+      case ROW: {
+        formObj.push({
+          id: item.id,
+          type: item.type,
+          maintype: GROUP,
+          children: []
+        })
+        getFormObject(schema[index]?.children, formObj[index].children);
+        break;
+      }
+      case COLUMN: {
+        formObj.push({
+          id: item.id,
+          type: item.type,
+          defaultsize: item.size,
+          children: []
+        })
+        getFormObject(schema[index]?.children, formObj[index].children);
+        break;
+      }
+      case ACCORDION: {
+        const {children, ...others} = item;
+        formObj.push({
+          id: item.id,
+          type: item.type,
+          maintype: ACCORDION,
+          component: {
+            ...others
+          },
+          children: []
+        })
+        getFormObject(children, formObj[index].children);
+        break;
+      }
+      case TAB: {
+        const {children, ...others} = item;
+        formObj.push({
+          id: item.id,
+          type: item.type,
+          maintype: TAB,
+          component: {
+            ...others
+          },
+          children: []
+        })
+        getFormObject(children, formObj[index].children);
+        break;
+      }
+      case SUBTAB: {
+        const {children, ...others} = item;
+        formObj.push({
+          ...others,
+          children: []
+        })
+        getFormObject(children, formObj[index].children);
+        break;
+      }
+      default: {
+        formObj.push({
+          id: item.id,
+          type: COMPONENT,
+          component: {
+            ...item
+          }
+        })
+      }
+    }
+  });
+  return formObj;
+}
 
 export const findChildComponentById = (array, id) => {
   for (const item of array) {

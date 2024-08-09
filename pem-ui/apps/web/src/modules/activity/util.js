@@ -184,7 +184,7 @@ export const nodeObjects = (node, readOnly) => {
       };
       break;
     case 'FORM':
-      data.editableProps = { name: rest?.name, description: rest?.description, role: rest?.roleKeys, form: rest?.form };
+      data.editableProps = { name: rest?.name, description: rest?.description };
       data.form = rest.form;
       break;
     case 'XSLT':
@@ -211,17 +211,18 @@ export const nodeObjects = (node, readOnly) => {
 
 export const generateActivitySchema = (nodes, edges, readOnly) => {
   const newNodes = nodes.map((node) => {
+    
     const nodeSpecificData = nodeObjects(node, readOnly);
-
-    if (Nodes_With_SubProcess.includes(node.type.toUpperCase())) {
-      if (node.nodes) {
-        const subProcessData = generateActivitySchema(node.nodes, node.connectors, readOnly);
-        nodeSpecificData.data.dialogNodes = subProcessData.nodes;
-        nodeSpecificData.data.dialogEdges = subProcessData.edges;
+  
+      if (Nodes_With_SubProcess.includes(node.type.toUpperCase())) {
+        if (node.nodes) {
+          const subProcessData = generateActivitySchema(node.nodes, node.connectors,readOnly);
+          nodeSpecificData.data.dialogNodes = subProcessData.nodes;
+          nodeSpecificData.data.dialogEdges = subProcessData.edges;
+        }
       }
-    }
-    return nodeSpecificData;
-  });
+      return nodeSpecificData;
+    });
   const newEdges = edges.map((edge) => {
     return {
       ...edge,

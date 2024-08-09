@@ -176,11 +176,11 @@ export const nodeObjects = (node, readOnly) => {
         estimate_days: rest?.estimateDays,
         role: rest?.roleKeys
       };
+      break;
     case 'API':
       data.editableProps = {
         name: rest?.name,
         description: rest?.description,
-        role: rest?.roleKeys
       };
       break;
     case 'FORM':
@@ -204,7 +204,7 @@ export const nodeObjects = (node, readOnly) => {
   }
   newNode = {
     ...newNode,
-    data: { ...data }
+    data
   };
   return newNode;
 };

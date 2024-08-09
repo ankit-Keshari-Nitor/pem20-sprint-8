@@ -1,23 +1,27 @@
 import React from 'react';
-import { Link as CarbonLink } from '@carbon/react';
+import { Link as CarbonLink, Tooltip } from '@carbon/react';
 import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, PropsPanelFields, propsPanelAdvanceFields } from '../constant';
 import { LinkIcon } from './../icons';
+import { Information } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.LINK;
 
-const Link = ({ field, id }) => {
-  const { type, labelText, labelLinkText, label, hrefText, ...rest } = field;
+const Link = ({ field, id: uniqueId, previewMode }) => {
+  const { type, labelText, helperText, labelLinkText, label, hrefText, ...rest } = field;
   return (
-    <div class="cds--form-item cds--text-input-wrapper">
-      <div class="cds--text-input__label-wrapper">{labelText}</div>
-      <div class="cds--text-input__field-outer-wrapper">
-        <div class="cds--text-input__field-wrapper">
-          <CarbonLink data-testid={id} id={id} href={hrefText} {...rest}>
-            {labelLinkText === undefined ? label : labelLinkText}
-          </CarbonLink>
-        </div>
-      </div>
-    </div>
+    <>
+      <p className="cds--label-description">
+        {labelText === undefined ? label : labelText}
+        {helperText && (
+          <Tooltip id={`${uniqueId}-${previewMode}`} className="min-max-tooltip" align="bottom" label={helperText}>
+            <Information />
+          </Tooltip>
+        )}
+      </p>
+      <CarbonLink data-testid={uniqueId} id={uniqueId} href={hrefText} {...rest}>
+        {labelLinkText === undefined ? label : labelLinkText}
+      </CarbonLink>
+    </>
   );
 };
 

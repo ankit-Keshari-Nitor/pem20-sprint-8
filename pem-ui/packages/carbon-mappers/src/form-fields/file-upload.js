@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { FileUploaderDropContainer, FileUploaderItem } from '@carbon/react';
+import { FileUploaderDropContainer, FileUploaderItem, Tooltip } from '@carbon/react';
 import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE, PropsPanelFields, propsPanelAdvanceFields } from '../constant';
 import { FileUploadIcon } from './../icons';
+import { Information } from '@carbon/icons-react';
 
 const type = FORM_FIELD_TYPE.FILE_UPLOADER;
 
-const FileUploader = ({ field, id }) => {
-  const { labelText, label, maxFileSize, extensions: extensionsStr } = field;
-
+const FileUploader = ({ field, id, previewMode, currentPath, onChangeHandle }) => {
+  const { labelText, label, maxFileSize, dragDropLabel, helperText, extensions: extensionsStr, invalid, invalidText } = field;
   // Convert comma-separated extensions string to array
-  const extensionsArray = extensionsStr ? extensionsStr.split(',') : [];
+  const extensionsArray = extensionsStr ? extensionsStr.value.split(',') : [];
   const [file, setFile] = useState();
   const [error, setError] = useState('');
 
@@ -81,6 +81,7 @@ const FileUploader = ({ field, id }) => {
         errorBody: ('Error', { fileName: fileUpload.name, fileType: extensionsArray !== undefined ? extensionsArray.join(',') : '' })
       };
       setFile(updatedFile);
+      previewMode && onChangeHandle(currentPath, updatedFile);
     } else {
       setFile();
       setError('File size exceeds the maximum limit');
@@ -96,8 +97,17 @@ const FileUploader = ({ field, id }) => {
     <div>
       {file === undefined ? (
         <>
+          <p className="cds--file--label">
+            {labelText === undefined ? label : labelText}
+            {helperText && (
+              <Tooltip id={id} className="min-max-tooltip" align="bottom" label={helperText}>
+                <Information />
+              </Tooltip>
+            )}
+          </p>
+          <p className="cds--label-description">Max file size is 500kb. Supported file types are .jpg and .png.</p>
           <FileUploaderDropContainer
-            labelText={labelText === undefined ? label : labelText}
+            labelText={dragDropLabel === undefined ? label : dragDropLabel}
             name={String(id)}
             filenameStatus="edit"
             onChange={onAddFiles}
@@ -106,6 +116,7 @@ const FileUploader = ({ field, id }) => {
             id={id}
           />
           {error && <p className="error-text">{error}</p>}
+          {invalid && <p className="error-text">{invalidText}</p>}
         </>
       ) : (
         <div>

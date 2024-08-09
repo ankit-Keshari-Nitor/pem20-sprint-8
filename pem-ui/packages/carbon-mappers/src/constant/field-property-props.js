@@ -317,6 +317,15 @@ const buttonLabel = {
   size: { col: 8 }
 };
 
+const dragDropText = {
+  propsName: 'dragDropLabel',
+  label: 'Drag and Drop Text',
+  value: '',
+  placeholder: 'Drag and Drop Text',
+  type: 'TextInput',
+  size: { col: 8 }
+};
+
 const fileUploader = {
   propsName: 'fileUploader',
   label: 'File Upload',
@@ -365,28 +374,16 @@ const maxFileSize = {
 
 const fontSize = {
   propsName: 'fontSize',
-  label: 'Font Size',
-  type: 'DropDown',
+  label: 'Text Type',
   options: [
-    { label: '8px', value: '8px' },
-    { label: '9px', value: '9px' },
-    { label: '10px', value: '10px' },
-    { label: '11px', value: '11px' },
-    { label: '12px', value: '12px' },
-    { label: '14px', value: '14px' },
-    { label: '16px', value: '16px' },
-    { label: '18px', value: '18px' },
-    { label: '20px', value: '20px' },
-    { label: '22px', value: '22px' },
-    { label: '24px', value: '24px' },
-    { label: '26px', value: '26px' },
-    { label: '28px', value: '28px' },
-    { label: '30px', value: '30px' },
-    { label: '32px', value: '32px' },
-    { label: '34px', value: '34px' },
-    { label: '36px', value: '36px' }
+    { label: 'Text', value: '5' },
+    { label: 'H1', value: '1' },
+    { label: 'H2', value: '2' },
+    { label: 'H3', value: '3' },
+    { label: 'H4', value: '4' }
   ],
-  size: { col: 8 }
+  type: 'radio',
+  size: { col: 16 }
 };
 
 const addTab = {
@@ -542,14 +539,14 @@ export const PropsPanelFields = {
   [FORM_FIELD_TYPE.DATEPICKER]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT_INPUT], Id, labelText, readOnly, isRequired, dateFormat, dateValue, placeHolder, helperText],
   [FORM_FIELD_TYPE.NUMBER]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT_INPUT], Id, labelText, readOnly, isRequired, valueLabel, placeHolder, helperText, mapping],
   [FORM_FIELD_TYPE.INFO]: [ElementTypeConfig[FORM_FIELD_TYPE.INFO], Id, helperText],
-  [FORM_FIELD_TYPE.FILE_DOWNLOADER]: [ElementTypeConfig[FORM_FIELD_TYPE.FILE_UPLOADER], Id, labelText, helperText, maxFileSize, extensions],
-  [FORM_FIELD_TYPE.FILE_UPLOADER]: [ElementTypeConfig[FORM_FIELD_TYPE.FILE_UPLOADER], Id, labelText, helperText, buttonLabel, fileUploader],
+  [FORM_FIELD_TYPE.FILE_DOWNLOADER]: [ElementTypeConfig[FORM_FIELD_TYPE.FILE_UPLOADER], Id, labelText, helperText, buttonLabel, fileUploader],
+  [FORM_FIELD_TYPE.FILE_UPLOADER]: [ElementTypeConfig[FORM_FIELD_TYPE.FILE_UPLOADER], Id, labelText, isRequired, dragDropText, helperText],
   [FORM_FIELD_TYPE.LINK]: [ElementTypeConfig[FORM_FIELD_TYPE.LINK], Id, labelText, labelLinkText, helperText, hrefText],
-  [FORM_FIELD_TYPE.TOGGLE]: [ElementTypeConfig[FORM_FIELD_TYPE.TOGGLE], Id, labelText, toggleValues, labelB, labelA, readOnly, helperText, mapping],
+  [FORM_FIELD_TYPE.TOGGLE]: [ElementTypeConfig[FORM_FIELD_TYPE.TOGGLE], Id, labelText, toggleValues, helperText, labelB, labelA, readOnly, mapping],
   [FORM_FIELD_TYPE.SELECT]: [ElementTypeConfig[FORM_FIELD_TYPE.SELECT], Id, labelText, placeHolder, helperText, options, readOnly],
   [FORM_FIELD_TYPE.RADIOGROUP]: [ElementTypeConfig[FORM_FIELD_TYPE.SELECT], Id, labelText, helperText, options, orientation, readOnly],
   [FORM_FIELD_TYPE.CHECKBOXGROUP]: [ElementTypeConfig[FORM_FIELD_TYPE.SELECT], Id, labelText, helperText, options, orientation, readOnly],
-  [FORM_FIELD_TYPE.TEXT]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT], Id, labelText, mapping, fontSize],
+  [FORM_FIELD_TYPE.TEXT]: [ElementTypeConfig[FORM_FIELD_TYPE.TEXT], Id, fontSize, labelText, mapping],
   [FORM_FIELD_TYPE.DATATABLE]: [ElementTypeConfig[FORM_FIELD_TYPE.DATATABLE], Id, labelText, helperText, selectRow, pageSize, tableColumn, tableRows],
   [FORM_FIELD_TYPE.ACCORDION]: [labelText],
   [FORM_FIELD_TYPE.GROUP]: [addColumnInGroup],
@@ -564,7 +561,7 @@ export const propsPanelAdvanceFields = {
   [FORM_FIELD_TYPE.DATEPICKER]: [minDate, maxDate],
   [FORM_FIELD_TYPE.INFO]: [],
   [FORM_FIELD_TYPE.FILE_DOWNLOADER]: [],
-  [FORM_FIELD_TYPE.FILE_UPLOADER]: [],
+  [FORM_FIELD_TYPE.FILE_UPLOADER]: [maxFileSize, extensions],
   [FORM_FIELD_TYPE.LINK]: [],
   [FORM_FIELD_TYPE.TOGGLE]: [],
   [FORM_FIELD_TYPE.SELECT]: [],

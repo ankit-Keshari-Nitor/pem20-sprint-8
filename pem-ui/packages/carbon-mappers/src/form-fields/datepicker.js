@@ -5,8 +5,8 @@ import { DatepickerIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.DATEPICKER;
 
-const DatePicker = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
-  const { type, labelText, value, dateFormat, label, readOnly, dateValue, placeHolder, helperText, isRequired, minDate, maxDate, ...rest } = field;
+const DatePicker = ({ field, id: uniqueId, currentPath, onChangeHandle, previewMode }) => {
+  const { type, labelText, value, dateFormat, label, readOnly, dateValue, placeHolder, helperText, isRequired, minDate, maxDate, id, ...rest } = field;
   const [fieldValue, setFieldValue] = useState(new Date());
   useEffect(() => {
     if (previewMode) {
@@ -19,10 +19,9 @@ const DatePicker = ({ field, id, currentPath, onChangeHandle, previewMode }) => 
   return (
     <>
       <CarbonDatePicker
-        data-testid={id}
-        id={id}
+        data-testid={uniqueId}
+        id={uniqueId}
         datePickerType="single"
-        value={fieldValue}
         minDate={minDate?.value}
         maxDate={maxDate?.value}
         onChange={(e) => {
@@ -32,7 +31,7 @@ const DatePicker = ({ field, id, currentPath, onChangeHandle, previewMode }) => 
         dateFormat={dateFormat?.value}
         readOnly={readOnly}
       >
-        <DatePickerInput id={id} type={type} labelText={labelText ? labelText : label} placeholder={placeHolder} helperText={helperText} {...rest} />
+        <DatePickerInput id={uniqueId} type={type} labelText={labelText ? labelText : label} placeholder={placeHolder ? placeHolder : "mm/dd/yyyy"} helperText={helperText} {...rest} />
       </CarbonDatePicker>
     </>
   );
